@@ -33,46 +33,81 @@
 
 ```
 src/
-  app/
-    App.tsx
-    index.css
-    main.tsx
-    routes.tsx
-    layouts/
-      RootLayout.tsx
-    providers/
-  pages/
-    feed/
-      index.tsx
-    home/
-      index.tsx
-    post/
-      index.tsx
-    profile/
-      index.tsx
-    signin/
-      index.tsx
-  widgets/
-  features/
-    auth/
-      ui/
-        RequireGuest.tsx
-  entities/
-  shared/
-    api/
-    config/
-    hooks/
-    lib/
-    types/
-    ui/
+├── app/
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   ├── routes.tsx
+│   ├── layouts/
+│   │   └── RootLayout.tsx
+│   └── providers/
+├── entities/
+│   ├── chat/
+│   │   └── model/
+│   │       └── types.ts
+│   ├── post/
+│   │   └── model/
+│   │       └── types.ts
+│   └── user/
+│       └── model/
+│           └── types.ts
+├── features/
+│   ├── add-comment/
+│   └── auth/
+│       ├── login/
+│       │   ├── ui/
+│       │   │   └── LoginForm.tsx
+│       │   └── index.ts
+│       └── ui/
+│           └── RequireGuest.tsx
+├── pages/
+│   ├── chat/
+│   │   └── index.tsx
+│   ├── create-post/
+│   │   └── index.tsx
+│   ├── feed/
+│   │   └── index.tsx
+│   ├── home/
+│   │   └── index.tsx
+│   ├── post/
+│   │   └── index.tsx
+│   ├── profile/
+│   │   └── index.tsx
+│   ├── search/
+│   │   └── index.tsx
+│   ├── settings/
+│   │   └── index.tsx
+│   ├── signin/
+│   │   └── index.tsx
+│   └── signup/
+│       └── index.tsx
+├── shared/
+│   ├── api/
+│   ├── config/
+│   │   └── routePaths.ts
+│   ├── hooks/
+│   ├── lib/
+│   ├── types/
+│   └── ui/
+│       ├── Container.tsx
+│       └── PageTitle.tsx
+└── widgets/
+    └── site-header/
+        ├── SiteHeader.tsx
+        └── index.ts
 ```
 
 ## 현재 페이지
 
 | 라우트 | 설명 |
 | --- | --- |
-| home | 홈 |
-| feed | 피드 |
-| post | 게시글 상세 |
-| profile | 프로필 |
-| signin | 로그인 |
+| /home | 홈 |
+| /feed | 피드 |
+| /post/:postId | 게시글 상세 |
+| /profile | 프로필 |
+| /search | 검색 |
+| /chat | 채팅 |
+| /signin | 로그인 |
+| /signup | 회원가입 |
+| /post/new | 게시물 생성 |
+| /settings | 설정 |
