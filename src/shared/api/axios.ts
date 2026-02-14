@@ -62,7 +62,12 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config as CustomAxiosRequestConfig;
 
     // 401 에러(인증 실패)이고, 재시도한 적이 없는 요청일 경우
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/api/user/refresh') // 추가: 토큰 갱신 요청 자체가 401일 때 무한 루프 방지
+    ) {
       if (isRefreshing) {
         // 이미 다른 요청으로 인해 토큰 갱신 중이라면 대기열(Queue)에 등록
         return new Promise((resolve, reject) => {
@@ -90,6 +95,14 @@ axiosInstance.interceptors.response.use(
       }
 
       try {
+        //refreshToken 이 없을경우 에러 처리
+        if (!refreshToken) {
+          const noTokenError = new Error('No refresh token');
+          onTokenRefreshFailed(noTokenError);
+          removeToken();
+          window.location.href = '/signin';
+          throw noTokenError;
+        }
         //  Body에 refreshToken을 담아서 요청 및 중복 방지
         const response = await axios.post(
           '/api/user/refresh',
