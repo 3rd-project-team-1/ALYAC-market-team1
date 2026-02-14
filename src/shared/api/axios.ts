@@ -28,15 +28,29 @@ axiosInstance.interceptors.request.use(
 
 // --- 토큰 갱신 동시성 제어를 위한 변수 및 함수 ---
 let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
+// 요청들이 성공할지 실패할지 모두 관리도록 타입 개선
+type RefreshSubscriber = {
+  resolve: (token: string) => void;
+  reject: (error: unknown) => void;
+};
+let refreshSubscribers: RefreshSubscriber[] = [];
 
-const subscribeTokenRefresh = (cb: (token: string) => void) => {
-  refreshSubscribers.push(cb);
+const subscribeTokenRefresh = (
+  resolve: (token: string) => void,
+  reject: (err: unknown) => void,
+) => {
+  refreshSubscribers.push({ resolve, reject });
 };
 
+// 갱신 성공 시: 대기 중인 요청들에게 새 토큰 전달
 const onTokenRefreshed = (token: string) => {
-  refreshSubscribers.forEach((cb) => cb(token));
-  refreshSubscribers = [];
+  refreshSubscribers.forEach(({ resolve }) => resolve(token));
+  refreshSubscribers = []; // 큐 비우기
+};
+// 갱신 실패 시: 대기 중인 요청들을 모두 에러 처리 (무한 로딩 방지)
+const onTokenRefreshFailed = (error: unknown) => {
+  refreshSubscribers.forEach(({ reject }) => reject(error));
+  refreshSubscribers = []; // 큐 비우기
 };
 // ------------------------------------------------
 
@@ -51,11 +65,14 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       if (isRefreshing) {
         // 이미 다른 요청으로 인해 토큰 갱신 중이라면 대기열(Queue)에 등록
-        return new Promise((resolve) => {
-          subscribeTokenRefresh((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            resolve(axiosInstance(originalRequest));
-          });
+        return new Promise((resolve, reject) => {
+          subscribeTokenRefresh(
+            (token) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              resolve(axiosInstance(originalRequest));
+            },
+            (err) => reject(err), // 갱신 실패 시 같이 에러 던짐
+          );
         });
       }
 
@@ -68,15 +85,17 @@ axiosInstance.interceptors.response.use(
       if (!refreshToken) {
         // Refresh Token조차 없다면 즉시 로그아웃 처리
         removeToken();
-        window.location.href = '/signin'; // 프로젝트의 라우팅 경로에 맞게 수정하세요
+        window.location.href = '/signin';
         return Promise.reject(error);
       }
 
       try {
-        //  Body에 refreshToken을 담아서 요청
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/refresh`, {
-          refreshToken: refreshToken,
-        });
+        //  Body에 refreshToken을 담아서 요청 및 중복 방지
+        const response = await axios.post(
+          '/api/user/refresh',
+          { refreshToken },
+          { baseURL: import.meta.env.VITE_API_BASE_URL },
+        );
 
         //  응답 데이터에서  accessToken과 refreshToken을 꺼냄
         const { accessToken: newToken, refreshToken: newRefreshToken } = response.data;
@@ -91,7 +110,8 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Refresh Token 갱신 요청 자체가 실패한 경우 (만료 등) -> 강제 로그아웃
+        //  갱신 실패 시: 대기열의 요청들을 쳐내고(reject) 로그아웃 처리
+        onTokenRefreshFailed(refreshError);
         removeToken();
         window.location.href = '/signin';
         return Promise.reject(refreshError);
