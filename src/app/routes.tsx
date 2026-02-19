@@ -4,10 +4,12 @@ import { RootLayout } from '@/app/layouts/RootLayout';
 import { HomePage } from '@/pages/home';
 import { SearchPage } from '@/pages/search';
 import { FeedPage } from '@/pages/feed';
-import { ProfilePage } from '@/pages/profile';
+import { MyProfilePage } from '@/pages/myprofile';
+import { YourProfilePage } from '@/pages/yourprofile';
 import { SettingsPage } from '@/pages/settings';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
+import { CreatePostPage } from '@/pages/create-post';
 import { NotFoundPage } from '@/pages/not-found';
 
 export const router = createBrowserRouter([
@@ -36,8 +38,12 @@ export const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        path: 'profile',
-        element: <ProfilePage />,
+        path: 'myprofile',
+        element: <MyProfilePage />,
+      },
+      {
+        path: 'yourprofile/:accountname',
+        element: <YourProfilePage />,
       },
       {
         path: 'settings',
