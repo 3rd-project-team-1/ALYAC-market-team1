@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ChevronLeft, Grid2X2, List, MoreVertical } from 'lucide-react';
+import { ChevronLeft, LayoutList, MoreVertical } from 'lucide-react';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
@@ -81,23 +81,23 @@ export function ProfilePage() {
       </header>
 
       {/* 프로필 정보 */}
-      <section className="px-6 pb-6 pt-2">
-        {/* 아바타 + 팔로워/팔로잉 가로 배치 */}
-        <div className="flex items-center justify-center gap-10">
+      <section className="px-6 pb-6 pt-4">
+        {/* 아바타 + 팔로워/팔로잉 */}
+        <div className="flex items-center justify-center gap-12">
           {/* 팔로워 */}
           <button className="flex flex-col items-center gap-1">
-            <span className="text-lg font-bold text-gray-900">
+            <span className="text-xl font-bold text-gray-900">
               {user?.followers?.length ?? 0}
             </span>
-            <span className="text-xs text-gray-500">followers</span>
+            <span className="text-xs text-gray-500">Followers</span>
           </button>
 
           {/* 아바타 */}
-          <div className="h-20 w-20 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+          <div className="h-24 w-24 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
             {user?.image ? (
               <img src={user.image} alt={user.username} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-2xl text-gray-400">
+              <div className="flex h-full w-full items-center justify-center text-3xl text-gray-400">
                 {user?.username?.[0]?.toUpperCase() ?? '?'}
               </div>
             )}
@@ -105,10 +105,10 @@ export function ProfilePage() {
 
           {/* 팔로잉 */}
           <button className="flex flex-col items-center gap-1">
-            <span className="text-lg font-bold text-gray-900">
+            <span className="text-xl font-bold text-gray-900">
               {user?.following?.length ?? 0}
             </span>
-            <span className="text-xs text-gray-500">followings</span>
+            <span className="text-xs text-gray-500">Followings</span>
           </button>
         </div>
 
@@ -117,22 +117,22 @@ export function ProfilePage() {
           <h1 className="text-base font-semibold text-gray-900">{user?.username ?? '이름 없음'}</h1>
           <p className="mt-0.5 text-sm text-gray-400">@{user?.accountname ?? ''}</p>
           {user?.intro && (
-            <p className="mt-2 text-center text-sm text-gray-500">{user.intro}</p>
+            <p className="mt-1.5 text-center text-sm text-gray-500">{user.intro}</p>
           )}
         </div>
 
         {/* 버튼 */}
-        <div className="mt-5 flex justify-center gap-3">
+        <div className="mt-5 flex gap-3">
           {isMyProfile ? (
             <>
               <button
-                className="rounded-full border border-gray-300 px-6 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 rounded-full border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 onClick={() => navigate('/settings')}
               >
                 프로필 수정
               </button>
               <button
-                className="rounded-full border border-green-500 px-6 py-2 text-sm font-medium text-green-500 hover:bg-green-50"
+                className="flex-1 rounded-full border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 onClick={() => navigate('/post/new')}
               >
                 상품 등록
@@ -141,12 +141,12 @@ export function ProfilePage() {
           ) : (
             <>
               <button
-                className="rounded-full border border-gray-300 px-6 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 rounded-full border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 onClick={() => navigate('/chat')}
               >
                 채팅하기
               </button>
-              <button className="rounded-full bg-green-500 px-6 py-2 text-sm font-medium text-white hover:bg-green-600">
+              <button className="flex-1 rounded-full bg-green-500 py-2 text-sm font-medium text-white hover:bg-green-600">
                 팔로우
               </button>
             </>
@@ -154,43 +154,45 @@ export function ProfilePage() {
         </div>
       </section>
 
-      {/* 판매중인 상품 */}
-      <section className="border-t border-gray-100 px-4 py-4">
-        <h2 className="mb-3 text-sm font-semibold text-gray-800">판매중인 상품</h2>
-        <div className="flex gap-3 overflow-x-auto pb-1">
-          <p className="text-sm text-gray-400">등록된 상품이 없습니다.</p>
-        </div>
-      </section>
-
       {/* 게시글 탭 */}
-      <section className="flex-1 border-t border-gray-100">
-        <div className="flex">
+      <section className="flex-1 border-t border-gray-200">
+        <div className="flex justify-end border-b border-gray-200 px-4">
           <button
-            className={`flex flex-1 items-center justify-center py-3 ${
-              viewMode === 'list'
-                ? 'border-b-2 border-gray-800 text-gray-800'
-                : 'border-b border-gray-100 text-gray-400'
+            className={`flex items-center justify-center px-3 py-3 ${
+              viewMode === 'list' ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'
             }`}
             onClick={() => setViewMode('list')}
             aria-label="리스트 뷰"
           >
-            <List className="h-5 w-5" />
+            <LayoutList className="h-5 w-5" />
           </button>
           <button
-            className={`flex flex-1 items-center justify-center py-3 ${
-              viewMode === 'grid'
-                ? 'border-b-2 border-gray-800 text-gray-800'
-                : 'border-b border-gray-100 text-gray-400'
+            className={`flex items-center justify-center px-3 py-3 ${
+              viewMode === 'grid' ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'
             }`}
             onClick={() => setViewMode('grid')}
             aria-label="그리드 뷰"
           >
-            <Grid2X2 className="h-5 w-5" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+            </svg>
           </button>
         </div>
 
         <div className="flex items-center justify-center py-16 text-sm text-gray-400">
-          게시글이 없습니다.
+          작성한 게시물이 없습니다.
         </div>
       </section>
     </div>
