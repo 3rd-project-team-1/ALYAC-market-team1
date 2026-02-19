@@ -1,5 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+build/
+.cache/
+coverage/
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,77 +17,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.*.example
 
-# Editor directories and files
+# TypeScript / Lint cache
+*.tsbuildinfo
+.eslintcache
+
+# Editor / IDE
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
-
-# Dependencies
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment variables
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-
-# Logs
-logs/
-*.log
-
-# OS Files
-.DS_Store
-Thumbs.db
-
-# IDE / Editor
-.vscode/
-.idea/
 *.swp
 *.swo
 *~
 
-# Build output
-dist/
-build/
-.cache/
-
-# Testing
-coverage/
+# OS files
+.DS_Store
+Thumbs.db
 
 # Temporary files
 *.tmp
 *.temp
 
-# Upload files
+# App-specific
 uploadFiles/
-
-# 환경 변수
-.env
-.env.local
-.env.*.local
-.env.production
-
-
-# IDE
-.vscode/*
-!.vscode/extensions.json
-.idea
-
-# OS
-.DS_Store
-Thumbs.db
