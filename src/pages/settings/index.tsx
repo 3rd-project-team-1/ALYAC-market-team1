@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
 
 export function SettingsPage() {
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [username, setUsername] = useState('');
@@ -50,11 +48,6 @@ export function SettingsPage() {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleSave = () => {
-    // TODO: 저장 API 연동
-    navigate('/profile');
   };
 
   if (isLoading) {
