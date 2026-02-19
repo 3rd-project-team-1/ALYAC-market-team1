@@ -60,8 +60,8 @@ export function SignInPage() {
           className={cn(
             'flex w-full flex-col items-center bg-white transition-all duration-500 ease-in-out',
             viewMode === 'selection'
-              ? 'animate-in slide-in-from-bottom-full h-[50vh] rounded-t-[30px] px-8 pt-12 pb-16 duration-700'
-              : 'h-screen justify-center rounded-none px-8', // 이메일 폼일 땐 화면 가득 참
+              ? 'animate-in slide-in-from-bottom-full h-[60vh] rounded-t-[30px] px-8 pt-12 pb-16 duration-700'
+              : 'h-screen justify-start rounded-none px-8 pt-32',
           )}
         >
           {/* [C-1] 로그인 방식 선택 화면 (사진 속 UI와 똑같이 테두리 버튼으로 수정!) */}

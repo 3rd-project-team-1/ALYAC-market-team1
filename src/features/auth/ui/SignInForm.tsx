@@ -1,12 +1,12 @@
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { useSignIn } from '@/entities/auth/hooks/useSignIn';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
-
-import { useLoginMutation } from '../api/useAuthMutaion';
 
 interface SignInFormData {
   email: string;
@@ -14,32 +14,39 @@ interface SignInFormData {
 }
 
 export function SignInForm() {
-  const navigate = useNavigate(); // 라우팅을 위한 훅
-  const loginMutation = useLoginMutation(); // 로그인 API 호출을 위한 커스텀 훅
+  const navigate = useNavigate();
+  const loginMutation = useSignIn();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid }, // ✅ isValid를 가져옵니다 (조건 충족 여부 boolean)
   } = useForm<SignInFormData>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: { email: '', password: '' },
+    mode: 'onChange', // ✅ 입력할 때마다 실시간으로 유효성 검사를 실행합니다!
   });
+
   const onSubmit = (data: SignInFormData) => {
     loginMutation.mutate(
       { user: data },
       {
-        onSuccess: () => {
-          navigate('/'); // 로그인 성공 시 홈으로 이동
-        },
+        onSuccess: () => navigate('/feed'),
         onError: (error) => {
-          alert('로그인 실패: ' + error.message); // 로그인 실패 시 에러 메시지 표시
+          //  타입 가드: "이 에러가 통신하다가 발생한 Axios 에러가 맞아?" 라고 검사
+          if (axios.isAxiosError<{ message: string }>(error)) {
+            const errorMessage =
+              error.response?.data?.message || '이메일 또는 비밀번호가 일치하지 않습니다.';
+            alert(errorMessage);
+          } else {
+            // 통신 에러가 아니라 다른 에러(예: 문법 에러, 네트워크 끊김 등)일 경우
+            alert('알 수 없는 오류가 발생했습니다.');
+            console.error(error);
+          }
         },
       },
     );
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-8 flex w-full flex-col">
       {/* --- 이메일 필드 --- */}
@@ -58,8 +65,8 @@ export function SignInForm() {
             },
           })}
           className={cn(
-            'h-auto rounded-none border-x-0 border-t-0 border-b border-gray-200 px-0 py-2 text-base shadow-none transition-colors focus-visible:border-[#1EC800] focus-visible:ring-0',
-            errors.email ? 'border-red-500' : '',
+            'mt-1.5 h-auto rounded-md border-none bg-[#F0F4FF] px-4 py-3 text-base shadow-none transition-colors focus-visible:ring-1 focus-visible:ring-[#1EC800]',
+            errors.email ? 'ring-1 ring-red-500' : '',
           )}
         />
         {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>}
@@ -78,8 +85,9 @@ export function SignInForm() {
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
           className={cn(
-            'h-auto rounded-none border-x-0 border-t-0 border-b border-gray-200 px-0 py-2 text-base shadow-none transition-colors focus-visible:border-[#1EC800] focus-visible:ring-0',
-            errors.password ? 'border-red-500' : '',
+            // 마지막 사진 시안에 맞춘 디자인 (연한 파란색 둥근 배경)
+            'mt-1.5 h-auto rounded-md border-none bg-[#F0F4FF] px-4 py-3 text-base shadow-none transition-colors focus-visible:ring-1 focus-visible:ring-[#1EC800]',
+            errors.password ? 'ring-1 ring-red-500' : '',
           )}
         />
         {errors.password && (
@@ -90,8 +98,15 @@ export function SignInForm() {
       {/* --- 로그인 버튼 --- */}
       <Button
         type="submit"
-        className="w-full rounded-full border-none bg-[#A6E265] py-6 text-base font-bold text-white shadow-none hover:bg-[#91ce51]"
-        disabled={loginMutation.isPending}
+        // ✅ 조건이 안 맞거나( !isValid ), API 로딩 중일 때 비활성화
+        disabled={!isValid || loginMutation.isPending}
+        className={cn(
+          'w-full rounded-full border-none py-6 text-base font-bold text-white shadow-none transition-colors',
+          // ✅ isValid 상태에 따라 색상 변경!
+          isValid
+            ? 'bg-[#6BCB26] hover:bg-[#5CB020]' // 조건 충족 시: 활기찬 연두색
+            : 'cursor-not-allowed bg-[#D9D9D9] text-gray-400', // 조건 불충족 시: 회색
+        )}
       >
         {loginMutation.isPending ? '로그인 중...' : '로그인'}
       </Button>
