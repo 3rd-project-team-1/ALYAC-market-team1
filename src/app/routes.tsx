@@ -8,6 +8,7 @@ import { ProfilePage } from '@/pages/profile';
 import { SettingsPage } from '@/pages/settings';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
+import { CreatePostPage } from '@/pages/create-post';
 import { NotFoundPage } from '@/pages/not-found';
 
 export const router = createBrowserRouter (
@@ -34,6 +35,7 @@ export const router = createBrowserRouter (
       { path: 'signup', element: <SignUpPage />},
       { path: 'feed', element: <FeedPage />},
       { path: 'search', element: <SearchPage />},
+      { path: 'create-post', element: <CreatePostPage />},
       { path: '*', id: 'not-found', element: <NotFoundPage />},
     ],
   }]
