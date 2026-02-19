@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -40,51 +41,58 @@ export function SignInForm() {
     );
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm space-y-6">
-      {/* --- 이메일 입력 영역 --- */}
-      <div className="space-y-2">
-        <Label htmlFor="email">이메일</Label>
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 flex w-full flex-col">
+      {/* --- 이메일 필드 --- */}
+      <div className="mb-6">
+        <Label htmlFor="email" className="text-[13px] font-normal text-gray-500">
+          이메일
+        </Label>
         <Input
           id="email"
           type="email"
-          placeholder="user@example.com"
-          // register를 통해 React Hook Form에 이 Input을 등록하고 검사 규칙을 부여합니다.
           {...register('email', {
-            required: '이메일을 입력해 주세요.', // 빈 값일 때의 에러 메시지
+            required: '이메일을 입력해 주세요.',
             pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // 이메일 정규식
-              message: '올바른 이메일 형식을 입력해 주세요.', // 정규식에 안 맞을 때의 에러 메시지
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: '올바른 이메일 형식을 입력해 주세요.',
             },
           })}
-          // 에러가 있다면 테두리를 빨간색(destructive)으로 변경하여 시각적 피드백 제공
-          className={errors.email ? 'border-destructive' : ''}
+          className={cn(
+            'h-auto rounded-none border-x-0 border-t-0 border-b border-gray-200 px-0 py-2 text-base shadow-none transition-colors focus-visible:border-[#1EC800] focus-visible:ring-0',
+            errors.email ? 'border-red-500' : '',
+          )}
         />
-        {/* 이메일 관련 에러가 발생했다면 빨간색 안내 문구를 띄워줍니다. */}
-        {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
+        {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>}
       </div>
 
-      {/* --- 비밀번호 입력 영역 --- */}
-      <div className="space-y-2">
-        <Label htmlFor="password">비밀번호</Label>
+      {/* --- 비밀번호 필드 --- */}
+      <div className="mb-10">
+        <Label htmlFor="password" className="text-[13px] font-normal text-gray-500">
+          비밀번호
+        </Label>
         <Input
           id="password"
           type="password"
-          placeholder="비밀번호를 입력하세요"
           {...register('password', {
             required: '비밀번호를 입력해 주세요.',
-            minLength: {
-              value: 6, // 최소 6글자 이상
-              message: '비밀번호는 최소 6자 이상이어야 합니다.',
-            },
+            minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
-          className={errors.password ? 'border-destructive' : ''}
+          className={cn(
+            'h-auto rounded-none border-x-0 border-t-0 border-b border-gray-200 px-0 py-2 text-base shadow-none transition-colors focus-visible:border-[#1EC800] focus-visible:ring-0',
+            errors.password ? 'border-red-500' : '',
+          )}
         />
-        {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
+        {errors.password && (
+          <p className="mt-1.5 text-xs text-red-500">{errors.password.message}</p>
+        )}
       </div>
 
-      {/* --- 제출 버튼 --- */}
-      {/* API 요청 중(isPending)일 때는 버튼을 비활성화(disabled)하여 '따닥' 중복 클릭을 방지합니다. */}
-      <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+      {/* --- 로그인 버튼 --- */}
+      <Button
+        type="submit"
+        className="w-full rounded-full border-none bg-[#A6E265] py-6 text-base font-bold text-white shadow-none hover:bg-[#91ce51]"
+        disabled={loginMutation.isPending}
+      >
         {loginMutation.isPending ? '로그인 중...' : '로그인'}
       </Button>
     </form>

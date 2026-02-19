@@ -68,6 +68,7 @@ export function SignInPage() {
           {viewMode === 'selection' && (
             <div className="animate-in fade-in flex w-full max-w-sm flex-col space-y-4 delay-300 duration-700">
               <Button
+                disabled
                 variant="outline"
                 className="relative w-full rounded-full border-[#FBD914] bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
               >
@@ -76,6 +77,7 @@ export function SignInPage() {
               </Button>
 
               <Button
+                disabled
                 variant="outline"
                 className="relative w-full rounded-full border-gray-400 bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
               >
@@ -84,6 +86,7 @@ export function SignInPage() {
               </Button>
 
               <Button
+                disabled
                 variant="outline"
                 className="relative w-full rounded-full border-[#1877F2] bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
               >
@@ -106,31 +109,27 @@ export function SignInPage() {
             </div>
           )}
 
-          {/* [C-2] 이메일 입력 폼 화면 */}
+          {/*  이메일 입력 폼 화면 */}
           {viewMode === 'email' && (
-            <div className="animate-in zoom-in-95 fade-in flex w-full max-w-sm flex-col duration-500">
-              <div className="mb-8">
-                <button
-                  onClick={() => setViewMode('selection')}
-                  className="flex items-center text-sm text-gray-400 transition-colors hover:text-gray-800"
-                >
-                  ← 이전으로
-                </button>
+            <div className="animate-in zoom-in-95 fade-in flex w-full max-w-sm flex-col pt-4 duration-500">
+              <div className="mb-6 text-center">
+                <h2 className="text-[28px] font-bold tracking-tight text-gray-900">로그인</h2>
               </div>
-
-              <div className="mb-8 text-center">
-                <h2 className="text-2xl font-bold text-gray-900">로그인</h2>
-                <p className="mt-2 text-sm text-gray-500">이메일과 비밀번호를 입력해 주세요.</p>
-              </div>
-
               <SignInForm />
-
-              <div className="mt-8 text-center text-sm text-gray-500">
-                아직 계정이 없으신가요?{' '}
-                <Link to="/signup" className="font-bold text-[#1EC800] hover:underline">
-                  회원가입
+              <div className="mt-6 text-center">
+                <Link
+                  to="/signup"
+                  className="text-[13px] text-gray-500 transition-colors hover:text-gray-900"
+                >
+                  이메일로 회원가입
                 </Link>
               </div>
+              <button
+                onClick={() => setViewMode('selection')}
+                className="mt-8 text-xs text-gray-300 underline underline-offset-2 hover:text-gray-500"
+              >
+                소셜 로그인으로 돌아가기
+              </button>
             </div>
           )}
         </div>
