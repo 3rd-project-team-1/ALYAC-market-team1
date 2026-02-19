@@ -67,27 +67,6 @@ export function SettingsPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      {/* 헤더 */}
-      <header className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid #f0f0f0' }}>
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center"
-          aria-label="뒤로가기"
-        >
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.4166 11H4.58325" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M10.9999 17.4167L4.58325 11L10.9999 4.58334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button
-          onClick={handleSave}
-          className="rounded-full px-5 py-1.5 text-sm font-semibold text-white"
-          style={{ backgroundColor: '#3C9E00' }}
-        >
-          저장
-        </button>
-      </header>
-
       {/* 프로필 이미지 */}
       <div className="flex justify-center py-8">
         <div className="relative">
