@@ -26,39 +26,41 @@ export function SignInPage() {
   }, [viewMode]);
   return (
     <div
-      // 2. [배경색 애니메이션] splash일 때는 흰색, 그 외에는 초록색 배경으로 서서히(duration-700) 바뀝니다.
+      //  splash일 때는 흰색, 그 외에는 초록색 배경으로
       className={cn(
         'flex min-h-screen flex-col overflow-hidden transition-colors duration-700 ease-in-out',
         viewMode === 'splash' ? 'bg-white' : 'bg-[#1EC800]',
       )}
     >
-      {/* --- [A] 스플래시 화면 (viewMode === 'splash') --- */}
+      {/* --- 스플래시 화면 (viewMode === 'splash') --- */}
       {viewMode === 'splash' && (
-        <div className="animate-in fade-in zoom-in-95 flex flex-1 flex-col items-center justify-center duration-1000">
+        <div className="animate-in fade-in zoom-in-95 flex flex-1 flex-col items-center justify-center pb-24 duration-1000">
           <img
             src={fulllogo}
             alt="알약마켓 로고"
-            className="h-24 w-24 object-contain md:h-32 md:w-32"
+            className="h-55 w-50 object-contain md:h-100 md:w-100"
           />
-          {/* 폰트는 디자인에 맞게 추후 변경 가능합니다 */}
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#1EC800]">알약마켓</h1>
         </div>
       )}
 
-      {/* --- [B] 상단: 로고 영역 (viewMode === 'selection') --- */}
+      {/* --- 상단: 로고 영역 (viewMode === 'selection') --- */}
       {viewMode === 'selection' && (
         <div className="animate-in fade-in flex flex-1 items-center justify-center duration-700">
-          <img src={logoimg} alt="앱 로고" className="h-24 w-24 object-contain md:h-32 md:w-32" />
+          <img
+            src={logoimg}
+            alt="앱 로고"
+            className="h-38.25 w-24.25 object-contain md:h-60 md:w-50"
+          />
         </div>
       )}
 
-      {/* --- [C] 하단: 화이트 시트 영역 (splash가 아닐 때만 하단에서 스르륵 올라옴) --- */}
+      {/* --- 하단: 화이트 시트 영역 (splash가 아닐 때만 하단에서 스르륵 올라옴) --- */}
       {viewMode !== 'splash' && (
         <div
           className={cn(
             'flex w-full flex-col items-center bg-white transition-all duration-500 ease-in-out',
             viewMode === 'selection'
-              ? 'animate-in slide-in-from-bottom-full rounded-t-[30px] px-8 pt-10 pb-16 duration-700' // 아래에서 올라오는 애니메이션
+              ? 'animate-in slide-in-from-bottom-full h-[50vh] rounded-t-[30px] px-8 pt-12 pb-16 duration-700'
               : 'h-screen justify-center rounded-none px-8', // 이메일 폼일 땐 화면 가득 참
           )}
         >
