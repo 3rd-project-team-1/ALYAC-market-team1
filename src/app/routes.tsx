@@ -10,13 +10,30 @@ import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
 import { NotFoundPage } from '@/pages/not-found';
 
-export const router = createBrowserRouter (
-  [{ path: '/',
+export const router = createBrowserRouter([
+  {
+    path: '/',
     element: <RootLayout />,
     children: [
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: 'signin',
+        element: <SignInPage />,
+      },
+      {
+        path: 'signup',
+        element: <SignUpPage />,
+      },
+      {
+        path: 'feed',
+        element: <FeedPage />,
+      },
+      {
+        path: 'search',
+        element: <SearchPage />,
       },
       {
         path: 'profile',
@@ -27,14 +44,9 @@ export const router = createBrowserRouter (
         element: <SettingsPage />,
       },
       {
-        path: 'signin',
-        element: <SignInPage />,
+        path: '*',
+        element: <NotFoundPage />,
       },
-      { index: true, element: <HomePage />},
-      { path: 'signup', element: <SignUpPage />},
-      { path: 'feed', element: <FeedPage />},
-      { path: 'search', element: <SearchPage />},
-      { path: '*', id: 'not-found', element: <NotFoundPage />},
     ],
-  }]
-);
+  },
+]);
