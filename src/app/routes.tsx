@@ -53,6 +53,10 @@ export const router = createBrowserRouter([
         path: '*',
         element: <NotFoundPage />,
       },
+      {
+        path: 'create-post',
+        element: <CreatePostPage />,
+      }
     ],
   },
 ]);
