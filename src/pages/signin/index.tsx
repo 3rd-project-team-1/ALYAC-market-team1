@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -6,6 +6,7 @@ import { SignInForm } from '@/features/auth/ui/SignInForm';
 import facebooklogo from '@/shared/assets/icons/facebook.svg';
 import googlelogo from '@/shared/assets/icons/google.svg';
 import kakaologo from '@/shared/assets/icons/kakao.svg';
+import fulllogo from '@/shared/assets/images/full-logo.png';
 import logoimg from '@/shared/assets/images/logo.png';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
@@ -14,112 +15,124 @@ import { Button } from '@/shared/ui/button';
 
 export function SignInPage() {
   // 화면 모드 상태 관리 ('selection': 초기 화면, 'email': 입력 폼 화면)
-  const [viewMode, setViewMode] = useState<'selection' | 'email'>('selection');
-
+  const [viewMode, setViewMode] = useState<'splash' | 'selection' | 'email'>('splash');
+  useEffect(() => {
+    if (viewMode === 'splash') {
+      const timer = setTimeout(() => {
+        setViewMode('selection');
+      }, 2000);
+      return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머 정리
+    }
+  }, [viewMode]);
   return (
-    <div className="flex min-h-screen flex-col overflow-hidden bg-[#1EC800]">
-      {/* --- [1] 상단: 로고 영역 --- 
-        조건부 렌더링: viewMode가 'selection'일 때만 보입니다.
-        '이메일 로그인' 클릭 시 사라집니다.
-      */}
-      {viewMode === 'selection' && (
-        <div className="animate-in fade-in zoom-in flex flex-1 items-center justify-center duration-500">
-          <img src={logoimg} alt="ALYAC Market Logo" className="h-30 w-20 md:h-35 md:w-25" />
-          <div className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-[#1EC800] opacity-50" />
+    <div
+      // 2. [배경색 애니메이션] splash일 때는 흰색, 그 외에는 초록색 배경으로 서서히(duration-700) 바뀝니다.
+      className={cn(
+        'flex min-h-screen flex-col overflow-hidden transition-colors duration-700 ease-in-out',
+        viewMode === 'splash' ? 'bg-white' : 'bg-[#1EC800]',
+      )}
+    >
+      {/* --- [A] 스플래시 화면 (viewMode === 'splash') --- */}
+      {viewMode === 'splash' && (
+        <div className="animate-in fade-in zoom-in-95 flex flex-1 flex-col items-center justify-center duration-1000">
+          <img
+            src={fulllogo}
+            alt="알약마켓 로고"
+            className="h-24 w-24 object-contain md:h-32 md:w-32"
+          />
+          {/* 폰트는 디자인에 맞게 추후 변경 가능합니다 */}
+          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#1EC800]">알약마켓</h1>
         </div>
       )}
 
-      {/* --- [2] 하단: 화이트 시트 영역 --- 
-        viewMode에 따라 스타일이 동적으로 변합니다.
-        - selection: 둥근 모서리, 하단 배치
-        - email: 전체 화면 꽉 채움 (h-screen, rounded-none)
-      */}
-      <div
-        className={cn(
-          'flex w-full flex-col items-center bg-white transition-all duration-500 ease-in-out',
-          viewMode === 'selection'
-            ? 'rounded-t-[30px] px-8 pt-12 pb-16' // 초기 모습 (바텀 시트)
-            : 'h-screen justify-center rounded-none px-8', // 폼 모습 (전체 화면)
-        )}
-      >
-        {/* [A] 로그인 방식 선택 화면 */}
-        {viewMode === 'selection' && (
-          <div className="animate-in slide-in-from-bottom-10 fade-in flex w-full max-w-sm flex-col space-y-3 duration-500">
-            <Button
-              variant="outline"
-              className="relative w-full rounded-full border-2 border-yellow-400 py-6 text-base text-[#3C1E1E] hover:bg-[#FDD835]"
-            >
-              <img src={kakaologo} alt="Kakao Logo" className="absolute left-6 h-5 w-5" />
-              카카오톡 계정으로 로그인
-            </Button>
+      {/* --- [B] 상단: 로고 영역 (viewMode === 'selection') --- */}
+      {viewMode === 'selection' && (
+        <div className="animate-in fade-in flex flex-1 items-center justify-center duration-700">
+          <img src={logoimg} alt="앱 로고" className="h-24 w-24 object-contain md:h-32 md:w-32" />
+        </div>
+      )}
 
-            <Button
-              variant="outline"
-              className="relative w-full rounded-full border-gray-200 bg-white py-6 text-base text-gray-700 hover:bg-gray-50"
-            >
-              <img src={googlelogo} alt="Google Logo" className="absolute left-6 h-5 w-5" />
-              구글 계정으로 로그인
-            </Button>
-
-            <Button
-              variant="outline"
-              className="relative w-full rounded-full border-2 border-blue-500 py-6 hover:bg-[#166FE5]"
-            >
-              <img src={facebooklogo} alt="Facebook Logo" className="absolute left-6 h-5 w-5" />
-              페이스북 계정으로 로그인
-            </Button>
-
-            <div className="mt-8 flex items-center justify-center space-x-4 pt-4">
-              {/* 클릭 시 setViewMode('email') 실행 -> 로고 사라짐 & 흰 배경 꽉 참 */}
-              <button
-                onClick={() => setViewMode('email')}
-                className="text-sm text-gray-500 transition-colors hover:text-gray-900"
+      {/* --- [C] 하단: 화이트 시트 영역 (splash가 아닐 때만 하단에서 스르륵 올라옴) --- */}
+      {viewMode !== 'splash' && (
+        <div
+          className={cn(
+            'flex w-full flex-col items-center bg-white transition-all duration-500 ease-in-out',
+            viewMode === 'selection'
+              ? 'animate-in slide-in-from-bottom-full rounded-t-[30px] px-8 pt-10 pb-16 duration-700' // 아래에서 올라오는 애니메이션
+              : 'h-screen justify-center rounded-none px-8', // 이메일 폼일 땐 화면 가득 참
+          )}
+        >
+          {/* [C-1] 로그인 방식 선택 화면 (사진 속 UI와 똑같이 테두리 버튼으로 수정!) */}
+          {viewMode === 'selection' && (
+            <div className="animate-in fade-in flex w-full max-w-sm flex-col space-y-4 delay-300 duration-700">
+              <Button
+                variant="outline"
+                className="relative w-full rounded-full border-[#FBD914] bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
               >
-                이메일로 로그인
-              </button>
-              <span className="text-xs text-gray-300">|</span>
-              <Link
-                to="/signup"
-                className="text-sm text-gray-500 transition-colors hover:text-gray-900"
+                <img src={kakaologo} alt="Kakao Logo" className="absolute left-6 h-5 w-5" />
+                카카오톡 계정으로 로그인
+              </Button>
+
+              <Button
+                variant="outline"
+                className="relative w-full rounded-full border-gray-400 bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
               >
-                회원가입
-              </Link>
-            </div>
-          </div>
-        )}
+                <img src={googlelogo} alt="Google Logo" className="absolute left-6 h-5 w-5" />
+                구글 계정으로 로그인
+              </Button>
 
-        {/* [B] 이메일 입력 폼 화면 (전체 화면 중앙 정렬) */}
-        {viewMode === 'email' && (
-          <div className="animate-in zoom-in-95 fade-in flex w-full max-w-sm flex-col duration-500">
-            {/* 상단바: 뒤로가기 버튼 */}
-            <div className="mb-8">
-              <button
-                onClick={() => setViewMode('selection')}
-                className="flex items-center text-sm text-gray-400 transition-colors hover:text-gray-800"
+              <Button
+                variant="outline"
+                className="relative w-full rounded-full border-[#1877F2] bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
               >
-                ← 이전으로
-              </button>
-            </div>
+                <img src={facebooklogo} alt="Facebook Logo" className="absolute left-6 h-5 w-5" />
+                페이스북 계정으로 로그인
+              </Button>
 
-            <div className="mb-8 text-center">
-              <h2 className="text-2xl font-bold text-gray-900">로그인</h2>
-              <p className="mt-2 text-sm text-gray-500">이메일과 비밀번호를 입력해 주세요.</p>
+              <div className="mt-6 flex items-center justify-center space-x-4 pt-4 text-sm">
+                <button
+                  onClick={() => setViewMode('email')}
+                  className="text-gray-500 transition-colors hover:text-gray-900"
+                >
+                  이메일로 로그인
+                </button>
+                <span className="text-xs text-gray-300">|</span>
+                <Link to="/signup" className="text-gray-500 transition-colors hover:text-gray-900">
+                  회원가입
+                </Link>
+              </div>
             </div>
+          )}
 
-            {/* 로그인 폼 컴포넌트 */}
-            <SignInForm />
+          {/* [C-2] 이메일 입력 폼 화면 */}
+          {viewMode === 'email' && (
+            <div className="animate-in zoom-in-95 fade-in flex w-full max-w-sm flex-col duration-500">
+              <div className="mb-8">
+                <button
+                  onClick={() => setViewMode('selection')}
+                  className="flex items-center text-sm text-gray-400 transition-colors hover:text-gray-800"
+                >
+                  ← 이전으로
+                </button>
+              </div>
 
-            <div className="mt-8 text-center text-sm text-gray-500">
-              아직 계정이 없으신가요?{' '}
-              <Link to="/signup" className="font-bold text-[#1EC800] hover:underline">
-                회원가입
-              </Link>
+              <div className="mb-8 text-center">
+                <h2 className="text-2xl font-bold text-gray-900">로그인</h2>
+                <p className="mt-2 text-sm text-gray-500">이메일과 비밀번호를 입력해 주세요.</p>
+              </div>
+
+              <SignInForm />
+
+              <div className="mt-8 text-center text-sm text-gray-500">
+                아직 계정이 없으신가요?{' '}
+                <Link to="/signup" className="font-bold text-[#1EC800] hover:underline">
+                  회원가입
+                </Link>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
-export function SignInPage() {
-	return <h1 className='text-2xl font-semibold'>Sign In</h1>;
 }
