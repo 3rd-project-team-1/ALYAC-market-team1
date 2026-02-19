@@ -157,7 +157,7 @@ export function ProfilePage() {
               </button>
               <button
                 className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" style={{ border: '1px solid #dbdbdb' }}
-                onClick={() => navigate('/post/new')}
+                onClick={() => navigate('/create-post')}
               >
                 상품 등록
               </button>
