@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ArrowLeft, MoreVertical } from 'lucide-react';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
@@ -51,13 +50,16 @@ export function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       {/* 헤더 */}
-      <header className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+      <header className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid #f0f0f0' }}>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-gray-800"
+          className="flex items-center"
           aria-label="뒤로가기"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.4166 11H4.58325" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M10.9999 17.4167L4.58325 11L10.9999 4.58334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </button>
         <div className="relative">
           <button
@@ -65,17 +67,41 @@ export function ProfilePage() {
             className="flex h-9 w-9 items-center justify-center"
             aria-label="더보기"
           >
-            <MoreVertical className="h-5 w-5 text-gray-800" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" fill="#767676" stroke="#767676" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" fill="#767676" stroke="#767676" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" fill="#767676" stroke="#767676" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
           </button>
           {isMenuOpen && (
-            <div className="absolute right-0 top-10 z-10 w-36 overflow-hidden rounded-lg bg-white py-1 shadow-lg">
-              <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">
-                설정 및 개인정보
-              </button>
-              <button className="w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-50">
-                로그아웃
-              </button>
-            </div>
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setIsMenuOpen(false)}
+              />
+              <div className="absolute right-0 top-10 z-20 w-44 overflow-hidden rounded-lg bg-white py-2 shadow-lg">
+                <button
+                  className="w-full px-4 py-2.5 text-left text-sm text-gray-800 hover:bg-gray-50"
+                  onClick={() => { navigate('/settings'); setIsMenuOpen(false); }}
+                >
+                  설정 및 개인정보
+                </button>
+                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-800 hover:bg-gray-50">
+                  <span>테마:</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                </button>
+                <button
+                  className="w-full px-4 py-2.5 text-left text-sm text-gray-800 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  로그아웃
+                </button>
+              </div>
+            </>
           )}
         </div>
       </header>
@@ -97,9 +123,7 @@ export function ProfilePage() {
             {user?.image ? (
               <img src={user.image} alt={user.username} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-3xl text-gray-400">
-                {user?.username?.[0]?.toUpperCase() ?? '?'}
-              </div>
+              <img src="/download.png" alt="기본 프로필" className="h-full w-full object-cover" />
             )}
           </div>
 
@@ -126,13 +150,13 @@ export function ProfilePage() {
           {isMyProfile ? (
             <>
               <button
-                className="flex-1 rounded-full border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" style={{ border: '1px solid #dbdbdb' }}
                 onClick={() => navigate('/settings')}
               >
                 프로필 수정
               </button>
               <button
-                className="flex-1 rounded-full border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" style={{ border: '1px solid #dbdbdb' }}
                 onClick={() => navigate('/post/new')}
               >
                 상품 등록
@@ -141,7 +165,7 @@ export function ProfilePage() {
           ) : (
             <>
               <button
-                className="flex-1 rounded-full border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" style={{ border: '1px solid #dbdbdb' }}
                 onClick={() => navigate('/chat')}
               >
                 채팅하기
@@ -155,76 +179,54 @@ export function ProfilePage() {
       </section>
 
       {/* 게시글 탭 */}
-      <section className="flex-1 border-t border-gray-100">
+      <section className="flex-1" style={{ borderTop: '1px solid #f0f0f0' }}>
         {/* 탭 - 오른쪽 정렬 */}
-        <div className="flex justify-end border-b border-gray-100">
+        <div className="flex justify-end" style={{ borderBottom: '1px solid #f0f0f0' }}>
           <button
-            className={`flex items-center justify-center px-5 py-2.5 ${
-              viewMode === 'list' ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-300'
-            }`}
+            className="flex items-center justify-center px-5 py-2.5"
             onClick={() => setViewMode('list')}
             aria-label="리스트 뷰"
           >
-            {/* 리스트 아이콘: 좌측 점 + 우측 선 */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="9" y1="6" x2="21" y2="6" />
-              <line x1="9" y1="12" x2="21" y2="12" />
-              <line x1="9" y1="18" x2="21" y2="18" />
-              <circle cx="4" cy="6" r="1" fill="currentColor" stroke="none" />
-              <circle cx="4" cy="12" r="1" fill="currentColor" stroke="none" />
-              <circle cx="4" cy="18" r="1" fill="currentColor" stroke="none" />
-            </svg>
+            {viewMode === 'list' ? (
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.75 3.25H3.25V7.58333H22.75V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+                <path d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+                <path d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+              </svg>
+            ) : (
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.75 3.25H3.25V7.58333H22.75V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+                <path d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+                <path d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+              </svg>
+            )}
           </button>
           <button
-            className={`flex items-center justify-center px-5 py-2.5 ${
-              viewMode === 'grid' ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-300'
-            }`}
+            className="flex items-center justify-center px-5 py-2.5"
             onClick={() => setViewMode('grid')}
             aria-label="그리드 뷰"
           >
-            {/* 그리드 아이콘: 4분할 */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-            </svg>
+            {viewMode === 'grid' ? (
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+                <path d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+                <path d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+                <path d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+              </svg>
+            ) : (
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+                <path d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+                <path d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+                <path d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+              </svg>
+            )}
           </button>
         </div>
 
         {/* 빈 게시글 */}
-        <div className="flex flex-col items-center justify-center gap-2 py-20">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-12 w-12 text-gray-200"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="2" />
-            <circle cx="8.5" cy="8.5" r="1.5" />
-            <polyline points="21 15 16 10 5 21" />
-          </svg>
-          <p className="text-sm text-gray-400">아직 게시물이 없습니다.</p>
+        <div className="flex items-center justify-center py-20">
+          <p className="text-sm text-gray-400">작성한 게시물이 없습니다.</p>
         </div>
       </section>
     </div>
