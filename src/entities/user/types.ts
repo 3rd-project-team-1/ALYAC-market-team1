@@ -17,7 +17,7 @@ export interface User {
 }
 
 //회원가입
-export interface SigbupRequest {
+export interface SignupRequest {
   user: Pick<User, 'username' | 'email' | 'accountname' | 'intro' | 'image' | 'password'>;
 }
 
