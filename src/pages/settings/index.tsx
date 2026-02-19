@@ -9,7 +9,6 @@ export function SettingsPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
   const [username, setUsername] = useState('');
   const [accountname, setAccountname] = useState('');
   const [intro, setIntro] = useState('');
@@ -22,8 +21,7 @@ export function SettingsPage() {
         const tokenInfo = getTokenUserInfo();
         if (tokenInfo?.accountname) {
           const res = await userApi.getProfile(tokenInfo.accountname);
-          const u = res.data.user;
-          setUser(u);
+          const u: Omit<User, 'password'> = res.data.user;
           setUsername(u.username);
           setAccountname(u.accountname);
           setIntro(u.intro ?? '');
@@ -81,11 +79,10 @@ export function SettingsPage() {
             <path d="M10.9999 17.4167L4.58325 11L10.9999 4.58334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-        <h1 className="text-base font-semibold text-gray-900">프로필 수정</h1>
         <button
           onClick={handleSave}
-          className="text-sm font-semibold"
-          style={{ color: '#3C9E00' }}
+          className="rounded-full px-5 py-1.5 text-sm font-semibold text-white"
+          style={{ backgroundColor: '#3C9E00' }}
         >
           저장
         </button>
@@ -98,21 +95,28 @@ export function SettingsPage() {
             {imagePreview ? (
               <img src={imagePreview} alt="프로필 이미지" className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-3xl text-gray-400">
-                {username?.[0]?.toUpperCase() ?? '?'}
+              <div className="flex h-full w-full items-center justify-center">
+                {/* 스마일 아이콘 */}
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="20" cy="20" r="20" fill="#DBDBDB"/>
+                  <circle cx="14" cy="17" r="2" fill="white"/>
+                  <circle cx="26" cy="17" r="2" fill="white"/>
+                  <path d="M13 24C13 24 15.5 28 20 28C24.5 28 27 24 27 24" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
               </div>
             )}
           </div>
-          {/* 카메라 아이콘 버튼 */}
+          {/* 이미지 아이콘 버튼 */}
           <button
             onClick={handleImageClick}
             className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full"
             style={{ backgroundColor: '#3C9E00' }}
             aria-label="이미지 변경"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
+              <path d="M21 15L16 10L5 21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           <input
@@ -129,7 +133,7 @@ export function SettingsPage() {
       <div className="px-6 flex flex-col gap-6">
         {/* 사용자 이름 */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium" style={{ color: '#3C9E00' }}>
+          <label className="text-sm font-medium text-gray-900">
             사용자 이름
           </label>
           <input
@@ -144,32 +148,35 @@ export function SettingsPage() {
 
         {/* 계정 ID */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium" style={{ color: '#3C9E00' }}>
+          <label className="text-sm font-medium text-gray-900">
             계정 ID
           </label>
           <input
             type="text"
             value={accountname}
-            onChange={(e) => setAccountname(e.target.value)}
-            placeholder="영문, 숫자, 특수문자(.),(_)만 사용 가능합니다."
-            className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
+            readOnly
+            className="w-full border-b py-2 text-sm text-gray-900 outline-none"
             style={{ borderColor: '#dbdbdb' }}
           />
+          <p className="text-xs text-gray-400">계정 ID는 변경할 수 없습니다.</p>
         </div>
 
         {/* 소개 */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium" style={{ color: '#3C9E00' }}>
+          <label className="text-sm font-medium text-gray-900">
             소개
           </label>
           <input
             type="text"
             value={intro}
-            onChange={(e) => setIntro(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= 60) setIntro(e.target.value);
+            }}
             placeholder="자신에 대해 소개해 주세요!"
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
             style={{ borderColor: '#dbdbdb' }}
           />
+          <p className="text-xs text-gray-400">최대 60자</p>
         </div>
       </div>
     </div>
