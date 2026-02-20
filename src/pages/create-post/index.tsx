@@ -1,0 +1,132 @@
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
+import imageIcon from '@/shared/assets/icons/image.svg';
+import { useImageUpload } from '@/shared/hooks/useImageUpload';
+
+type FormValues = {
+  productName: string;
+  price: string;
+  link: string;
+};
+
+export function CreatePostPage() {
+  const navigate = useNavigate();
+
+  const { fileInputRef, imagePreview, handleImageClick, handleImageChange } = useImageUpload();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: { productName: '', price: '', link: '' },
+  });
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+    // TODO: 저장 API 연동
+    navigate('/profile');
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col bg-white">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* 본문 */}
+        <div className="flex flex-col gap-5 px-6 pt-6">
+          {/* 이미지 등록 */}
+          <div>
+            <p className="mb-2 text-sm font-medium text-gray-900">이미지 등록</p>
+            <div
+              className="relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl bg-gray-100"
+              onClick={handleImageClick}
+            >
+              {imagePreview && (
+                <img src={imagePreview} alt="상품 이미지" className="h-full w-full object-cover" />
+              )}
+              <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow transition-shadow hover:shadow-md">
+                <img src={imageIcon} alt="이미지 등록" width={20} height={20} />
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
+
+          {/* 상품명 */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-bold text-gray-900">상품명</label>
+            <input
+              {...register('productName', {
+                required: '상품명을 입력해주세요.',
+                minLength: { value: 2, message: '상품명은 최소 2자 이상이어야 합니다.' },
+                maxLength: { value: 15, message: '상품명은 15자 이하여야 합니다.' },
+              })}
+              placeholder="2~15자 이내여야 합니다."
+              className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
+              style={{ borderColor: errors.productName ? '#FF0000' : '#dbdbdb' }}
+            />
+            {errors.productName && (
+              <p className="text-xs text-red-500">{errors.productName.message}</p>
+            )}
+          </div>
+
+          {/* 가격 */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-bold text-gray-900">가격</label>
+            <input
+              {...register('price', {
+                pattern: { value: /^[0-9]*$/, message: '숫자만 입력 가능합니다.' },
+              })}
+              placeholder="숫자만 입력 가능합니다."
+              className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
+              style={{ borderColor: errors.price ? '#FF0000' : '#dbdbdb' }}
+              onChange={(e) => {
+                const raw = e.target.value;
+                const hasNonNumeric = /[^0-9]/.test(raw);
+                if (hasNonNumeric) {
+                  setValue('price', raw.replace(/[^0-9]/g, ''), { shouldValidate: true });
+                  // 잠깐 에러를 보여주기 위해 원본 값으로 트리거
+                  e.target.value = raw;
+                } else {
+                  setValue('price', raw, { shouldValidate: true });
+                }
+              }}
+            />
+            {errors.price && (
+              <p className="text-xs text-red-500">{errors.price.message}</p>
+            )}
+          </div>
+
+          {/* 판매 링크 */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-bold text-gray-900">판매 링크</label>
+            <input
+              {...register('link', {
+                pattern: {
+                  value: /^(https?:\/\/).*/,
+                  message: 'http:// 또는 https://로 시작해야 합니다.',
+                },
+              })}
+              type="url"
+              placeholder="URL을 입력해 주세요."
+              className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
+              style={{ borderColor: errors.link ? '#FF0000' : '#dbdbdb' }}
+            />
+            {errors.link ? (
+              <p className="text-xs text-red-500">{errors.link.message}</p>
+            ) : (
+              <p className="text-xs text-gray-400">선택 사항 (http:// 또는 https://로 시작)</p>
+            )}
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}
