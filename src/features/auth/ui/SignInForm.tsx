@@ -30,7 +30,7 @@ export function SignInForm() {
     loginMutation.mutate(
       { user: data },
       {
-        onSuccess: () => navigate('/feed'),
+        onSuccess: () => navigate('/'), // 로그인 성공 시 메인 페이지로 이동
         onError: (error) => {
           //  타입 가드: "이 에러가 통신하다가 발생한 Axios 에러가 맞아?" 라고 검사
           if (axios.isAxiosError<{ message: string }>(error)) {
