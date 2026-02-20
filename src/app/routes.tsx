@@ -9,11 +9,15 @@ import { SettingsPage } from '@/pages/settings';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
 import { NotFoundPage } from '@/pages/not-found';
+import { TopBasicNav } from '@/widgets/top-basic-nav/ui/TopBasicNav';
 
-export const router = createBrowserRouter (
-  [{ path: '/',
+
+export const router = createBrowserRouter(
+  [{
+    path: '/',
     element: <RootLayout />,
     children: [
+      { path: 'test', element: <TopBasicNav /> },
       {
         index: true,
         element: <HomePage />,
@@ -30,11 +34,11 @@ export const router = createBrowserRouter (
         path: 'signin',
         element: <SignInPage />,
       },
-      { index: true, element: <HomePage />},
-      { path: 'signup', element: <SignUpPage />},
-      { path: 'feed', element: <FeedPage />},
-      { path: 'search', element: <SearchPage />},
-      { path: '*', id: 'not-found', element: <NotFoundPage />},
+      { index: true, element: <HomePage /> },
+      { path: 'signup', element: <SignUpPage /> },
+      { path: 'feed', element: <FeedPage /> },
+      { path: 'search', element: <SearchPage /> },
+      { path: '*', id: 'not-found', element: <NotFoundPage /> },
     ],
   }]
 );
