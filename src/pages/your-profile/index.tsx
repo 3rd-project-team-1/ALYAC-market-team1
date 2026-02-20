@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
+import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 type ViewMode = 'grid' | 'list';
 
@@ -57,7 +58,7 @@ export function YourProfilePage() {
             {user?.image ? (
               <img src={user.image} alt={user.username} className="h-full w-full object-cover" />
             ) : (
-              <img src="/download.png" alt="기본 프로필" className="h-full w-full object-cover" />
+              <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
             )}
           </div>
 
