@@ -9,15 +9,12 @@ import { SettingsPage } from '@/pages/settings';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
 import { NotFoundPage } from '@/pages/not-found';
-import { TopBasicNav } from '@/widgets/top-basic-nav/ui/TopBasicNav';
-
 
 export const router = createBrowserRouter(
   [{
     path: '/',
     element: <RootLayout />,
     children: [
-      { path: 'test', element: <TopBasicNav /> },
       {
         index: true,
         element: <HomePage />,
