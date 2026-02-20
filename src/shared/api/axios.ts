@@ -1,6 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-// (경로는 실제 프로젝트 구조에 맞게 수정해 주세요)
 import { getRefreshToken, getToken, removeToken, saveToken } from '@/entities/auth/lib/token';
 
 // 타입을 확장
