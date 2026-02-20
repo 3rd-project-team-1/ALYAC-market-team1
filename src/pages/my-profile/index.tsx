@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
+import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 type ViewMode = 'grid' | 'list';
 
@@ -64,7 +65,7 @@ export function MyProfilePage() {
             {user?.image ? (
               <img src={user.image} alt={user.username} className="h-full w-full object-cover" />
             ) : (
-              <img src="/download.png" alt="기본 프로필" className="h-full w-full object-cover" />
+              <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
             )}
           </div>
 
@@ -92,7 +93,7 @@ export function MyProfilePage() {
             <>
               <button
                 className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" style={{ border: '1px solid #dbdbdb' }}
-                onClick={() => navigate('/settings')}
+                onClick={() => navigate('/edit-profile')}
               >
                 프로필 수정
               </button>

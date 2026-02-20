@@ -4,9 +4,9 @@ import { RootLayout } from '@/app/layouts/RootLayout';
 import { HomePage } from '@/pages/home';
 import { SearchPage } from '@/pages/search';
 import { FeedPage } from '@/pages/feed';
-import { MyProfilePage } from '@/pages/myprofile';
-import { YourProfilePage } from '@/pages/yourprofile';
-import { SettingsPage } from '@/pages/settings';
+import { MyProfilePage } from '@/pages/my-profile';
+import { YourProfilePage } from '@/pages/your-profile';
+import { EditProfilePage } from '@/pages/edit-profile';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
 import { CreatePostPage } from '@/pages/create-post';
@@ -38,16 +38,16 @@ export const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        path: 'myprofile',
+        path: 'my-profile',
         element: <MyProfilePage />,
       },
       {
-        path: 'yourprofile/:accountname',
+        path: 'your-profile/:accountname',
         element: <YourProfilePage />,
       },
       {
-        path: 'settings',
-        element: <SettingsPage />,
+        path: 'edit-profile',
+        element: <EditProfilePage />,
       },
       {
         path: '*',

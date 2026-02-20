@@ -3,8 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
+import uploadFile from '@/shared/assets/icons/upload-file.svg';
+import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
-export function SettingsPage() {
+export function EditProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [username, setUsername] = useState('');
@@ -67,29 +69,16 @@ export function SettingsPage() {
             {imagePreview ? (
               <img src={imagePreview} alt="프로필 이미지" className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                {/* 스마일 아이콘 */}
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="20" cy="20" r="20" fill="#DBDBDB"/>
-                  <circle cx="14" cy="17" r="2" fill="white"/>
-                  <circle cx="26" cy="17" r="2" fill="white"/>
-                  <path d="M13 24C13 24 15.5 28 20 28C24.5 28 27 24 27 24" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
+              <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
             )}
           </div>
           {/* 이미지 아이콘 버튼 */}
           <button
             onClick={handleImageClick}
-            className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full"
-            style={{ backgroundColor: '#3C9E00' }}
+            className="absolute bottom-0 right-0 transition-all hover:brightness-75"
             aria-label="이미지 변경"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
-              <path d="M21 15L16 10L5 21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <img src={uploadFile} alt="이미지 변경" width={28} height={28} />
           </button>
           <input
             ref={fileInputRef}
@@ -112,10 +101,13 @@ export function SettingsPage() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="2~10자 이내여야 합니다."
+            placeholder="이름을 입력하세요."
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: '#dbdbdb' }}
+            style={{ borderColor: username.length > 0 && username.length < 2 ? '#FF0000' : '#dbdbdb' }}
           />
+          {username.length > 0 && username.length < 2 && (
+            <p className="text-xs text-red-500">사용자 이름은 최소 2자 이상이어야 합니다.</p>
+          )}
         </div>
 
         {/* 계정 ID */}
@@ -144,7 +136,7 @@ export function SettingsPage() {
             onChange={(e) => {
               if (e.target.value.length <= 60) setIntro(e.target.value);
             }}
-            placeholder="자신에 대해 소개해 주세요!"
+            placeholder="간단한 자기 소개를 입력하세요."
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
             style={{ borderColor: '#dbdbdb' }}
           />
