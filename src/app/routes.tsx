@@ -6,13 +6,13 @@ import { RequireGuest } from '@/features/auth/ui/RequireGuest';
 import { CreatePostPage } from '@/pages/create-post';
 import { FeedPage } from '@/pages/feed';
 import { HomePage } from '@/pages/home';
-import { MyProfilePage } from '@/pages/myprofile';
+import { MyProfilePage } from '@/pages/my-profile';
 import { NotFoundPage } from '@/pages/not-found';
 import { SearchPage } from '@/pages/search';
-import { SettingsPage } from '@/pages/settings';
+import { EditProfilePage } from '@/pages/edit-profile';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
-import { YourProfilePage } from '@/pages/yourprofile';
+import { YourProfilePage } from '@/pages/your-profile';
 
 export const router = createBrowserRouter([
   {
@@ -36,16 +36,16 @@ export const router = createBrowserRouter([
             element: <SearchPage />,
           },
           {
-            path: 'myprofile',
+            path: 'my-profile',
             element: <MyProfilePage />,
           },
           {
-            path: 'yourprofile/:accountname',
+            path: 'your-profile/:accountname',
             element: <YourProfilePage />,
           },
           {
-            path: 'settings',
-            element: <SettingsPage />,
+            path: 'edit-profile',
+            element: <EditProfilePage />,
           },
           {
             path: 'create-post',
