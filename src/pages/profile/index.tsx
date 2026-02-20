@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
-import { userApi } from '@/entities/user/api';
-import type { User } from '@/entities/user/types';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
@@ -13,40 +11,10 @@ type ViewMode = 'grid' | 'list';
 export function ProfilePage() {
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
+  const { user, isLoading, isMyProfile } = useProfile(accountname);
 
-  const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMyProfile, setIsMyProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const tokenInfo = getTokenUserInfo();
-        const myAccountname = tokenInfo?.accountname;
-
-        if (accountname) {
-          // 타인 프로필: URL의 accountname으로 조회
-          const res = await userApi.getProfile(accountname);
-          setUser(res.data.user);
-          // 내 계정과 같으면 내 프로필로 판단
-          setIsMyProfile(myAccountname === accountname);
-        } else {
-          // 내 프로필: 토큰으로 조회
-          const res = await userApi.getMyProfile();
-          setUser(res.data.user);
-          setIsMyProfile(true);
-        }
-      } catch {
-        // 에러 시 무시
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [accountname]);
 
   if (isLoading) {
     return (
@@ -118,7 +86,6 @@ export function ProfilePage() {
             </>
           ) : (
             <>
-              {/* 채팅 아이콘 버튼 */}
               <button
                 className="flex h-10 w-10 items-center justify-center rounded-full"
                 style={{ border: '1px solid #dbdbdb' }}
@@ -127,7 +94,6 @@ export function ProfilePage() {
                 <img src={messageCircle} alt="채팅" width={20} height={20} />
               </button>
 
-              {/* 팔로우/언팔로우 버튼 */}
               <button
                 className="rounded-full px-8 py-2 text-sm font-semibold text-white"
                 style={{ backgroundColor: isFollowing ? '#dbdbdb' : '#3C9E00' }}
@@ -136,7 +102,6 @@ export function ProfilePage() {
                 {isFollowing ? '언팔로우' : '팔로우'}
               </button>
 
-              {/* 공유 아이콘 버튼 */}
               <button
                 className="flex h-10 w-10 items-center justify-center rounded-full"
                 style={{ border: '1px solid #dbdbdb' }}
