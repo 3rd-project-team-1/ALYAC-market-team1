@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 import { saveToken } from '@/entities/auth/lib/token';
 import { AuthResponse, LoginRequest, SignupRequest } from '@/entities/user/types';
@@ -29,13 +30,14 @@ const loginApi = async (data: LoginRequest) => {
  * 사용법: const { mutate: signup, isPending } = useSignupMutation();
  */
 export const useSignupMutation = () => {
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: signupApi,
     onSuccess: (data) => {
       //  회원가입 응답에도 토큰이 옴 (자동 로그인 처리)
       const { token, refreshToken } = data.user;
       saveToken(token, refreshToken);
-
+      navigate('/');
       // TODO: 성공 알림(Toast) 띄우기 및 메인 페이지로 이동
       console.log('회원가입 성공!', data.user.username);
     },
@@ -51,13 +53,14 @@ export const useSignupMutation = () => {
  * 사용법: const { mutate: login, isPending, isError } = useLoginMutation();
  */
 export const useLoginMutation = () => {
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
       // 로그인 성공 시 토큰 저장
       const { token, refreshToken } = data.user;
       saveToken(token, refreshToken);
-
+      navigate('/');
       // TODO: 전역 상태(Zustand 등)에 유저 정보 저장 및 메인 페이지로 이동
       console.log('로그인 성공!', data.user.accountname);
     },
