@@ -1,6 +1,8 @@
 import React from "react";
 import uploadImage from "@/assets/shared/icons/upload-image.svg";
 import uploadImageSmall from "@/assets/shared/icons/upload-s-image.svg";
+import uploadFile from "@/assets/shared/icons/upload-file.svg";
+import imgButton from "@/assets/shared/icons/img-button.svg";
 
 // 공통 타입
 interface IconButtonProps {
@@ -11,7 +13,7 @@ interface IconButtonProps {
 // 업로드 이미지 컴포넌트
 
 // 큰 프로필 업로드 (upload-l-image.svg)
-export const UploadImageLarge = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
+export const UploadImageLargeBtn = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
     <div
         onClick={onClick}
         className="w-[110px] h-[110px] rounded-full
@@ -24,7 +26,7 @@ export const UploadImageLarge = ({ onClick }: { onClick?: React.MouseEventHandle
 );
 
 // 작은 프로필 업로드 (upload-s-image.svg)
-export const UploadImageSmall = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
+export const UploadImageSmallBtn = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
     <div
         onClick={onClick}
         className="w-[42px] h-[42px] rounded-[55px]
@@ -35,26 +37,28 @@ export const UploadImageSmall = ({ onClick }: { onClick?: React.MouseEventHandle
         <img src={uploadImageSmall} alt="upload-small-image" />
     </div>
 );
-/*
-//TODO: 미완
-// 이미지 버튼 (image-button)
-export const ImageButtonDisabled = () => (
-    <div className="w-[56px] h-[56px] rounded-full bg-[#DBDBDB] border border-[#D4D4D4] flex items-center justify-center cursor-not-allowed">
-        <img src={uploadImage} alt="upload-image" />
+
+// 파일 업로드 버튼 (upload-file)
+export const UploadFileBtn = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
+
+    <div
+        onClick={onClick}
+        className="w-[50px] h-[50px] rounded-full
+            bg-[#4CAF50]
+            flex items-center justify-center
+            cursor-pointer hover:brightness-95 transition-all">
+        <img src={uploadFile} alt="upload-file" />
     </div>
 );
 
-// 이미지 업로드 (원형, 활성/초록)
-export const UploadImageActive = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
+// 이미지 버튼 (img-button)
+export const ImageBtn = ({ onClick }: { onClick?: React.MouseEventHandler<HTMLDivElement> }) => (
     <div
         onClick={onClick}
-        className="w-[56px] h-[56px] rounded-full bg-[#11CC27] flex items-center justify-center cursor-pointer hover:brightness-110 transition-all"
-    >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" strokeWidth="1.5" />
-            <circle cx="8.5" cy="9.5" r="1.5" stroke="white" strokeWidth="1.5" />
-            <path d="M3 15l5-4 4 3 3-2 6 5" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
-        </svg>
+        className="w-[36px] h-[36px]
+            flex items-center justify-center
+            cursor-pointer hover:brightness-95 transition-all">
+        <img src={imgButton} alt="img-button" />
     </div>
 );
 
@@ -307,4 +311,3 @@ export const FacebookButton = ({ onClick }: { onClick?: React.MouseEventHandler<
         </svg>
     </button>
 );
-*/
