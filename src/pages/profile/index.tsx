@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
@@ -27,14 +28,12 @@ export function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       {/* 프로필 정보 */}
-      <section className="px-6 pb-6 pt-6">
+      <section className="px-6 pt-6 pb-6">
         {/* 아바타 + 팔로워/팔로잉 */}
         <div className="flex items-center justify-center gap-12">
           {/* 팔로워 */}
           <button className="flex flex-col items-center gap-1">
-            <span className="text-xl font-bold text-gray-900">
-              {user?.followers?.length ?? 0}
-            </span>
+            <span className="text-xl font-bold text-gray-900">{user?.followers?.length ?? 0}</span>
             <span className="text-xs text-gray-500">Followers</span>
           </button>
 
@@ -49,9 +48,7 @@ export function ProfilePage() {
 
           {/* 팔로잉 */}
           <button className="flex flex-col items-center gap-1">
-            <span className="text-xl font-bold text-gray-900">
-              {user?.following?.length ?? 0}
-            </span>
+            <span className="text-xl font-bold text-gray-900">{user?.following?.length ?? 0}</span>
             <span className="text-xs text-gray-500">Followings</span>
           </button>
         </div>
@@ -60,9 +57,7 @@ export function ProfilePage() {
         <div className="mt-4 flex flex-col items-center">
           <h1 className="text-base font-semibold text-gray-900">{user?.username ?? '이름 없음'}</h1>
           <p className="mt-0.5 text-sm text-gray-400">@{user?.accountname ?? ''}</p>
-          {user?.intro && (
-            <p className="mt-1.5 text-center text-sm text-gray-500">{user.intro}</p>
-          )}
+          {user?.intro && <p className="mt-1.5 text-center text-sm text-gray-500">{user.intro}</p>}
         </div>
 
         {/* 버튼 */}
@@ -123,16 +118,58 @@ export function ProfilePage() {
             aria-label="리스트 뷰"
           >
             {viewMode === 'list' ? (
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.75 3.25H3.25V7.58333H22.75V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
-                <path d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
-                <path d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 26 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M22.75 3.25H3.25V7.58333H22.75V3.25Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
               </svg>
             ) : (
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.75 3.25H3.25V7.58333H22.75V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
-                <path d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
-                <path d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 26 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M22.75 3.25H3.25V7.58333H22.75V3.25Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
               </svg>
             )}
           </button>
@@ -142,18 +179,70 @@ export function ProfilePage() {
             aria-label="그리드 뷰"
           >
             {viewMode === 'grid' ? (
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
-                <path d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
-                <path d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
-                <path d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z" fill="#767676" stroke="#767676" strokeLinecap="round"/>
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 26 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z"
+                  fill="#767676"
+                  stroke="#767676"
+                  strokeLinecap="round"
+                />
               </svg>
             ) : (
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
-                <path d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
-                <path d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
-                <path d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round"/>
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 26 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z"
+                  fill="#DBDBDB"
+                  stroke="#DBDBDB"
+                  strokeLinecap="round"
+                />
               </svg>
             )}
           </button>
