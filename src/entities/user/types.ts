@@ -19,11 +19,11 @@ export interface User {
 //회원가입
 export interface SignupRequest {
   user: Pick<User, 'username' | 'email' | 'accountname' | 'intro' | 'image' | 'password'>;
-}
+} //Pick : User 타입에서 여러개의 속성을 선택하여 SignupRequest 타입의 user 속성으로 사용
 
 export interface AuthResponse {
   user: Omit<User, 'password'> & { token: string; refreshToken: string };
-}
+} //Omit : User 타입에서 password 속성을 제외한 나머지 속성들과 token, refreshToken을 포함하는 AuthResponse 타입의 user 속성으로 사용
 
 //로그인
 export interface LoginRequest {
