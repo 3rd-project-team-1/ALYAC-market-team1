@@ -12,15 +12,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
     primary: "bg-[#11CC27] text-white hover:brightness-110 active:scale-[0.97]",
-    disabled: "bg-[#B3F5BB] text-white cursor-not-allowed pointer-events-none",
-    active: "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 active:scale-[0.97]",
+    disabled: "bg-[#A7FFB9] text-white cursor-not-allowed pointer-events-none",
+    active: "bg-white text-[#767676] border border-[#E5E5E5] hover:bg-gray-50 active:scale-[0.97]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-    l: "w-[322px] h-[44px] text-[15px] font-bold",
-    m: "h-[38px] px-7 text-[14px] font-bold",
-    ms: "h-[38px] px-5 text-[14px] font-bold",
-    s: "h-[32px] px-4 text-[13px] font-bold",
+    l: "w-[322px] h-[44px] rounded-[44px] px-[148px] py-[13px] text-[14px] font-medium",
+    m: "w-[120px] h-[34px] rounded-[30px] px-[40px] py-[8px] text-[14px] font-medium",
+    ms: "w-[90px] h-[32px] rounded-[32px] px-[31px] py-[7px] text-[14px] font-medium",
+    s: "w-[56px] h-[28px] rounded-[26px] px-[11px] py-[7px] text-[12px] font-medium",
 };
 
 export const Button = ({
