@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
+import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 export function EditProfilePage() {
@@ -74,15 +75,10 @@ export function EditProfilePage() {
           {/* 이미지 아이콘 버튼 */}
           <button
             onClick={handleImageClick}
-            className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full"
-            style={{ backgroundColor: '#3C9E00' }}
+            className="absolute bottom-0 right-0 transition-all hover:brightness-75"
             aria-label="이미지 변경"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
-              <path d="M21 15L16 10L5 21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <img src={uploadFile} alt="이미지 변경" width={28} height={28} />
           </button>
           <input
             ref={fileInputRef}

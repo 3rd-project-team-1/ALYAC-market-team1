@@ -1,13 +1,17 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import imageIcon from '@/shared/assets/icons/image.svg';
+
 export function CreatePostPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [productName, setProductName] = useState('');
+  const [productNameTouched, setProductNameTouched] = useState(false);
   const [price, setPrice] = useState('');
+  const [priceError, setPriceError] = useState(false);
   const [link, setLink] = useState('');
 
   const handleImageClick = () => {
@@ -26,8 +30,10 @@ export function CreatePostPage() {
   };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    setPrice(value);
+    const raw = e.target.value;
+    const hasNonNumeric = /[^0-9]/.test(raw);
+    setPriceError(hasNonNumeric);
+    setPrice(raw.replace(/[^0-9]/g, ''));
   };
 
   const handleSave = () => {
@@ -49,12 +55,8 @@ export function CreatePostPage() {
             {imagePreview && (
               <img src={imagePreview} alt="상품 이미지" className="h-full w-full object-cover" />
             )}
-            <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-white shadow">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="#767676" strokeWidth="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5" fill="#767676"/>
-                <path d="M21 15L16 10L5 21" stroke="#767676" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow transition-shadow hover:shadow-md">
+              <img src={imageIcon} alt="이미지 등록" width={20} height={20} />
             </div>
             <input
               ref={fileInputRef}
@@ -72,11 +74,17 @@ export function CreatePostPage() {
           <input
             type="text"
             value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            onChange={(e) => { setProductName(e.target.value); setProductNameTouched(true); }}
             placeholder="2~15자 이내여야 합니다."
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: '#dbdbdb' }}
+            style={{ borderColor: productNameTouched && (productName.length === 0 || productName.length < 2) ? '#FF0000' : '#dbdbdb' }}
           />
+          {productNameTouched && productName.length === 0 && (
+            <p className="text-xs text-red-500">상품명을 입력해주세요.</p>
+          )}
+          {productNameTouched && productName.length > 0 && productName.length < 2 && (
+            <p className="text-xs text-red-500">상품명은 최소 2자 이상이어야 합니다.</p>
+          )}
         </div>
 
         {/* 가격 */}
@@ -88,8 +96,11 @@ export function CreatePostPage() {
             onChange={handlePriceChange}
             placeholder="숫자만 입력 가능합니다."
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: '#dbdbdb' }}
+            style={{ borderColor: priceError ? '#FF0000' : '#dbdbdb' }}
           />
+          {priceError && (
+            <p className="text-xs text-red-500">가격을 입력해주세요.</p>
+          )}
         </div>
 
         {/* 판매 링크 */}
