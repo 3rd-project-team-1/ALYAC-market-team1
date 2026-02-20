@@ -44,7 +44,7 @@ export const UploadFileBtn = ({ onClick }: { onClick?: React.MouseEventHandler<H
     <div
         onClick={onClick}
         className="w-[50px] h-[50px] rounded-full
-            bg-[#4CAF50]
+            bg-[#11CC27]
             flex items-center justify-center
             cursor-pointer hover:brightness-95 transition-all">
         <img src={uploadFile} alt="upload-file" />
