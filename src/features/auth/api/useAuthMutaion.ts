@@ -5,7 +5,7 @@ import { AuthResponse, LoginRequest, SignupRequest } from '@/entities/user/types
 import axiosInstance from '@/shared/api/axios';
 
 // ==========================================
-// 1. 순수 API 호출 함수 (fetcher)
+// 순수 API 호출 함수 (fetcher)
 // ==========================================
 
 // 회원가입 API 호출
@@ -21,7 +21,7 @@ const loginApi = async (data: LoginRequest) => {
 };
 
 // ==========================================
-// 2. TanStack Query Custom Hooks
+// TanStack Query Custom Hooks
 // ==========================================
 
 /**
