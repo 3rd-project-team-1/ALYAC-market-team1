@@ -93,7 +93,7 @@ axiosInstance.interceptors.response.use(
           const noTokenError = new Error('No refresh token');
           onTokenRefreshFailed(noTokenError);
           removeToken();
-          // window.location.href = '/signin';
+          window.location.href = '/signin';
           throw noTokenError;
         }
         //  Body에 refreshToken을 담아서 요청 및 중복 방지
@@ -119,7 +119,7 @@ axiosInstance.interceptors.response.use(
         //  갱신 실패 시: 대기열의 요청들을 쳐내고(reject) 로그아웃 처리
         onTokenRefreshFailed(refreshError);
         removeToken();
-        // window.location.href = '/signin';
+        window.location.href = '/signin';
         return Promise.reject(refreshError);
       } finally {
         // 성공하든 실패하든 갱신 상태 초기화

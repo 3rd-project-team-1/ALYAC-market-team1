@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
@@ -9,19 +10,33 @@ import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 type ViewMode = 'grid' | 'list';
 
-export function YourProfilePage() {
+export function ProfilePage() {
   const { accountname } = useParams<{ accountname: string }>();
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [isLoading, setIsLoading] = useState(true);
+  const [isMyProfile, setIsMyProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        const tokenInfo = getTokenUserInfo();
+        const myAccountname = tokenInfo?.accountname;
+
         if (accountname) {
+          // 타인 프로필: URL의 accountname으로 조회
           const res = await userApi.getProfile(accountname);
           setUser(res.data.user);
+          // 내 계정과 같으면 내 프로필로 판단
+          setIsMyProfile(myAccountname === accountname);
+        } else {
+          // 내 프로필: 토큰으로 조회
+          const res = await userApi.getMyProfile();
+          setUser(res.data.user);
+          setIsMyProfile(true);
         }
       } catch {
         // 에러 시 무시
@@ -82,34 +97,55 @@ export function YourProfilePage() {
           )}
         </div>
 
-        {/* 버튼: 채팅 | 팔로우 | 공유 */}
-        <div className="mt-5 flex items-center justify-center gap-4">
-          {/* 채팅 아이콘 버튼 */}
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded-full"
-            style={{ border: '1px solid #dbdbdb' }}
-            aria-label="채팅하기"
-          >
-            <img src={messageCircle} alt="채팅" width={20} height={20} />
-          </button>
+        {/* 버튼 */}
+        <div className="mt-5 flex items-center justify-center gap-3">
+          {isMyProfile ? (
+            <>
+              <button
+                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                style={{ border: '1px solid #dbdbdb' }}
+                onClick={() => navigate('/edit-profile')}
+              >
+                프로필 수정
+              </button>
+              <button
+                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                style={{ border: '1px solid #dbdbdb' }}
+                onClick={() => navigate('/create-post')}
+              >
+                상품 등록
+              </button>
+            </>
+          ) : (
+            <>
+              {/* 채팅 아이콘 버튼 */}
+              <button
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ border: '1px solid #dbdbdb' }}
+                aria-label="채팅하기"
+              >
+                <img src={messageCircle} alt="채팅" width={20} height={20} />
+              </button>
 
-          {/* 팔로우/언팔로우 버튼 */}
-          <button
-            className="rounded-full px-8 py-2 text-sm font-semibold text-white"
-            style={{ backgroundColor: isFollowing ? '#dbdbdb' : '#3C9E00' }}
-            onClick={() => setIsFollowing((prev) => !prev)}
-          >
-            {isFollowing ? '언팔로우' : '팔로우'}
-          </button>
+              {/* 팔로우/언팔로우 버튼 */}
+              <button
+                className="rounded-full px-8 py-2 text-sm font-semibold text-white"
+                style={{ backgroundColor: isFollowing ? '#dbdbdb' : '#3C9E00' }}
+                onClick={() => setIsFollowing((prev) => !prev)}
+              >
+                {isFollowing ? '언팔로우' : '팔로우'}
+              </button>
 
-          {/* 공유 아이콘 버튼 */}
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded-full"
-            style={{ border: '1px solid #dbdbdb' }}
-            aria-label="공유하기"
-          >
-            <img src={shareIcon} alt="공유" width={20} height={20} />
-          </button>
+              {/* 공유 아이콘 버튼 */}
+              <button
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ border: '1px solid #dbdbdb' }}
+                aria-label="공유하기"
+              >
+                <img src={shareIcon} alt="공유" width={20} height={20} />
+              </button>
+            </>
+          )}
         </div>
       </section>
 

@@ -4,15 +4,14 @@ import { RootLayout } from '@/app/layouts/RootLayout';
 import { RequireAuth } from '@/features/auth/ui/RequireAuth';
 import { RequireGuest } from '@/features/auth/ui/RequireGuest';
 import { CreatePostPage } from '@/pages/create-post';
+import { EditProfilePage } from '@/pages/edit-profile';
 import { FeedPage } from '@/pages/feed';
 import { HomePage } from '@/pages/home';
-import { MyProfilePage } from '@/pages/my-profile';
 import { NotFoundPage } from '@/pages/not-found';
+import { ProfilePage } from '@/pages/profile';
 import { SearchPage } from '@/pages/search';
-import { EditProfilePage } from '@/pages/edit-profile';
 import { SignInPage } from '@/pages/signin';
 import { SignUpPage } from '@/pages/signup';
-import { YourProfilePage } from '@/pages/your-profile';
 
 export const router = createBrowserRouter([
   {
@@ -36,12 +35,12 @@ export const router = createBrowserRouter([
             element: <SearchPage />,
           },
           {
-            path: 'my-profile',
-            element: <MyProfilePage />,
+            path: 'profile',
+            element: <ProfilePage />,
           },
           {
-            path: 'your-profile/:accountname',
-            element: <YourProfilePage />,
+            path: 'profile/:accountname',
+            element: <ProfilePage />,
           },
           {
             path: 'edit-profile',
