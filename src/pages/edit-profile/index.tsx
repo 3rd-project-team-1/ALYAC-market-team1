@@ -1,19 +1,34 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import type { User } from '@/entities/user/types';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { useImageUpload } from '@/shared/hooks/useImageUpload';
+
+type FormValues = {
+  username: string;
+  intro: string;
+};
 
 export function EditProfilePage() {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [username, setUsername] = useState('');
   const [accountname, setAccountname] = useState('');
-  const [intro, setIntro] = useState('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { fileInputRef, imagePreview, setImagePreview, handleImageClick, handleImageChange } =
+    useImageUpload();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: { username: '', intro: '' },
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,9 +37,9 @@ export function EditProfilePage() {
         if (tokenInfo?.accountname) {
           const res = await userApi.getProfile(tokenInfo.accountname);
           const u: Omit<User, 'password'> = res.data.user;
-          setUsername(u.username);
+          // API 데이터로 폼 초기값 세팅
+          reset({ username: u.username, intro: u.intro ?? '' });
           setAccountname(u.accountname);
-          setIntro(u.intro ?? '');
           setImagePreview(u.image ?? null);
         }
       } catch {
@@ -35,21 +50,11 @@ export function EditProfilePage() {
     };
 
     fetchProfile();
-  }, []);
+  }, [reset, setImagePreview]);
 
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+    // TODO: 프로필 수정 API 연동
   };
 
   if (isLoading) {
@@ -72,8 +77,8 @@ export function EditProfilePage() {
               <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
             )}
           </div>
-          {/* 이미지 아이콘 버튼 */}
           <button
+            type="button"
             onClick={handleImageClick}
             className="absolute bottom-0 right-0 transition-all hover:brightness-75"
             aria-label="이미지 변경"
@@ -91,30 +96,28 @@ export function EditProfilePage() {
       </div>
 
       {/* 입력 폼 */}
-      <div className="px-6 flex flex-col gap-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="px-6 flex flex-col gap-6">
         {/* 사용자 이름 */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-900">
-            사용자 이름
-          </label>
+          <label className="text-sm font-medium text-gray-900">사용자 이름</label>
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            {...register('username', {
+              required: '사용자 이름을 입력해주세요.',
+              minLength: { value: 2, message: '사용자 이름은 최소 2자 이상이어야 합니다.' },
+              maxLength: { value: 10, message: '사용자 이름은 10자 이하여야 합니다.' },
+            })}
             placeholder="이름을 입력하세요."
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: username.length > 0 && username.length < 2 ? '#FF0000' : '#dbdbdb' }}
+            style={{ borderColor: errors.username ? '#FF0000' : '#dbdbdb' }}
           />
-          {username.length > 0 && username.length < 2 && (
-            <p className="text-xs text-red-500">사용자 이름은 최소 2자 이상이어야 합니다.</p>
+          {errors.username && (
+            <p className="text-xs text-red-500">{errors.username.message}</p>
           )}
         </div>
 
         {/* 계정 ID */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-900">
-            계정 ID
-          </label>
+          <label className="text-sm font-medium text-gray-900">계정 ID</label>
           <input
             type="text"
             value={accountname}
@@ -127,22 +130,22 @@ export function EditProfilePage() {
 
         {/* 소개 */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-900">
-            소개
-          </label>
+          <label className="text-sm font-medium text-gray-900">소개</label>
           <input
-            type="text"
-            value={intro}
-            onChange={(e) => {
-              if (e.target.value.length <= 60) setIntro(e.target.value);
-            }}
+            {...register('intro', {
+              maxLength: { value: 60, message: '소개는 60자 이하여야 합니다.' },
+            })}
             placeholder="간단한 자기 소개를 입력하세요."
             className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: '#dbdbdb' }}
+            style={{ borderColor: errors.intro ? '#FF0000' : '#dbdbdb' }}
           />
-          <p className="text-xs text-gray-400">최대 60자</p>
+          {errors.intro ? (
+            <p className="text-xs text-red-500">{errors.intro.message}</p>
+          ) : (
+            <p className="text-xs text-gray-400">최대 60자</p>
+          )}
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -11,12 +11,8 @@ const SignInPage = lazy(() => import('@/pages/signin').then((m) => ({ default: m
 const SignUpPage = lazy(() => import('@/pages/signup').then((m) => ({ default: m.SignUpPage })));
 const FeedPage = lazy(() => import('@/pages/feed').then((m) => ({ default: m.FeedPage })));
 const SearchPage = lazy(() => import('@/pages/search').then((m) => ({ default: m.SearchPage })));
-const MyProfilePage = lazy(() =>
-  import('@/pages/my-profile').then((m) => ({ default: m.MyProfilePage })),
-);
-const YourProfilePage = lazy(() =>
-  import('@/pages/your-profile').then((m) => ({ default: m.YourProfilePage })),
-);
+const ProfilePage = lazy(() => import('@/pages/profile').then((m) => ({ default: m.ProfilePage })));
+
 const EditProfilePage = lazy(() =>
   import('@/pages/edit-profile').then((m) => ({ default: m.EditProfilePage })),
 );
@@ -44,12 +40,12 @@ export const router = createBrowserRouter([
             element: <SearchPage />,
           },
           {
-            path: 'my-profile',
-            element: <MyProfilePage />,
+            path: 'profile',
+            element: <ProfilePage />,
           },
           {
-            path: 'your-profile/:accountname',
-            element: <YourProfilePage />,
+            path: 'profile/:accountname',
+            element: <ProfilePage />,
           },
           {
             path: 'edit-profile',

@@ -1,43 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
-import { userApi } from '@/entities/user/api';
-import type { User } from '@/entities/user/types';
+import { useProfile } from '@/entities/user/hooks/useProfile';
+import messageCircle from '@/shared/assets/icons/message-circle.svg';
+import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 type ViewMode = 'grid' | 'list';
 
-export function MyProfilePage() {
+export function ProfilePage() {
+  const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
-  const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
+  const { user, isLoading, isMyProfile } = useProfile(accountname);
+
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMyProfile, setIsMyProfile] = useState(false);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const tokenInfo = getTokenUserInfo();
-        if (tokenInfo?.accountname) {
-          const res = await userApi.getProfile(tokenInfo.accountname);
-          setUser(res.data.user);
-          setIsMyProfile(true);
-        } else {
-          const res = await userApi.getMyProfile();
-          setUser(res.data.user);
-          setIsMyProfile(true);
-        }
-      } catch {
-        // 에러 시 무시
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   if (isLoading) {
     return (
@@ -59,7 +37,7 @@ export function MyProfilePage() {
             <span className="text-xs text-gray-500">Followers</span>
           </button>
 
-          {/* 아바타 - 테두리 없음 */}
+          {/* 아바타 */}
           <div className="h-24 w-24 overflow-hidden rounded-full bg-gray-100">
             {user?.image ? (
               <img src={user.image} alt={user.username} className="h-full w-full object-cover" />
@@ -83,7 +61,7 @@ export function MyProfilePage() {
         </div>
 
         {/* 버튼 */}
-        <div className="mt-5 flex gap-3">
+        <div className="mt-5 flex items-center justify-center gap-3">
           {isMyProfile ? (
             <>
               <button
@@ -104,14 +82,27 @@ export function MyProfilePage() {
           ) : (
             <>
               <button
-                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="flex h-10 w-10 items-center justify-center rounded-full"
                 style={{ border: '1px solid #dbdbdb' }}
-                onClick={() => navigate('/chat')}
+                aria-label="채팅하기"
               >
-                채팅하기
+                <img src={messageCircle} alt="채팅" width={20} height={20} />
               </button>
-              <button className="flex-1 rounded-full bg-green-500 py-2 text-sm font-medium text-white hover:bg-green-600">
-                팔로우
+
+              <button
+                className="rounded-full px-8 py-2 text-sm font-semibold text-white"
+                style={{ backgroundColor: isFollowing ? '#dbdbdb' : '#3C9E00' }}
+                onClick={() => setIsFollowing((prev) => !prev)}
+              >
+                {isFollowing ? '언팔로우' : '팔로우'}
+              </button>
+
+              <button
+                className="flex h-10 w-10 items-center justify-center rounded-full"
+                style={{ border: '1px solid #dbdbdb' }}
+                aria-label="공유하기"
+              >
+                <img src={shareIcon} alt="공유" width={20} height={20} />
               </button>
             </>
           )}
@@ -120,7 +111,6 @@ export function MyProfilePage() {
 
       {/* 게시글 탭 */}
       <section className="flex-1" style={{ borderTop: '1px solid #f0f0f0' }}>
-        {/* 탭 - 오른쪽 정렬 */}
         <div className="flex justify-end" style={{ borderBottom: '1px solid #f0f0f0' }}>
           <button
             className="flex items-center justify-center px-5 py-2.5"

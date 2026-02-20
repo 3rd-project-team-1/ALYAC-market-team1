@@ -5,7 +5,7 @@ import { getToken } from '@/entities/auth/lib/token';
 export function RequireAuth() {
   const token = getToken();
 
-  // 토큰이 없으면 로그인 페이지로 쫓아냄
+  // // 토큰이 없으면 로그인 페이지로 쫓아냄
   if (!token) {
     return <Navigate to="/" replace />;
   }
