@@ -12,6 +12,9 @@ const SignUpPage = lazy(() => import('@/pages/signup').then((m) => ({ default: m
 const FeedPage = lazy(() => import('@/pages/feed').then((m) => ({ default: m.FeedPage })));
 const SearchPage = lazy(() => import('@/pages/search').then((m) => ({ default: m.SearchPage })));
 const ProfilePage = lazy(() => import('@/pages/profile').then((m) => ({ default: m.ProfilePage })));
+const SignUpProfilePage = lazy(() =>
+  import('@/pages/signup-profile').then((m) => ({ default: m.SignUpProfilePage })),
+);
 
 const EditProfilePage = lazy(() =>
   import('@/pages/edit-profile').then((m) => ({ default: m.EditProfilePage })),
@@ -95,6 +98,10 @@ export const router = createBrowserRouter([
           {
             path: 'signup',
             element: <SignUpPage />,
+          },
+          {
+            path: 'signup/profile',
+            element: <SignUpProfilePage />,
           },
         ],
       },
