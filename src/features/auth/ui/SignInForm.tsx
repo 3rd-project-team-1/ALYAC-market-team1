@@ -48,10 +48,10 @@ export function SignInForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 flex w-full flex-col">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* --- 이메일 필드 --- */}
-      <div className="mb-6">
-        <Label htmlFor="email" className="text-[13px] font-normal text-gray-500">
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-foreground block text-sm font-medium">
           이메일
         </Label>
         <Input
@@ -65,16 +65,16 @@ export function SignInForm() {
             },
           })}
           className={cn(
-            'mt-1.5 h-auto rounded-md border-none bg-[#F0F4FF] px-4 py-3 text-base shadow-none transition-colors focus-visible:ring-1 focus-visible:ring-[#1EC800]',
-            errors.email ? 'ring-1 ring-red-500' : '',
+            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            // errors.email ? 'ring-1 ring-red-500' : '',
           )}
         />
-        {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>}
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
       {/* --- 비밀번호 필드 --- */}
-      <div className="mb-10">
-        <Label htmlFor="password" className="text-[13px] font-normal text-gray-500">
+      <div className="space-y-2">
+        <Label htmlFor="password" className="text-foreground block text-sm font-medium">
           비밀번호
         </Label>
         <Input
@@ -85,13 +85,11 @@ export function SignInForm() {
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
           className={cn(
-            'mt-1.5 h-auto rounded-md border-none bg-[#F0F4FF] px-4 py-3 text-base shadow-none transition-colors focus-visible:ring-1 focus-visible:ring-[#1EC800]',
+            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
             errors.password ? 'ring-1 ring-red-500' : '',
           )}
         />
-        {errors.password && (
-          <p className="mt-1.5 text-xs text-red-500">{errors.password.message}</p>
-        )}
+        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
       </div>
 
       {/* --- 로그인 버튼 --- */}
@@ -100,7 +98,7 @@ export function SignInForm() {
         //  조건이 안 맞거나 API 로딩 중일 때 비활성화
         disabled={!isValid || loginMutation.isPending}
         className={cn(
-          'w-full rounded-full border-none py-6 text-base font-bold text-white shadow-none transition-colors',
+          'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
           //  isValid 상태에 따라 색상 변경
           isValid
             ? 'bg-[#6BCB26] hover:bg-[#5CB020]' // 조건 충족 시: 활기찬 연두색
