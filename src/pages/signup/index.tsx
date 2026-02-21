@@ -8,7 +8,6 @@ export function SignUpPage() {
         <div className="text-center">
           <h2 className="text-foreground text-3xl font-bold">이메일로 회원가입</h2>
         </div>
-
         <SignUpEmailForm />
       </div>
     </div>
