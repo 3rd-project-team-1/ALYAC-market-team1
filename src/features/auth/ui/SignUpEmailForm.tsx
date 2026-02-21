@@ -28,7 +28,7 @@ export function SignUpEmailForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex w-full flex-col">
       <div className="mb-4">
-        <Label htmlFor="email" className="text-[13px] font-normal text-gray-500">
+        <Label htmlFor="email" className="text-input-label text-[12px] font-normal">
           이메일
         </Label>
         <Input
@@ -43,7 +43,7 @@ export function SignUpEmailForm() {
             },
           })}
           className={cn(
-            'mt-1 h-auto rounded-none border-b border-gray-300 bg-transparent px-0 py-2 focus-visible:border-[#6BCB26] focus-visible:ring-0',
+            'border-border mt-1 h-12 rounded-sm border-0 border-b bg-transparent px-3 py-2 focus-visible:rounded-md focus-visible:ring-1 focus-visible:ring-black',
             errors.email && 'border-red-500',
           )}
         />
@@ -51,7 +51,7 @@ export function SignUpEmailForm() {
       </div>
 
       <div className="mb-8">
-        <Label htmlFor="password" className="text-[13px] font-normal text-gray-500">
+        <Label htmlFor="password" className="text-input-label text-[12px] font-normal">
           비밀번호
         </Label>
         <Input
@@ -63,7 +63,7 @@ export function SignUpEmailForm() {
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
           className={cn(
-            'mt-1 h-auto rounded-none border-b border-gray-300 bg-transparent px-0 py-2 focus-visible:border-[#6BCB26] focus-visible:ring-0',
+            'border-border mt-1 h-12 rounded-sm border-0 border-b bg-transparent px-3 py-2 focus-visible:rounded-md focus-visible:ring-1 focus-visible:ring-black',
             errors.password && 'border-red-500',
           )}
         />
