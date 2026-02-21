@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { checkAccountnameDuplicate } from '@/entities/auth/api/signup';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
 import { cn } from '@/shared/lib/utils';
@@ -34,10 +35,16 @@ export function SignUpProfileForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid },
   } = useForm<ProfileFormData>({ mode: 'onChange' });
 
-  const onSubmit = (data: ProfileFormData) => {
+  const onSubmit = async (data: ProfileFormData) => {
+    const isDuplicate = await checkAccountnameDuplicate(data.accountname);
+    if (isDuplicate) {
+      setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
+      return;
+    }
     const requestData: SignupRequest = {
       user: {
         email,
@@ -71,8 +78,9 @@ export function SignUpProfileForm() {
         <Input
           id="username"
           type="text"
+          placeholder="2~10자 이내여야 합니다."
           {...register('username', {
-            required: '필수',
+            required: '사용자 이름을 입력해주세요.',
             minLength: { value: 2, message: '2자 이상' },
           })}
           className={cn(
@@ -80,6 +88,7 @@ export function SignUpProfileForm() {
             errors.username && 'border-red-500',
           )}
         />
+        {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
       </div>
 
       <div className="space-y-2">
@@ -89,12 +98,20 @@ export function SignUpProfileForm() {
         <Input
           id="accountname"
           type="text"
-          {...register('accountname', { required: '필수', pattern: /^[a-zA-Z0-9._]+$/ })}
+          placeholder="영문, 숫자, 특수문자(.),(_)만 사용 가능합니다."
+          {...register('accountname', {
+            required: '계정 ID를 입력해주세요.',
+            pattern: {
+              value: /^[a-zA-Z0-9._]+$/,
+              message: '영문, 숫자, ._만 사용 가능합니다.',
+            },
+          })}
           className={cn(
             'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
             errors.accountname && 'border-red-500',
           )}
         />
+        {errors.accountname && <p className="text-sm text-red-500">{errors.accountname.message}</p>}
       </div>
 
       <div className="space-y-2">
@@ -104,6 +121,7 @@ export function SignUpProfileForm() {
         <Input
           id="intro"
           type="text"
+          placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
           {...register('intro', { required: '필수', maxLength: 100 })}
           className={cn(
             'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',

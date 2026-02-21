@@ -9,3 +9,9 @@ export const checkEmailDuplicate = async (email: string): Promise<boolean> => {
   const response = await axiosInstance.post('/api/user/emailvalid', { user: { email } });
   return !response.data.ok;
 };
+export const checkAccountnameDuplicate = async (accountname: string): Promise<boolean> => {
+  const response = await axiosInstance.post('/api/user/accountnamevalid', {
+    user: { accountname },
+  });
+  return !response.data.ok;
+};
