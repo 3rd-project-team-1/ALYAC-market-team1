@@ -33,9 +33,9 @@ export function SignUpEmailForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex w-full flex-col">
-      <div className="mb-4">
-        <Label htmlFor="email" className="text-input-label text-[12px] font-normal">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-foreground block text-sm font-medium">
           이메일
         </Label>
         <Input
@@ -50,15 +50,15 @@ export function SignUpEmailForm() {
             },
           })}
           className={cn(
-            'border-border mt-1 h-12 rounded-sm border-0 border-b bg-transparent px-3 py-2 focus-visible:rounded-md focus-visible:ring-1 focus-visible:ring-black',
-            errors.email && 'border-red-500',
+            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            // errors.email && 'border-red-500',
           )}
         />
-        {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>}
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
-      <div className="mb-8">
-        <Label htmlFor="password" className="text-input-label text-[12px] font-normal">
+      <div className="space-y-2">
+        <Label htmlFor="password" className="text-foreground block text-sm font-medium">
           비밀번호
         </Label>
         <Input
@@ -70,21 +70,19 @@ export function SignUpEmailForm() {
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
           className={cn(
-            'border-border mt-1 h-12 rounded-sm border-0 border-b bg-transparent px-3 py-2 focus-visible:rounded-md focus-visible:ring-1 focus-visible:ring-black',
-            errors.password && 'border-red-500',
+            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            // errors.password && 'border-red-500',
           )}
         />
-        {errors.password && (
-          <p className="mt-1.5 text-xs text-red-500">{errors.password.message}</p>
-        )}
+        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
       </div>
 
       <Button
         type="submit"
         disabled={!isValid}
         className={cn(
-          'w-full rounded-full py-6 text-base font-bold text-white',
-          isValid ? 'bg-[#6BCB26] hover:bg-[#5CB020]' : 'bg-[#D9D9D9] text-gray-400',
+          'ring-offset-background focus-visible:ring-ring inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#6FCA3C] px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors hover:bg-[#5CB32A] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#6FCA3C] [&_svg]:pointer-events-none [&_svg]:shrink-0',
+          // isValid ? 'bg-[#6BCB26] hover:bg-[#5CB020]' : 'bg-[#D9D9D9] text-gray-400',
         )}
       >
         다음
