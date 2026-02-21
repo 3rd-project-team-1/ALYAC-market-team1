@@ -2,8 +2,10 @@ interface IconProps {
     size?: number;
     color?: string;
     className?: string;
+    active?: boolean;
 }
 
+/* upload file·image */
 export const UploadFile = ({ size = 50, color = 'currentColor', ...props }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <circle cx="25" cy="25" r="25" fill="#11CC27" />
@@ -22,10 +24,50 @@ export const ImgButton = ({ size = 36, color = 'currentColor', ...props }: IconP
     </svg>
 );
 
+//TODO: 강사님께 물어보고 사용하기
 export const UploadImage = ({ size = 42, className }: Pick<IconProps, 'size' | 'className'>) => (
     <svg width={size} height={size} viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
         <circle cx="55" cy="55" r="54.5" fill="#DBDBDB" stroke="#D4D4D4" />
         <circle cx="55" cy="43" r="14" fill="white" />
         <rect x="35" y="62" width="40" height="34" rx="20" fill="white" />
+    </svg>
+);
+
+/* tab menu */
+export const HomeIcon = ({ active }: Pick<IconProps, 'active'>) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 21V12H15V21"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+export const ChatIcon = ({ active }: Pick<IconProps, 'active'>) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.5 9.58336C17.5029 10.6832 17.2459 11.7683 16.75 12.75C16.162 13.9265 15.2581 14.916 14.1395 15.6078C13.021 16.2995 11.7319 16.6662 10.4167 16.6667C9.31678 16.6696 8.23176 16.4126 7.25 15.9167L2.5 17.5L4.08333 12.75C3.58744 11.7683 3.33047 10.6832 3.33333 9.58336C3.33384 8.26815 3.70051 6.97907 4.39227 5.86048C5.08402 4.7419 6.07355 3.838 7.25 3.25002C8.23176 2.75413 9.31678 2.49716 10.4167 2.50002H10.8333C12.5703 2.59585 14.2109 3.32899 15.4409 4.55907C16.671 5.78915 17.4042 7.42973 17.5 9.16669V9.58336Z"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+export const WriteIcon = ({ active }: Pick<IconProps, 'active'>) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="18" height="18" rx="3"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" />
+        <path d="M12 8V16"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" />
+        <path d="M8 12L16 12"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" />
+    </svg>
+);
+
+export const ProfileIcon = ({ active }: Pick<IconProps, 'active'>) => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 22V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V22"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 22H20"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" />
+        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+            stroke={active ? "#11CC27" : "#767676"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
