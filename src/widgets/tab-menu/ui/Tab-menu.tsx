@@ -13,18 +13,17 @@ export const TabMenu = () => {
     const navigate = useNavigate();
 
     return (
-        <nav style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "8px 8px 8px",
-            borderTop: "1px solid #EFEFEF",
-            background: "#fff",
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-        }}>
+        <nav className="bg-background border-t border-border"
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "8px 8px 8px",
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                right: 0,
+            }}>
             {tabs.map(({ path, label, Icon }) => {
                 const active = path.some(p => location.pathname.startsWith(p));
                 return (

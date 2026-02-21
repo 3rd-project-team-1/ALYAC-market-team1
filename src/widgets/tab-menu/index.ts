@@ -1,1 +1,1 @@
-export { TabMenu } from './ui/Tab-menu';
+export { TabMenu } from './ui/tab-menu';

@@ -19,7 +19,7 @@ export function FeedPage() {
 
   return (
     <div>
-      <TopMainNav />
+      <TopMainNav title="알약마켓 피드" />
       <main className="mx-auto max-w-5xl">
         {/* <텍스트카드 />
         <게시글 리스트 /> */}
