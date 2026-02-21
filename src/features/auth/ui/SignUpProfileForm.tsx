@@ -63,7 +63,7 @@ export function SignUpProfileForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex w-full flex-col">
-      {/* 사용자 이름, 계정 ID, 소개 입력창 (기존 코드와 동일하게 Input 박스 3개 배치) */}
+      {/* 사용자 이름, 계정 ID, 소개 입력창 */}
       <div className="mb-4">
         <Label htmlFor="username" className="text-[13px] font-normal text-gray-500">
           사용자 이름

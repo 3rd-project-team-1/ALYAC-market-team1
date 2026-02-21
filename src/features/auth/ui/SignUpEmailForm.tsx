@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { checkEmailDuplicate } from '@/entities/auth/api/signup';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -16,12 +17,18 @@ export function SignUpEmailForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid },
   } = useForm<EmailFormData>({
     mode: 'onChange',
   });
 
-  const onSubmit = (data: EmailFormData) => {
+  const onSubmit = async (data: EmailFormData) => {
+    const isDuplicate = await checkEmailDuplicate(data.email);
+    if (isDuplicate) {
+      setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
+      return;
+    }
     navigate('/signup/profile', { state: { email: data.email, password: data.password } });
   };
 
