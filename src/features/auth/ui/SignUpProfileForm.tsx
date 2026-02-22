@@ -1,16 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { checkAccountnameDuplicate } from '@/entities/auth/api/signup';
+import { checkAccountnameDuplicate, uploadProfileImage } from '@/entities/auth/api/signup';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+
+import { ProfileImageUploader } from './ProfileImageUploader';
 
 interface ProfileFormData {
   username: string;
@@ -24,7 +26,7 @@ export function SignUpProfileForm() {
   const signUpMutation = useSignUp();
 
   const { email, password } = location.state || {};
-
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   useEffect(() => {
     if (!email || !password) {
       alert('잘못된 접근입니다. 이메일부터 다시 입력해 주세요.');
@@ -45,6 +47,17 @@ export function SignUpProfileForm() {
       setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
       return;
     }
+    let finalImageValue = '';
+
+    if (profileImageFile) {
+      try {
+        finalImageValue = await uploadProfileImage(profileImageFile);
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+        alert('프로필 이미지 업로드에 실패했습니다.');
+        return;
+      }
+    }
     const requestData: SignupRequest = {
       user: {
         email,
@@ -52,7 +65,7 @@ export function SignUpProfileForm() {
         username: data.username,
         accountname: data.accountname,
         intro: data.intro || '안녕하세요! 반갑습니다.',
-        image: 'https://api.mandarin.weniv.co.kr/1687141773353.png',
+        image: finalImageValue,
       },
     };
 
@@ -67,9 +80,9 @@ export function SignUpProfileForm() {
       },
     });
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <ProfileImageUploader onImageChange={(file) => setProfileImageFile(file)} />
       {/* 사용자 이름, 계정 ID, 소개 입력창 */}
       <div className="space-y-2">
         <Label htmlFor="username" className="text-foreground block text-sm font-medium">
@@ -81,7 +94,8 @@ export function SignUpProfileForm() {
           placeholder="2~10자 이내여야 합니다."
           {...register('username', {
             required: '사용자 이름을 입력해주세요.',
-            minLength: { value: 2, message: '2자 이상' },
+            minLength: { value: 2, message: '2자 이상 입력해주세요.' },
+            maxLength: { value: 10, message: '10자 이하로 입력해주세요.' },
           })}
           className={cn(
             'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
@@ -103,7 +117,7 @@ export function SignUpProfileForm() {
             required: '계정 ID를 입력해주세요.',
             pattern: {
               value: /^[a-zA-Z0-9._]+$/,
-              message: '영문, 숫자, ._만 사용 가능합니다.',
+              message: '*영문, 숫자, 밑줄 및 마침표만 사용할 수 있습니다.',
             },
           })}
           className={cn(
