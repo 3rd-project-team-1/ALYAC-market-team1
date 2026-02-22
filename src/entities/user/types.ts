@@ -16,6 +16,18 @@ export interface User {
   followers: string[];
 }
 
+// 프로필 조회 응답 모델 (API 문서 기준)
+export interface Profile {
+  _id: string;
+  username: string;
+  accountname: string;
+  intro: string;
+  image: string;
+  followingCount: number;
+  followerCount: number;
+  isfollow: boolean;
+}
+
 //회원가입
 export interface SignupRequest {
   user: Pick<User, 'username' | 'email' | 'accountname' | 'intro' | 'image' | 'password'>;
