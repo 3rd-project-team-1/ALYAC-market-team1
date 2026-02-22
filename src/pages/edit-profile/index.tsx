@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
-import type { User } from '@/entities/user/types';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
@@ -36,11 +35,11 @@ export function EditProfilePage() {
         const tokenInfo = getTokenUserInfo();
         if (tokenInfo?.accountname) {
           const res = await userApi.getProfile(tokenInfo.accountname);
-          const u: Omit<User, 'password'> = res.data.user;
+          const p = res.data.profile;
           // API 데이터로 폼 초기값 세팅
-          reset({ username: u.username, intro: u.intro ?? '' });
-          setAccountname(u.accountname);
-          setImagePreview(u.image ?? null);
+          reset({ username: p.username, intro: p.intro ?? '' });
+          setAccountname(p.accountname);
+          setImagePreview(p.image ?? null);
         }
       } catch {
         // 에러 시 무시

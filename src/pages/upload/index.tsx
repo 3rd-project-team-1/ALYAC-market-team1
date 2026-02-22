@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 interface LocationState {
@@ -132,21 +133,11 @@ export function UploadPage() {
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full shadow-lg"
-        style={{ backgroundColor: '#3C9E00' }}
+        className="fixed bottom-6 right-6 flex h-[50px] w-[50px] items-center justify-center rounded-full shadow-lg"
+        style={{ backgroundColor: '#11CC27' }}
         aria-label="이미지 추가"
       >
-        <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1.5" y="1.5" width="24" height="24" rx="5" stroke="white" strokeWidth="1.5" />
-          <circle cx="9" cy="9.75" r="2.25" stroke="white" strokeWidth="1.5" />
-          <path
-            d="M1.5 17.25L8.25 11.25L12.75 15.75L17.25 10.5L25.5 18.75"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <img src={uploadFile} alt="upload-file" />
       </button>
 
       <input
