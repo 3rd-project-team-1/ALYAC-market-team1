@@ -4,10 +4,9 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { checkAccountnameDuplicate } from '@/entities/auth/api/signup';
+import { checkAccountnameDuplicate, uploadProfileImage } from '@/entities/auth/api/signup';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
-import uploadimage from '@/shared/assets/icons/upload-image.svg';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -48,17 +47,16 @@ export function SignUpProfileForm() {
       setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
       return;
     }
-    let finalImageUrl = uploadimage; // 기본값: 기본 이미지
+    let finalImageValue = '';
 
     if (profileImageFile) {
-      // 사용자가 업로드한 파일이 있다면 Base64로 변환
-      finalImageUrl = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.readAsDataURL(profileImageFile);
-      });
+      try {
+        finalImageValue = await uploadProfileImage(profileImageFile);
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+        alert('프로필 이미지 업로드에 실패했습니다.');
+        return;
+      }
     }
     const requestData: SignupRequest = {
       user: {
@@ -67,7 +65,7 @@ export function SignUpProfileForm() {
         username: data.username,
         accountname: data.accountname,
         intro: data.intro || '안녕하세요! 반갑습니다.',
-        image: finalImageUrl,
+        image: finalImageValue,
       },
     };
 
