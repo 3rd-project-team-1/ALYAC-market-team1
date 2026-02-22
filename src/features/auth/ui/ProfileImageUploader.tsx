@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import uploadfile from '@/shared/assets/icons/upload-file.svg';
 import uploadimage from '@/shared/assets/icons/upload-image.svg';
@@ -16,11 +16,21 @@ export function ProfileImageUploader({ onImageChange, className }: ProfileImageU
 
   const [preview, setPreview] = useState<string>(DEFAULT_IMAGE);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewUrlRef = useRef<string | null>(null);
 
   const handleClick = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
   };
-
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
+    };
+  }, []);
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -34,11 +44,12 @@ export function ProfileImageUploader({ onImageChange, className }: ProfileImageU
       return;
     }
     onImageChange(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+    const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
+    setPreview(url);
   };
 
   return (
