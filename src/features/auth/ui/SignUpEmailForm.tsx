@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { checkEmailDuplicate } from '@/entities/auth/api/signup';
 import { cn } from '@/shared/lib/utils';
+import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 
 interface EmailFormData {
@@ -38,43 +38,35 @@ export function SignUpEmailForm() {
         <Label htmlFor="email" className="text-foreground block text-sm font-medium">
           이메일
         </Label>
-        <Input
+        <FormField
           id="email"
           type="email"
-          placeholder="이메일 주소를 입력해 주세요."
-          {...register('email', {
+          placeholder="이메일을 입력해 주세요."
+          register={register('email', {
             required: '이메일을 입력해 주세요.',
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: '올바른 이메일 형식을 입력해 주세요.',
             },
           })}
-          className={cn(
-            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-            // errors.email && 'border-red-500',
-          )}
+          error={errors.email}
         />
-        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="password" className="text-foreground block text-sm font-medium">
           비밀번호
         </Label>
-        <Input
+        <FormField
           id="password"
           type="password"
-          placeholder="비밀번호를 설정해 주세요."
-          {...register('password', {
+          placeholder="비밀번호를 입력해 주세요."
+          register={register('password', {
             required: '비밀번호를 입력해 주세요.',
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
-          className={cn(
-            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-            // errors.password && 'border-red-500',
-          )}
+          error={errors.password}
         />
-        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
       </div>
 
       <Button
