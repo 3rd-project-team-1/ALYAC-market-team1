@@ -99,7 +99,7 @@ export function ProfilePage() {
               <Button
                 variant="outline"
                 className="flex-1 rounded-full text-sm font-medium"
-                onClick={() => navigate('/create-post')}
+                onClick={() => navigate('/create-product')}
               >
                 상품 등록
               </Button>

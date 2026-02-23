@@ -19,8 +19,8 @@ const SignUpProfilePage = lazy(() =>
 const EditProfilePage = lazy(() =>
   import('@/pages/edit-profile').then((m) => ({ default: m.EditProfilePage })),
 );
-const CreatePostPage = lazy(() =>
-  import('@/pages/create-post').then((m) => ({ default: m.CreatePostPage })),
+const CreateProductPage = lazy(() =>
+  import('@/pages/create-product').then((m) => ({ default: m.CreateProductPage })),
 );
 const PostPage = lazy(() => import('@/pages/post').then((m) => ({ default: m.PostPage })));
 const UploadPage = lazy(() => import('@/pages/upload').then((m) => ({ default: m.UploadPage })));
@@ -61,8 +61,8 @@ export const router = createBrowserRouter([
             element: <EditProfilePage />,
           },
           {
-            path: 'create-post',
-            element: <CreatePostPage />,
+            path: 'create-product',
+            element: <CreateProductPage />,
           },
           {
             path: 'post',
