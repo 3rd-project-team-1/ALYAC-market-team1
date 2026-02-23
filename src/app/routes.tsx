@@ -22,8 +22,8 @@ const EditProfilePage = lazy(() =>
 const CreateProductPage = lazy(() =>
   import('@/pages/create-product').then((m) => ({ default: m.CreateProductPage })),
 );
-const PostPage = lazy(() => import('@/pages/post').then((m) => ({ default: m.PostPage })));
-const UploadPage = lazy(() => import('@/pages/upload').then((m) => ({ default: m.UploadPage })));
+const CreatePostPage = lazy(() => import('@/pages/create-post').then((m) => ({ default: m.CreatePostPage })));
+const PostCreatePage = lazy(() => import('@/pages/post-create').then((m) => ({ default: m.PostCreatePage })));
 const ChatPage = lazy(() => import('@/pages/chat').then((m) => ({ default: m.ChatPage })));
 const ChatRoomPage = lazy(() =>
   import('@/pages/chat-room').then((m) => ({ default: m.ChatRoomPage })),
@@ -65,12 +65,12 @@ export const router = createBrowserRouter([
             element: <CreateProductPage />,
           },
           {
-            path: 'post',
-            element: <PostPage />,
+            path: 'create-post',
+            element: <CreatePostPage />,
           },
           {
-            path: 'upload',
-            element: <UploadPage />,
+            path: 'post-create',
+            element: <PostCreatePage />,
           },
           {
             path: 'chat',

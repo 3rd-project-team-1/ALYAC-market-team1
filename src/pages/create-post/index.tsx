@@ -1,134 +1,89 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import imageIcon from '@/shared/assets/icons/image.svg';
-import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { Button } from '@/shared/ui/button';
 
 type FormValues = {
-  productName: string;
-  price: string;
-  link: string;
+  content: string;
 };
 
-export function CreatePostPage() {
+export function PostPage() {
   const navigate = useNavigate();
 
-  const { fileInputRef, imagePreview, handleImageClick, handleImageChange } = useImageUpload();
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    setError,
-    clearErrors,
-    control,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const { register, handleSubmit, control } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: { productName: '', price: '', link: '' },
+    defaultValues: { content: '' },
   });
 
-  // 가격 입력 핸들러 - 숫자 외 문자 차단
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    if (/[^0-9]/.test(raw)) {
-      // 숫자 외 문자가 있으면 에러 표시 + 숫자만 남김
-      setError('price', { type: 'manual', message: '숫자만 입력 가능합니다.' });
-      setValue('price', raw.replace(/[^0-9]/g, ''));
-    } else {
-      clearErrors('price');
-      setValue('price', raw);
-    }
-  };
+  const content = useWatch({ control, name: 'content' });
+  const hasContent = content?.trim().length > 0;
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // TODO: 저장 API 연동
-    navigate('/profile');
+    navigate('/post-create', { state: { content: data.content } });
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* 본문 */}
-        <div className="flex flex-col gap-5 px-6 pt-6">
-          {/* 이미지 등록 */}
-          <div>
-            <p className="mb-2 text-sm font-medium text-foreground">이미지 등록</p>
-            <div
-              className="relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl bg-muted"
-              onClick={handleImageClick}
-            >
-              {imagePreview && (
-                <img src={imagePreview} alt="상품 이미지" className="h-full w-full object-cover" />
-              )}
-              <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-background shadow transition-shadow hover:shadow-md">
-                <img src={imageIcon} alt="이미지 등록" width={20} height={20} />
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-              />
-            </div>
-          </div>
-
-          {/* 상품명 */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-foreground">상품명</label>
-            <input
-              {...register('productName', {
-                required: '상품명을 입력해주세요.',
-                minLength: { value: 2, message: '상품명은 최소 2자 이상이어야 합니다.' },
-                maxLength: { value: 15, message: '상품명은 15자 이하여야 합니다.' },
-              })}
-              placeholder="2~15자 이내여야 합니다."
-              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.productName ? 'border-destructive' : 'border-border'}`}
+      {/* 헤더 */}
+      <header className="flex items-center justify-between border-b border-border px-4 py-3">
+        <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M15 18L9 12L15 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
-            {errors.productName && (
-              <p className="text-xs text-destructive">{errors.productName.message}</p>
-            )}
-          </div>
+          </svg>
+        </button>
+        <Button
+          type="button"
+          onClick={handleSubmit(onSubmit)}
+          disabled={!hasContent}
+          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
+        >
+          업로드
+        </Button>
+      </header>
 
-          {/* 가격 */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-foreground">가격</label>
-            <input
-              {...register('price')}
-              placeholder="숫자만 입력 가능합니다."
-              inputMode="numeric"
-              onChange={handlePriceChange}
-              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.price ? 'border-destructive' : 'border-border'}`}
-            />
-            {errors.price && (
-              <p className="text-xs text-destructive">{errors.price.message}</p>
-            )}
-          </div>
-
-          {/* 판매 링크 */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-foreground">판매 링크</label>
-            <input
-              {...register('link', {
-                pattern: {
-                  value: /^(https?:\/\/).*/,
-                  message: 'http:// 또는 https://로 시작해야 합니다.',
-                },
-              })}
-              type="url"
-              placeholder="URL을 입력해 주세요."
-              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.link ? 'border-destructive' : 'border-border'}`}
-            />
-            {errors.link ? (
-              <p className="text-xs text-destructive">{errors.link.message}</p>
-            ) : (
-              <p className="text-xs text-muted-foreground">선택 사항 (http:// 또는 https://로 시작)</p>
-            )}
-          </div>
+      {/* 본문 */}
+      <form className="flex flex-1 gap-3 px-4 pt-5">
+        {/* 프로필 아바타 */}
+        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-muted">
+          <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
+
+        {/* 텍스트 입력 */}
+        <textarea
+          {...register('content', { required: true })}
+          placeholder="게시글 입력하기."
+          className="flex-1 resize-none bg-background text-sm text-foreground outline-none placeholder:text-muted-foreground"
+          rows={5}
+        />
       </form>
+
+      {/* 이미지 업로드 버튼 (우하단 고정) */}
+      <button
+        type="button"
+        onClick={handleSubmit(onSubmit)}
+        disabled={!hasContent}
+        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#3C9E00] shadow-lg hover:bg-[#2d7a00] disabled:bg-[#C4E4A5]"
+        aria-label="이미지 업로드"
+      >
+        <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1.5" y="1.5" width="24" height="24" rx="5" stroke="white" strokeWidth="1.5" />
+          <circle cx="9" cy="9.75" r="2.25" stroke="white" strokeWidth="1.5" />
+          <path
+            d="M1.5 17.25L8.25 11.25L12.75 15.75L17.25 10.5L25.5 18.75"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
     </div>
   );
 }
