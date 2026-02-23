@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { Button } from '@/shared/ui/button';
 
 interface LocationState {
   content?: string;
@@ -21,11 +22,7 @@ export function UploadPage() {
   const [images, setImages] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-  } = useForm<FormValues>({
+  const { register, handleSubmit, control } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: { content: state?.content ?? '' },
   });
@@ -33,6 +30,7 @@ export function UploadPage() {
   const content = useWatch({ control, name: 'content' });
   const hasContent = content?.trim().length > 0;
 
+  // 이미지 추가 핸들러
   const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     files.forEach((file) => {
@@ -46,6 +44,7 @@ export function UploadPage() {
     e.target.value = '';
   };
 
+  // 이미지 삭제 핸들러
   const handleImageRemove = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
@@ -57,38 +56,34 @@ export function UploadPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* 헤더 */}
-      <header
-        className="flex items-center justify-between border-b px-4 py-3"
-        style={{ borderColor: '#dbdbdb' }}
-      >
+      <header className="flex items-center justify-between border-b border-border px-4 py-3">
         <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M15 18L9 12L15 6"
-              stroke="#767676"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
         </button>
-        <button
+        <Button
           type="submit"
           form="upload-form"
           disabled={!hasContent}
-          className="rounded-full px-5 py-1.5 text-sm font-semibold text-white transition-opacity"
-          style={{ backgroundColor: hasContent ? '#3C9E00' : '#C4E4A5' }}
+          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
         >
           업로드
-        </button>
+        </Button>
       </header>
 
       {/* 본문 */}
       <form id="upload-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-1 gap-3 px-4 pt-5">
         {/* 프로필 아바타 */}
-        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gray-100">
+        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-muted">
           <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
@@ -97,7 +92,7 @@ export function UploadPage() {
           <textarea
             {...register('content', { required: true })}
             placeholder="게시글 입력하기..."
-            className="w-full resize-none text-sm text-gray-900 outline-none placeholder:text-gray-300"
+            className="w-full resize-none bg-background text-sm text-foreground outline-none placeholder:text-muted-foreground"
             rows={4}
           />
 
@@ -133,8 +128,7 @@ export function UploadPage() {
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="fixed bottom-6 right-6 flex h-[50px] w-[50px] items-center justify-center rounded-full shadow-lg"
-        style={{ backgroundColor: '#11CC27' }}
+        className="fixed bottom-6 right-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]"
         aria-label="이미지 추가"
       >
         <img src={uploadFile} alt="upload-file" />

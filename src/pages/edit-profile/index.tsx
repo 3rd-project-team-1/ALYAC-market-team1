@@ -41,8 +41,8 @@ export function EditProfilePage() {
           setAccountname(p.accountname);
           setImagePreview(p.image ?? null);
         }
-      } catch {
-        // 에러 시 무시
+      } catch (error) {
+        console.error('프로필 불러오기 실패:', error);
       } finally {
         setIsLoading(false);
       }
@@ -58,18 +58,18 @@ export function EditProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* 프로필 이미지 */}
       <div className="flex justify-center py-8">
         <div className="relative">
-          <div className="h-24 w-24 overflow-hidden rounded-full bg-gray-100">
+          <div className="h-24 w-24 overflow-hidden rounded-full bg-muted">
             {imagePreview ? (
               <img src={imagePreview} alt="프로필 이미지" className="h-full w-full object-cover" />
             ) : (
@@ -95,10 +95,10 @@ export function EditProfilePage() {
       </div>
 
       {/* 입력 폼 */}
-      <form onSubmit={handleSubmit(onSubmit)} className="px-6 flex flex-col gap-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 px-6">
         {/* 사용자 이름 */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-900">사용자 이름</label>
+          <label className="text-sm font-medium text-foreground">사용자 이름</label>
           <input
             {...register('username', {
               required: '사용자 이름을 입력해주세요.',
@@ -106,42 +106,39 @@ export function EditProfilePage() {
               maxLength: { value: 10, message: '사용자 이름은 10자 이하여야 합니다.' },
             })}
             placeholder="이름을 입력하세요."
-            className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: errors.username ? '#FF0000' : '#dbdbdb' }}
+            className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.username ? 'border-destructive' : 'border-border'}`}
           />
           {errors.username && (
-            <p className="text-xs text-red-500">{errors.username.message}</p>
+            <p className="text-xs text-destructive">{errors.username.message}</p>
           )}
         </div>
 
         {/* 계정 ID */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-900">계정 ID</label>
+          <label className="text-sm font-medium text-foreground">계정 ID</label>
           <input
             type="text"
             value={accountname}
             readOnly
-            className="w-full border-b py-2 text-sm text-gray-900 outline-none"
-            style={{ borderColor: '#dbdbdb' }}
+            className="w-full border-b border-border py-2 text-sm text-foreground outline-none"
           />
-          <p className="text-xs text-gray-400">계정 ID는 변경할 수 없습니다.</p>
+          <p className="text-xs text-muted-foreground">계정 ID는 변경할 수 없습니다.</p>
         </div>
 
         {/* 소개 */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-900">소개</label>
+          <label className="text-sm font-medium text-foreground">소개</label>
           <input
             {...register('intro', {
               maxLength: { value: 60, message: '소개는 60자 이하여야 합니다.' },
             })}
             placeholder="간단한 자기 소개를 입력하세요."
-            className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-            style={{ borderColor: errors.intro ? '#FF0000' : '#dbdbdb' }}
+            className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.intro ? 'border-destructive' : 'border-border'}`}
           />
           {errors.intro ? (
-            <p className="text-xs text-red-500">{errors.intro.message}</p>
+            <p className="text-xs text-destructive">{errors.intro.message}</p>
           ) : (
-            <p className="text-xs text-gray-400">최대 60자</p>
+            <p className="text-xs text-muted-foreground">최대 60자</p>
           )}
         </div>
       </form>

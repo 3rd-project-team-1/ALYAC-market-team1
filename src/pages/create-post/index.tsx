@@ -32,21 +32,21 @@ export function CreatePostPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 본문 */}
         <div className="flex flex-col gap-5 px-6 pt-6">
           {/* 이미지 등록 */}
           <div>
-            <p className="mb-2 text-sm font-medium text-gray-900">이미지 등록</p>
+            <p className="mb-2 text-sm font-medium text-foreground">이미지 등록</p>
             <div
-              className="relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl bg-gray-100"
+              className="relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl bg-muted"
               onClick={handleImageClick}
             >
               {imagePreview && (
                 <img src={imagePreview} alt="상품 이미지" className="h-full w-full object-cover" />
               )}
-              <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow transition-shadow hover:shadow-md">
+              <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-background shadow transition-shadow hover:shadow-md">
                 <img src={imageIcon} alt="이미지 등록" width={20} height={20} />
               </div>
               <input
@@ -61,7 +61,7 @@ export function CreatePostPage() {
 
           {/* 상품명 */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-gray-900">상품명</label>
+            <label className="text-sm font-bold text-foreground">상품명</label>
             <input
               {...register('productName', {
                 required: '상품명을 입력해주세요.',
@@ -69,30 +69,28 @@ export function CreatePostPage() {
                 maxLength: { value: 15, message: '상품명은 15자 이하여야 합니다.' },
               })}
               placeholder="2~15자 이내여야 합니다."
-              className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-              style={{ borderColor: errors.productName ? '#FF0000' : '#dbdbdb' }}
+              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.productName ? 'border-destructive' : 'border-border'}`}
             />
             {errors.productName && (
-              <p className="text-xs text-red-500">{errors.productName.message}</p>
+              <p className="text-xs text-destructive">{errors.productName.message}</p>
             )}
           </div>
 
           {/* 가격 */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-gray-900">가격</label>
+            <label className="text-sm font-bold text-foreground">가격</label>
             <input
               {...register('price', {
                 pattern: { value: /^[0-9]*$/, message: '숫자만 입력 가능합니다.' },
               })}
               placeholder="숫자만 입력 가능합니다."
-              className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-              style={{ borderColor: errors.price ? '#FF0000' : '#dbdbdb' }}
+              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.price ? 'border-destructive' : 'border-border'}`}
               onChange={(e) => {
                 const raw = e.target.value;
                 const hasNonNumeric = /[^0-9]/.test(raw);
                 if (hasNonNumeric) {
+                  // 숫자 외 입력 시 에러를 잠깐 보여주기 위해 원본값 유지 후 정제
                   setValue('price', raw.replace(/[^0-9]/g, ''), { shouldValidate: true });
-                  // 잠깐 에러를 보여주기 위해 원본 값으로 트리거
                   e.target.value = raw;
                 } else {
                   setValue('price', raw, { shouldValidate: true });
@@ -100,13 +98,13 @@ export function CreatePostPage() {
               }}
             />
             {errors.price && (
-              <p className="text-xs text-red-500">{errors.price.message}</p>
+              <p className="text-xs text-destructive">{errors.price.message}</p>
             )}
           </div>
 
           {/* 판매 링크 */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-gray-900">판매 링크</label>
+            <label className="text-sm font-bold text-foreground">판매 링크</label>
             <input
               {...register('link', {
                 pattern: {
@@ -116,13 +114,12 @@ export function CreatePostPage() {
               })}
               type="url"
               placeholder="URL을 입력해 주세요."
-              className="w-full border-b py-2 text-sm text-gray-900 outline-none placeholder:text-gray-300"
-              style={{ borderColor: errors.link ? '#FF0000' : '#dbdbdb' }}
+              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.link ? 'border-destructive' : 'border-border'}`}
             />
             {errors.link ? (
-              <p className="text-xs text-red-500">{errors.link.message}</p>
+              <p className="text-xs text-destructive">{errors.link.message}</p>
             ) : (
-              <p className="text-xs text-gray-400">선택 사항 (http:// 또는 https://로 시작)</p>
+              <p className="text-xs text-muted-foreground">선택 사항 (http:// 또는 https://로 시작)</p>
             )}
           </div>
         </div>
