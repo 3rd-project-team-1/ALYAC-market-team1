@@ -39,17 +39,14 @@ export function ChatPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="bg-background flex min-h-screen flex-col">
       {/* 헤더 */}
-      <header
-        className="flex items-center justify-between border-b px-4 py-3"
-        style={{ borderColor: '#dbdbdb' }}
-      >
+      <header className="border-border flex items-center justify-between border-b px-4 py-3">
         <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M15 18L9 12L15 6"
-              stroke="#767676"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -58,9 +55,9 @@ export function ChatPage() {
         </button>
         <button type="button" aria-label="더보기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="5" cy="12" r="1.5" fill="#767676" />
-            <circle cx="12" cy="12" r="1.5" fill="#767676" />
-            <circle cx="19" cy="12" r="1.5" fill="#767676" />
+            <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+            <circle cx="19" cy="12" r="1.5" fill="currentColor" />
           </svg>
         </button>
       </header>
@@ -71,30 +68,26 @@ export function ChatPage() {
           <li key={room.id}>
             <button
               type="button"
-              className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-gray-50"
-              style={{ borderBottom: '1px solid #f0f0f0' }}
+              className="border-border hover:bg-accent flex w-full items-center gap-3 border-b px-4 py-4 text-left"
               onClick={() => navigate(`/chat/${room.id}`)}
             >
               {/* 아바타 + 온라인 표시 */}
               <div className="relative flex-shrink-0">
-                <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+                <div className="bg-muted h-10 w-10 overflow-hidden rounded-full">
                   <img src={uploadImage} alt={room.name} className="h-full w-full object-cover" />
                 </div>
                 {room.isOnline && (
-                  <span
-                    className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white"
-                    style={{ backgroundColor: '#3C9E00' }}
-                  />
+                  <span className="border-background absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 bg-[#3C9E00]" />
                 )}
               </div>
 
               {/* 채팅 정보 */}
               <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-900">{room.name}</span>
-                  <span className="text-xs text-gray-400">{room.date}</span>
+                  <span className="text-foreground text-sm font-medium">{room.name}</span>
+                  <span className="text-muted-foreground text-xs">{room.date}</span>
                 </div>
-                <p className="truncate text-xs text-gray-400">{room.lastMessage}</p>
+                <p className="text-muted-foreground truncate text-xs">{room.lastMessage}</p>
               </div>
             </button>
           </li>

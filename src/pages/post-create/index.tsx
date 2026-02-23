@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react';
+
 import { useForm, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { Button } from '@/shared/ui/button';
 
 interface LocationState {
   content?: string;
@@ -13,7 +15,7 @@ type FormValues = {
   content: string;
 };
 
-export function UploadPage() {
+export function PostCreatePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState | null;
@@ -21,11 +23,7 @@ export function UploadPage() {
   const [images, setImages] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-  } = useForm<FormValues>({
+  const { register, handleSubmit, control } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: { content: state?.content ?? '' },
   });
@@ -33,6 +31,7 @@ export function UploadPage() {
   const content = useWatch({ control, name: 'content' });
   const hasContent = content?.trim().length > 0;
 
+  // 이미지 추가 핸들러
   const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     files.forEach((file) => {
@@ -46,49 +45,50 @@ export function UploadPage() {
     e.target.value = '';
   };
 
+  // 이미지 삭제 핸들러
   const handleImageRemove = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onSubmit = (data: FormValues) => {
     console.log({ content: data.content, images });
-    // TODO: 게시글 업로드 API 연동
-    navigate('/feed');
+    // TODO: 게시글 업로드 API 연동 후 postId 받아서 이동
+    navigate('/post/1');
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="bg-background flex min-h-screen flex-col">
       {/* 헤더 */}
-      <header
-        className="flex items-center justify-between border-b px-4 py-3"
-        style={{ borderColor: '#dbdbdb' }}
-      >
+      <header className="border-border flex items-center justify-between border-b px-4 py-3">
         <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M15 18L9 12L15 6"
-              stroke="#767676"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
         </button>
-        <button
+        <Button
           type="submit"
           form="upload-form"
           disabled={!hasContent}
-          className="rounded-full px-5 py-1.5 text-sm font-semibold text-white transition-opacity"
-          style={{ backgroundColor: hasContent ? '#3C9E00' : '#C4E4A5' }}
+          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
         >
           업로드
-        </button>
+        </Button>
       </header>
 
       {/* 본문 */}
-      <form id="upload-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-1 gap-3 px-4 pt-5">
+      <form
+        id="upload-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-1 gap-3 px-4 pt-5"
+      >
         {/* 프로필 아바타 */}
-        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gray-100">
+        <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
           <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
@@ -97,7 +97,7 @@ export function UploadPage() {
           <textarea
             {...register('content', { required: true })}
             placeholder="게시글 입력하기..."
-            className="w-full resize-none text-sm text-gray-900 outline-none placeholder:text-gray-300"
+            className="bg-background text-foreground placeholder:text-muted-foreground w-full resize-none text-sm outline-none"
             rows={4}
           />
 
@@ -106,11 +106,15 @@ export function UploadPage() {
             <div className="flex flex-col gap-3">
               {images.map((src, index) => (
                 <div key={index} className="relative overflow-hidden rounded-xl">
-                  <img src={src} alt={`업로드 이미지 ${index + 1}`} className="w-full object-cover" />
+                  <img
+                    src={src}
+                    alt={`업로드 이미지 ${index + 1}`}
+                    className="w-full object-cover"
+                  />
                   <button
                     type="button"
                     onClick={() => handleImageRemove(index)}
-                    className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white"
+                    className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white"
                     aria-label="이미지 삭제"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -133,8 +137,7 @@ export function UploadPage() {
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="fixed bottom-6 right-6 flex h-[50px] w-[50px] items-center justify-center rounded-full shadow-lg"
-        style={{ backgroundColor: '#11CC27' }}
+        className="fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]"
         aria-label="이미지 추가"
       >
         <img src={uploadFile} alt="upload-file" />
