@@ -8,7 +8,7 @@ export const useSignIn = () => {
     mutationFn: signIn,
     onSuccess: (data) => {
       // 로그인 성공 시 로컬 스토리지에 토큰 저장
-      saveToken(data.user.token, data.user.refreshToken);
+      saveToken(data.user.accessToken, data.user.refreshToken);
     },
   });
 };
