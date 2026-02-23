@@ -9,7 +9,7 @@ export function NotFoundPage() {
       <h1 className="text-2xl font-bold mb-4">페이지를 찾을 수 없습니다</h1>
       <p className="text-gray-500 mb-8">죄송합니다. 요청하신 페이지를 찾을 수 없습니다.</p>
       <Link to="/">
-        <Button variant="outline">홈으로 돌아가기</Button>
+        <Button variant="outline">뒤로 돌아가기</Button>
       </Link>
     </main>
   );
