@@ -12,10 +12,8 @@ export const userApi = {
     axiosInstance.get<ProfileResponse>(`/api/profile/${accountname}`),
 
   // 팔로우 POST /api/profile/:accountname/follow
-  follow: (accountname: string) =>
-    axiosInstance.post(`/api/profile/${accountname}/follow`),
+  follow: (accountname: string) => axiosInstance.post(`/api/profile/${accountname}/follow`),
 
   // 언팔로우 DELETE /api/profile/:accountname/unfollow
-  unfollow: (accountname: string) =>
-    axiosInstance.delete(`/api/profile/${accountname}/unfollow`),
+  unfollow: (accountname: string) => axiosInstance.delete(`/api/profile/${accountname}/unfollow`),
 };

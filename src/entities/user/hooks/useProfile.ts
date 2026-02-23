@@ -14,8 +14,7 @@ export function useProfile(accountname?: string) {
       try {
         const tokenInfo = getTokenUserInfo();
         // JWT 페이로드 필드명 확인 (서버마다 다를 수 있음)
-        const myAccountname =
-          tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
+        const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
         if (accountname) {
           // URL에 accountname이 있으면 → 해당 유저 프로필 조회
