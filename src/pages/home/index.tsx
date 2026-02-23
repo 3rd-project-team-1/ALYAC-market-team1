@@ -8,7 +8,8 @@ import kakaologo from '@/shared/assets/icons/kakao.svg';
 import fulllogo from '@/shared/assets/images/full-logo.png';
 import logoimg from '@/shared/assets/images/logo.png';
 import { cn } from '@/shared/lib/utils';
-import { Button } from '@/shared/ui/button';
+
+import { SocialLoginButton } from './ui/SocialLoginButtons';
 
 export function HomePage() {
   const [viewMode, setViewMode] = useState<'splash' | 'selection'>('splash');
@@ -56,32 +57,24 @@ export function HomePage() {
       {viewMode === 'selection' && (
         <div className="animate-in slide-in-from-bottom-full flex h-[60vh] w-full flex-col items-center rounded-t-[30px] bg-white px-8 pt-12 pb-16 duration-700">
           <div className="animate-in fade-in flex w-full max-w-sm flex-col space-y-4 delay-300 duration-700">
-            <Button
-              disabled
-              variant="outline"
-              className="relative w-full rounded-full border-[#FBD914] bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
-            >
-              <img src={kakaologo} alt="Kakao Logo" className="absolute left-6 h-5 w-5" />
-              카카오톡 계정으로 로그인
-            </Button>
-
-            <Button
-              disabled
-              variant="outline"
-              className="relative w-full rounded-full border-gray-400 bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
-            >
-              <img src={googlelogo} alt="Google Logo" className="absolute left-6 h-5 w-5" />
-              구글 계정으로 로그인
-            </Button>
-
-            <Button
-              disabled
-              variant="outline"
-              className="relative w-full rounded-full border-[#1877F2] bg-white py-6 text-base text-gray-600 hover:bg-gray-50"
-            >
-              <img src={facebooklogo} alt="Facebook Logo" className="absolute left-6 h-5 w-5" />
-              페이스북 계정으로 로그인
-            </Button>
+            <SocialLoginButton
+              logo={googlelogo}
+              alt="구글 로고"
+              label="구글 계정으로 로그인"
+              borderClass="border-gray-400"
+            />
+            <SocialLoginButton
+              logo={kakaologo}
+              alt="카카오 로고"
+              label="카카오톡 계정으로 로그인"
+              borderClass="border-[#FBD914]"
+            />
+            <SocialLoginButton
+              logo={facebooklogo}
+              alt="페이스북 로고"
+              label="페이스북 계정으로 로그인"
+              borderClass="border-[#1877F2]"
+            />
 
             <div className="mt-6 flex items-center justify-center space-x-4 pt-4 text-sm">
               <button
