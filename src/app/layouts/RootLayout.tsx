@@ -1,7 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom';
+
 import { TabMenu } from '@/widgets/tab-menu/ui/Tab-menu';
 
-const HIDE_TAB_MENU_PATHS = ['/edit-profile', '/create-post', '/signin', '/signup', '/'];
+const HIDE_TAB_MENU_PATHS = ['/edit-profile', '/post-create', '/signin', '/signup', '/'];
 
 export function RootLayout() {
   const location = useLocation();
@@ -9,7 +10,7 @@ export function RootLayout() {
 
   return (
     <div>
-      <main className='mx-auto max-w-5xl'>
+      <main className="mx-auto max-w-5xl">
         <Outlet />
       </main>
       {showTabMenu && <TabMenu />}
