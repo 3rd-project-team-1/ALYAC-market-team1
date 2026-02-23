@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+
 import { useForm, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -56,9 +57,9 @@ export function UploadPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="bg-background flex min-h-screen flex-col">
       {/* 헤더 */}
-      <header className="flex items-center justify-between border-b border-border px-4 py-3">
+      <header className="border-border flex items-center justify-between border-b px-4 py-3">
         <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
@@ -81,9 +82,13 @@ export function UploadPage() {
       </header>
 
       {/* 본문 */}
-      <form id="upload-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-1 gap-3 px-4 pt-5">
+      <form
+        id="upload-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-1 gap-3 px-4 pt-5"
+      >
         {/* 프로필 아바타 */}
-        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-muted">
+        <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
           <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
@@ -92,7 +97,7 @@ export function UploadPage() {
           <textarea
             {...register('content', { required: true })}
             placeholder="게시글 입력하기..."
-            className="w-full resize-none bg-background text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="bg-background text-foreground placeholder:text-muted-foreground w-full resize-none text-sm outline-none"
             rows={4}
           />
 
@@ -101,11 +106,15 @@ export function UploadPage() {
             <div className="flex flex-col gap-3">
               {images.map((src, index) => (
                 <div key={index} className="relative overflow-hidden rounded-xl">
-                  <img src={src} alt={`업로드 이미지 ${index + 1}`} className="w-full object-cover" />
+                  <img
+                    src={src}
+                    alt={`업로드 이미지 ${index + 1}`}
+                    className="w-full object-cover"
+                  />
                   <button
                     type="button"
                     onClick={() => handleImageRemove(index)}
-                    className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white"
+                    className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white"
                     aria-label="이미지 삭제"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -128,7 +137,7 @@ export function UploadPage() {
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="fixed bottom-6 right-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]"
+        className="fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]"
         aria-label="이미지 추가"
       >
         <img src={uploadFile} alt="upload-file" />
