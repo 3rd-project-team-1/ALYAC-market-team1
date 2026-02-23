@@ -13,17 +13,22 @@ export function useProfile(accountname?: string) {
     const fetchProfile = async () => {
       try {
         const tokenInfo = getTokenUserInfo();
-        const myAccountname = tokenInfo?.accountname;
+        // JWT 페이로드 필드명 확인 (accountname 또는 _id 등 서버마다 다를 수 있음)
+        const myAccountname =
+          tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
         if (accountname) {
-          // 다른 유저 프로필 조회 GET /api/profile/:accountname
+          // URL에 accountname이 있으면 → 해당 유저 프로필 조회
           const res = await userApi.getProfile(accountname);
           setProfile(res.data.profile);
-          setIsMyProfile(myAccountname === accountname);
-        } else if (myAccountname) {
-          // 내 프로필 조회 GET /api/profile/:accountname (내 accountname으로)
-          const res = await userApi.getProfile(myAccountname);
-          setProfile(res.data.profile);
+          // 내 accountname과 동일하면 내 프로필
+          setIsMyProfile(!!myAccountname && myAccountname === accountname);
+        } else {
+          // URL에 accountname 없음 → /profile 경로 = 무조건 내 프로필
+          if (myAccountname) {
+            const res = await userApi.getProfile(myAccountname);
+            setProfile(res.data.profile);
+          }
           setIsMyProfile(true);
         }
       } catch {
