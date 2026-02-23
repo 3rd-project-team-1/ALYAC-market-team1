@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
@@ -16,44 +18,34 @@ type FormValues = {
 
 export function EditProfilePage() {
   const navigate = useNavigate();
-  const [accountname, setAccountname] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [uploadedImagePath, setUploadedImagePath] = useState<string>('');
+  const queryClient = useQueryClient();
+
+  const tokenInfo = getTokenUserInfo();
+  const myAccountname = tokenInfo?.accountname ?? null;
+
+  const { profile, isLoading } = useProfile();
+
+  // 사용자가 새로 선택한 이미지만 별도 관리 (null이면 profile.image 사용)
+  const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
+  const [newUploadedImagePath, setNewUploadedImagePath] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 파생 상태: 새 이미지가 없으면 서버 값 사용
+  const imagePreview = newImagePreview ?? profile?.image ?? null;
+  const uploadedImagePath = newUploadedImagePath ?? profile?.image ?? '';
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: { username: '', intro: '' },
+    // profile이 로드된 후에도 defaultValues가 반영되도록 values 옵션 사용
+    values: {
+      username: profile?.username ?? '',
+      intro: profile?.intro ?? '',
+    },
   });
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const tokenInfo = getTokenUserInfo();
-        if (tokenInfo?.accountname) {
-          const res = await userApi.getProfile(tokenInfo.accountname);
-          const p = res.data.profile;
-          reset({ username: p.username, intro: p.intro ?? '' });
-          setAccountname(p.accountname);
-          setImagePreview(p.image ?? null);
-          setUploadedImagePath(p.image ?? '');
-        }
-      } catch (error) {
-        console.error('프로필 불러오기 실패:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [reset]);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -63,44 +55,38 @@ export function EditProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 로컬 미리보기
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
+    reader.onloadend = () => setNewImagePreview(reader.result as string);
     reader.readAsDataURL(file);
 
-    // 서버 업로드
     try {
       const formData = new FormData();
       formData.append('image', file);
       const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setUploadedImagePath(res.data.path);
+      setNewUploadedImagePath(res.data.path);
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
     }
   };
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
-    try {
-      await userApi.updateProfile({
+  // 프로필 수정 mutation
+  const updateMutation = useMutation({
+    mutationFn: (data: FormValues) =>
+      userApi.updateProfile({
         user: {
           username: data.username,
-          accountname,
+          accountname: myAccountname ?? '',
           intro: data.intro,
           image: uploadedImagePath,
         },
-      });
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile', myAccountname] });
       navigate(-1);
-    } catch (error) {
-      console.error('프로필 수정 실패:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    },
+  });
 
   if (isLoading) {
     return (
@@ -141,7 +127,10 @@ export function EditProfilePage() {
       </div>
 
       {/* 입력 폼 */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 px-6">
+      <form
+        onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
+        className="flex flex-col gap-6 px-6"
+      >
         {/* 사용자 이름 */}
         <div className="flex flex-col gap-1">
           <label className="text-foreground text-sm font-medium">사용자 이름</label>
@@ -162,7 +151,7 @@ export function EditProfilePage() {
           <label className="text-foreground text-sm font-medium">계정 ID</label>
           <input
             type="text"
-            value={accountname}
+            value={profile?.accountname ?? ''}
             readOnly
             className="border-border text-foreground w-full border-b py-2 text-sm outline-none"
           />
@@ -188,10 +177,10 @@ export function EditProfilePage() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={updateMutation.isPending}
           className="bg-primary text-primary-foreground mt-2 rounded-lg py-3 text-sm font-medium disabled:opacity-50"
         >
-          {isSubmitting ? '저장 중...' : '저장'}
+          {updateMutation.isPending ? '저장 중...' : '저장'}
         </button>
       </form>
     </div>

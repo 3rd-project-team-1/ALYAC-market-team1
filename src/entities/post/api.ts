@@ -19,6 +19,10 @@ export interface CommentResponse {
 }
 
 export const postApi = {
+  // 게시글 작성 POST /api/post
+  createPost: (content: string, image: string = '') =>
+    axiosInstance.post<PostResponse>('/api/post', { post: { content, image } }),
+
   // 게시글 상세 조회 GET /api/post/:post_id
   getPost: (postId: string) => axiosInstance.get<PostResponse>(`/api/post/${postId}`),
 

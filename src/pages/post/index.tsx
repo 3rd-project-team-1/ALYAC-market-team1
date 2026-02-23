@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post/api';
-import type { Comment, Post } from '@/entities/post/types';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
 export function PostPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const [post, setPost] = useState<Post | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [comment, setComment] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -23,76 +21,61 @@ export function PostPage() {
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
   const hasComment = comment.trim().length > 0;
 
-  useEffect(() => {
-    if (!postId) return;
-    const fetchData = async () => {
-      try {
-        const [postRes, commentsRes] = await Promise.all([
-          postApi.getPost(postId),
-          postApi.getComments(postId),
-        ]);
-        setPost(postRes.data.post);
-        setComments(commentsRes.data.comment);
-      } catch (error) {
-        console.error('데이터 불러오기 실패:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [postId]);
+  // 게시글 조회
+  const { data: post, isLoading: isPostLoading } = useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => postApi.getPost(postId!).then((res) => res.data.post),
+    enabled: !!postId,
+  });
 
-  const handleToggleHeart = async () => {
-    if (!postId || !post) return;
-    try {
-      const res = await postApi.toggleHeart(postId);
-      setPost(res.data.post);
-    } catch (error) {
-      console.error('좋아요 실패:', error);
-    }
-  };
+  // 댓글 목록 조회
+  const { data: comments = [] } = useQuery({
+    queryKey: ['comments', postId],
+    queryFn: () => postApi.getComments(postId!).then((res) => res.data.comment),
+    enabled: !!postId,
+  });
 
-  const handleCommentSubmit = async () => {
-    if (!hasComment || !postId) return;
-    try {
-      const res = await postApi.createComment(postId, comment);
-      setComments((prev) => [...prev, res.data.comment]);
-      setPost((prev) => (prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev));
+  // 좋아요 토글
+  const heartMutation = useMutation({
+    mutationFn: () => postApi.toggleHeart(postId!),
+    onSuccess: (res) => {
+      queryClient.setQueryData(['post', postId], res.data.post);
+    },
+  });
+
+  // 댓글 작성
+  const createCommentMutation = useMutation({
+    mutationFn: () => postApi.createComment(postId!, comment),
+    onSuccess: () => {
       setComment('');
-    } catch (error) {
-      console.error('댓글 작성 실패:', error);
-    }
-  };
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+    },
+  });
 
-  const handleDeleteComment = async () => {
-    if (!postId || !selectedCommentId) return;
-    try {
-      await postApi.deleteComment(postId, selectedCommentId);
-      setComments((prev) => prev.filter((c) => c.id !== selectedCommentId));
-      setPost((prev) => (prev ? { ...prev, commentCount: prev.commentCount - 1 } : prev));
-    } catch (error) {
-      console.error('댓글 삭제 실패:', error);
-    } finally {
+  // 댓글 삭제
+  const deleteCommentMutation = useMutation({
+    mutationFn: (commentId: string) => postApi.deleteComment(postId!, commentId),
+    onSuccess: () => {
       setShowCommentModal(false);
       setSelectedCommentId(null);
-    }
-  };
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+    },
+  });
 
-  const handleDeletePost = async () => {
-    if (!postId) return;
-    try {
-      await postApi.deletePost(postId);
-      navigate(-1);
-    } catch (error) {
-      console.error('게시글 삭제 실패:', error);
-    } finally {
+  // 게시글 삭제
+  const deletePostMutation = useMutation({
+    mutationFn: () => postApi.deletePost(postId!),
+    onSuccess: () => {
       setShowModal(false);
-    }
-  };
+      navigate(-1);
+    },
+  });
 
   const isMyPost = post?.author.accountname === myAccountname;
 
-  if (isLoading) {
+  if (isPostLoading) {
     return (
       <div className="bg-background flex h-screen items-center justify-center">
         <div className="border-muted border-t-foreground h-8 w-8 animate-spin rounded-full border-2" />
@@ -148,7 +131,12 @@ export function PostPage() {
 
         {/* 좋아요 / 댓글 수 */}
         <div className="mt-3 flex items-center gap-4">
-          <button type="button" onClick={handleToggleHeart} className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => heartMutation.mutate()}
+            disabled={heartMutation.isPending}
+            className="flex items-center gap-1.5"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill={post.hearted ? '#11CC27' : 'none'}>
               <path
                 d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
@@ -232,8 +220,8 @@ export function PostPage() {
         />
         <button
           type="button"
-          onClick={handleCommentSubmit}
-          disabled={!hasComment}
+          onClick={() => createCommentMutation.mutate()}
+          disabled={!hasComment || createCommentMutation.isPending}
           className={`text-sm font-medium transition-colors ${hasComment ? 'text-[#3C9E00]' : 'text-[#C4E4A5]'}`}
         >
           게시
@@ -264,7 +252,8 @@ export function PostPage() {
               <button
                 type="button"
                 className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
-                onClick={handleDeletePost}
+                onClick={() => deletePostMutation.mutate()}
+                disabled={deletePostMutation.isPending}
               >
                 삭제
               </button>
@@ -289,7 +278,8 @@ export function PostPage() {
             <button
               type="button"
               className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
-              onClick={handleDeleteComment}
+              onClick={() => selectedCommentId && deleteCommentMutation.mutate(selectedCommentId)}
+              disabled={deleteCommentMutation.isPending}
             >
               삭제
             </button>

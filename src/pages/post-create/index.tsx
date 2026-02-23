@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { postApi } from '@/entities/post/api';
+import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { Button } from '@/shared/ui/button';
@@ -20,7 +22,9 @@ export function PostCreatePage() {
   const location = useLocation();
   const state = location.state as LocationState | null;
 
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]); // 미리보기용 base64
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // 실제 업로드용 File
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, control } = useForm<FormValues>({
@@ -41,19 +45,40 @@ export function PostCreatePage() {
       };
       reader.readAsDataURL(file);
     });
-    // 같은 파일 재선택 가능하도록 초기화
+    setImageFiles((prev) => [...prev, ...files]);
     e.target.value = '';
   };
 
   // 이미지 삭제 핸들러
   const handleImageRemove = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = (data: FormValues) => {
-    console.log({ content: data.content, images });
-    // TODO: 게시글 업로드 API 연동 후 postId 받아서 이동
-    navigate('/post/1');
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      // 이미지 업로드
+      let imagePaths = '';
+      if (imageFiles.length > 0) {
+        const formData = new FormData();
+        imageFiles.forEach((file) => formData.append('image', file));
+        const uploadRes = await axiosInstance.post<{ path: string }[]>(
+          '/api/image/uploadfiles',
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } },
+        );
+        imagePaths = uploadRes.data.map((f) => f.path).join(',');
+      }
+
+      // 게시글 작성
+      const res = await postApi.createPost(data.content, imagePaths);
+      navigate(`/post/${res.data.post.id}`);
+    } catch (error) {
+      console.error('게시글 업로드 실패:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -74,10 +99,10 @@ export function PostCreatePage() {
         <Button
           type="submit"
           form="upload-form"
-          disabled={!hasContent}
-          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
+          disabled={!hasContent || isSubmitting}
+          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent && !isSubmitting ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
         >
-          업로드
+          {isSubmitting ? '업로드 중...' : '업로드'}
         </Button>
       </header>
 
