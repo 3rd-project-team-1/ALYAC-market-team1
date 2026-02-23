@@ -4,11 +4,11 @@ import { TabMenu } from '@/widgets/tab-menu/ui/Tab-menu';
 
 const HIDE_TAB_MENU_PATHS = [
   '/edit-profile',
-  '/post',
   '/post-create',
-  '/post-product',
+  '/create-product',
   '/signin',
   '/signup',
+  '/post',
   '/',
 ];
 
