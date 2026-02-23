@@ -52,6 +52,7 @@ export function ChatRoomPage() {
   const messageValue = useWatch({ control, name: 'message' });
   const hasMessage = messageValue?.trim().length > 0;
 
+  // 메시지 전송 핸들러
   const onSubmit = useCallback(
     (data: FormValues) => {
       if (!data.message.trim()) return;
@@ -78,35 +79,33 @@ export function ChatRoomPage() {
     [handleSubmit, onSubmit],
   );
 
+  // 채팅방 나가기
   const handleLeaveRoom = () => {
     setShowModal(false);
     navigate('/chat');
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* 헤더 */}
-      <header
-        className="flex items-center justify-between border-b px-4 py-3"
-        style={{ borderColor: '#dbdbdb' }}
-      >
+      <header className="flex items-center justify-between border-b border-border px-4 py-3">
         <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M15 18L9 12L15 6"
-              stroke="#767676"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
         </button>
-        <h1 className="text-base font-medium text-gray-900">이스트 시큐리티 알약</h1>
+        <h1 className="text-base font-medium text-foreground">이스트 시큐리티 알약</h1>
         <button type="button" onClick={() => setShowModal(true)} aria-label="더보기">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="5" cy="12" r="1.5" fill="#767676" />
-            <circle cx="12" cy="12" r="1.5" fill="#767676" />
-            <circle cx="19" cy="12" r="1.5" fill="#767676" />
+            <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+            <circle cx="19" cy="12" r="1.5" fill="currentColor" />
           </svg>
         </button>
       </header>
@@ -120,7 +119,7 @@ export function ChatRoomPage() {
           >
             {/* 상대방 아바타 */}
             {!msg.isMine && (
-              <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-gray-100">
+              <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-muted">
                 <img src={uploadImage} alt="상대방 프로필" className="h-full w-full object-cover" />
               </div>
             )}
@@ -128,12 +127,11 @@ export function ChatRoomPage() {
             <div className={`flex flex-col gap-1 ${msg.isMine ? 'items-end' : 'items-start'}`}>
               {/* 말풍선 */}
               <div
-                className="max-w-[240px] px-4 py-2.5 text-sm"
-                style={{
-                  backgroundColor: msg.isMine ? '#3C9E00' : '#f0f0f0',
-                  color: msg.isMine ? '#ffffff' : '#111827',
-                  borderRadius: msg.isMine ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                }}
+                className={`max-w-[240px] px-4 py-2.5 text-sm ${
+                  msg.isMine
+                    ? 'rounded-[18px_18px_4px_18px] bg-[#3C9E00] text-white'
+                    : 'rounded-[18px_18px_18px_4px] bg-muted text-foreground'
+                }`}
               >
                 {msg.content}
               </div>
@@ -146,7 +144,7 @@ export function ChatRoomPage() {
               )}
 
               {/* 시간 */}
-              <span className="text-xs text-gray-400">{msg.time}</span>
+              <span className="text-xs text-muted-foreground">{msg.time}</span>
             </div>
           </div>
         ))}
@@ -155,11 +153,10 @@ export function ChatRoomPage() {
       {/* 메시지 입력창 */}
       <form
         onSubmit={handleFormSubmit}
-        className="flex items-center gap-3 border-t px-4 py-3"
-        style={{ borderColor: '#dbdbdb' }}
+        className="flex items-center gap-3 border-t border-border px-4 py-3"
       >
         {/* 내 아바타 */}
-        <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-gray-100">
+        <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-muted">
           <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
@@ -167,15 +164,14 @@ export function ChatRoomPage() {
         <input
           {...register('message')}
           placeholder="메시지 입력하기..."
-          className="flex-1 text-sm text-gray-900 outline-none placeholder:text-gray-300"
+          className="flex-1 bg-background text-sm text-foreground outline-none placeholder:text-muted-foreground"
         />
 
         {/* 전송 버튼 */}
         <button
           type="submit"
           disabled={!hasMessage}
-          className="text-sm font-medium transition-colors"
-          style={{ color: hasMessage ? '#3C9E00' : '#C4E4A5' }}
+          className={`text-sm font-medium transition-colors ${hasMessage ? 'text-[#3C9E00]' : 'text-[#C4E4A5]'}`}
         >
           전송
         </button>
@@ -188,17 +184,17 @@ export function ChatRoomPage() {
           onClick={() => setShowModal(false)}
         >
           <div
-            className="w-full max-w-md rounded-t-2xl bg-white pb-8"
+            className="w-full max-w-md rounded-t-2xl bg-background pb-8"
             onClick={(e) => e.stopPropagation()}
           >
             {/* 핸들 바 */}
             <div className="flex justify-center py-3">
-              <div className="h-1 w-10 rounded-full bg-gray-300" />
+              <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
             </div>
 
             <button
               type="button"
-              className="w-full px-6 py-4 text-left text-sm text-gray-900 hover:bg-gray-50"
+              className="w-full px-6 py-4 text-left text-sm text-foreground hover:bg-accent"
               onClick={handleLeaveRoom}
             >
               채팅방 나가기

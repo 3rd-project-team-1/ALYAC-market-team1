@@ -19,6 +19,7 @@ export function ProfilePage() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [isFollowing, setIsFollowing] = useState(profile?.isfollow ?? false);
 
+  // 팔로우/언팔로우 토글
   const handleFollowToggle = async () => {
     if (!profile) return;
     try {
@@ -28,38 +29,38 @@ export function ProfilePage() {
         await userApi.follow(profile.accountname);
       }
       setIsFollowing((prev) => !prev);
-    } catch {
-      // 에러 시 무시
+    } catch (error) {
+      console.error('팔로우 처리 중 오류 발생:', error);
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen flex-col bg-white">
+      <div className="flex min-h-screen flex-col bg-background">
         <TopBasicNav />
         <div className="flex flex-1 items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       <TopBasicNav />
 
       {/* 프로필 정보 */}
-      <section className="px-6 pt-[60px] pb-6">
+      <section className="px-6 pb-6 pt-[60px]">
         {/* 아바타 + 팔로워/팔로잉 */}
         <div className="flex items-center justify-center gap-12">
           {/* 팔로워 */}
           <button className="flex flex-col items-center gap-1">
-            <span className="text-xl font-bold text-gray-900">{profile?.followerCount ?? 0}</span>
-            <span className="text-xs text-gray-500">Followers</span>
+            <span className="text-xl font-bold text-foreground">{profile?.followerCount ?? 0}</span>
+            <span className="text-xs text-muted-foreground">Followers</span>
           </button>
 
           {/* 아바타 */}
-          <div className="h-24 w-24 overflow-hidden rounded-full bg-gray-100">
+          <div className="h-24 w-24 overflow-hidden rounded-full bg-muted">
             {profile?.image ? (
               <img src={profile.image} alt={profile.username} className="h-full w-full object-cover" />
             ) : (
@@ -69,17 +70,17 @@ export function ProfilePage() {
 
           {/* 팔로잉 */}
           <button className="flex flex-col items-center gap-1">
-            <span className="text-xl font-bold text-gray-900">{profile?.followingCount ?? 0}</span>
-            <span className="text-xs text-gray-500">Followings</span>
+            <span className="text-xl font-bold text-foreground">{profile?.followingCount ?? 0}</span>
+            <span className="text-xs text-muted-foreground">Followings</span>
           </button>
         </div>
 
         {/* 이름 & 계정명 & 소개글 */}
         <div className="mt-4 flex flex-col items-center">
-          <h1 className="text-base font-semibold text-gray-900">{profile?.username ?? '이름 없음'}</h1>
-          <p className="mt-0.5 text-sm text-gray-400">@{profile?.accountname ?? ''}</p>
+          <h1 className="text-base font-semibold text-foreground">{profile?.username ?? '이름 없음'}</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">@{profile?.accountname ?? ''}</p>
           {profile?.intro && (
-            <p className="mt-1.5 text-center text-sm text-gray-500">{profile.intro}</p>
+            <p className="mt-1.5 text-center text-sm text-muted-foreground">{profile.intro}</p>
           )}
         </div>
 
@@ -87,16 +88,17 @@ export function ProfilePage() {
         <div className="mt-5 flex items-center justify-center gap-3">
           {isMyProfile ? (
             <>
+              {/* 내 프로필: 프로필 수정 / 상품 등록 */}
               <Button
                 variant="outline"
-                className="flex-1 rounded-full text-sm font-medium text-gray-700"
+                className="flex-1 rounded-full text-sm font-medium"
                 onClick={() => navigate('/edit-profile')}
               >
                 프로필 수정
               </Button>
               <Button
                 variant="outline"
-                className="flex-1 rounded-full text-sm font-medium text-gray-700"
+                className="flex-1 rounded-full text-sm font-medium"
                 onClick={() => navigate('/create-post')}
               >
                 상품 등록
@@ -104,6 +106,7 @@ export function ProfilePage() {
             </>
           ) : (
             <>
+              {/* 타인 프로필: 채팅 / 팔로우 / 공유 */}
               <Button
                 variant="outline"
                 size="icon-lg"
@@ -115,8 +118,7 @@ export function ProfilePage() {
               </Button>
 
               <Button
-                className="rounded-full px-8 text-sm font-semibold text-white"
-                style={{ backgroundColor: isFollowing ? '#dbdbdb' : '#3C9E00' }}
+                className={`rounded-full px-8 text-sm font-semibold text-white ${isFollowing ? 'bg-muted-foreground' : 'bg-[#3C9E00] hover:bg-[#2d7a00]'}`}
                 onClick={handleFollowToggle}
               >
                 {isFollowing ? '언팔로우' : '팔로우'}
@@ -136,8 +138,9 @@ export function ProfilePage() {
       </section>
 
       {/* 게시글 탭 */}
-      <section className="flex-1" style={{ borderTop: '1px solid #f0f0f0' }}>
-        <div className="flex justify-end" style={{ borderBottom: '1px solid #f0f0f0' }}>
+      <section className="flex-1 border-t border-border">
+        <div className="flex justify-end border-b border-border">
+          {/* 리스트 뷰 버튼 */}
           <button
             className="flex items-center justify-center px-5 py-2.5"
             onClick={() => setViewMode('list')}
@@ -157,6 +160,8 @@ export function ProfilePage() {
               </svg>
             )}
           </button>
+
+          {/* 그리드 뷰 버튼 */}
           <button
             className="flex items-center justify-center px-5 py-2.5"
             onClick={() => setViewMode('grid')}
@@ -182,7 +187,7 @@ export function ProfilePage() {
 
         {/* 빈 게시글 */}
         <div className="flex items-center justify-center py-20">
-          <p className="text-sm text-gray-400">작성한 게시물이 없습니다.</p>
+          <p className="text-sm text-muted-foreground">작성한 게시물이 없습니다.</p>
         </div>
       </section>
     </div>
