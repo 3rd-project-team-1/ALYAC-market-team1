@@ -24,6 +24,7 @@ const CreateProductPage = lazy(() =>
 );
 const CreatePostPage = lazy(() => import('@/pages/create-post').then((m) => ({ default: m.CreatePostPage })));
 const PostCreatePage = lazy(() => import('@/pages/post-create').then((m) => ({ default: m.PostCreatePage })));
+const PostPage = lazy(() => import('@/pages/post').then((m) => ({ default: m.PostPage })));
 const ChatPage = lazy(() => import('@/pages/chat').then((m) => ({ default: m.ChatPage })));
 const ChatRoomPage = lazy(() =>
   import('@/pages/chat-room').then((m) => ({ default: m.ChatRoomPage })),
@@ -71,6 +72,10 @@ export const router = createBrowserRouter([
           {
             path: 'post-create',
             element: <PostCreatePage />,
+          },
+          {
+            path: 'post/:postId',
+            element: <PostPage />,
           },
           {
             path: 'chat',

@@ -51,8 +51,8 @@ export function PostCreatePage() {
 
   const onSubmit = (data: FormValues) => {
     console.log({ content: data.content, images });
-    // TODO: 게시글 업로드 API 연동
-    navigate('/feed');
+    // TODO: 게시글 업로드 API 연동 후 postId 받아서 이동
+    navigate('/post/1');
   };
 
   return (
