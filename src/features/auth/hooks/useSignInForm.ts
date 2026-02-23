@@ -16,6 +16,7 @@ export const useSignInForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid },
   } = useForm<SignInFormData>({
     defaultValues: { email: '', password: '' },
@@ -31,7 +32,8 @@ export const useSignInForm = () => {
           if (axios.isAxiosError<{ message: string }>(error)) {
             const errorMessage =
               error.response?.data?.message || '이메일 또는 비밀번호가 일치하지 않습니다.';
-            alert(errorMessage);
+            setError('email', { message: '' });
+            setError('password', { message: errorMessage });
           } else {
             alert('알 수 없는 오류가 발생했습니다.');
             console.error(error);
