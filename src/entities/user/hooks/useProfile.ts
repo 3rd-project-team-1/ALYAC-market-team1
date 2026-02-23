@@ -13,7 +13,7 @@ export function useProfile(accountname?: string) {
     const fetchProfile = async () => {
       try {
         const tokenInfo = getTokenUserInfo();
-        // JWT 페이로드 필드명 확인 (accountname 또는 _id 등 서버마다 다를 수 있음)
+        // JWT 페이로드 필드명 확인 (서버마다 다를 수 있음)
         const myAccountname =
           tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
@@ -21,7 +21,7 @@ export function useProfile(accountname?: string) {
           // URL에 accountname이 있으면 → 해당 유저 프로필 조회
           const res = await userApi.getProfile(accountname);
           setProfile(res.data.profile);
-          // 내 accountname과 동일하면 내 프로필
+          // 내 accountname과 동일하면 내 프로필로 처리
           setIsMyProfile(!!myAccountname && myAccountname === accountname);
         } else {
           // URL에 accountname 없음 → /profile 경로 = 무조건 내 프로필
@@ -31,8 +31,8 @@ export function useProfile(accountname?: string) {
           }
           setIsMyProfile(true);
         }
-      } catch {
-        // 에러 시 무시
+      } catch (error) {
+        console.error('프로필 조회 실패:', error);
       } finally {
         setIsLoading(false);
       }
