@@ -4,13 +4,15 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000', // json-server 포트에 맞게 변경
     },
   },
 });

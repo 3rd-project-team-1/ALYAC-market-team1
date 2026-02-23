@@ -1,11 +1,15 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RouterProvider } from 'react-router-dom';
+
+import './app.css';
+import { router } from './routes';
+
+const queryClient = new QueryClient();
 function App() {
   return (
-    <div className="bg-background text-foreground min-h-screen">
-      <h1 className="py-10 text-center text-4xl font-bold">Alyac Market</h1>
-      <p className="text-muted-foreground text-center">
-        React + TypeScript + Vite 프로젝트가 성공적으로 설정되었습니다! 🎉
-      </p>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }
 
