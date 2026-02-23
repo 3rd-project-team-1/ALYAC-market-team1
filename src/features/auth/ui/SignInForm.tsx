@@ -1,6 +1,6 @@
 import { cn } from '@/shared/lib/utils';
+import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 
 import { useSignInForm } from '../hooks/useSignInForm';
@@ -15,20 +15,19 @@ export function SignInForm() {
         <Label htmlFor="email" className="text-foreground block text-sm font-medium">
           이메일
         </Label>
-        <Input
+        <FormField
           id="email"
           type="email"
-          // react-hook-form의 에러 상태를 컴포넌트에 전달
-          aria-invalid={errors.email ? 'true' : 'false'}
-          {...register('email', {
+          placeholder="이메일을 입력해 주세요."
+          register={register('email', {
             required: '이메일을 입력해 주세요.',
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: '올바른 이메일 형식을 입력해 주세요.',
             },
           })}
+          error={errors.email}
         />
-        {errors.email && <p className="text-destructive mt-1 text-sm">{errors.email.message}</p>}
       </div>
 
       {/* --- 비밀번호 필드 --- */}
@@ -36,19 +35,16 @@ export function SignInForm() {
         <Label htmlFor="password" className="text-foreground block text-sm font-medium">
           비밀번호
         </Label>
-        <Input
+        <FormField
           id="password"
           type="password"
-          // react-hook-form의 에러 상태를 컴포넌트에 전달
-          aria-invalid={errors.password ? 'true' : 'false'}
-          {...register('password', {
+          placeholder="비밀번호를 입력해 주세요."
+          register={register('password', {
             required: '비밀번호를 입력해 주세요.',
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
+          error={errors.password}
         />
-        {errors.password && (
-          <p className="text-destructive mt-1 text-sm">{errors.password.message}</p>
-        )}
       </div>
 
       {/* --- 로그인 버튼 --- */}
