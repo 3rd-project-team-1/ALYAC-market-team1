@@ -6,6 +6,8 @@ import { useProfile } from '@/entities/user/hooks/useProfile';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { Button } from '@/shared/ui/button';
+import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 type ViewMode = 'grid' | 'list';
 
@@ -33,16 +35,21 @@ export function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+      <div className="flex min-h-screen flex-col bg-white">
+        <TopBasicNav />
+        <div className="flex flex-1 items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
+      <TopBasicNav />
+
       {/* 프로필 정보 */}
-      <section className="px-6 pt-6 pb-6">
+      <section className="px-6 pt-[60px] pb-6">
         {/* 아바타 + 팔로워/팔로잉 */}
         <div className="flex items-center justify-center gap-12">
           {/* 팔로워 */}
@@ -80,47 +87,49 @@ export function ProfilePage() {
         <div className="mt-5 flex items-center justify-center gap-3">
           {isMyProfile ? (
             <>
-              <button
-                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                style={{ border: '1px solid #dbdbdb' }}
+              <Button
+                variant="outline"
+                className="flex-1 rounded-full text-sm font-medium text-gray-700"
                 onClick={() => navigate('/edit-profile')}
               >
                 프로필 수정
-              </button>
-              <button
-                className="flex-1 rounded-full py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                style={{ border: '1px solid #dbdbdb' }}
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 rounded-full text-sm font-medium text-gray-700"
                 onClick={() => navigate('/create-post')}
               >
                 상품 등록
-              </button>
+              </Button>
             </>
           ) : (
             <>
-              <button
-                className="flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ border: '1px solid #dbdbdb' }}
+              <Button
+                variant="outline"
+                size="icon-lg"
+                className="rounded-full"
                 aria-label="채팅하기"
                 onClick={() => navigate('/chat')}
               >
                 <img src={messageCircle} alt="채팅" width={20} height={20} />
-              </button>
+              </Button>
 
-              <button
-                className="rounded-full px-8 py-2 text-sm font-semibold text-white"
+              <Button
+                className="rounded-full px-8 text-sm font-semibold text-white"
                 style={{ backgroundColor: isFollowing ? '#dbdbdb' : '#3C9E00' }}
                 onClick={handleFollowToggle}
               >
                 {isFollowing ? '언팔로우' : '팔로우'}
-              </button>
+              </Button>
 
-              <button
-                className="flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ border: '1px solid #dbdbdb' }}
+              <Button
+                variant="outline"
+                size="icon-lg"
+                className="rounded-full"
                 aria-label="공유하기"
               >
                 <img src={shareIcon} alt="공유" width={20} height={20} />
-              </button>
+              </Button>
             </>
           )}
         </div>
