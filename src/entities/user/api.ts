@@ -16,4 +16,9 @@ export const userApi = {
 
   // 언팔로우 DELETE /api/profile/:accountname/unfollow
   unfollow: (accountname: string) => axiosInstance.delete(`/api/profile/${accountname}/unfollow`),
+
+  // 프로필 수정 PUT /api/user
+  updateProfile: (data: {
+    user: { username: string; accountname: string; intro: string; image: string };
+  }) => axiosInstance.put('/api/user', data),
 };

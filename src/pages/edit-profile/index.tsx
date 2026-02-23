@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
+import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
-import { useImageUpload } from '@/shared/hooks/useImageUpload';
 
 type FormValues = {
   username: string;
@@ -14,11 +15,13 @@ type FormValues = {
 };
 
 export function EditProfilePage() {
+  const navigate = useNavigate();
   const [accountname, setAccountname] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-
-  const { fileInputRef, imagePreview, setImagePreview, handleImageClick, handleImageChange } =
-    useImageUpload();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadedImagePath, setUploadedImagePath] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -37,10 +40,10 @@ export function EditProfilePage() {
         if (tokenInfo?.accountname) {
           const res = await userApi.getProfile(tokenInfo.accountname);
           const p = res.data.profile;
-          // API 데이터로 폼 초기값 세팅
           reset({ username: p.username, intro: p.intro ?? '' });
           setAccountname(p.accountname);
           setImagePreview(p.image ?? null);
+          setUploadedImagePath(p.image ?? '');
         }
       } catch (error) {
         console.error('프로필 불러오기 실패:', error);
@@ -50,11 +53,53 @@ export function EditProfilePage() {
     };
 
     fetchProfile();
-  }, [reset, setImagePreview]);
+  }, [reset]);
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // TODO: 프로필 수정 API 연동
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 로컬 미리보기
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // 서버 업로드
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setUploadedImagePath(res.data.path);
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+    }
+  };
+
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      await userApi.updateProfile({
+        user: {
+          username: data.username,
+          accountname,
+          intro: data.intro,
+          image: uploadedImagePath,
+        },
+      });
+      navigate(-1);
+    } catch (error) {
+      console.error('프로필 수정 실패:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isLoading) {
@@ -140,6 +185,14 @@ export function EditProfilePage() {
             <p className="text-muted-foreground text-xs">최대 60자</p>
           )}
         </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="bg-primary text-primary-foreground mt-2 rounded-lg py-3 text-sm font-medium disabled:opacity-50"
+        >
+          {isSubmitting ? '저장 중...' : '저장'}
+        </button>
       </form>
     </div>
   );

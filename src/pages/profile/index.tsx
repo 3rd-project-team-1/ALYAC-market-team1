@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { postApi } from '@/entities/post/api';
+import type { Post } from '@/entities/post/types';
+import { productApi } from '@/entities/product/api';
+import type { Product } from '@/entities/product/types';
 import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
@@ -18,9 +22,33 @@ export function ProfilePage() {
   const { profile, isLoading, isMyProfile } = useProfile(accountname);
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [isFollowing, setIsFollowing] = useState(profile?.isfollow ?? false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
 
-  // 팔로우/언팔로우 토글
+  useEffect(() => {
+    if (profile?.isfollow !== undefined) {
+      setIsFollowing(profile.isfollow);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (!profile?.accountname) return;
+    const fetchData = async () => {
+      try {
+        const [productsRes, postsRes] = await Promise.all([
+          productApi.getUserProducts(profile.accountname),
+          postApi.getUserPosts(profile.accountname),
+        ]);
+        setProducts(productsRes.data.product);
+        setPosts(postsRes.data.post);
+      } catch (error) {
+        console.error('데이터 불러오기 실패:', error);
+      }
+    };
+    fetchData();
+  }, [profile?.accountname]);
+
   const handleFollowToggle = async () => {
     if (!profile) return;
     try {
@@ -47,7 +75,7 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pb-20">
       <TopBasicNav />
 
       {/* 프로필 정보 */}
@@ -57,7 +85,7 @@ export function ProfilePage() {
           {/* 팔로워 */}
           <button className="flex flex-col items-center gap-1">
             <span className="text-foreground text-xl font-bold">{profile?.followerCount ?? 0}</span>
-            <span className="text-muted-foreground text-xs">Followers</span>
+            <span className="text-muted-foreground text-xs">followers</span>
           </button>
 
           {/* 아바타 */}
@@ -78,7 +106,7 @@ export function ProfilePage() {
             <span className="text-foreground text-xl font-bold">
               {profile?.followingCount ?? 0}
             </span>
-            <span className="text-muted-foreground text-xs">Followings</span>
+            <span className="text-muted-foreground text-xs">followings</span>
           </button>
         </div>
 
@@ -97,7 +125,6 @@ export function ProfilePage() {
         <div className="mt-5 flex items-center justify-center gap-3">
           {isMyProfile ? (
             <>
-              {/* 내 프로필: 프로필 수정 / 상품 등록 */}
               <Button
                 variant="outline"
                 className="flex-1 rounded-full text-sm font-medium"
@@ -115,7 +142,6 @@ export function ProfilePage() {
             </>
           ) : (
             <>
-              {/* 타인 프로필: 채팅 / 팔로우 / 공유 */}
               <Button
                 variant="outline"
                 size="icon-lg"
@@ -146,6 +172,36 @@ export function ProfilePage() {
         </div>
       </section>
 
+      {/* 판매 중인 상품 */}
+      {products.length > 0 && (
+        <section className="border-border border-t px-4 py-4">
+          <h2 className="text-foreground mb-3 text-sm font-semibold">판매 중인 상품</h2>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {products.map((product) => (
+              <a
+                key={product.id}
+                href={product.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0"
+              >
+                <div className="h-[90px] w-[90px] overflow-hidden rounded-xl bg-muted">
+                  <img
+                    src={product.itemImage}
+                    alt={product.itemName}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <p className="mt-1 max-w-[90px] truncate text-xs font-medium text-foreground">
+                  {product.itemName}
+                </p>
+                <p className="text-xs text-[#3C9E00]">{product.price.toLocaleString()}원</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* 게시글 탭 */}
       <section className="border-border flex-1 border-t">
         <div className="border-border flex justify-end border-b">
@@ -156,58 +212,16 @@ export function ProfilePage() {
             aria-label="리스트 뷰"
           >
             {viewMode === 'list' ? (
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M22.75 3.25H3.25V7.58333H22.75V3.25Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                <path d="M22.75 3.25H3.25V7.58333H22.75V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
+                <path d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
+                <path d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
               </svg>
             ) : (
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M22.75 3.25H3.25V7.58333H22.75V3.25Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                <path d="M22.75 3.25H3.25V7.58333H22.75V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
+                <path d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
+                <path d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
               </svg>
             )}
           </button>
@@ -219,79 +233,113 @@ export function ProfilePage() {
             aria-label="그리드 뷰"
           >
             {viewMode === 'grid' ? (
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z"
-                  fill="#767676"
-                  stroke="#767676"
-                  strokeLinecap="round"
-                />
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                <path d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
+                <path d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
+                <path d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
+                <path d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z" fill="#767676" stroke="#767676" strokeLinecap="round" />
               </svg>
             ) : (
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z"
-                  fill="#DBDBDB"
-                  stroke="#DBDBDB"
-                  strokeLinecap="round"
-                />
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                <path d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
+                <path d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
+                <path d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
+                <path d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z" fill="#DBDBDB" stroke="#DBDBDB" strokeLinecap="round" />
               </svg>
             )}
           </button>
         </div>
 
-        {/* 빈 게시글 */}
-        <div className="flex items-center justify-center py-20">
-          <p className="text-muted-foreground text-sm">작성한 게시물이 없습니다.</p>
-        </div>
+        {/* 게시글 목록 */}
+        {posts.length === 0 ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-muted-foreground text-sm">작성한 게시물이 없습니다.</p>
+          </div>
+        ) : viewMode === 'list' ? (
+          <div className="flex flex-col gap-4 px-4 py-4">
+            {posts.map((post) => (
+              <div
+                key={post.id}
+                className="cursor-pointer"
+                onClick={() => navigate(`/post/${post.id}`)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 overflow-hidden rounded-full bg-muted">
+                    <img
+                      src={post.author.image || uploadImage}
+                      alt={post.author.username}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{post.author.username}</p>
+                    <p className="text-xs text-muted-foreground">@{post.author.accountname}</p>
+                  </div>
+                </div>
+                <p className="mt-2 line-clamp-2 text-sm text-foreground">{post.content}</p>
+                {post.image && (
+                  <div className="mt-2 overflow-hidden rounded-xl">
+                    <img
+                      src={post.image.split(',')[0]}
+                      alt="게시글 이미지"
+                      className="w-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="mt-2 flex items-center gap-4">
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {post.heartCount}
+                  </span>
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {post.commentCount}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-0.5">
+            {posts.map((post) => (
+              <div
+                key={post.id}
+                className="aspect-square cursor-pointer overflow-hidden bg-muted"
+                onClick={() => navigate(`/post/${post.id}`)}
+              >
+                {post.image ? (
+                  <img
+                    src={post.image.split(',')[0]}
+                    alt="게시글"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <p className="line-clamp-3 p-2 text-center text-xs text-muted-foreground">
+                      {post.content}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

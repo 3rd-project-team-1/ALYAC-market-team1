@@ -1,58 +1,112 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { getTokenUserInfo } from '@/entities/auth/lib/token';
+import { postApi } from '@/entities/post/api';
+import type { Comment, Post } from '@/entities/post/types';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
-interface Comment {
-  id: string;
-  author: string;
-  accountname: string;
-  content: string;
-  time: string;
-}
-
-// 임시 더미 데이터
-const DUMMY_POST = {
-  id: '1',
-  author: '이스트 시큐리티 알약',
-  accountname: '@estSecurity_Alyac',
-  content:
-    '알려지지 않은 위협의 즉각적인 차단부터 식별, 대응까지. 10년이상의 백신 운영 노하우와 악성코드 분석 전문성을 담은 알약 EDR 솔루션은 위협 인텔리전스와의 결합으로 확장된 엔드포인트 위협 대응 체계를 제공합니다.',
-  image: 'https://via.placeholder.com/480x280/111827/ffffff?text=이스트시큐리티',
-  likeCount: 58,
-  commentCount: 12,
-};
-
-const DUMMY_COMMENTS: Comment[] = [
-  {
-    id: '1',
-    author: '이스트 소프트',
-    accountname: '5분 전',
-    content: '게시글 굿~~!! 최고최고',
-    time: '2020년 10월 21일',
-  },
-  {
-    id: '2',
-    author: '보안 백신 전문가',
-    accountname: '15분 전',
-    content:
-      '너무 기대됩니다. 블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라...',
-    time: '',
-  },
-];
-
 export function PostPage() {
+  const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
+
+  const [post, setPost] = useState<Post | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [comment, setComment] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(null);
+
+  const tokenInfo = getTokenUserInfo();
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
   const hasComment = comment.trim().length > 0;
 
-  const handleCommentSubmit = () => {
-    if (!hasComment) return;
-    // TODO: 댓글 API 연동
-    setComment('');
+  useEffect(() => {
+    if (!postId) return;
+    const fetchData = async () => {
+      try {
+        const [postRes, commentsRes] = await Promise.all([
+          postApi.getPost(postId),
+          postApi.getComments(postId),
+        ]);
+        setPost(postRes.data.post);
+        setComments(commentsRes.data.comment);
+      } catch (error) {
+        console.error('데이터 불러오기 실패:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [postId]);
+
+  const handleToggleHeart = async () => {
+    if (!postId || !post) return;
+    try {
+      const res = await postApi.toggleHeart(postId);
+      setPost(res.data.post);
+    } catch (error) {
+      console.error('좋아요 실패:', error);
+    }
   };
+
+  const handleCommentSubmit = async () => {
+    if (!hasComment || !postId) return;
+    try {
+      const res = await postApi.createComment(postId, comment);
+      setComments((prev) => [...prev, res.data.comment]);
+      setPost((prev) => (prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev));
+      setComment('');
+    } catch (error) {
+      console.error('댓글 작성 실패:', error);
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    if (!postId || !selectedCommentId) return;
+    try {
+      await postApi.deleteComment(postId, selectedCommentId);
+      setComments((prev) => prev.filter((c) => c.id !== selectedCommentId));
+      setPost((prev) => (prev ? { ...prev, commentCount: prev.commentCount - 1 } : prev));
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+    } finally {
+      setShowCommentModal(false);
+      setSelectedCommentId(null);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!postId) return;
+    try {
+      await postApi.deletePost(postId);
+      navigate(-1);
+    } catch (error) {
+      console.error('게시글 삭제 실패:', error);
+    } finally {
+      setShowModal(false);
+    }
+  };
+
+  const isMyPost = post?.author.accountname === myAccountname;
+
+  if (isLoading) {
+    return (
+      <div className="bg-background flex h-screen items-center justify-center">
+        <div className="border-muted border-t-foreground h-8 w-8 animate-spin rounded-full border-2" />
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="bg-background flex h-screen items-center justify-center">
+        <p className="text-muted-foreground text-sm">게시글을 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -62,18 +116,18 @@ export function PostPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 overflow-hidden rounded-full bg-muted">
-              <img src={uploadImage} alt="프로필" className="h-full w-full object-cover" />
+              <img
+                src={post.author.image || uploadImage}
+                alt="프로필"
+                className="h-full w-full object-cover"
+              />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">{DUMMY_POST.author}</p>
-              <p className="text-xs text-muted-foreground">{DUMMY_POST.accountname}</p>
+              <p className="text-sm font-semibold text-foreground">{post.author.username}</p>
+              <p className="text-xs text-muted-foreground">@{post.author.accountname}</p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowModal(true)}
-            aria-label="더보기"
-          >
+          <button type="button" onClick={() => setShowModal(true)} aria-label="더보기">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <circle cx="5" cy="12" r="1.5" fill="currentColor" />
               <circle cx="12" cy="12" r="1.5" fill="currentColor" />
@@ -83,28 +137,28 @@ export function PostPage() {
         </div>
 
         {/* 게시글 내용 */}
-        <p className="mt-4 text-sm leading-relaxed text-foreground">{DUMMY_POST.content}</p>
+        <p className="mt-4 text-sm leading-relaxed text-foreground">{post.content}</p>
 
         {/* 게시글 이미지 */}
-        {DUMMY_POST.image && (
+        {post.image && (
           <div className="mt-4 overflow-hidden rounded-xl">
-            <img src={DUMMY_POST.image} alt="게시글 이미지" className="w-full object-cover" />
+            <img src={post.image} alt="게시글 이미지" className="w-full object-cover" />
           </div>
         )}
 
         {/* 좋아요 / 댓글 수 */}
         <div className="mt-3 flex items-center gap-4">
-          <button type="button" className="flex items-center gap-1.5">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <button type="button" onClick={handleToggleHeart} className="flex items-center gap-1.5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill={post.hearted ? '#11CC27' : 'none'}>
               <path
                 d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                stroke="currentColor"
+                stroke={post.hearted ? '#11CC27' : 'currentColor'}
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-xs text-muted-foreground">{DUMMY_POST.likeCount}</span>
+            <span className="text-xs text-muted-foreground">{post.heartCount}</span>
           </button>
           <button type="button" className="flex items-center gap-1.5">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -116,7 +170,7 @@ export function PostPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-xs text-muted-foreground">{DUMMY_POST.commentCount}</span>
+            <span className="text-xs text-muted-foreground">{post.commentCount}</span>
           </button>
         </div>
       </div>
@@ -125,31 +179,41 @@ export function PostPage() {
       <div className="mt-4 border-t border-border" />
 
       {/* 댓글 목록 */}
-      <div className="flex flex-col gap-4 px-4 py-4">
-        {DUMMY_COMMENTS.map((c) => (
+      <div className="flex flex-col gap-4 px-4 py-4 pb-20">
+        {comments.map((c) => (
           <div key={c.id} className="flex items-start gap-3">
             <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-muted">
-              <img src={uploadImage} alt={c.author} className="h-full w-full object-cover" />
+              <img
+                src={c.author.image || uploadImage}
+                alt={c.author.username}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="flex flex-1 flex-col gap-0.5">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-foreground">{c.author}</span>
-                <span className="text-xs text-muted-foreground">{c.accountname}</span>
+                <span className="text-sm font-semibold text-foreground">{c.author.username}</span>
+                <span className="text-xs text-muted-foreground">
+                  {new Date(c.createdAt).toLocaleDateString('ko-KR')}
+                </span>
               </div>
               <p className="text-sm text-foreground">{c.content}</p>
-              {c.time && <span className="text-xs text-muted-foreground">{c.time}</span>}
             </div>
-            <button
-              type="button"
-              onClick={() => setShowReportModal(true)}
-              aria-label="더보기"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <circle cx="5" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="19" cy="12" r="1.5" fill="currentColor" />
-              </svg>
-            </button>
+            {c.author.accountname === myAccountname && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCommentId(c.id);
+                  setShowCommentModal(true);
+                }}
+                aria-label="더보기"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                  <circle cx="19" cy="12" r="1.5" fill="currentColor" />
+                </svg>
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -196,22 +260,24 @@ export function PostPage() {
             >
               신고하기
             </button>
-            <button
-              type="button"
-              className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
-              onClick={() => setShowModal(false)}
-            >
-              삭제
-            </button>
+            {isMyPost && (
+              <button
+                type="button"
+                className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
+                onClick={handleDeletePost}
+              >
+                삭제
+              </button>
+            )}
           </div>
         </div>
       )}
 
       {/* 댓글 옵션 모달 */}
-      {showReportModal && (
+      {showCommentModal && (
         <div
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/30"
-          onClick={() => setShowReportModal(false)}
+          onClick={() => setShowCommentModal(false)}
         >
           <div
             className="w-full max-w-md rounded-t-2xl bg-background pb-8"
@@ -222,15 +288,8 @@ export function PostPage() {
             </div>
             <button
               type="button"
-              className="w-full px-6 py-4 text-left text-sm text-foreground hover:bg-accent"
-              onClick={() => setShowReportModal(false)}
-            >
-              신고하기
-            </button>
-            <button
-              type="button"
               className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
-              onClick={() => setShowReportModal(false)}
+              onClick={handleDeleteComment}
             >
               삭제
             </button>
