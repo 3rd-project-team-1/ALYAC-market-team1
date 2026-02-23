@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { TabMenu } from '@/widgets/tab-menu/ui/tab-menu'; // TabMenu 경로에 맞게 수정
+import { TabMenu } from '@/widgets/tab-menu/ui/Tab-menu';
 
 const HIDE_TAB_MENU_PATHS = ['/edit-profile', '/create-post', '/signin', '/signup', '/'];
 
