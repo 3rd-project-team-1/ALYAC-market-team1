@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import imageIcon from '@/shared/assets/icons/image.svg';
@@ -19,11 +19,27 @@ export function CreatePostPage() {
     register,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
+    control,
     formState: { errors },
   } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: { productName: '', price: '', link: '' },
   });
+
+  // 가격 입력 핸들러 - 숫자 외 문자 차단
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    if (/[^0-9]/.test(raw)) {
+      // 숫자 외 문자가 있으면 에러 표시 + 숫자만 남김
+      setError('price', { type: 'manual', message: '숫자만 입력 가능합니다.' });
+      setValue('price', raw.replace(/[^0-9]/g, ''));
+    } else {
+      clearErrors('price');
+      setValue('price', raw);
+    }
+  };
 
   const onSubmit = (data: FormValues) => {
     console.log(data);
@@ -80,22 +96,11 @@ export function CreatePostPage() {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-bold text-foreground">가격</label>
             <input
-              {...register('price', {
-                pattern: { value: /^[0-9]*$/, message: '숫자만 입력 가능합니다.' },
-              })}
+              {...register('price')}
               placeholder="숫자만 입력 가능합니다."
+              inputMode="numeric"
+              onChange={handlePriceChange}
               className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.price ? 'border-destructive' : 'border-border'}`}
-              onChange={(e) => {
-                const raw = e.target.value;
-                const hasNonNumeric = /[^0-9]/.test(raw);
-                if (hasNonNumeric) {
-                  // 숫자 외 입력 시 에러를 잠깐 보여주기 위해 원본값 유지 후 정제
-                  setValue('price', raw.replace(/[^0-9]/g, ''), { shouldValidate: true });
-                  e.target.value = raw;
-                } else {
-                  setValue('price', raw, { shouldValidate: true });
-                }
-              }}
             />
             {errors.price && (
               <p className="text-xs text-destructive">{errors.price.message}</p>
