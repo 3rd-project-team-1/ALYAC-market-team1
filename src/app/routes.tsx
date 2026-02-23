@@ -106,11 +106,11 @@ export const router = createBrowserRouter([
         ],
       },
 
-      // 404 페이지는누구나 볼 수 있게
-      {
-        path: '*',
-        element: <NotFoundPage />,
-      },
     ],
+  },
+  // 404 페이지는 레이아웃 없이 렌더링
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ]);
