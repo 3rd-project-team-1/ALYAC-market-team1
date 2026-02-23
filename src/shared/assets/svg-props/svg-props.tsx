@@ -24,15 +24,6 @@ export const ImgButton = ({ size = 36, color = 'currentColor', ...props }: IconP
     </svg>
 );
 
-//TODO: 강사님께 물어보고 사용하기
-export const UploadImage = ({ size = 42, className }: Pick<IconProps, 'size' | 'className'>) => (
-    <svg width={size} height={size} viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-        <circle cx="55" cy="55" r="54.5" fill="#DBDBDB" stroke="#D4D4D4" />
-        <circle cx="55" cy="43" r="14" fill="white" />
-        <rect x="35" y="62" width="40" height="34" rx="20" fill="white" />
-    </svg>
-);
-
 /* tab menu */
 export const HomeIcon = ({ active }: Pick<IconProps, 'active'>) => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
