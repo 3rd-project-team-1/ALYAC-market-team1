@@ -1,1 +1,1 @@
-export { TopMainNav } from './ui/TopMainNav';
+export { TopMainNav } from './ui/top-main-nav';
