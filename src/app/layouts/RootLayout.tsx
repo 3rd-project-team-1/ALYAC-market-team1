@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { TabMenu } from '@/widgets/tab-menu/ui/Tab-menu';
 
-const HIDE_TAB_MENU_PATHS = ['/edit-profile', '/post-create', '/signin', '/signup', '/'];
+const HIDE_TAB_MENU_PATHS = ['/edit-profile', '/create-product', '/post-create', '/signin', '/signup', '/'];
 
 export function RootLayout() {
   const location = useLocation();

@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import imageIcon from '@/shared/assets/icons/image.svg';
@@ -10,7 +10,7 @@ type FormValues = {
   link: string;
 };
 
-export function CreatePostPage() {
+export function CreateProductPage() {
   const navigate = useNavigate();
 
   const { fileInputRef, imagePreview, handleImageClick, handleImageChange } = useImageUpload();
@@ -19,11 +19,27 @@ export function CreatePostPage() {
     register,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
+    control,
     formState: { errors },
   } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: { productName: '', price: '', link: '' },
   });
+
+  // 가격 입력 핸들러 - 숫자 외 문자 차단
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    if (/[^0-9]/.test(raw)) {
+      // 숫자 외 문자가 있으면 에러 표시 + 숫자만 남김
+      setError('price', { type: 'manual', message: '숫자만 입력 가능합니다.' });
+      setValue('price', raw.replace(/[^0-9]/g, ''));
+    } else {
+      clearErrors('price');
+      setValue('price', raw);
+    }
+  };
 
   const onSubmit = (data: FormValues) => {
     console.log(data);
@@ -32,21 +48,21 @@ export function CreatePostPage() {
   };
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 본문 */}
         <div className="flex flex-col gap-5 px-6 pt-6">
           {/* 이미지 등록 */}
           <div>
-            <p className="text-foreground mb-2 text-sm font-medium">이미지 등록</p>
+            <p className="mb-2 text-sm font-medium text-foreground">이미지 등록</p>
             <div
-              className="bg-muted relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl"
+              className="relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl bg-muted"
               onClick={handleImageClick}
             >
               {imagePreview && (
                 <img src={imagePreview} alt="상품 이미지" className="h-full w-full object-cover" />
               )}
-              <div className="bg-background absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full shadow transition-shadow hover:shadow-md">
+              <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-background shadow transition-shadow hover:shadow-md">
                 <img src={imageIcon} alt="이미지 등록" width={20} height={20} />
               </div>
               <input
@@ -61,7 +77,7 @@ export function CreatePostPage() {
 
           {/* 상품명 */}
           <div className="flex flex-col gap-1">
-            <label className="text-foreground text-sm font-bold">상품명</label>
+            <label className="text-sm font-bold text-foreground">상품명</label>
             <input
               {...register('productName', {
                 required: '상품명을 입력해주세요.',
@@ -69,40 +85,31 @@ export function CreatePostPage() {
                 maxLength: { value: 15, message: '상품명은 15자 이하여야 합니다.' },
               })}
               placeholder="2~15자 이내여야 합니다."
-              className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.productName ? 'border-destructive' : 'border-border'}`}
+              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.productName ? 'border-destructive' : 'border-border'}`}
             />
             {errors.productName && (
-              <p className="text-destructive text-xs">{errors.productName.message}</p>
+              <p className="text-xs text-destructive">{errors.productName.message}</p>
             )}
           </div>
 
           {/* 가격 */}
           <div className="flex flex-col gap-1">
-            <label className="text-foreground text-sm font-bold">가격</label>
+            <label className="text-sm font-bold text-foreground">가격</label>
             <input
-              {...register('price', {
-                pattern: { value: /^[0-9]*$/, message: '숫자만 입력 가능합니다.' },
-              })}
+              {...register('price')}
               placeholder="숫자만 입력 가능합니다."
-              className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.price ? 'border-destructive' : 'border-border'}`}
-              onChange={(e) => {
-                const raw = e.target.value;
-                const hasNonNumeric = /[^0-9]/.test(raw);
-                if (hasNonNumeric) {
-                  // 숫자 외 입력 시 에러를 잠깐 보여주기 위해 원본값 유지 후 정제
-                  setValue('price', raw.replace(/[^0-9]/g, ''), { shouldValidate: true });
-                  e.target.value = raw;
-                } else {
-                  setValue('price', raw, { shouldValidate: true });
-                }
-              }}
+              inputMode="numeric"
+              onChange={handlePriceChange}
+              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.price ? 'border-destructive' : 'border-border'}`}
             />
-            {errors.price && <p className="text-destructive text-xs">{errors.price.message}</p>}
+            {errors.price && (
+              <p className="text-xs text-destructive">{errors.price.message}</p>
+            )}
           </div>
 
           {/* 판매 링크 */}
           <div className="flex flex-col gap-1">
-            <label className="text-foreground text-sm font-bold">판매 링크</label>
+            <label className="text-sm font-bold text-foreground">판매 링크</label>
             <input
               {...register('link', {
                 pattern: {
@@ -112,14 +119,12 @@ export function CreatePostPage() {
               })}
               type="url"
               placeholder="URL을 입력해 주세요."
-              className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.link ? 'border-destructive' : 'border-border'}`}
+              className={`w-full border-b py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground ${errors.link ? 'border-destructive' : 'border-border'}`}
             />
             {errors.link ? (
-              <p className="text-destructive text-xs">{errors.link.message}</p>
+              <p className="text-xs text-destructive">{errors.link.message}</p>
             ) : (
-              <p className="text-muted-foreground text-xs">
-                선택 사항 (http:// 또는 https://로 시작)
-              </p>
+              <p className="text-xs text-muted-foreground">선택 사항 (http:// 또는 https://로 시작)</p>
             )}
           </div>
         </div>
