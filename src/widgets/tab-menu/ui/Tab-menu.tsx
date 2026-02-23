@@ -5,11 +5,7 @@ import { ChatIcon, HomeIcon, ProfileIcon, WriteIcon } from '@/shared/assets/svg-
 const tabs = [
   { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
   { path: ['/chat'], label: '채팅', Icon: ChatIcon },
-<<<<<<< HEAD
   { path: ['/create-post'], label: '게시물 작성', Icon: WriteIcon },
-=======
-  { path: ['/post-create'], label: '게시물 작성', Icon: WriteIcon },
->>>>>>> develop
   { path: ['/profile'], label: '프로필', Icon: ProfileIcon },
 ];
 

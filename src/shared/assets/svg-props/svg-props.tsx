@@ -6,11 +6,7 @@ interface IconProps {
 }
 
 /* upload file·image */
-<<<<<<< HEAD
 export const UploadFile = ({ size = 50, color = 'currentColor', ...props }: IconProps) => (
-=======
-export const UploadFile = ({ size = 50, ...props }: IconProps) => (
->>>>>>> develop
   <svg
     width={size}
     height={size}
