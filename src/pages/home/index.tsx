@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import facebooklogo from '@/shared/assets/icons/facebook.svg';
-import googlelogo from '@/shared/assets/icons/google.svg';
-import kakaologo from '@/shared/assets/icons/kakao.svg';
 import fulllogo from '@/shared/assets/images/full-logo.png';
 import logoimg from '@/shared/assets/images/logo.png';
 import { cn } from '@/shared/lib/utils';
@@ -57,24 +54,9 @@ export function HomePage() {
       {viewMode === 'selection' && (
         <div className="animate-in slide-in-from-bottom-full flex h-[60vh] w-full flex-col items-center rounded-t-[30px] bg-white px-8 pt-12 pb-16 duration-700">
           <div className="animate-in fade-in flex w-full max-w-sm flex-col space-y-4 delay-300 duration-700">
-            <SocialLoginButton
-              logo={googlelogo}
-              alt="구글 로고"
-              label="구글 계정으로 로그인"
-              borderClass="border-gray-400"
-            />
-            <SocialLoginButton
-              logo={kakaologo}
-              alt="카카오 로고"
-              label="카카오톡 계정으로 로그인"
-              borderClass="border-[#FBD914]"
-            />
-            <SocialLoginButton
-              logo={facebooklogo}
-              alt="페이스북 로고"
-              label="페이스북 계정으로 로그인"
-              borderClass="border-[#1877F2]"
-            />
+            <SocialLoginButton platform="kakao" />
+            <SocialLoginButton platform="google" />
+            <SocialLoginButton platform="facebook" />
 
             <div className="mt-6 flex items-center justify-center space-x-4 pt-4 text-sm">
               <button
