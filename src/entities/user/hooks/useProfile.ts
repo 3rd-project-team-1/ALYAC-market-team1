@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
-import type { User } from '@/entities/user/types';
+import type { Profile } from '@/entities/user/types';
 
 export function useProfile(accountname?: string) {
-  const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMyProfile, setIsMyProfile] = useState(false);
 
@@ -13,15 +13,22 @@ export function useProfile(accountname?: string) {
     const fetchProfile = async () => {
       try {
         const tokenInfo = getTokenUserInfo();
-        const myAccountname = tokenInfo?.accountname;
+        // JWT 페이로드 필드명 확인 (accountname 또는 _id 등 서버마다 다를 수 있음)
+        const myAccountname =
+          tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
         if (accountname) {
+          // URL에 accountname이 있으면 → 해당 유저 프로필 조회
           const res = await userApi.getProfile(accountname);
-          setUser(res.data.user);
-          setIsMyProfile(myAccountname === accountname);
+          setProfile(res.data.profile);
+          // 내 accountname과 동일하면 내 프로필
+          setIsMyProfile(!!myAccountname && myAccountname === accountname);
         } else {
-          const res = await userApi.getMyProfile();
-          setUser(res.data.user);
+          // URL에 accountname 없음 → /profile 경로 = 무조건 내 프로필
+          if (myAccountname) {
+            const res = await userApi.getProfile(myAccountname);
+            setProfile(res.data.profile);
+          }
           setIsMyProfile(true);
         }
       } catch {
@@ -34,5 +41,5 @@ export function useProfile(accountname?: string) {
     fetchProfile();
   }, [accountname]);
 
-  return { user, isLoading, isMyProfile };
+  return { profile, isLoading, isMyProfile };
 }
