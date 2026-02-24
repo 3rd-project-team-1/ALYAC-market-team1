@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import uploadfile from '@/shared/assets/icons/upload-file.svg';
-import uploadimage from '@/shared/assets/icons/upload-image.svg';
+import { UploadFile, UploadImageIcon } from '@/shared/assets/svg-props/svg-props';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -17,9 +16,7 @@ export function ProfileImageUploader({
   className,
   initialImage,
 }: ProfileImageUploaderProps) {
-  const DEFAULT_IMAGE = uploadimage;
-
-  const [preview, setPreview] = useState<string>(initialImage || DEFAULT_IMAGE);
+  const [preview, setPreview] = useState<string | null>(initialImage || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrlRef = useRef<string | null>(null);
 
@@ -70,17 +67,22 @@ export function ProfileImageUploader({
           'cursor-pointer',
         )}
       >
-        {/* 프로필 이미지 미리보기 */}
-        <img
-          src={preview}
-          alt="프로필 이미지"
-          className="h-full w-full rounded-full bg-gray-200 object-cover group-hover:brightness-90 hover:brightness-90"
-        />
+        {/* 프로필 이미지 미리보기 또는 기본 회색 아이콘 */}
+        {preview ? (
+          <img
+            src={preview}
+            alt="프로필 이미지"
+            className="size-full rounded-full bg-gray-200 object-cover group-hover:brightness-90"
+          />
+        ) : (
+          <div className="flex size-full items-center justify-center overflow-hidden rounded-full bg-gray-200 group-hover:brightness-90">
+            <UploadImageIcon className="size-full" />
+          </div>
+        )}
 
         {/* 초록색 사진 아이콘 뱃지 */}
         <div
           className={cn(
-            // 1. 기본 위치 및 형태
             'absolute right-0 bottom-0 z-10 flex h-10 w-10 items-center justify-center',
             'rounded-full border-2 border-white text-white',
             'transition-all duration-300',
@@ -88,7 +90,7 @@ export function ProfileImageUploader({
             'bg-[var(--color-primary-green)] group-hover:brightness-90 hover:brightness-90',
           )}
         >
-          <img src={uploadfile} alt="업로드 아이콘" className="h-10 w-10" />
+          <UploadFile className="size-5" />
         </div>
       </Button>
 
