@@ -1,7 +1,6 @@
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-import { Label } from '@/shared/ui/label';
 
 import { useSignInForm } from '../hooks/useSignInForm';
 
@@ -12,12 +11,9 @@ export function SignInForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* --- 이메일 필드 --- */}
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground block text-sm font-medium">
-          이메일
-        </Label>
         <FormField
-          id="email"
           type="email"
+          label="이메일"
           placeholder="이메일을 입력해 주세요."
           register={register('email', {
             required: '이메일을 입력해 주세요.',
@@ -32,12 +28,9 @@ export function SignInForm() {
 
       {/* --- 비밀번호 필드 --- */}
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-foreground block text-sm font-medium">
-          비밀번호
-        </Label>
         <FormField
-          id="password"
           type="password"
+          label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           register={register('password', {
             required: '비밀번호를 입력해 주세요.',
@@ -54,10 +47,9 @@ export function SignInForm() {
         disabled={!isValid || isPending}
         className={cn(
           'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
-          //  isValid 상태에 따라 색상 변경
           isValid
-            ? 'bg-[#6BCB26] hover:bg-[#5CB020]' // 조건 충족 시: 활기찬 연두색
-            : 'cursor-not-allowed bg-[#A7FFB9] text-white', // 조건 불충족 시: 회색
+            ? 'bg-[#6BCB26] hover:bg-[#5CB020]'
+            : 'cursor-not-allowed bg-[#A7FFB9] text-white',
         )}
       >
         {isPending ? '로그인 중...' : '로그인'}
