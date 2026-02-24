@@ -10,6 +10,7 @@ import { useProfile } from '@/entities/user/hooks/useProfile';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
@@ -85,10 +86,10 @@ export function ProfilePage() {
           </button>
 
           <div className="bg-muted h-24 w-24 overflow-hidden rounded-full">
-            {profile?.image ? (
+            {getImageUrl(profile?.image) ? (
               <img
-                src={profile.image}
-                alt={profile.username}
+                src={getImageUrl(profile?.image)!}
+                alt={profile?.username}
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -180,7 +181,7 @@ export function ProfilePage() {
               >
                 <div className="bg-muted h-[90px] w-[90px] overflow-hidden rounded-xl">
                   <img
-                    src={product.itemImage}
+                    src={getImageUrl(product.itemImage) ?? product.itemImage}
                     alt={product.itemName}
                     className="h-full w-full object-cover"
                   />
@@ -326,7 +327,7 @@ export function ProfilePage() {
                 <div className="flex items-center gap-3">
                   <div className="bg-muted h-8 w-8 overflow-hidden rounded-full">
                     <img
-                      src={post.author.image || uploadImage}
+                      src={getImageUrl(post.author.image) ?? uploadImage}
                       alt={post.author.username}
                       className="h-full w-full object-cover"
                     />
@@ -340,7 +341,7 @@ export function ProfilePage() {
                 {post.image && (
                   <div className="mt-2 overflow-hidden rounded-xl">
                     <img
-                      src={post.image.split(',')[0]}
+                      src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
                       alt="게시글 이미지"
                       className="w-full object-cover"
                     />
@@ -385,7 +386,7 @@ export function ProfilePage() {
               >
                 {post.image ? (
                   <img
-                    src={post.image.split(',')[0]}
+                    src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
                     alt="게시글"
                     className="h-full w-full object-cover"
                   />

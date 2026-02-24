@@ -4,12 +4,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import axiosInstance from '@/shared/api/axios';
+import { getImageUrl } from '@/shared/lib/utils';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
   username: string;
@@ -20,9 +21,6 @@ export function EditProfilePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const tokenInfo = getTokenUserInfo();
-  const myAccountname = tokenInfo?.accountname ?? null;
-
   const { profile, isLoading } = useProfile();
 
   // 사용자가 새로 선택한 이미지만 별도 관리 (null이면 profile.image 사용)
@@ -30,8 +28,8 @@ export function EditProfilePage() {
   const [newUploadedImagePath, setNewUploadedImagePath] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 파생 상태: 새 이미지가 없으면 서버 값 사용
-  const imagePreview = newImagePreview ?? profile?.image ?? null;
+  // 파생 상태: 새 이미지가 없으면 서버 값 사용 (서버 이미지는 절대 URL로 변환)
+  const imagePreview = newImagePreview ?? getImageUrl(profile?.image);
   const uploadedImagePath = newUploadedImagePath ?? profile?.image ?? '';
 
   const {
@@ -77,13 +75,13 @@ export function EditProfilePage() {
       userApi.updateProfile({
         user: {
           username: data.username,
-          accountname: myAccountname ?? '',
+          accountname: profile?.accountname ?? '',
           intro: data.intro,
           image: uploadedImagePath,
         },
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile', myAccountname] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
       navigate(-1);
     },
   });
@@ -98,6 +96,11 @@ export function EditProfilePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
+      <TopUploadNav
+        label="저장"
+        disabled={updateMutation.isPending}
+        onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
+      />
       {/* 프로필 이미지 */}
       <div className="flex justify-center py-8">
         <div className="relative">

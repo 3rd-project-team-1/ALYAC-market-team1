@@ -4,10 +4,12 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postApi } from '@/entities/post/api';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
-import { Button } from '@/shared/ui/button';
+import { getImageUrl } from '@/shared/lib/utils';
+import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface LocationState {
   content?: string;
@@ -21,6 +23,8 @@ export function PostCreatePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState | null;
+
+  const { profile } = useProfile();
 
   const [images, setImages] = useState<string[]>([]); // 미리보기용 base64
   const [imageFiles, setImageFiles] = useState<File[]>([]); // 실제 업로드용 File
@@ -83,28 +87,11 @@ export function PostCreatePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* 헤더 */}
-      <header className="border-border flex items-center justify-between border-b px-4 py-3">
-        <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <Button
-          type="submit"
-          form="upload-form"
-          disabled={!hasContent || isSubmitting}
-          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent && !isSubmitting ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
-        >
-          {isSubmitting ? '업로드 중...' : '업로드'}
-        </Button>
-      </header>
+      <TopUploadNav
+        label={isSubmitting ? '업로드 중...' : '업로드'}
+        disabled={!hasContent || isSubmitting}
+        onSubmit={handleSubmit(onSubmit)}
+      />
 
       {/* 본문 */}
       <form
@@ -114,7 +101,7 @@ export function PostCreatePage() {
       >
         {/* 프로필 아바타 */}
         <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
         <div className="flex flex-1 flex-col gap-4">

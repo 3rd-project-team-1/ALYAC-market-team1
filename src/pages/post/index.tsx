@@ -5,7 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post/api';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils';
+import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {
   const { postId } = useParams<{ postId: string }>();
@@ -20,6 +23,8 @@ export function PostPage() {
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
   const hasComment = comment.trim().length > 0;
+
+  const { profile } = useProfile();
 
   // 게시글 조회
   const { data: post, isLoading: isPostLoading } = useQuery({
@@ -93,6 +98,7 @@ export function PostPage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
+      <TopBasicNav />
       {/* 게시글 본문 */}
       <div className="px-4 pt-5">
         {/* 작성자 정보 */}
@@ -100,7 +106,7 @@ export function PostPage() {
           <div className="flex items-center gap-3">
             <div className="bg-muted h-10 w-10 overflow-hidden rounded-full">
               <img
-                src={post.author.image || uploadImage}
+                src={getImageUrl(post.author.image) ?? uploadImage}
                 alt="프로필"
                 className="h-full w-full object-cover"
               />
@@ -125,7 +131,7 @@ export function PostPage() {
         {/* 게시글 이미지 */}
         {post.image && (
           <div className="mt-4 overflow-hidden rounded-xl">
-            <img src={post.image} alt="게시글 이미지" className="w-full object-cover" />
+            <img src={getImageUrl(post.image) ?? post.image} alt="게시글 이미지" className="w-full object-cover" />
           </div>
         )}
 
@@ -177,7 +183,7 @@ export function PostPage() {
           <div key={c.id} className="flex items-start gap-3">
             <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
               <img
-                src={c.author.image || uploadImage}
+                src={getImageUrl(c.author.image) ?? uploadImage}
                 alt={c.author.username}
                 className="h-full w-full object-cover"
               />
@@ -214,7 +220,7 @@ export function PostPage() {
       {/* 댓글 입력창 */}
       <div className="border-border bg-background fixed right-0 bottom-0 left-0 flex items-center gap-3 border-t px-4 py-3">
         <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
         <input
           type="text"
