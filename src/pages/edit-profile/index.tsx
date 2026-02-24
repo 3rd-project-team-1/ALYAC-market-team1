@@ -117,13 +117,19 @@ export function EditProfilePage() {
 
         {/* 소개 */}
         <div className="flex flex-col gap-1">
-          <FormField
-            type="text"
-            label="소개"
-            placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
-            register={register('intro', { required: '필수', maxLength: 60 })}
-            error={errors.intro}
+          <label className="text-foreground text-sm font-medium">소개</label>
+          <textarea
+            {...register('intro', {
+              maxLength: { value: 60, message: '소개는 60자 이내로 입력해주세요.' },
+            })}
+            placeholder="간단한 자기 소개를 입력하세요."
+            rows={1}
+            className="border-border text-foreground placeholder:text-muted-foreground w-full resize-none border-b py-2 text-sm outline-none"
           />
+          {errors.intro && (
+            <p className="text-destructive text-xs">{errors.intro.message}</p>
+          )}
+          <p className="text-muted-foreground text-xs">최대 60자</p>
         </div>
 
         <button
