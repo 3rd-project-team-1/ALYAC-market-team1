@@ -2,45 +2,59 @@ import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { userApi } from '@/entities/user/api';
+import { getTokenUserInfo } from '@/entities/auth/lib/token';
+import { PostCard, type PostCardModel, postApi } from '@/entities/post';
 import { Button } from '@/shared/ui/button';
 import { TopMainNav } from '@/widgets/top-main-nav';
 
-// 포스트카드 컴포넌트
-// import { PostCard } from '@/entities/post/ui/PostCard';
-// 텍스트카드 컴포넌트
-// import { TextCard } from '@/entities/text/ui/TextCard';
-
-interface UserProfile {
-  profile: {
-    followerCount: number;
-  };
-}
-
 export function FeedPage() {
-  const [haveFollowers, setHaveFollowers] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState<PostCardModel[]>([]);
   const navigate = useNavigate();
+  const tokenInfo = getTokenUserInfo();
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? '';
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchFeed = async () => {
       try {
-        const response = await userApi.getProfile('exampleUser');
-        const profile: UserProfile = response.data;
-        setHaveFollowers(profile.profile.followerCount > 0);
+        const response = await postApi.getFeedPosts();
+        const feedPosts = response.data.post ?? [];
+
+        const mappedPosts: PostCardModel[] = feedPosts.map((post) => ({
+          id: post.id,
+          content: post.content,
+          image: post.image || undefined,
+          heartCount: post.heartCount,
+          commentCount: post.commentCount,
+          author: {
+            username: post.author.username,
+            accountname: post.author.accountname,
+            image: post.author.image,
+          },
+        }));
+
+        setPosts(mappedPosts);
       } catch (error) {
-        console.error('프로필 조회 실패:', error);
-        setHaveFollowers(false);
+        console.error('피드 조회 실패:', error);
+        setPosts([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchFeed();
   }, []);
 
   const handleSearchClick = () => {
     navigate('/search');
+  };
+
+  const handleRewritePost = (postId: string) => {
+    navigate(`/post/${postId}`);
+  };
+
+  const handleDeletePost = (postId: string) => {
+    setPosts((prev) => prev.filter((post) => post.id !== postId));
   };
 
   if (isLoading) {
@@ -50,10 +64,17 @@ export function FeedPage() {
   return (
     <>
       <TopMainNav title="얄약마켓 피드" />
-      {haveFollowers ? (
-        <main className="mx-auto max-w-5xl">
-          {/* <텍스트카드 />
-          <게시글 리스트 /> */}
+      {posts.length > 0 ? (
+        <main className="mx-auto max-w-5xl pt-[48px]">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              isMyPost={post.author.accountname === myAccountname}
+              onRewrite={handleRewritePost}
+              onDelete={handleDeletePost}
+            />
+          ))}
         </main>
       ) : (
         <main className="mx-auto flex h-screen max-w-5xl flex-col items-center justify-center">
