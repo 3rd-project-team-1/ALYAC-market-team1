@@ -25,7 +25,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
         </svg>
       </button>
 
-      <span className="text-foreground absolute left-1/2 -translate-x-1/2 text-base font-semibold">
+      <span className="text-foreground text-base font-semibold">
         {title}
       </span>
 
