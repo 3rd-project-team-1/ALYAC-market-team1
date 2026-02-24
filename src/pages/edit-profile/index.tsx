@@ -73,7 +73,7 @@ export function EditProfilePage() {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-12">
       <TopUploadNav
         label="저장"
         disabled={updateMutation.isPending}
@@ -126,9 +126,7 @@ export function EditProfilePage() {
             rows={1}
             className="border-border text-foreground placeholder:text-muted-foreground w-full resize-none border-b py-2 text-sm outline-none"
           />
-          {errors.intro && (
-            <p className="text-destructive text-xs">{errors.intro.message}</p>
-          )}
+          {errors.intro && <p className="text-destructive text-xs">{errors.intro.message}</p>}
           <p className="text-muted-foreground text-xs">최대 60자</p>
         </div>
 
