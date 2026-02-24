@@ -49,4 +49,7 @@ export const postApi = {
   // 유저 게시글 목록 GET /api/post/:accountname/userpost
   getUserPosts: (accountname: string) =>
     axiosInstance.get<PostsResponse>(`/api/post/${accountname}/userpost`),
+
+  // 피드 게시글 목록 GET /api/post/feed
+  getFeedPosts: () => axiosInstance.get<PostsResponse>('/api/post/feed'),
 };
