@@ -10,6 +10,7 @@ import { useProfile } from '@/entities/user/hooks/useProfile';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
@@ -87,8 +88,8 @@ export function ProfilePage() {
           </button>
 
           <div className="bg-muted h-24 w-24 overflow-hidden rounded-full">
-            {profile?.image ? (
-              <img src={profile.image} alt={profile.username} className="h-full w-full object-cover" />
+            {getImageUrl(profile?.image) ? (
+              <img src={getImageUrl(profile?.image)!} alt={profile?.username} className="h-full w-full object-cover" />
             ) : (
               <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
             )}
@@ -231,7 +232,7 @@ export function ProfilePage() {
               <div key={post.id} className="cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 overflow-hidden rounded-full bg-muted">
-                    <img src={post.author.image || uploadImage} alt={post.author.username} className="h-full w-full object-cover" />
+                    <img src={getImageUrl(post.author.image) ?? uploadImage} alt={post.author.username} className="h-full w-full object-cover" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground">{post.author.username}</p>
