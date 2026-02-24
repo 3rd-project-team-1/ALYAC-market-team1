@@ -4,9 +4,11 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postApi } from '@/entities/post/api';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 
 interface LocationState {
@@ -21,6 +23,8 @@ export function PostCreatePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState | null;
+
+  const { profile } = useProfile();
 
   const [images, setImages] = useState<string[]>([]); // 미리보기용 base64
   const [imageFiles, setImageFiles] = useState<File[]>([]); // 실제 업로드용 File
@@ -114,7 +118,7 @@ export function PostCreatePage() {
       >
         {/* 프로필 아바타 */}
         <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
         <div className="flex flex-1 flex-col gap-4">
