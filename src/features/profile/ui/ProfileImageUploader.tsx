@@ -9,12 +9,17 @@ import { Input } from '@/shared/ui/input';
 interface ProfileImageUploaderProps {
   onImageChange: (file: File | null) => void;
   className?: string;
+  initialImage?: string;
 }
 
-export function ProfileImageUploader({ onImageChange, className }: ProfileImageUploaderProps) {
+export function ProfileImageUploader({
+  onImageChange,
+  className,
+  initialImage,
+}: ProfileImageUploaderProps) {
   const DEFAULT_IMAGE = uploadimage;
 
-  const [preview, setPreview] = useState<string>(DEFAULT_IMAGE);
+  const [preview, setPreview] = useState<string>(initialImage || DEFAULT_IMAGE);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrlRef = useRef<string | null>(null);
 
@@ -69,7 +74,7 @@ export function ProfileImageUploader({ onImageChange, className }: ProfileImageU
         <img
           src={preview}
           alt="프로필 이미지"
-          className="hover:brightness-90' h-full w-full rounded-full bg-gray-200 object-cover group-hover:brightness-90"
+          className="h-full w-full rounded-full bg-gray-200 object-cover group-hover:brightness-90 hover:brightness-90"
         />
 
         {/* 초록색 사진 아이콘 뱃지 */}

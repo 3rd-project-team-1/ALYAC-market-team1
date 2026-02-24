@@ -7,11 +7,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { checkAccountnameDuplicate, uploadProfileImage } from '@/entities/auth/api/signup';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
+import { ProfileImageUploader } from '@/features/profile/ui/ProfileImageUploader';
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-
-import { ProfileImageUploader } from './ProfileImageUploader';
 
 interface ProfileFormData {
   username: string;
