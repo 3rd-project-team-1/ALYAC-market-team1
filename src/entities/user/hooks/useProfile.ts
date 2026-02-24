@@ -16,9 +16,7 @@ export function useProfile(accountname?: string) {
     enabled: !!targetAccountname,
   });
 
-  const isMyProfile = accountname
-    ? !!myAccountname && myAccountname === accountname
-    : true;
+  const isMyProfile = accountname ? !!myAccountname && myAccountname === accountname : true;
 
   return { profile: data ?? null, isLoading, isMyProfile };
 }

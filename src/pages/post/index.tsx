@@ -97,14 +97,14 @@ export function PostPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="bg-background flex min-h-screen flex-col">
       <TopBasicNav />
       {/* 게시글 본문 */}
       <div className="px-4 pt-5">
         {/* 작성자 정보 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 overflow-hidden rounded-full bg-muted">
+            <div className="bg-muted h-10 w-10 overflow-hidden rounded-full">
               <img
                 src={getImageUrl(post.author.image) ?? uploadImage}
                 alt="프로필"
@@ -112,8 +112,8 @@ export function PostPage() {
               />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">{post.author.username}</p>
-              <p className="text-xs text-muted-foreground">@{post.author.accountname}</p>
+              <p className="text-foreground text-sm font-semibold">{post.author.username}</p>
+              <p className="text-muted-foreground text-xs">@{post.author.accountname}</p>
             </div>
           </div>
           <button type="button" onClick={() => setShowModal(true)} aria-label="더보기">
@@ -126,7 +126,7 @@ export function PostPage() {
         </div>
 
         {/* 게시글 내용 */}
-        <p className="mt-4 text-sm leading-relaxed text-foreground">{post.content}</p>
+        <p className="text-foreground mt-4 text-sm leading-relaxed">{post.content}</p>
 
         {/* 게시글 이미지 */}
         {post.image && (
@@ -143,7 +143,12 @@ export function PostPage() {
             disabled={heartMutation.isPending}
             className="flex items-center gap-1.5"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill={post.hearted ? '#11CC27' : 'none'}>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill={post.hearted ? '#11CC27' : 'none'}
+            >
               <path
                 d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
                 stroke={post.hearted ? '#11CC27' : 'currentColor'}
@@ -152,7 +157,7 @@ export function PostPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-xs text-muted-foreground">{post.heartCount}</span>
+            <span className="text-muted-foreground text-xs">{post.heartCount}</span>
           </button>
           <button type="button" className="flex items-center gap-1.5">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -164,19 +169,19 @@ export function PostPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-xs text-muted-foreground">{post.commentCount}</span>
+            <span className="text-muted-foreground text-xs">{post.commentCount}</span>
           </button>
         </div>
       </div>
 
       {/* 구분선 */}
-      <div className="mt-4 border-t border-border" />
+      <div className="border-border mt-4 border-t" />
 
       {/* 댓글 목록 */}
       <div className="flex flex-col gap-4 px-4 py-4 pb-20">
         {comments.map((c) => (
           <div key={c.id} className="flex items-start gap-3">
-            <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-muted">
+            <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
               <img
                 src={getImageUrl(c.author.image) ?? uploadImage}
                 alt={c.author.username}
@@ -185,12 +190,12 @@ export function PostPage() {
             </div>
             <div className="flex flex-1 flex-col gap-0.5">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-foreground">{c.author.username}</span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-foreground text-sm font-semibold">{c.author.username}</span>
+                <span className="text-muted-foreground text-xs">
                   {new Date(c.createdAt).toLocaleDateString('ko-KR')}
                 </span>
               </div>
-              <p className="text-sm text-foreground">{c.content}</p>
+              <p className="text-foreground text-sm">{c.content}</p>
             </div>
             {c.author.accountname === myAccountname && (
               <button
@@ -213,8 +218,8 @@ export function PostPage() {
       </div>
 
       {/* 댓글 입력창 */}
-      <div className="fixed bottom-0 left-0 right-0 flex items-center gap-3 border-t border-border bg-background px-4 py-3">
-        <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full bg-muted">
+      <div className="border-border bg-background fixed right-0 bottom-0 left-0 flex items-center gap-3 border-t px-4 py-3">
+        <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
           <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
         <input
@@ -222,7 +227,7 @@ export function PostPage() {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="댓글 달아이지..."
-          className="flex-1 bg-background text-sm text-foreground outline-none placeholder:text-muted-foreground"
+          className="bg-background text-foreground placeholder:text-muted-foreground flex-1 text-sm outline-none"
         />
         <button
           type="button"
@@ -241,15 +246,15 @@ export function PostPage() {
           onClick={() => setShowModal(false)}
         >
           <div
-            className="w-full max-w-md rounded-t-2xl bg-background pb-8"
+            className="bg-background w-full max-w-md rounded-t-2xl pb-8"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-center py-3">
-              <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
+              <div className="bg-muted-foreground/30 h-1 w-10 rounded-full" />
             </div>
             <button
               type="button"
-              className="w-full px-6 py-4 text-left text-sm text-foreground hover:bg-accent"
+              className="text-foreground hover:bg-accent w-full px-6 py-4 text-left text-sm"
               onClick={() => setShowModal(false)}
             >
               신고하기
@@ -257,7 +262,7 @@ export function PostPage() {
             {isMyPost && (
               <button
                 type="button"
-                className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
+                className="text-destructive hover:bg-accent w-full px-6 py-4 text-left text-sm"
                 onClick={() => deletePostMutation.mutate()}
                 disabled={deletePostMutation.isPending}
               >
@@ -275,15 +280,15 @@ export function PostPage() {
           onClick={() => setShowCommentModal(false)}
         >
           <div
-            className="w-full max-w-md rounded-t-2xl bg-background pb-8"
+            className="bg-background w-full max-w-md rounded-t-2xl pb-8"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-center py-3">
-              <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
+              <div className="bg-muted-foreground/30 h-1 w-10 rounded-full" />
             </div>
             <button
               type="button"
-              className="w-full px-6 py-4 text-left text-sm text-destructive hover:bg-accent"
+              className="text-destructive hover:bg-accent w-full px-6 py-4 text-left text-sm"
               onClick={() => selectedCommentId && deleteCommentMutation.mutate(selectedCommentId)}
               disabled={deleteCommentMutation.isPending}
             >

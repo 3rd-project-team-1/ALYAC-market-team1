@@ -5,7 +5,6 @@ import { checkEmailDuplicate } from '@/entities/auth/api/signup';
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-import { Label } from '@/shared/ui/label';
 
 interface EmailFormData {
   email: string;
@@ -35,12 +34,9 @@ export function SignUpEmailForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground block text-sm font-medium">
-          이메일
-        </Label>
         <FormField
-          id="email"
           type="email"
+          label="이메일"
           placeholder="이메일을 입력해 주세요."
           register={register('email', {
             required: '이메일을 입력해 주세요.',
@@ -54,12 +50,9 @@ export function SignUpEmailForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-foreground block text-sm font-medium">
-          비밀번호
-        </Label>
         <FormField
-          id="password"
           type="password"
+          label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           register={register('password', {
             required: '비밀번호를 입력해 주세요.',
@@ -73,8 +66,10 @@ export function SignUpEmailForm() {
         type="submit"
         disabled={!isValid}
         className={cn(
-          'ring-offset-background focus-visible:ring-ring inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#6FCA3C] px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors hover:bg-[#5CB32A] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#6FCA3C] [&_svg]:pointer-events-none [&_svg]:shrink-0',
-          // isValid ? 'bg-[#6BCB26] hover:bg-[#5CB020]' : 'bg-[#D9D9D9] text-gray-400',
+          'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+          isValid
+            ? 'bg-[#6BCB26] hover:bg-[#5CB020]'
+            : 'cursor-not-allowed bg-[#A7FFB9] text-white',
         )}
       >
         다음
