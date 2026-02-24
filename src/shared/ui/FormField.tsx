@@ -9,6 +9,7 @@ interface FormFieldProps {
   placeholder?: string;
   register: UseFormRegisterReturn;
   error?: FieldError;
+  readonly?: boolean;
 }
 
 export function FormField({ label, type = 'text', placeholder, register, error }: FormFieldProps) {

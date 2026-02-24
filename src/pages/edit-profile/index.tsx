@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { ProfileImageUploader } from '@/features/profile/ui/ProfileImageUploader';
 import axiosInstance from '@/shared/api/axios';
 import { getImageUrl } from '@/shared/lib/utils';
-import uploadFile from '@/shared/assets/icons/upload-file.svg';
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { FormField } from '@/shared/ui/FormField';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
@@ -22,16 +22,7 @@ export function EditProfilePage() {
   const queryClient = useQueryClient();
 
   const { profile, isLoading } = useProfile();
-
-  // 사용자가 새로 선택한 이미지만 별도 관리 (null이면 profile.image 사용)
-  const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
-  const [newUploadedImagePath, setNewUploadedImagePath] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // 파생 상태: 새 이미지가 없으면 서버 값 사용 (서버 이미지는 절대 URL로 변환)
-  const imagePreview = newImagePreview ?? getImageUrl(profile?.image);
-  const uploadedImagePath = newUploadedImagePath ?? profile?.image ?? '';
-
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const {
     register,
     handleSubmit,
@@ -44,42 +35,29 @@ export function EditProfilePage() {
       intro: profile?.intro ?? '',
     },
   });
-
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => setNewImagePreview(reader.result as string);
-    reader.readAsDataURL(file);
-
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      setNewUploadedImagePath(res.data.path);
-    } catch (error) {
-      console.error('이미지 업로드 실패:', error);
-    }
-  };
-
   // 프로필 수정 mutation
   const updateMutation = useMutation({
-    mutationFn: (data: FormValues) =>
-      userApi.updateProfile({
+    mutationFn: async (data: FormValues) => {
+      let imagePath = profile?.image ?? '';
+
+      if (profileImageFile) {
+        const formData = new FormData();
+        formData.append('image', profileImageFile);
+        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        imagePath = res.data.path;
+      }
+
+      return userApi.updateProfile({
         user: {
           username: data.username,
           accountname: profile?.accountname ?? '',
           intro: data.intro,
-          image: uploadedImagePath,
+          image: imagePath,
         },
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       navigate(-1);
@@ -101,34 +79,10 @@ export function EditProfilePage() {
         disabled={updateMutation.isPending}
         onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
       />
-      {/* 프로필 이미지 */}
-      <div className="flex justify-center py-8">
-        <div className="relative">
-          <div className="bg-muted h-24 w-24 overflow-hidden rounded-full">
-            {imagePreview ? (
-              <img src={imagePreview} alt="프로필 이미지" className="h-full w-full object-cover" />
-            ) : (
-              <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={handleImageClick}
-            className="absolute right-0 bottom-0 transition-all hover:brightness-75"
-            aria-label="이미지 변경"
-          >
-            <img src={uploadFile} alt="이미지 변경" width={28} height={28} />
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
-          />
-        </div>
-      </div>
-
+      <ProfileImageUploader
+        onImageChange={setProfileImageFile}
+        initialImage={getImageUrl(profile?.image) ?? undefined}
+      />
       {/* 입력 폼 */}
       <form
         onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
@@ -136,17 +90,17 @@ export function EditProfilePage() {
       >
         {/* 사용자 이름 */}
         <div className="flex flex-col gap-1">
-          <label className="text-foreground text-sm font-medium">사용자 이름</label>
-          <input
-            {...register('username', {
+          <FormField
+            type="text"
+            label="사용자 이름"
+            placeholder="2~10자 이내여야 합니다."
+            register={register('username', {
               required: '사용자 이름을 입력해주세요.',
-              minLength: { value: 2, message: '사용자 이름은 최소 2자 이상이어야 합니다.' },
-              maxLength: { value: 10, message: '사용자 이름은 10자 이하여야 합니다.' },
+              minLength: { value: 2, message: '2자 이상 입력해주세요.' },
+              maxLength: { value: 10, message: '10자 이하로 입력해주세요.' },
             })}
-            placeholder="이름을 입력하세요."
-            className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.username ? 'border-destructive' : 'border-border'}`}
+            error={errors.username}
           />
-          {errors.username && <p className="text-destructive text-xs">{errors.username.message}</p>}
         </div>
 
         {/* 계정 ID */}
@@ -163,19 +117,13 @@ export function EditProfilePage() {
 
         {/* 소개 */}
         <div className="flex flex-col gap-1">
-          <label className="text-foreground text-sm font-medium">소개</label>
-          <input
-            {...register('intro', {
-              maxLength: { value: 60, message: '소개는 60자 이하여야 합니다.' },
-            })}
-            placeholder="간단한 자기 소개를 입력하세요."
-            className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.intro ? 'border-destructive' : 'border-border'}`}
+          <FormField
+            type="text"
+            label="소개"
+            placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
+            register={register('intro', { required: '필수', maxLength: 60 })}
+            error={errors.intro}
           />
-          {errors.intro ? (
-            <p className="text-destructive text-xs">{errors.intro.message}</p>
-          ) : (
-            <p className="text-muted-foreground text-xs">최대 60자</p>
-          )}
         </div>
 
         <button
