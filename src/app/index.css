@@ -19,6 +19,7 @@
   /* 버튼 색상 추가 */
   --color-primary-green: #11cc27;
   --color-primary-green-light: #a7ffb9;
+  --color-primary-green-hover: #5cb020;
   /* 기존 변수들 */
   color-scheme: light;
   --radius: 0.625rem;
@@ -73,6 +74,7 @@ body {
   /* 버튼 색상 추가 */
   --color-primary-green: var(--color-primary-green);
   --color-primary-green-light: var(--color-primary-green-light);
+  --color-primary-green-hover: var(--color-primary-green-hover);
   /* 기존 변수들 */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
