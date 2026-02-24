@@ -10,6 +10,7 @@ const HIDE_TAB_MENU_PATHS = [
   '/signup',
   '/post',
   '/chat-room',
+  '/signup/profile',
   '/',
 ];
 

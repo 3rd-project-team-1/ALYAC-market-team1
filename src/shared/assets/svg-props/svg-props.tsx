@@ -6,16 +6,8 @@ interface IconProps {
 }
 
 /* upload file·image */
-export const UploadFile = ({ size = 50, color = 'currentColor', ...props }: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 50 50"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <circle cx="25" cy="25" r="25" fill="#11CC27" />
+export const UploadFile = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="13 13 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M33.1667 14.5H16.8333C15.5447 14.5 14.5 15.5447 14.5 16.8333V33.1667C14.5 34.4553 15.5447 35.5 16.8333 35.5H33.1667C34.4553 35.5 35.5 34.4553 35.5 33.1667V16.8333C35.5 15.5447 34.4553 14.5 33.1667 14.5Z"
       stroke="white"
@@ -76,26 +68,13 @@ export const ImgButton = ({ size = 36, color = 'currentColor', ...props }: IconP
 
 export const UploadImageIcon = (props: React.SVGProps<SVGSVGElement>): React.JSX.Element => (
   <svg
-    width="1em"
-    height="1em"
     viewBox="0 0 110 110"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     {...props}
   >
-    <path d="M0 0H110V110H0V0Z" fill="url(#pattern_upload_image)" />
-    <defs>
-      <pattern
-        id="pattern_upload_image"
-        patternContentUnits="objectBoundingBox"
-        width="1"
-        height="1"
-      >
-        <use xlinkHref="#image_upload_image" transform="matrix(0.00909 0 0 0.00909 0 0)" />
-      </pattern>
-      <image id="image_upload_image" width="110" height="110" xlinkHref="/upload-image.webp" />
-    </defs>
+    <image x="0" y="0" width="110" height="110" href="/upload-image.webp" />
   </svg>
 );
 
