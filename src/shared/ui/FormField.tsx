@@ -1,9 +1,9 @@
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
 import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
 
 interface FormFieldProps {
-  id: string;
   label?: string;
   type?: string;
   placeholder?: string;
@@ -11,23 +11,16 @@ interface FormFieldProps {
   error?: FieldError;
 }
 
-export function FormField({
-  id,
-  label,
-  type = 'text',
-  placeholder,
-  register,
-  error,
-}: FormFieldProps) {
+export function FormField({ label, type = 'text', placeholder, register, error }: FormFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={id} className="text-sm font-medium">
+        <Label htmlFor={register.name} className="text-sm font-medium">
           {label}
-        </label>
+        </Label>
       )}
       <Input
-        id={id}
+        id={register.name}
         type={type}
         placeholder={placeholder}
         aria-invalid={error ? 'true' : 'false'}

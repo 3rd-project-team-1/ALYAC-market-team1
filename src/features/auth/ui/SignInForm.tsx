@@ -1,7 +1,6 @@
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-import { Label } from '@/shared/ui/label';
 
 import { useSignInForm } from '../hooks/useSignInForm';
 
@@ -12,12 +11,9 @@ export function SignInForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* --- 이메일 필드 --- */}
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground block text-sm font-medium">
-          이메일
-        </Label>
         <FormField
-          id="email"
           type="email"
+          label="이메일"
           placeholder="이메일을 입력해 주세요."
           register={register('email', {
             required: '이메일을 입력해 주세요.',
@@ -32,12 +28,9 @@ export function SignInForm() {
 
       {/* --- 비밀번호 필드 --- */}
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-foreground block text-sm font-medium">
-          비밀번호
-        </Label>
         <FormField
-          id="password"
           type="password"
+          label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           register={register('password', {
             required: '비밀번호를 입력해 주세요.',
