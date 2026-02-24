@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { getImageUrl } from '@/shared/lib/utils';
+import { TopChatNav } from '@/widgets/top-chat-nav';
 
 interface Message {
   id: string;
@@ -91,28 +92,7 @@ export function ChatRoomPage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* 헤더 */}
-      <header className="border-border flex items-center justify-between border-b px-4 py-3">
-        <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <h1 className="text-foreground text-base font-medium">이스트 시큐리티 알약</h1>
-        <button type="button" onClick={() => setShowModal(true)} aria-label="더보기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="5" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="19" cy="12" r="1.5" fill="currentColor" />
-          </svg>
-        </button>
-      </header>
+      <TopChatNav title="이스트 시큐리티 알약" onMoreClick={() => setShowModal(true)} />
 
       {/* 메시지 목록 */}
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-5">

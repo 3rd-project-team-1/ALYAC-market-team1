@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 interface ChatRoom {
   id: string;
@@ -40,27 +41,7 @@ export function ChatPage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* 헤더 */}
-      <header className="border-border flex items-center justify-between border-b px-4 py-3">
-        <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <button type="button" aria-label="더보기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="5" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="19" cy="12" r="1.5" fill="currentColor" />
-          </svg>
-        </button>
-      </header>
+      <TopBasicNav />
 
       {/* 채팅 목록 */}
       <ul>

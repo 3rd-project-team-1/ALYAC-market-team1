@@ -9,7 +9,7 @@ import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { getImageUrl } from '@/shared/lib/utils';
-import { Button } from '@/shared/ui/button';
+import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface LocationState {
   content?: string;
@@ -87,28 +87,11 @@ export function PostCreatePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* 헤더 */}
-      <header className="border-border flex items-center justify-between border-b px-4 py-3">
-        <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <Button
-          type="submit"
-          form="upload-form"
-          disabled={!hasContent || isSubmitting}
-          className={`rounded-full px-5 py-1.5 text-sm font-semibold text-white ${hasContent && !isSubmitting ? 'bg-[#3C9E00] hover:bg-[#2d7a00]' : 'bg-[#C4E4A5]'}`}
-        >
-          {isSubmitting ? '업로드 중...' : '업로드'}
-        </Button>
-      </header>
+      <TopUploadNav
+        label={isSubmitting ? '업로드 중...' : '업로드'}
+        disabled={!hasContent || isSubmitting}
+        onSubmit={handleSubmit(onSubmit)}
+      />
 
       {/* 본문 */}
       <form

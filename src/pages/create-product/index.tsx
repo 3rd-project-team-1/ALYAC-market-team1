@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import imageIcon from '@/shared/assets/icons/image.svg';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
   productName: string;
@@ -49,6 +50,7 @@ export function CreateProductPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <TopUploadNav label="저장" onSubmit={handleSubmit(onSubmit)} />
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 본문 */}
         <div className="flex flex-col gap-5 px-6 pt-6">

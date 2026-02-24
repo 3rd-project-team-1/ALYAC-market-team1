@@ -8,6 +8,7 @@ import { postApi } from '@/entities/post/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { getImageUrl } from '@/shared/lib/utils';
+import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {
   const { postId } = useParams<{ postId: string }>();
@@ -97,6 +98,7 @@ export function PostPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <TopBasicNav />
       {/* 게시글 본문 */}
       <div className="px-4 pt-5">
         {/* 작성자 정보 */}

@@ -10,6 +10,7 @@ import axiosInstance from '@/shared/api/axios';
 import { getImageUrl } from '@/shared/lib/utils';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
   username: string;
@@ -95,6 +96,11 @@ export function EditProfilePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
+      <TopUploadNav
+        label="저장"
+        disabled={updateMutation.isPending}
+        onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
+      />
       {/* 프로필 이미지 */}
       <div className="flex justify-center py-8">
         <div className="relative">
