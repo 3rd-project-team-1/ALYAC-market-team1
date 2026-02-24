@@ -7,11 +7,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { checkAccountnameDuplicate, uploadProfileImage } from '@/entities/auth/api/signup';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
+import { ProfileImageUploader } from '@/features/profile/ui/ProfileImageUploader';
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-
-import { ProfileImageUploader } from './ProfileImageUploader';
 
 interface ProfileFormData {
   username: string;
@@ -117,8 +116,9 @@ export function SignUpProfileForm() {
         <FormField
           type="text"
           label="소개"
+          readonly={true}
           placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
-          register={register('intro', { required: '필수', maxLength: 100 })}
+          register={register('intro', { required: '필수', maxLength: 60 })}
           error={errors.intro}
         />
       </div>
@@ -128,8 +128,8 @@ export function SignUpProfileForm() {
         className={cn(
           'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
           isValid
-            ? 'bg-[#6BCB26] hover:bg-[#5CB020]'
-            : 'cursor-not-allowed bg-[#A7FFB9] text-white',
+            ? 'bg-[var(--color-primary-green)] hover:bg-[var(--color-primary-green-hover)] active:bg-[var(--color-primary-green-hover)]'
+            : 'cursor-not-allowed bg-[var(--color-primary-green-light)] text-white',
         )}
       >
         {signUpMutation.isPending ? '처리 중...' : '알약마켓 시작하기'}

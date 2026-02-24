@@ -68,8 +68,8 @@ export function SignUpEmailForm() {
         className={cn(
           'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
           isValid
-            ? 'bg-[#6BCB26] hover:bg-[#5CB020]'
-            : 'cursor-not-allowed bg-[#A7FFB9] text-white',
+            ? 'bg-[var(--color-primary-green)] hover:bg-[var(--color-primary-green-hover)] active:bg-[var(--color-primary-green-hover)]'
+            : 'cursor-not-allowed bg-[var(--color-primary-green-light)] text-white',
         )}
       >
         다음
