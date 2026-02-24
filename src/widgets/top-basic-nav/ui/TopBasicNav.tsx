@@ -1,23 +1,40 @@
-import { useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import { removeToken } from '@/entities/auth/lib/token';
+import { LogoutModal } from '@/shared/ui/modal';
 
 type Theme = 'light' | 'dark' | 'system';
 
 interface TopBasicNavProps {
   onSettings?: () => void;
+  userId?: string;
 }
 
-export function TopBasicNav({ onSettings }: TopBasicNavProps) {
+export function TopBasicNav({ onSettings, userId }: TopBasicNavProps) {
+  // userId 구조분해 추가
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<Theme>(
-    (localStorage.getItem('theme') as Theme) || 'system',
-  );
 
+  const themeKey = userId ? `theme_${userId}` : 'theme';
+
+  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+    return (localStorage.getItem(themeKey) as Theme) || 'system';
+  });
+
+  useEffect(() => {
+    const saved = (localStorage.getItem(themeKey) as Theme) || 'system';
+    const isDark =
+      saved === 'dark' ||
+      (saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList.toggle('dark', isDark);
+    // startTransition으로 감싸면 lint 경고 없이 setState 호출 가능
+    startTransition(() => {
+      setCurrentTheme(saved);
+    });
+  }, [themeKey]);
   const toggleTheme = () => {
     const next: Record<Theme, Theme> = {
       light: 'dark',
@@ -31,7 +48,7 @@ export function TopBasicNav({ onSettings }: TopBasicNavProps) {
     } else {
       document.documentElement.classList.toggle('dark', nextTheme === 'dark');
     }
-    localStorage.setItem('theme', nextTheme);
+    localStorage.setItem(themeKey, nextTheme); // key 변경
     setCurrentTheme(nextTheme);
   };
 
@@ -163,32 +180,16 @@ export function TopBasicNav({ onSettings }: TopBasicNavProps) {
       </header>
 
       {isLogoutModalOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-[100] bg-black/60"
-            onClick={() => setIsLogoutModalOpen(false)}
-          />
-          <div className="bg-background fixed top-1/2 left-1/2 z-[101] w-[252px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[10px] shadow-xl">
-            <p className="text-foreground py-6 text-center text-sm">로그아웃하시겠어요?</p>
-            <div className="border-border flex border-t">
-              <button
-                className="text-foreground hover:bg-accent border-border flex-1 border-r py-3 text-sm"
-                onClick={() => setIsLogoutModalOpen(false)}
-              >
-                취소
-              </button>
-              <button
-                className="hover:bg-accent flex-1 py-3 text-sm font-medium text-[#11CC27]"
-                onClick={() => {
-                  handleLogout();
-                  setIsLogoutModalOpen(false);
-                }}
-              >
-                로그아웃
-              </button>
-            </div>
-          </div>
-        </>
+        <LogoutModal
+          title="로그아웃 하시겠습니까?"
+          confirmText="로그아웃"
+          cancelText="취소"
+          onConfirm={() => {
+            handleLogout();
+            setIsLogoutModalOpen(false);
+          }}
+          onCancel={() => setIsLogoutModalOpen(false)}
+        />
       )}
     </>
   );

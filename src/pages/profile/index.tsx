@@ -16,6 +16,7 @@ import { TopBasicNav } from '@/widgets/top-basic-nav';
 type ViewMode = 'grid' | 'list';
 
 export function ProfilePage() {
+  const myUserId = localStorage.getItem('lastUserId') ?? undefined;
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -66,7 +67,7 @@ export function ProfilePage() {
   if (isLoading) {
     return (
       <div className="bg-background flex min-h-screen flex-col">
-        <TopBasicNav />
+        <TopBasicNav userId={myUserId} />
         <div className="flex flex-1 items-center justify-center">
           <div className="border-muted border-t-foreground h-8 w-8 animate-spin rounded-full border-2" />
         </div>
@@ -76,7 +77,7 @@ export function ProfilePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col pb-20">
-      <TopBasicNav />
+      <TopBasicNav userId={myUserId}/>
 
       {/* 프로필 정보 */}
       <section className="px-6 pt-[60px] pb-6">
