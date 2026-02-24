@@ -1,6 +1,11 @@
+import { useRef } from 'react';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { productApi } from '@/entities/product/api';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import imageIcon from '@/shared/assets/icons/image.svg';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
@@ -13,8 +18,18 @@ type FormValues = {
 
 export function CreateProductPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { profile } = useProfile();
+  const imageFileRef = useRef<File | null>(null);
 
-  const { fileInputRef, imagePreview, handleImageClick, handleImageChange } = useImageUpload();
+  const { fileInputRef, imagePreview, handleImageClick, handleImageChange: baseHandleImageChange } =
+    useImageUpload();
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) imageFileRef.current = file;
+    baseHandleImageChange(e);
+  };
 
   const {
     register,
@@ -28,11 +43,34 @@ export function CreateProductPage() {
     defaultValues: { productName: '', price: '', link: '' },
   });
 
+  const createMutation = useMutation({
+    mutationFn: async (data: FormValues) => {
+      // 이미지 업로드 (선택) - 서버는 itemImage 필수이므로 없으면 기본값 사용
+      let itemImage = 'uploadFiles/default.png';
+      if (imageFileRef.current) {
+        const res = await productApi.uploadImage(imageFileRef.current);
+        itemImage = res.data.path;
+      }
+
+      return productApi.createProduct({
+        itemName: data.productName,
+        price: Number(data.price),
+        // 서버는 link 필수이므로 빈 값이면 현재 앱 주소로 대체
+        link: data.link || `${window.location.origin}/create-product`,
+        itemImage,
+      });
+    },
+    onSuccess: () => {
+      // 프로필 페이지의 상품 목록 캐시 무효화 → 재조회
+      queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
+      navigate('/profile');
+    },
+  });
+
   // 가격 입력 핸들러 - 숫자 외 문자 차단
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
     if (/[^0-9]/.test(raw)) {
-      // 숫자 외 문자가 있으면 에러 표시 + 숫자만 남김
       setError('price', { type: 'manual', message: '숫자만 입력 가능합니다.' });
       setValue('price', raw.replace(/[^0-9]/g, ''));
     } else {
@@ -42,14 +80,15 @@ export function CreateProductPage() {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // TODO: 저장 API 연동
-    navigate('/profile');
+    createMutation.mutate(data);
   };
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      <TopUploadNav label="저장" onSubmit={handleSubmit(onSubmit)} />
+      <TopUploadNav
+        label={createMutation.isPending ? '저장 중...' : '저장'}
+        onSubmit={handleSubmit(onSubmit)}
+      />
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 본문 */}
         <div className="flex flex-col gap-5 px-6 pt-6">
@@ -97,7 +136,10 @@ export function CreateProductPage() {
           <div className="flex flex-col gap-1">
             <label className="text-foreground text-sm font-bold">가격</label>
             <input
-              {...register('price')}
+              {...register('price', {
+                required: '가격을 입력해주세요.',
+                min: { value: 1, message: '가격은 1원 이상이어야 합니다.' },
+              })}
               placeholder="숫자만 입력 가능합니다."
               inputMode="numeric"
               onChange={handlePriceChange}

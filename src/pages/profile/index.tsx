@@ -172,12 +172,10 @@ export function ProfilePage() {
           <h2 className="text-foreground mb-3 text-sm font-semibold">판매 중인 상품</h2>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {products.map((product) => (
-              <a
+              <div
                 key={product.id}
-                href={product.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-shrink-0"
+                className="flex-shrink-0 cursor-pointer"
+                onClick={() => navigate('/create-product')}
               >
                 <div className="bg-muted h-[90px] w-[90px] overflow-hidden rounded-xl">
                   <img
@@ -190,7 +188,7 @@ export function ProfilePage() {
                   {product.itemName}
                 </p>
                 <p className="text-xs text-[#3C9E00]">{product.price.toLocaleString()}원</p>
-              </a>
+              </div>
             ))}
           </div>
         </section>
