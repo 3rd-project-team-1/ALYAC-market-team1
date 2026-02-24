@@ -1,4 +1,4 @@
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import imageIcon from '@/shared/assets/icons/image.svg';
@@ -21,7 +21,6 @@ export function CreateProductPage() {
     setValue,
     setError,
     clearErrors,
-    control,
     formState: { errors },
   } = useForm<FormValues>({
     mode: 'onChange',
