@@ -61,7 +61,7 @@ export function ProfileImageUploader({ onImageChange, className }: ProfileImageU
         onClick={handleClick}
         className={cn(
           'group relative h-32 w-32 rounded-full p-0 hover:bg-transparent',
-          'focus-visible:ring-2 focus-visible:ring-[#6FCA3C] focus-visible:ring-offset-2',
+          'focus-visible:ring-2 focus-visible:ring-[var(--color-primary-green)] focus-visible:ring-offset-2',
           'cursor-pointer',
         )}
       >
@@ -69,7 +69,7 @@ export function ProfileImageUploader({ onImageChange, className }: ProfileImageU
         <img
           src={preview}
           alt="프로필 이미지"
-          className="h-full w-full rounded-full bg-gray-200 object-cover"
+          className="hover:brightness-90' h-full w-full rounded-full bg-gray-200 object-cover group-hover:brightness-90"
         />
 
         {/* 초록색 사진 아이콘 뱃지 */}
@@ -80,7 +80,7 @@ export function ProfileImageUploader({ onImageChange, className }: ProfileImageU
             'rounded-full border-2 border-white text-white',
             'transition-all duration-300',
             '[&_img]:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0',
-            'bg-[#6FCA3C] group-hover:brightness-90 hover:brightness-90',
+            'bg-[var(--color-primary-green)] group-hover:brightness-90 hover:brightness-90',
           )}
         >
           <img src={uploadfile} alt="업로드 아이콘" className="h-10 w-10" />
