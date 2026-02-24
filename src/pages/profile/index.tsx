@@ -174,7 +174,7 @@ export function ProfilePage() {
                 className="flex-shrink-0"
               >
                 <div className="h-[90px] w-[90px] overflow-hidden rounded-xl bg-muted">
-                  <img src={product.itemImage} alt={product.itemName} className="h-full w-full object-cover" />
+                  <img src={getImageUrl(product.itemImage) ?? product.itemImage} alt={product.itemName} className="h-full w-full object-cover" />
                 </div>
                 <p className="mt-1 max-w-[90px] truncate text-xs font-medium text-foreground">{product.itemName}</p>
                 <p className="text-xs text-[#3C9E00]">{product.price.toLocaleString()}원</p>
@@ -242,7 +242,7 @@ export function ProfilePage() {
                 <p className="mt-2 line-clamp-2 text-sm text-foreground">{post.content}</p>
                 {post.image && (
                   <div className="mt-2 overflow-hidden rounded-xl">
-                    <img src={post.image.split(',')[0]} alt="게시글 이미지" className="w-full object-cover" />
+                    <img src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]} alt="게시글 이미지" className="w-full object-cover" />
                   </div>
                 )}
                 <div className="mt-2 flex items-center gap-4">
@@ -267,7 +267,7 @@ export function ProfilePage() {
             {posts.map((post) => (
               <div key={post.id} className="aspect-square cursor-pointer overflow-hidden bg-muted" onClick={() => navigate(`/post/${post.id}`)}>
                 {post.image ? (
-                  <img src={post.image.split(',')[0]} alt="게시글" className="h-full w-full object-cover" />
+                  <img src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]} alt="게시글" className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
                     <p className="line-clamp-3 p-2 text-center text-xs text-muted-foreground">{post.content}</p>

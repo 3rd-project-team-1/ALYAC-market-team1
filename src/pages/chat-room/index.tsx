@@ -3,7 +3,9 @@ import { useCallback, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils';
 
 interface Message {
   id: string;
@@ -43,6 +45,7 @@ const DUMMY_MESSAGES: Message[] = [
 export function ChatRoomPage() {
   const navigate = useNavigate();
   const idCounterRef = useRef(DUMMY_MESSAGES.length);
+  const { profile } = useProfile();
   const [messages, setMessages] = useState<Message[]>(DUMMY_MESSAGES);
   const [showModal, setShowModal] = useState(false);
 
@@ -158,7 +161,7 @@ export function ChatRoomPage() {
       >
         {/* 내 아바타 */}
         <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
         </div>
 
         {/* 입력창 */}
