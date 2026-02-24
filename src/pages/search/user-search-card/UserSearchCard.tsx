@@ -1,22 +1,26 @@
 import UserAvatar from '@/shared/ui/userAvatar';
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 interface UserSearchCardProps {
-  // 검색 결과로 표시할 사용자 기본 정보
+  // 카드에 표시할 사용자 요약 정보
   user: {
     username: string;
     accountname: string;
     image?: string;
   };
-  // 카드 클릭 시(예: 프로필 페이지 이동) 실행할 핸들러
+  // 카드 클릭 액션
   onClick: () => void;
-  // 입력한 검색어(있으면 username에서 하이라이트 처리)
+  // username 하이라이트 키워드
   highlight?: string;
 }
 
 export function UserSearchCard({ user, onClick, highlight }: UserSearchCardProps) {
-  // 검색어가 있으면 username에서 일치 문자열을 <mark>로 감싸 강조 표시
-  const highlightedUsername = highlight
-    ? user.username.replace(new RegExp(`(${highlight})`, 'gi'), '<mark>$1</mark>')
+  const escapedHighlight = highlight ? escapeRegExp(highlight) : '';
+
+  // keyword가 있으면 일치 구간을 <mark>로 감싸 강조
+  const highlightedUsername = escapedHighlight
+    ? user.username.replace(new RegExp(`(${escapedHighlight})`, 'gi'), '<mark>$1</mark>')
     : user.username;
 
   return (
@@ -28,7 +32,7 @@ export function UserSearchCard({ user, onClick, highlight }: UserSearchCardProps
       <div>
         <p
           className="text-foreground text-sm font-semibold"
-          // <mark> 태그가 포함된 문자열을 렌더링하기 위해 사용
+          // 하이라이트 마크업 문자열 렌더링
           dangerouslySetInnerHTML={{ __html: highlightedUsername }}
         />
         <p className="text-muted-foreground text-xs">@{user.accountname}</p>
