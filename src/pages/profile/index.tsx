@@ -74,7 +74,7 @@ export function ProfilePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col pb-20">
-      <TopBasicNav userId={myUserId}/>
+      <TopBasicNav userId={myUserId} />
 
       {/* 프로필 정보 */}
       <section className="px-6 pt-[60px] pb-6">
