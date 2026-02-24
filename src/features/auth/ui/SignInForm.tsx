@@ -1,6 +1,6 @@
 import { cn } from '@/shared/lib/utils';
+import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 
 import { useSignInForm } from '../hooks/useSignInForm';
@@ -15,22 +15,19 @@ export function SignInForm() {
         <Label htmlFor="email" className="text-foreground block text-sm font-medium">
           이메일
         </Label>
-        <Input
+        <FormField
           id="email"
           type="email"
-          {...register('email', {
+          placeholder="이메일을 입력해 주세요."
+          register={register('email', {
             required: '이메일을 입력해 주세요.',
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: '올바른 이메일 형식을 입력해 주세요.',
             },
           })}
-          className={cn(
-            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-            // errors.email ? 'ring-1 ring-red-500' : '',
-          )}
+          error={errors.email}
         />
-        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
       {/* --- 비밀번호 필드 --- */}
@@ -38,19 +35,16 @@ export function SignInForm() {
         <Label htmlFor="password" className="text-foreground block text-sm font-medium">
           비밀번호
         </Label>
-        <Input
+        <FormField
           id="password"
           type="password"
-          {...register('password', {
+          placeholder="비밀번호를 입력해 주세요."
+          register={register('password', {
             required: '비밀번호를 입력해 주세요.',
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
           })}
-          className={cn(
-            'border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-12 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-            errors.password ? 'ring-1 ring-red-500' : '',
-          )}
+          error={errors.password}
         />
-        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
       </div>
 
       {/* --- 로그인 버튼 --- */}
@@ -63,7 +57,7 @@ export function SignInForm() {
           //  isValid 상태에 따라 색상 변경
           isValid
             ? 'bg-[#6BCB26] hover:bg-[#5CB020]' // 조건 충족 시: 활기찬 연두색
-            : 'cursor-not-allowed bg-[#D9D9D9] text-gray-400', // 조건 불충족 시: 회색
+            : 'cursor-not-allowed bg-[#A7FFB9] text-white', // 조건 불충족 시: 회색
         )}
       >
         {isPending ? '로그인 중...' : '로그인'}
