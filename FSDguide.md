@@ -73,6 +73,8 @@ src/
 │   └── user/
 │       ├── api.ts
 │       ├── types.ts
+│       ├── ui/
+│       │   └── UserSearchItem.tsx
 │       └── hooks/
 │           └── useProfile.ts
 ├── features/
@@ -122,9 +124,7 @@ src/
 │   │       ├── followButton.tsx
 │   │       └── followItem.tsx
 │   ├── search/
-│   │   ├── index.tsx
-│   │   └── search-input/
-│   │       └── userSearchItem.tsx
+│   │   └── index.tsx
 │   ├── signin/
 │   │   └── index.tsx
 │   ├── signup/
@@ -206,3 +206,22 @@ src/
 | /chat                 | 채팅 목록(회원)              |
 | /chat/:roomId         | 채팅방(회원)                 |
 | \*                    | Not Found(404)               |
+
+## 구조적 이슈 및 개선 사항
+
+현재 폴더 구조에서 FSD 원칙과 맞지 않는 부분들입니다. 아래 항목들을 체계적으로 정리해야 합니다.
+
+| #   | 이슈                        | 현재 위치                              | 이동 대상                                | 이유                                                |
+| --- | --------------------------- | -------------------------------------- | ---------------------------------------- | --------------------------------------------------- |
+| 1   | `lib` 폴더 중복             | `src/lib/utils.ts`                     | 제거 (이미 `shared/lib/utils.ts`에 존재) | FSD는 `lib`을 레이어 내에만 둠. 최상위 `lib` 불필요 |
+| 2   | 소셜 로그인 버튼            | `pages/home/ui/SocialLoginButtons.tsx` | `widgets/` 또는 `entities/auth/ui/`      | 홈 페이지 전용이 아니라 재사용 가능한 컴포넌트      |
+| 3   | 댓글 입력 컴포넌트          | `pages/post/comment/comment.tsx`       | `features/add-comment/ui/`               | 댓글 기능은 사용자 액션 `feature`로 분류            |
+| 4   | 프로필 페이지 서브 컴포넌트 | `pages/profile/profile-input/`         | `features/` 또는 `widgets/`              | 페이지 내 UI 조각은 상위 레이어로 분리              |
+
+## 다음 단계
+
+위 이슈들을 차례대로 정리하면서 FSD 구조를 점진적으로 안정화합니다.
+
+- 각 컴포넌트의 의존성 확인 후 안전하게 이동
+- 모듈 경로 업데이트
+- 최종 폴더 구조 문서 갱신
