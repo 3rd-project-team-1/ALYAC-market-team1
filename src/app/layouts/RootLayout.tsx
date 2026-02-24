@@ -9,6 +9,7 @@ const HIDE_TAB_MENU_PATHS = [
   '/signin',
   '/signup',
   '/post',
+  '/chat-room',
   '/',
 ];
 
