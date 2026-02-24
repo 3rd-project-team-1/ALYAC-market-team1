@@ -6,10 +6,20 @@ export interface GetProfileResponse {
   profile: Profile;
 }
 
+export interface SearchUsersResponse {
+  user: Profile[];
+}
+
 export const userApi = {
   // 프로필 조회 GET /api/profile/:accountname
   getProfile: (accountname: string) =>
     axiosInstance.get<GetProfileResponse>(`/api/profile/${accountname}`),
+
+  // 유저 검색 GET /api/user/searchuser/?keyword=:keyword
+  searchUsers: (keyword: string) =>
+    axiosInstance.get<SearchUsersResponse>('/api/user/searchuser', {
+      params: { keyword },
+    }),
 
   // 팔로우 POST /api/profile/:accountname/follow
   follow: (accountname: string) => axiosInstance.post(`/api/profile/${accountname}/follow`),

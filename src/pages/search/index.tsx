@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import { userApi } from '@/entities/user/api';
 import type { Profile } from '@/entities/user/types';
 import { UserSearchCard } from '@/pages/search/ui/UserSearchCard';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 import { TopSearchNav } from '@/widgets/top-search-nav';
 
 type SearchResultUser = Pick<Profile, 'username' | 'accountname' | 'image'>;
@@ -20,6 +21,8 @@ export function SearchPage() {
 
   // 검색어
   const [searchValue, setSearchValue] = useState('');
+  // 디바운스 100ms
+  const debouncedSearchValue = useDebounce(searchValue, 100);
 
   // 표시할 결과 목록
   const [searchResults, setSearchResults] = useState<SearchResultUser[]>([]);
@@ -31,10 +34,13 @@ export function SearchPage() {
     navigate(`/profile/${accountname}`);
   };
 
-  // 입력 변경 시 조회
-  const handleSearchChange = async (value: string) => {
+  // 입력 변경 시 검색어 상태만 갱신
+  const handleSearchChange = (value: string) => {
     setSearchValue(value);
-    const keyword = value.trim();
+  };
+
+  useEffect(() => {
+    const keyword = debouncedSearchValue.trim();
     const requestId = ++latestRequestIdRef.current;
 
     // 빈 값은 요청 없이 결과 초기화
@@ -43,25 +49,29 @@ export function SearchPage() {
       return;
     }
 
-    try {
-      const { data } = await userApi.getProfile(keyword);
+    const fetchSearchResults = async () => {
+      try {
+        const { data } = await userApi.searchUsers(keyword);
 
-      // 최신 요청이 아닐 경우 결과 반영하지 않음
-      if (requestId !== latestRequestIdRef.current) {
-        return;
+        // 최신 요청이 아닐 경우 결과 반영하지 않음
+        if (requestId !== latestRequestIdRef.current) {
+          return;
+        }
+
+        setSearchResults(data.user.map(toSearchResultUser));
+      } catch (error) {
+        // 실패 시 결과 비움
+        if (requestId !== latestRequestIdRef.current) {
+          return;
+        }
+
+        console.error('Search failed:', error);
+        setSearchResults([]);
       }
+    };
 
-      setSearchResults([toSearchResultUser(data.profile)]);
-    } catch (error) {
-      // 실패 시 결과 비움
-      if (requestId !== latestRequestIdRef.current) {
-        return;
-      }
-
-      console.error('Search failed:', error);
-      setSearchResults([]);
-    }
-  };
+    void fetchSearchResults();
+  }, [debouncedSearchValue]);
 
   return (
     <div>
