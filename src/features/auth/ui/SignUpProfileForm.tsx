@@ -116,8 +116,9 @@ export function SignUpProfileForm() {
         <FormField
           type="text"
           label="소개"
+          readonly={true}
           placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
-          register={register('intro', { required: '필수', maxLength: 100 })}
+          register={register('intro', { required: '필수', maxLength: 60 })}
           error={errors.intro}
         />
       </div>
