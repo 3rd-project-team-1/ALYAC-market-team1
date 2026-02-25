@@ -55,9 +55,14 @@ export function FeedPage() {
     navigate('/search');
   };
 
-  // 포스트 상세/수정 페이지로 이동
-  const handleRewritePost = (postId: string) => {
+  // 포스트 페이지로 이동
+  const handlePostClick = (postId: string) => {
     navigate(`/post/${postId}`);
+  };
+
+  // 포스트 수정 페이지로 이동
+  const handleRewritePost = (postId: string) => {
+    navigate(`/post/${postId}/edit`);
   };
 
   // 포스트 삭제 시 상태 업데이트
@@ -83,6 +88,7 @@ export function FeedPage() {
               isMyPost={post.author.accountname === myAccountname}
               onRewrite={handleRewritePost}
               onDelete={handleDeletePost}
+              onClick={() => handlePostClick(post.id)}
             />
           ))}
         </main>
