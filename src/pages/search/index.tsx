@@ -31,7 +31,7 @@ export function SearchPage() {
   const latestRequestIdRef = useRef(0);
 
   const handleUserClick = (accountname: string) => {
-    navigate(`/profile/${accountname}`);
+    navigate(`/api/profile/${accountname}`);
   };
 
   // 입력 변경 시 검색어 상태만 갱신
