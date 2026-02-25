@@ -86,7 +86,7 @@ export function PostCreatePage() {
   };
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopUploadNav
         label={isSubmitting ? '업로드 중...' : '업로드'}
         disabled={!hasContent || isSubmitting}
