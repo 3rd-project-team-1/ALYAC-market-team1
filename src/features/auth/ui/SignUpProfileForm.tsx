@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { checkAccountnameDuplicate, uploadProfileImage } from '@/entities/auth/api/signup';
+import { checkAccountnameDuplicate, uploadProfileImage } from '@/entities/auth/';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
 import { ProfileImageUploader } from '@/features/profile/ui/ProfileImageUploader';
