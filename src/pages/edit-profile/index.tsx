@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { ProfileImageUploader } from '@/features/profile/ui/ProfileImageUploader';
+import { ProfileImageInput } from '@/features/profile/ui/ProfileImageInput';
 import axiosInstance from '@/shared/api/axios';
 import { getImageUrl } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
@@ -75,7 +75,7 @@ export function EditProfilePage() {
         onSubmit={() => void handleSubmit((data) => updateMutation.mutate(data))()}
       />
       <div className="mt-8">
-        <ProfileImageUploader
+        <ProfileImageInput
           onImageChange={setProfileImageFile}
           initialImage={getImageUrl(profile?.image) ?? undefined}
         />
