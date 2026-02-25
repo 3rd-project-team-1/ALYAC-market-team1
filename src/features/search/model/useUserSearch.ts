@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { userApi } from '@/entities/user/api';
+import { useSearchUsers } from '@/entities/user/hooks';
 import type { Profile } from '@/entities/user/types';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 
@@ -15,43 +15,21 @@ const toSearchResultUser = (profile: Profile): SearchResultUser => ({
 export const useUserSearch = (initialSearchValue = '') => {
   const [searchValue, setSearchValue] = useState(initialSearchValue);
   const debouncedSearchValue = useDebounce(searchValue, 100);
-  const [searchResults, setSearchResults] = useState<SearchResultUser[]>([]);
-  const latestRequestIdRef = useRef(0);
 
-  const performSearch = async (keyword: string, requestId: number) => {
-    try {
-      const { data } = await userApi.searchUsers(keyword);
+  // 엔티티 레이어의 데이터 페칭 훅 사용
+  const { data, isLoading, isError } = useSearchUsers(debouncedSearchValue);
 
-      if (requestId !== latestRequestIdRef.current) {
-        return;
-      }
-
-      setSearchResults(data.user.map(toSearchResultUser));
-    } catch (error) {
-      if (requestId !== latestRequestIdRef.current) {
-        return;
-      }
-
-      console.error('Search failed:', error);
-      setSearchResults([]);
-    }
-  };
-
-  useEffect(() => {
-    const keyword = debouncedSearchValue.trim();
-    const requestId = ++latestRequestIdRef.current;
-
-    if (!keyword) {
-      setSearchResults([]);
-      return;
-    }
-
-    void performSearch(keyword, requestId);
-  }, [debouncedSearchValue]);
+  // 데이터를 뷰 모델에 맞게 변환
+  const searchResults = useMemo(() => {
+    if (!debouncedSearchValue.trim() || !data) return [];
+    return data.map(toSearchResultUser);
+  }, [data, debouncedSearchValue]);
 
   return {
     searchValue,
     setSearchValue,
     searchResults,
+    isLoading,
+    isError,
   };
 };
