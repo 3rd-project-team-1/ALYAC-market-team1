@@ -175,7 +175,7 @@ export function ProfilePage() {
               <div
                 key={product.id}
                 className="flex-shrink-0 cursor-pointer"
-                onClick={() => navigate('/create-product')}
+                onClick={() => navigate(`/edit-product/${product.id}`, { state: { product } })}
               >
                 <div className="bg-muted h-[90px] w-[90px] overflow-hidden rounded-xl">
                   <img

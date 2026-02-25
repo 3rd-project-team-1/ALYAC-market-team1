@@ -97,7 +97,7 @@ export function PostPage() {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopBasicNav />
       {/* 게시글 본문 */}
       <div className="px-4 pt-5">

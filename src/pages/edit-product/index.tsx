@@ -2,12 +2,14 @@ import { useRef } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { productApi } from '@/entities/product/api';
+import type { Product } from '@/entities/product/types';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import imageIcon from '@/shared/assets/icons/image.svg';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { getImageUrl } from '@/shared/lib/utils';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
@@ -16,14 +18,23 @@ type FormValues = {
   link: string;
 };
 
-export function CreateProductPage() {
+interface LocationState {
+  product?: Product;
+}
+
+export function EditProductPage() {
   const navigate = useNavigate();
+  const { productId } = useParams<{ productId: string }>();
+  const location = useLocation();
+  const state = location.state as LocationState | null;
+  const product = state?.product;
+
   const queryClient = useQueryClient();
   const { profile } = useProfile();
   const imageFileRef = useRef<File | null>(null);
 
   const { fileInputRef, imagePreview, handleImageClick, handleImageChange: baseHandleImageChange } =
-    useImageUpload();
+    useImageUpload(getImageUrl(product?.itemImage) ?? undefined);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,34 +51,34 @@ export function CreateProductPage() {
     formState: { errors },
   } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: { productName: '', price: '', link: '' },
+    defaultValues: {
+      productName: product?.itemName ?? '',
+      price: product?.price?.toString() ?? '',
+      link: product?.link ?? '',
+    },
   });
 
-  const createMutation = useMutation({
+  const updateMutation = useMutation({
     mutationFn: async (data: FormValues) => {
-      // 이미지 업로드 (선택) - 서버는 itemImage 필수이므로 없으면 기본값 사용
-      let itemImage = 'uploadFiles/default.png';
+      let itemImage = product?.itemImage ?? 'uploadFiles/default.png';
       if (imageFileRef.current) {
         const res = await productApi.uploadImage(imageFileRef.current);
         itemImage = res.data.path;
       }
 
-      return productApi.createProduct({
+      return productApi.updateProduct(productId!, {
         itemName: data.productName,
         price: Number(data.price),
-        // 서버는 link 필수이므로 빈 값이면 현재 앱 주소로 대체
-        link: data.link || `${window.location.origin}/create-product`,
+        link: data.link || `${window.location.origin}/edit-product/${productId}`,
         itemImage,
       });
     },
     onSuccess: () => {
-      // 프로필 페이지의 상품 목록 캐시 무효화 → 재조회
       queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
       navigate('/profile');
     },
   });
 
-  // 가격 입력 핸들러 - 숫자 외 문자 차단
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
     if (/[^0-9]/.test(raw)) {
@@ -80,17 +91,16 @@ export function CreateProductPage() {
   };
 
   const onSubmit = (data: FormValues) => {
-    createMutation.mutate(data);
+    updateMutation.mutate(data);
   };
 
   return (
     <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopUploadNav
-        label={createMutation.isPending ? '저장 중...' : '저장'}
+        label={updateMutation.isPending ? '저장 중...' : '저장'}
         onSubmit={handleSubmit(onSubmit)}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* 본문 */}
         <div className="flex flex-col gap-5 px-6 pt-6">
           {/* 이미지 등록 */}
           <div>
