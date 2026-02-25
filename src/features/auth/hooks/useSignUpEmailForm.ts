@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { checkEmailDuplicate } from '@/entities/auth/api/signup';
+import { checkEmailDuplicate } from '@/entities/auth/';
 
 export interface EmailFormData {
   email: string;
