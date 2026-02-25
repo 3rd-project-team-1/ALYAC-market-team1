@@ -22,8 +22,12 @@ export function CreateProductPage() {
   const { profile } = useProfile();
   const imageFileRef = useRef<File | null>(null);
 
-  const { fileInputRef, imagePreview, handleImageClick, handleImageChange: baseHandleImageChange } =
-    useImageUpload();
+  const {
+    fileInputRef,
+    imagePreview,
+    handleImageClick,
+    handleImageChange: baseHandleImageChange,
+  } = useImageUpload();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
