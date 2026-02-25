@@ -91,7 +91,7 @@ export function ChatRoomPage() {
   };
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopChatNav title="이스트 시큐리티 알약" onMoreClick={() => setShowModal(true)} />
 
       {/* 메시지 목록 */}
