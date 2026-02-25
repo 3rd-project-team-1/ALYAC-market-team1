@@ -43,9 +43,7 @@ export function EditProfilePage() {
       if (profileImageFile) {
         const formData = new FormData();
         formData.append('image', profileImageFile);
-        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData);
         imagePath = res.data.path;
       }
 
@@ -77,12 +75,14 @@ export function EditProfilePage() {
       <TopUploadNav
         label="저장"
         disabled={updateMutation.isPending}
-        onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
+        onSubmit={() => void handleSubmit((data) => updateMutation.mutate(data))()}
       />
-      <ProfileImageUploader
-        onImageChange={setProfileImageFile}
-        initialImage={getImageUrl(profile?.image) ?? undefined}
-      />
+      <div className="mt-8">
+        <ProfileImageUploader
+          onImageChange={setProfileImageFile}
+          initialImage={getImageUrl(profile?.image) ?? undefined}
+        />
+      </div>
       {/* 입력 폼 */}
       <form
         onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
@@ -129,14 +129,6 @@ export function EditProfilePage() {
           {errors.intro && <p className="text-destructive text-xs">{errors.intro.message}</p>}
           <p className="text-muted-foreground text-xs">최대 60자</p>
         </div>
-
-        <button
-          type="submit"
-          disabled={updateMutation.isPending}
-          className="bg-primary text-primary-foreground mt-2 rounded-lg py-3 text-sm font-medium disabled:opacity-50"
-        >
-          {updateMutation.isPending ? '저장 중...' : '저장'}
-        </button>
       </form>
     </div>
   );
