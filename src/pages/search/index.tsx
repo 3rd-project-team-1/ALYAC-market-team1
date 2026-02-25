@@ -49,7 +49,32 @@ export function SearchPage() {
     setSearchValue(value);
   };
 
-  // 디바운스된 검색어가 변경될 때마다 검색 API 호출
+  /**
+   * @param keyword - 검색할 키워드 (공백 제거됨)
+   * @param requestId - 비동기 응답 순서 제어를 위한 요청 ID
+   */
+  // 서버 API를 호출하여 사용자 검색을 수행하고 결과를 상태에 반영합니다.
+  const performSearch = async (keyword: string, requestId: number) => {
+    try {
+      const { data } = await userApi.searchUsers(keyword);
+
+      // 최신 요청이 아닐 경우(응답이 늦게 온 경우) 결과를 무시하여 데이터 정합성 유지
+      if (requestId !== latestRequestIdRef.current) {
+        return;
+      }
+
+      setSearchResults(data.user.map(toSearchResultUser));
+    } catch (error) {
+      if (requestId !== latestRequestIdRef.current) {
+        return;
+      }
+
+      console.error('Search failed:', error);
+      setSearchResults([]);
+    }
+  };
+
+  // 디바운스된 검색어가 변경될 때마다 검색 로직 실행
   useEffect(() => {
     const keyword = debouncedSearchValue.trim();
     const requestId = ++latestRequestIdRef.current;
@@ -60,28 +85,7 @@ export function SearchPage() {
       return;
     }
 
-    const fetchSearchResults = async () => {
-      try {
-        const { data } = await userApi.searchUsers(keyword);
-
-        // 최신 요청이 아닐 경우 결과 반영하지 않음
-        if (requestId !== latestRequestIdRef.current) {
-          return;
-        }
-
-        setSearchResults(data.user.map(toSearchResultUser));
-      } catch (error) {
-        // 실패 시 결과 비움
-        if (requestId !== latestRequestIdRef.current) {
-          return;
-        }
-
-        console.error('Search failed:', error);
-        setSearchResults([]);
-      }
-    };
-
-    void fetchSearchResults();
+    void performSearch(keyword, requestId);
   }, [debouncedSearchValue]);
 
   return (
