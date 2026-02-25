@@ -38,7 +38,7 @@ export function SearchPage() {
    * @param accountname - 사용자의 고유 계정 ID
    */
   const handleUserClick = (accountname: string) => {
-    navigate(`/api/profile/${accountname}`);
+    navigate(`/profile/${accountname}`);
   };
 
   /**
