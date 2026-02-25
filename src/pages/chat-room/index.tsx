@@ -4,8 +4,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
-import { getImageUrl } from '@/shared/lib/utils';
 import { TopChatNav } from '@/widgets/top-chat-nav';
 
 interface Message {

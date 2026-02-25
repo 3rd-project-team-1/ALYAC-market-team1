@@ -1,16 +1,15 @@
 import { useState } from 'react';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { postApi } from '@/entities/post/api';
-import { productApi } from '@/entities/product/api';
-import { userApi } from '@/entities/user/api';
+import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
+import { useUserProducts } from '@/entities/product/hooks/useUserProducts';
+import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
-import { getImageUrl } from '@/shared/lib/utils';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { Button } from '@/shared/ui/button';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
@@ -21,70 +20,16 @@ export function ProfilePage() {
   const myUserId = localStorage.getItem('lastUserId') ?? undefined;
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { profile, isLoading, isMyProfile } = useProfile(accountname);
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [optimisticFollowing, setOptimisticFollowing] = useState<boolean | null>(null);
-
-  // 서버 상태 기반 팔로우 여부 (낙관적 업데이트가 없으면 서버 값 사용)
-  const isFollowing = optimisticFollowing ?? profile?.isfollow ?? false;
-
-  // 상품 목록
-  const { data: products = [] } = useQuery({
-    queryKey: ['products', profile?.accountname],
-    queryFn: () => productApi.getUserProducts(profile!.accountname).then((res) => res.data.product),
-    enabled: !!profile?.accountname,
+  const { isFollowing, followMutation } = useProfileFollow({
+    accountname: profile?.accountname,
+    initialIsFollow: profile?.isfollow,
   });
 
-  // 게시글 목록
-  const { data: posts = [] } = useQuery({
-    queryKey: ['userPosts', profile?.accountname],
-    queryFn: () => postApi.getUserPosts(profile!.accountname).then((res) => res.data.post),
-    enabled: !!profile?.accountname,
-  });
-
-  // 좋아요 토글 mutation
-  const heartMutation = useMutation({
-    mutationFn: (postId: string) => postApi.toggleHeart(postId),
-    onMutate: (postId) => {
-      // 낙관적 업데이트: 즉시 UI 반영
-      queryClient.setQueryData(['userPosts', profile?.accountname], (old: typeof posts) =>
-        old.map((p) =>
-          p.id === postId
-            ? {
-                ...p,
-                hearted: !p.hearted,
-                heartCount: p.hearted ? p.heartCount - 1 : p.heartCount + 1,
-              }
-            : p,
-        ),
-      );
-    },
-    onError: () => {
-      // 실패 시 롤백
-      queryClient.invalidateQueries({ queryKey: ['userPosts', profile?.accountname] });
-    },
-  });
-
-  // 팔로우/언팔로우 mutation
-  const followMutation = useMutation({
-    mutationFn: () =>
-      isFollowing ? userApi.unfollow(profile!.accountname) : userApi.follow(profile!.accountname),
-    onMutate: () => {
-      // 낙관적 업데이트: 요청 즉시 UI 반영
-      setOptimisticFollowing((prev) => !(prev ?? profile?.isfollow ?? false));
-    },
-    onSuccess: () => {
-      // 서버 응답 후 캐시 무효화 → profile 재조회 → optimistic 초기화
-      setOptimisticFollowing(null);
-      queryClient.invalidateQueries({ queryKey: ['profile', profile?.accountname] });
-    },
-    onError: () => {
-      // 실패 시 낙관적 업데이트 롤백
-      setOptimisticFollowing(null);
-    },
-  });
+  const { products } = useUserProducts(profile?.accountname);
+  const { posts, heartMutation } = useUserPostsWithHeart(profile?.accountname);
 
   if (isLoading) {
     return (

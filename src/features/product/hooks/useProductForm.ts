@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { productApi } from '@/entities/product/api';
 import type { Product } from '@/entities/product/types';
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { uploadSingleImage } from '@/shared/lib/imageUpload';
+import { uploadSingleImage } from '@/features/image/lib/imageUpload';
 
 interface UseProductFormOptions {
   product?: Product;
