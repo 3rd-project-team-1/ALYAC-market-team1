@@ -10,6 +10,7 @@ import { ProfileImageUploader } from '@/features/profile/ui/ProfileImageUploader
 import axiosInstance from '@/shared/api/axios';
 import { getImageUrl } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
@@ -63,11 +64,7 @@ export function EditProfilePage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="bg-background flex h-screen items-center justify-center">
-        <div className="border-muted border-t-foreground h-8 w-8 animate-spin rounded-full border-2" />
-      </div>
-    );
+    return <LoadingSpinner fullScreen message="프로필을 불러오는 중입니다..." />;
   }
 
   return (
