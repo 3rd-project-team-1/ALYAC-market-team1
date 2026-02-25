@@ -101,7 +101,11 @@ export function PostCreatePage() {
       >
         {/* 프로필 아바타 */}
         <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img
+            src={getImageUrl(profile?.image) ?? uploadImage}
+            alt="내 프로필"
+            className="h-full w-full object-cover"
+          />
         </div>
 
         <div className="flex flex-1 flex-col gap-4">

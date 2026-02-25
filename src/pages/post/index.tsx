@@ -127,7 +127,11 @@ export function PostPage() {
         {/* 게시글 이미지 */}
         {post.image && (
           <div className="mt-4 overflow-hidden rounded-xl">
-            <img src={getImageUrl(post.image) ?? post.image} alt="게시글 이미지" className="w-full object-cover" />
+            <img
+              src={getImageUrl(post.image) ?? post.image}
+              alt="게시글 이미지"
+              className="w-full object-cover"
+            />
           </div>
         )}
 

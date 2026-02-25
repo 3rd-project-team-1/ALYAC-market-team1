@@ -141,7 +141,11 @@ export function ChatRoomPage() {
       >
         {/* 내 아바타 */}
         <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img
+            src={getImageUrl(profile?.image) ?? uploadImage}
+            alt="내 프로필"
+            className="h-full w-full object-cover"
+          />
         </div>
 
         {/* 입력창 */}
