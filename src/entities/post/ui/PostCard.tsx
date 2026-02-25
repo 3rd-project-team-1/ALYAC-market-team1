@@ -2,12 +2,18 @@ import { useState } from 'react';
 
 import UserAvatar from '@/shared/ui/userAvatar';
 
+/**
+ * 포스트 작성자 정보 인터페이스
+ */
 interface PostCardAuthor {
   username: string;
   accountname: string;
   image?: string;
 }
 
+/**
+ * 포스트 카드 데이터 모델 인터페이스
+ */
 export interface PostCardModel {
   id: string;
   content: string;
@@ -17,21 +23,30 @@ export interface PostCardModel {
   author: PostCardAuthor;
 }
 
+/**
+ * PostCard 컴포넌트 Props 인터페이스
+ */
 interface PostCardProps {
   post: PostCardModel;
-  isMyPost?: boolean;
-  onRewrite?: (postId: string) => void;
-  onDelete?: (postId: string) => void;
+  isMyPost?: boolean; // 본인 게시글 여부 (수정/삭제 메뉴 표시 결정)
+  onRewrite?: (postId: string) => void; // 수정 버튼 클릭 핸들러
+  onDelete?: (postId: string) => void; // 삭제 버튼 클릭 핸들러
 }
 
+/**
+ * 포스트 정보를 카드 형태로 보여주는 컴포넌트
+ */
 export function PostCard({ post, isMyPost = false, onRewrite, onDelete }: PostCardProps) {
+  // 수정/삭제 메뉴 열림 상태 관리
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // 게시글 수정 핸들러
   const handleRewrite = () => {
     onRewrite?.(post.id);
     setIsMenuOpen(false);
   };
 
+  // 게시글 삭제 핸들러
   const handleDelete = () => {
     onDelete?.(post.id);
     setIsMenuOpen(false);
@@ -40,6 +55,7 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete }: PostCa
   return (
     <article className="border-border relative border-b px-4 py-4">
       <div className="flex items-start justify-between gap-3">
+        {/* 상단: 작성자 프로필 정보 */}
         <div className="flex items-start gap-3">
           <UserAvatar src={post.author.image} username={post.author.username} />
           <div>
@@ -48,6 +64,7 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete }: PostCa
           </div>
         </div>
 
+        {/* 본인 게시글일 경우 수정/삭제 메뉴 표시 */}
         {isMyPost && (
           <div className="relative">
             <button
@@ -65,12 +82,14 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete }: PostCa
 
             {isMenuOpen && (
               <>
+                {/* 배경 클릭 시 메뉴 닫기용 오버레이 */}
                 <button
                   type="button"
                   className="fixed inset-0 z-10 cursor-default"
                   aria-label="메뉴 닫기"
                   onClick={() => setIsMenuOpen(false)}
                 />
+                {/* 드롭다운 메뉴 */}
                 <div className="bg-background border-border absolute top-9 right-0 z-20 w-28 overflow-hidden rounded-md border py-1 shadow-sm">
                   <button
                     type="button"
@@ -93,8 +112,10 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete }: PostCa
         )}
       </div>
 
+      {/* 게시글 본문 내용 */}
       <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
 
+      {/* 게시글 이미지가 있을 경우에만 렌더링 */}
       {post.image && (
         <img
           src={post.image}
@@ -103,6 +124,7 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete }: PostCa
         />
       )}
 
+      {/* 하단: 통계 정보 (좋아요, 댓글 수) */}
       <p className="text-muted-foreground mt-3 text-xs">
         좋아요 {post.heartCount} · 댓글 {post.commentCount}
       </p>
