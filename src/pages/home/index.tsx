@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import fulllogo from '@/shared/assets/images/full-logo.png';
 import logoimg from '@/shared/assets/images/logo.png';
@@ -25,8 +25,6 @@ function SplashScreen() {
 }
 
 function SelectionScreen() {
-  const navigate = useNavigate();
-
   return (
     <>
       <div className="animate-in fade-in flex flex-1 items-center justify-center duration-700">
@@ -43,12 +41,11 @@ function SelectionScreen() {
           ))}
           <div className="mt-6 flex items-center justify-center space-x-4 pt-4 text-sm">
             <Button
-              variant="ghost"
+              variant="ghost" //평상시엔 투명,hover 되면 배경표시
               size="sm"
-              onClick={() => navigate('/signin')}
               className="h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900"
             >
-              이메일로 로그인
+              <Link to="/signin">이메일로 로그인</Link>
             </Button>
             <span>|</span>
             <Button
