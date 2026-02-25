@@ -5,26 +5,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post/api';
-import { useProfile } from '@/entities/user/hooks/useProfile';
+import messageCircleIcon from '@/shared/assets/icons/message-circle.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { getImageUrl } from '@/shared/lib/utils';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
+import { CommentFooter } from './comment/comment';
 
 export function PostPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [comment, setComment] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<string | null>(null);
 
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
-  const hasComment = comment.trim().length > 0;
-
-  const { profile } = useProfile();
 
   // 게시글 조회
   const { data: post, isLoading: isPostLoading } = useQuery({
@@ -50,9 +47,8 @@ export function PostPage() {
 
   // 댓글 작성
   const createCommentMutation = useMutation({
-    mutationFn: () => postApi.createComment(postId!, comment),
+    mutationFn: (text: string) => postApi.createComment(postId!, text),
     onSuccess: () => {
-      setComment('');
       queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       queryClient.invalidateQueries({ queryKey: ['post', postId] });
     },
@@ -97,7 +93,7 @@ export function PostPage() {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopBasicNav />
       {/* 게시글 본문 */}
       <div className="px-4 pt-5">
@@ -147,15 +143,11 @@ export function PostPage() {
             disabled={heartMutation.isPending}
             className="flex items-center gap-1.5"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill={post.hearted ? '#11CC27' : 'none'}
-            >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
-                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                stroke={post.hearted ? '#11CC27' : 'currentColor'}
+                d="M16.9202 4.01322C16.5204 3.60554 16.0456 3.28215 15.5231 3.0615C15.0006 2.84086 14.4406 2.72729 13.875 2.72729C13.3094 2.72729 12.7494 2.84086 12.2268 3.0615C11.7043 3.28215 11.2296 3.60554 10.8298 4.01322L9.99997 4.85889L9.17017 4.01322C8.36252 3.19013 7.26713 2.72772 6.12495 2.72772C4.98277 2.72772 3.88737 3.19013 3.07973 4.01322C2.27209 4.83631 1.81836 5.95266 1.81836 7.11668C1.81836 8.28071 2.27209 9.39706 3.07973 10.2201L3.90953 11.0658L9.99997 17.2728L16.0904 11.0658L16.9202 10.2201C17.3202 9.81266 17.6376 9.32885 17.8541 8.79635C18.0706 8.26385 18.182 7.69309 18.182 7.11668C18.182 6.54028 18.0706 5.96952 17.8541 5.43702C17.6376 4.90452 17.3202 4.4207 16.9202 4.01322Z"
+                fill={post.hearted ? '#FF0000' : 'none'}
+                stroke={post.hearted ? '#FF0000' : '#767676'}
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -164,15 +156,7 @@ export function PostPage() {
             <span className="text-muted-foreground text-xs">{post.heartCount}</span>
           </button>
           <button type="button" className="flex items-center gap-1.5">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <img src={messageCircleIcon} alt="댓글" width={20} height={20} />
             <span className="text-muted-foreground text-xs">{post.commentCount}</span>
           </button>
         </div>
@@ -222,30 +206,7 @@ export function PostPage() {
       </div>
 
       {/* 댓글 입력창 */}
-      <div className="border-border bg-background fixed right-0 bottom-0 left-0 flex items-center gap-3 border-t px-4 py-3">
-        <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-          <img
-            src={getImageUrl(profile?.image) ?? uploadImage}
-            alt="내 프로필"
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <input
-          type="text"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="댓글 달아이지..."
-          className="bg-background text-foreground placeholder:text-muted-foreground flex-1 text-sm outline-none"
-        />
-        <button
-          type="button"
-          onClick={() => createCommentMutation.mutate()}
-          disabled={!hasComment || createCommentMutation.isPending}
-          className={`text-sm font-medium transition-colors ${hasComment ? 'text-[#3C9E00]' : 'text-[#C4E4A5]'}`}
-        >
-          게시
-        </button>
-      </div>
+      <CommentFooter onSubmit={(text) => createCommentMutation.mutate(text)} />
 
       {/* 게시글 옵션 모달 */}
       {showModal && (

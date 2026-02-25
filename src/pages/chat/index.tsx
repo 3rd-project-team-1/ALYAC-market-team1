@@ -40,7 +40,7 @@ export function ChatPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopBasicNav />
 
       {/* 채팅 목록 */}

@@ -27,6 +27,10 @@ export const productApi = {
   createProduct: (data: CreateProductInput) =>
     axiosInstance.post<ProductResponse>('/api/product', { product: data }),
 
+  // 상품 수정 PUT /api/product/:id
+  updateProduct: (id: string, data: CreateProductInput) =>
+    axiosInstance.put<ProductResponse>(`/api/product/${id}`, { product: data }),
+
   // 이미지 업로드 POST /api/image/uploadfile
   uploadImage: (file: File) => {
     const formData = new FormData();
