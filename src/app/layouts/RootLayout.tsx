@@ -6,6 +6,7 @@ const HIDE_TAB_MENU_PATHS = [
   '/edit-profile',
   '/post-create',
   '/create-product',
+  '/edit-product',
   '/signin',
   '/signup',
   '/post',
