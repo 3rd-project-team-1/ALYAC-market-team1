@@ -9,6 +9,8 @@ import type { Product } from '@/entities/product/types';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import imageIcon from '@/shared/assets/icons/image.svg';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { usePriceInput } from '@/shared/hooks/usePriceInput';
+import { uploadSingleImage } from '@/shared/lib/imageUpload';
 import { getImageUrl } from '@/shared/lib/utils';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
@@ -33,8 +35,12 @@ export function EditProductPage() {
   const { profile } = useProfile();
   const imageFileRef = useRef<File | null>(null);
 
-  const { fileInputRef, imagePreview, handleImageClick, handleImageChange: baseHandleImageChange } =
-    useImageUpload(getImageUrl(product?.itemImage) ?? undefined);
+  const {
+    fileInputRef,
+    imagePreview,
+    handleImageClick,
+    handleImageChange: baseHandleImageChange,
+  } = useImageUpload(getImageUrl(product?.itemImage) ?? undefined);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -58,12 +64,13 @@ export function EditProductPage() {
     },
   });
 
+  const { handlePriceChange } = usePriceInput('price', setValue, setError, clearErrors);
+
   const updateMutation = useMutation({
     mutationFn: async (data: FormValues) => {
       let itemImage = product?.itemImage ?? 'uploadFiles/default.png';
       if (imageFileRef.current) {
-        const res = await productApi.uploadImage(imageFileRef.current);
-        itemImage = res.data.path;
+        itemImage = await uploadSingleImage(imageFileRef.current);
       }
 
       return productApi.updateProduct(productId!, {
@@ -78,17 +85,6 @@ export function EditProductPage() {
       navigate('/profile');
     },
   });
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    if (/[^0-9]/.test(raw)) {
-      setError('price', { type: 'manual', message: '숫자만 입력 가능합니다.' });
-      setValue('price', raw.replace(/[^0-9]/g, ''));
-    } else {
-      clearErrors('price');
-      setValue('price', raw);
-    }
-  };
 
   const onSubmit = (data: FormValues) => {
     updateMutation.mutate(data);

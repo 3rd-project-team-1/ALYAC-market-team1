@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postApi } from '@/entities/post/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import axiosInstance from '@/shared/api/axios';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { fileToBase64, uploadMultipleImages } from '@/shared/lib/imageUpload';
 import { getImageUrl } from '@/shared/lib/utils';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
@@ -40,15 +40,15 @@ export function PostCreatePage() {
   const hasContent = content?.trim().length > 0;
 
   // 이미지 추가 핸들러
-  const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageAdd = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages((prev) => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
+
+    // Base64 변환
+    for (const file of files) {
+      const base64 = await fileToBase64(file);
+      setImages((prev) => [...prev, base64]);
+    }
+
     setImageFiles((prev) => [...prev, ...files]);
     e.target.value = '';
   };
@@ -63,17 +63,7 @@ export function PostCreatePage() {
     setIsSubmitting(true);
     try {
       // 이미지 업로드
-      let imagePaths = '';
-      if (imageFiles.length > 0) {
-        const formData = new FormData();
-        imageFiles.forEach((file) => formData.append('image', file));
-        const uploadRes = await axiosInstance.post<{ path: string }[]>(
-          '/api/image/uploadfiles',
-          formData,
-          { headers: { 'Content-Type': 'multipart/form-data' } },
-        );
-        imagePaths = uploadRes.data.map((f) => f.path).join(',');
-      }
+      const imagePaths = await uploadMultipleImages(imageFiles);
 
       // 게시글 작성
       const res = await postApi.createPost(data.content, imagePaths);

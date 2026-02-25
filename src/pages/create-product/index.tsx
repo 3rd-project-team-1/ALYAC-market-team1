@@ -8,6 +8,8 @@ import { productApi } from '@/entities/product/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import imageIcon from '@/shared/assets/icons/image.svg';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { usePriceInput } from '@/shared/hooks/usePriceInput';
+import { uploadSingleImage } from '@/shared/lib/imageUpload';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {
@@ -47,13 +49,14 @@ export function CreateProductPage() {
     defaultValues: { productName: '', price: '', link: '' },
   });
 
+  const { handlePriceChange } = usePriceInput('price', setValue, setError, clearErrors);
+
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
       // 이미지 업로드 (선택) - 서버는 itemImage 필수이므로 없으면 기본값 사용
       let itemImage = 'uploadFiles/default.png';
       if (imageFileRef.current) {
-        const res = await productApi.uploadImage(imageFileRef.current);
-        itemImage = res.data.path;
+        itemImage = await uploadSingleImage(imageFileRef.current);
       }
 
       return productApi.createProduct({
@@ -70,18 +73,6 @@ export function CreateProductPage() {
       navigate('/profile');
     },
   });
-
-  // 가격 입력 핸들러 - 숫자 외 문자 차단
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    if (/[^0-9]/.test(raw)) {
-      setError('price', { type: 'manual', message: '숫자만 입력 가능합니다.' });
-      setValue('price', raw.replace(/[^0-9]/g, ''));
-    } else {
-      clearErrors('price');
-      setValue('price', raw);
-    }
-  };
 
   const onSubmit = (data: FormValues) => {
     createMutation.mutate(data);
