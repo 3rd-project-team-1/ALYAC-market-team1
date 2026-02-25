@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { getToken } from '@/entities/auth/lib/token';
+import { getToken } from '@/entities/auth';
 
 export function RequireAuth() {
   const token = getToken();

@@ -1,36 +1,10 @@
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-
-import { checkEmailDuplicate } from '@/entities/auth/api/signup';
+import { useSignUpEmailForm } from '@/features/auth/hooks/useSignUpEmailForm';
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
 
-interface EmailFormData {
-  email: string;
-  password: string;
-}
-
 export function SignUpEmailForm() {
-  const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isValid },
-  } = useForm<EmailFormData>({
-    mode: 'onChange',
-  });
-
-  const onSubmit = async (data: EmailFormData) => {
-    const isDuplicate = await checkEmailDuplicate(data.email);
-    if (isDuplicate) {
-      setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
-      return;
-    }
-    navigate('/signup/profile', { state: { email: data.email, password: data.password } });
-  };
-
+  const { register, handleSubmit, errors, isValid, onSubmit } = useSignUpEmailForm();
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-2">
@@ -68,8 +42,8 @@ export function SignUpEmailForm() {
         className={cn(
           'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
           isValid
-            ? 'bg-[var(--color-primary-green)] hover:bg-[var(--color-primary-green-hover)] active:bg-[var(--color-primary-green-hover)]'
-            : 'cursor-not-allowed bg-[var(--color-primary-green-light)] text-white',
+            ? 'bg-primary-green hover:bg-primary-green-hover active:bg-primary-green-hover'
+            : 'bg-primary-green-light cursor-not-allowed text-white',
         )}
       >
         다음

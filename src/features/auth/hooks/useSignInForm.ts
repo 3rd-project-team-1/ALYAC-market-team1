@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { useSignIn } from '@/entities/auth/hooks/useSignIn';
+import { useSignIn } from '@/entities/auth';
 
 export interface SignInFormData {
   email: string;
