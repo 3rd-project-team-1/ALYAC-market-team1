@@ -131,7 +131,11 @@ export function PostPage() {
         {/* 게시글 이미지 */}
         {post.image && (
           <div className="mt-4 overflow-hidden rounded-xl">
-            <img src={getImageUrl(post.image) ?? post.image} alt="게시글 이미지" className="w-full object-cover" />
+            <img
+              src={getImageUrl(post.image) ?? post.image}
+              alt="게시글 이미지"
+              className="w-full object-cover"
+            />
           </div>
         )}
 
@@ -220,7 +224,11 @@ export function PostPage() {
       {/* 댓글 입력창 */}
       <div className="border-border bg-background fixed right-0 bottom-0 left-0 flex items-center gap-3 border-t px-4 py-3">
         <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-          <img src={getImageUrl(profile?.image) ?? uploadImage} alt="내 프로필" className="h-full w-full object-cover" />
+          <img
+            src={getImageUrl(profile?.image) ?? uploadImage}
+            alt="내 프로필"
+            className="h-full w-full object-cover"
+          />
         </div>
         <input
           type="text"

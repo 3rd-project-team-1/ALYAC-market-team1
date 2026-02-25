@@ -25,9 +25,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
         </svg>
       </button>
 
-      <span className="text-foreground text-base font-semibold">
-        {title}
-      </span>
+      <span className="text-foreground text-base font-semibold">{title}</span>
 
       <button
         onClick={onMoreClick}
