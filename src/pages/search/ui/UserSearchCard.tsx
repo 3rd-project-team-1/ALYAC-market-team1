@@ -14,7 +14,10 @@ interface UserSearchCardProps {
   // username 하이라이트 키워드
   highlight?: string;
 }
-
+/**
+ * @param UserSearchCard - 사용자 검색 결과 카드 컴포넌트
+ * @returns JSX.Element
+ */
 export function UserSearchCard({ user, onClick, highlight }: UserSearchCardProps) {
   const escapedHighlight = highlight ? escapeRegExp(highlight) : '';
 
