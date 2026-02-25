@@ -1,1 +1,0 @@
-export { UserSearchCard } from './UserSearchCard';
