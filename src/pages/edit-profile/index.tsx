@@ -43,9 +43,7 @@ export function EditProfilePage() {
       if (profileImageFile) {
         const formData = new FormData();
         formData.append('image', profileImageFile);
-        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData);
         imagePath = res.data.path;
       }
 
@@ -73,16 +71,18 @@ export function EditProfilePage() {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex min-h-screen flex-col pt-12">
       <TopUploadNav
         label="저장"
         disabled={updateMutation.isPending}
-        onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
+        onSubmit={() => void handleSubmit((data) => updateMutation.mutate(data))()}
       />
-      <ProfileImageUploader
-        onImageChange={setProfileImageFile}
-        initialImage={getImageUrl(profile?.image) ?? undefined}
-      />
+      <div className="mt-8">
+        <ProfileImageUploader
+          onImageChange={setProfileImageFile}
+          initialImage={getImageUrl(profile?.image) ?? undefined}
+        />
+      </div>
       {/* 입력 폼 */}
       <form
         onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
@@ -117,22 +117,18 @@ export function EditProfilePage() {
 
         {/* 소개 */}
         <div className="flex flex-col gap-1">
-          <FormField
-            type="text"
-            label="소개"
-            placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
-            register={register('intro', { required: '필수', maxLength: 60 })}
-            error={errors.intro}
+          <label className="text-foreground text-sm font-medium">소개</label>
+          <textarea
+            {...register('intro', {
+              maxLength: { value: 60, message: '소개는 60자 이내로 입력해주세요.' },
+            })}
+            placeholder="간단한 자기 소개를 입력하세요."
+            rows={1}
+            className="border-border text-foreground placeholder:text-muted-foreground w-full resize-none border-b py-2 text-sm outline-none"
           />
+          {errors.intro && <p className="text-destructive text-xs">{errors.intro.message}</p>}
+          <p className="text-muted-foreground text-xs">최대 60자</p>
         </div>
-
-        <button
-          type="submit"
-          disabled={updateMutation.isPending}
-          className="bg-primary text-primary-foreground mt-2 rounded-lg py-3 text-sm font-medium disabled:opacity-50"
-        >
-          {updateMutation.isPending ? '저장 중...' : '저장'}
-        </button>
       </form>
     </div>
   );

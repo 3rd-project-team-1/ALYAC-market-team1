@@ -9,7 +9,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
   const navigate = useNavigate();
 
   return (
-    <header className="bg-background fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between px-4">
+    <header className="bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4">
       <button
         onClick={() => navigate(-1)}
         className="text-foreground flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors hover:bg-gray-100"
@@ -25,7 +25,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
         </svg>
       </button>
 
-      <span className="text-foreground absolute left-1/2 -translate-x-1/2 text-base font-semibold">
+      <span className="text-foreground text-base font-semibold">
         {title}
       </span>
 
