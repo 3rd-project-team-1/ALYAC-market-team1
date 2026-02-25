@@ -5,7 +5,8 @@ interface IconProps {
   active?: boolean;
 }
 
-/* upload file·image */
+/*----------------------------- upload file·image -------------------------------*/
+
 export const UploadFile = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="13 13 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
@@ -102,7 +103,23 @@ export const UploadSImageIcon = (props: React.SVGProps<SVGSVGElement>): React.JS
     </defs>
   </svg>
 );
-/* tab menu */
+
+export const FullLogoAlyacPngIcon = (props: React.SVGProps<SVGSVGElement>): React.JSX.Element => (
+  <svg viewBox="0 0 199 220" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <image x="0" y="0" width="199" height="220" href="/full-logo-alyac-png.webp" />
+  </svg>
+);
+
+export const FullLogoAlyacNoTextIcon = (
+  props: React.SVGProps<SVGSVGElement>,
+): React.JSX.Element => (
+  <svg viewBox="0 0 97 153" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <image x="0" y="0" width="97" height="153" href="/full-logo-alyac-no-text.webp" />
+  </svg>
+);
+
+/* -----------------------------------tab menu-------------------------------------- */
+
 export const HomeIcon = ({ active }: Pick<IconProps, 'active'>) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
