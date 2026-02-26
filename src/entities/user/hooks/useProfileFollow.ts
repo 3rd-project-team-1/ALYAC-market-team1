@@ -5,35 +5,46 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi } from '@/entities/user/api';
 
 interface UseProfileFollowParams {
-  accountname?: string;
   initialIsFollow?: boolean;
 }
 
-export function useProfileFollow({ accountname, initialIsFollow }: UseProfileFollowParams) {
+interface FollowMutationVariables {
+  accountname: string;
+  isFollowing: boolean;
+}
+
+export function useProfileFollow({ initialIsFollow }: UseProfileFollowParams) {
   const queryClient = useQueryClient();
   const [optimisticFollowing, setOptimisticFollowing] = useState<boolean | null>(null);
 
   const isFollowing = optimisticFollowing ?? initialIsFollow ?? false;
 
   const followMutation = useMutation({
-    mutationFn: () => {
-      if (!accountname) {
+    mutationFn: ({ accountname, isFollowing }: FollowMutationVariables) => {
+      const normalizedAccountname = accountname.replace(/^@/, '').trim();
+      if (!normalizedAccountname) {
         throw new Error('accountname is required');
       }
 
-      return isFollowing ? userApi.unfollow(accountname) : userApi.follow(accountname);
+      return isFollowing
+        ? userApi.unfollow(normalizedAccountname)
+        : userApi.follow(normalizedAccountname);
     },
-    onMutate: () => {
-      setOptimisticFollowing((prev) => !(prev ?? initialIsFollow ?? false));
+    onMutate: ({ isFollowing }: FollowMutationVariables) => {
+      setOptimisticFollowing(!isFollowing);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       setOptimisticFollowing(null);
-      queryClient.invalidateQueries({ queryKey: ['profile', accountname] });
+      queryClient.invalidateQueries({ queryKey: ['profile', variables.accountname] });
     },
     onError: () => {
       setOptimisticFollowing(null);
     },
   });
 
-  return { isFollowing, followMutation };
+  const toggleFollow = (accountname: string) => {
+    followMutation.mutate({ accountname, isFollowing });
+  };
+
+  return { isFollowing, followMutation, toggleFollow };
 }
