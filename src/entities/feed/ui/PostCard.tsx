@@ -44,14 +44,6 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   // 수정/삭제 메뉴 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 이미지 경로 보정 함수 (윈도우 경로 대응)
-  const getValidImageUrl = (url?: string) => {
-    if (!url) return undefined;
-    const normalized = url.replace(/\\|\\/g, '/');
-    if (normalized.startsWith('http')) return normalized;
-    return import.meta.env.VITE_API_BASE_URL + normalized;
-  };
-
   // 수정 핸들러: 이벤트 전파를 막고 props의 onRewrite를 호출합니다.
   const handleRewrite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,6 +62,15 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   const handleMenuToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsMenuOpen((prev) => !prev);
+  };
+
+  // 이미지 경로 처리 함수
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath || imagePath.trim() === '') return undefined;
+    if (imagePath.startsWith('http')) return imagePath;
+    // 환경변수에서 이미지 서버 주소를 가져오고, 없으면 localhost fallback
+    const baseUrl = import.meta.env.VITE_IMAGE_BASE_URL || 'http://localhost:3000';
+    return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
   };
 
   return (
@@ -143,7 +144,7 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
       {post.image && post.image.trim() !== '' && (
         <img
-          src={getValidImageUrl(post.image)}
+          src={getImageUrl(post.image)}
           alt="게시글 이미지"
           className="border-border mt-3 w-full rounded-lg border object-cover"
           onError={(e) => {
