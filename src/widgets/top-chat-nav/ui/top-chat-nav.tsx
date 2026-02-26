@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+import { BackIcon, MoreIcon } from '@/shared/assets';
+
 interface TopChatNavProps {
   title: string;
   onMoreClick?: () => void;
@@ -14,15 +16,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
         onClick={() => navigate(-1)}
         className="text-foreground flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors hover:bg-gray-100"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M19 12H5M5 12L12 19M5 12L12 5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <BackIcon />
       </button>
 
       <span className="text-foreground text-base font-semibold">{title}</span>
@@ -31,11 +25,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
         onClick={onMoreClick}
         className="text-foreground flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors hover:bg-gray-100"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="5" r="1.2" fill="currentColor" />
-          <circle cx="12" cy="12" r="1.2" fill="currentColor" />
-          <circle cx="12" cy="19" r="1.2" fill="currentColor" />
-        </svg>
+        <MoreIcon />
       </button>
     </header>
   );

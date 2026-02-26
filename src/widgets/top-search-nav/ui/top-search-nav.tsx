@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+import { BackIcon } from '@/shared/assets';
+
 interface TopSearchNavProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -14,15 +16,7 @@ export function TopSearchNav({ searchValue, onSearchChange }: TopSearchNavProps)
         onClick={() => navigate(-1)}
         className="text-foreground flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors hover:bg-gray-100"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M19 12H5M5 12L12 19M5 12L12 5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <BackIcon />
       </button>
 
       <input
@@ -31,7 +25,7 @@ export function TopSearchNav({ searchValue, onSearchChange }: TopSearchNavProps)
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
         autoFocus
-        className="bg-background h-[32px] flex-1 rounded-full border border-transparent px-3 text-xs text-black outline-none placeholder:text-xs placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-400/60 dark:text-white"
+        className="bg-background text-foreground h-[32px] flex-1 rounded-full border border-transparent px-3 text-xs outline-none placeholder:text-xs placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-400/60"
       />
     </header>
   );
