@@ -26,3 +26,5 @@ export { MoreSmallIcon } from './MoreSmallIcon';
 export { PostAlbumIcon } from './PostAlbumIcon';
 export { PostListIcon } from './PostListIcon';
 export { ShareIcon } from './ShareIcon';
+export { FullLogoAlyac404Icon } from './FullLogoAlyac404Icon';
+export { FullLogoAlyacGrayIcon } from './FullLogoAlyacGrayIcon';
