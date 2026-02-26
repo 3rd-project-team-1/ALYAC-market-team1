@@ -15,6 +15,7 @@ export function SignInForm() {
           type="email"
           label="이메일"
           placeholder="이메일을 입력해 주세요."
+          autoComplete="email"
           register={register('email', {
             required: '이메일을 입력해 주세요.',
             pattern: {
@@ -31,6 +32,7 @@ export function SignInForm() {
         <FormField
           type="password"
           label="비밀번호"
+          autoComplete="current-password"
           placeholder="비밀번호를 입력해 주세요."
           register={register('password', {
             required: '비밀번호를 입력해 주세요.',

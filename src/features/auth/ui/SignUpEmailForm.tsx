@@ -12,6 +12,7 @@ export function SignUpEmailForm() {
           type="email"
           label="이메일"
           placeholder="이메일을 입력해 주세요."
+          autoComplete="email"
           register={register('email', {
             required: '이메일을 입력해 주세요.',
             pattern: {
@@ -28,6 +29,7 @@ export function SignUpEmailForm() {
           type="password"
           label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
+          autoComplete="current-password"
           register={register('password', {
             required: '비밀번호를 입력해 주세요.',
             minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
