@@ -14,7 +14,7 @@ export function TopMainNav({ title }: TopMainNavProps) {
       <span className="text-foreground text-base font-semibold">{title}</span>
       <button
         onClick={() => navigate('/search')}
-        className="flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors hover:bg-gray-100"
+        className="hover:bg-accent flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors"
       >
         <SearchIcon />
       </button>

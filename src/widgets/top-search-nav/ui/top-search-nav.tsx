@@ -14,7 +14,7 @@ export function TopSearchNav({ searchValue, onSearchChange }: TopSearchNavProps)
     <header className="bg-background fixed top-0 right-0 left-0 flex h-[48px] items-center gap-2 px-4">
       <button
         onClick={() => navigate(-1)}
-        className="text-foreground flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors hover:bg-gray-100"
+        className="text-foreground hover:bg-accent flex h-[32px] w-[32px] items-center justify-center rounded-md transition-colors"
       >
         <BackIcon />
       </button>
