@@ -28,7 +28,7 @@ export function useFeedPosts() {
         const mappedPosts: PostCardModel[] = feedPosts.map((post: FeedPost) => ({
           id: post.id,
           content: post.content,
-          image: post.image || undefined,
+          image: post.image && post.image.trim() !== '' ? post.image : undefined,
           heartCount: post.heartCount,
           commentCount: post.commentCount,
           author: {

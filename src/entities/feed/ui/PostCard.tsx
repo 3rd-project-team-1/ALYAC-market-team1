@@ -44,6 +44,14 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   // 수정/삭제 메뉴 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // 이미지 경로 보정 함수 (윈도우 경로 대응)
+  const getValidImageUrl = (url?: string) => {
+    if (!url) return undefined;
+    const normalized = url.replace(/\\|\\/g, '/');
+    if (normalized.startsWith('http')) return normalized;
+    return import.meta.env.VITE_API_BASE_URL + normalized;
+  };
+
   // 수정 핸들러: 이벤트 전파를 막고 props의 onRewrite를 호출합니다.
   const handleRewrite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -132,12 +140,18 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       {/* 게시글 본문 내용 */}
       <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
 
-      {/* 이미지 영역 (있을 경우만 표시) */}
-      {post.image && (
+      {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
+      {post.image && post.image.trim() !== '' && (
         <img
-          src={post.image}
+          src={getValidImageUrl(post.image)}
           alt="게시글 이미지"
           className="border-border mt-3 w-full rounded-lg border object-cover"
+          onError={(e) => {
+            if (!e.currentTarget.dataset.fallback) {
+              e.currentTarget.src = '/default-image.png';
+              e.currentTarget.dataset.fallback = 'true';
+            }
+          }}
         />
       )}
 
