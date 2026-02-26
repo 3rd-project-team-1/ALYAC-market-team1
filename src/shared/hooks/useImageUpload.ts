@@ -1,23 +1,48 @@
-import { useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-export function useImageUpload(initialImage?: string | null) {
+export function useImageUpload(initialImage?: string | null, onImageChange?: (file: File) => void) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(initialImage ?? null);
+  const previewUrlRef = useRef<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(initialImage || null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
+    };
+  }, []);
 
   const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // 같은 파일 다시 선택 시 onChange 발동하게 초기화
+      fileInputRef.current.click();
     }
   };
 
-  return { fileInputRef, imagePreview, setImagePreview, handleImageClick, handleImageChange };
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드 가능합니다.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB 제한
+      alert('5MB 이하의 파일만 업로드 가능합니다.');
+      return;
+    }
+    if (onImageChange) {
+      onImageChange(file);
+    }
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+    const url = URL.createObjectURL(file);
+    previewUrlRef.current = url;
+    setPreview(url);
+  };
+
+  return { fileInputRef, preview, handleImageClick, handleImageChange };
 }

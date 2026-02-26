@@ -1,58 +1,24 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-
 import { UploadFile, UploadImageIcon } from '@/shared/assets/svg-props/svg-props';
+import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 
-interface ProfileImageUploaderProps {
+interface ProfileImageInputProps {
   onImageChange: (file: File | null) => void;
   className?: string;
   initialImage?: string;
 }
 
-export function ProfileImageUploader({
+export function ProfileImageInput({
   onImageChange,
   className,
   initialImage,
-}: ProfileImageUploaderProps) {
-  const [preview, setPreview] = useState<string | null>(initialImage || null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const previewUrlRef = useRef<string | null>(null);
-
-  const handleClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-      fileInputRef.current.click();
-    }
-  };
-  useEffect(() => {
-    return () => {
-      if (previewUrlRef.current) {
-        URL.revokeObjectURL(previewUrlRef.current);
-      }
-    };
-  }, []);
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드 가능합니다.');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      alert('5MB 이하의 파일만 업로드 가능합니다.');
-      return;
-    }
-    onImageChange(file);
-    if (previewUrlRef.current) {
-      URL.revokeObjectURL(previewUrlRef.current);
-    }
-    const url = URL.createObjectURL(file);
-    previewUrlRef.current = url;
-    setPreview(url);
-  };
+}: ProfileImageInputProps) {
+  const { fileInputRef, preview, handleImageClick, handleImageChange } = useImageUpload(
+    initialImage,
+    onImageChange as (file: File) => void, // 타입 호환을 위해
+  );
 
   return (
     <div className={cn('mb-8 flex justify-center', className)}>
@@ -60,7 +26,7 @@ export function ProfileImageUploader({
         aria-label="프로필 이미지 업로드"
         type="button"
         variant="ghost"
-        onClick={handleClick}
+        onClick={handleImageClick}
         className={cn(
           'group relative h-32 w-32 rounded-full p-0 hover:bg-transparent',
           'focus-visible:ring-2 focus-visible:ring-[var(--color-primary-green)] focus-visible:ring-offset-2',
@@ -98,8 +64,8 @@ export function ProfileImageUploader({
         type="file"
         accept="image/*"
         ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden" // 화면에서 숨김 처리
+        onChange={handleImageChange}
+        className="hidden"
       />
     </div>
   );
