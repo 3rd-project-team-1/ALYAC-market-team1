@@ -1,12 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { useProfile } from '@/entities/user/hooks/useProfile';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 import { TopChatNav } from '@/widgets/top-chat-nav';
+
+import { ChatRoomFooter } from './ChatRoomFooter';
 
 interface Message {
   id: string;
@@ -15,10 +14,6 @@ interface Message {
   time: string;
   image?: string;
 }
-
-type FormValues = {
-  message: string;
-};
 
 const DUMMY_MESSAGES: Message[] = [
   {
@@ -46,43 +41,22 @@ const DUMMY_MESSAGES: Message[] = [
 export function ChatRoomPage() {
   const navigate = useNavigate();
   const idCounterRef = useRef(DUMMY_MESSAGES.length);
-  const { profile } = useProfile();
   const [messages, setMessages] = useState<Message[]>(DUMMY_MESSAGES);
   const [showModal, setShowModal] = useState(false);
 
-  const { register, handleSubmit, reset, control } = useForm<FormValues>({
-    defaultValues: { message: '' },
-  });
-
-  const messageValue = useWatch({ control, name: 'message' });
-  const hasMessage = messageValue?.trim().length > 0;
-
   // 메시지 전송 핸들러
-  const onSubmit = useCallback(
-    (data: FormValues) => {
-      if (!data.message.trim()) return;
-      idCounterRef.current += 1;
-      const now = new Date();
-      const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      const newMessage: Message = {
-        id: String(idCounterRef.current),
-        content: data.message.trim(),
-        isMine: true,
-        time,
-      };
-      setMessages((prev) => [...prev, newMessage]);
-      reset();
-    },
-    [reset],
-  );
-
-  const handleFormSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      void handleSubmit(onSubmit)(e as React.BaseSyntheticEvent);
-    },
-    [handleSubmit, onSubmit],
-  );
+  const handleSendMessage = (text: string) => {
+    idCounterRef.current += 1;
+    const now = new Date();
+    const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const newMessage: Message = {
+      id: String(idCounterRef.current),
+      content: text,
+      isMine: true,
+      time,
+    };
+    setMessages((prev) => [...prev, newMessage]);
+  };
 
   // 채팅방 나가기
   const handleLeaveRoom = () => {
@@ -134,36 +108,8 @@ export function ChatRoomPage() {
         ))}
       </div>
 
-      {/* 메시지 입력창 */}
-      <form
-        onSubmit={handleFormSubmit}
-        className="border-border flex items-center gap-3 border-t px-4 py-3"
-      >
-        {/* 내 아바타 */}
-        <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-          <img
-            src={getImageUrl(profile?.image) ?? uploadImage}
-            alt="내 프로필"
-            className="h-full w-full object-cover"
-          />
-        </div>
-
-        {/* 입력창 */}
-        <input
-          {...register('message')}
-          placeholder="메시지 입력하기..."
-          className="bg-background text-foreground placeholder:text-muted-foreground flex-1 text-sm outline-none"
-        />
-
-        {/* 전송 버튼 */}
-        <button
-          type="submit"
-          disabled={!hasMessage}
-          className={`text-sm font-medium transition-colors ${hasMessage ? 'text-[#3C9E00]' : 'text-[#C4E4A5]'}`}
-        >
-          전송
-        </button>
-      </form>
+      {/* 채팅 입력창 */}
+      <ChatRoomFooter onSubmit={handleSendMessage} />
 
       {/* 채팅방 나가기 모달 */}
       {showModal && (
