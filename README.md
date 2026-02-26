@@ -42,6 +42,10 @@
   - format공유가 안되던 문제 해결.
 
 - 5일차:
+  - FSD 계층 구조
+  - 천천히 나눠놓고 해도 좋고, 까먹지말고 꼭 나누기, 프로젝트 안에 가이드파일 참조
+  - useEffect 안에서 수동으로 API를 호출하고 데이터를 가져오는 방식을 useQuery를 사용하는 방식으로 리팩토링
+
 - 6일차:
 - 7일차
 
@@ -107,18 +111,24 @@ src/
 
 ## 7. 실행 방법
 
-1. 의존성 설치
-   ```bash
-   npm install
-   ```
-2. 개발 서버 실행
-   ```bash
-   npm run dev
-   ```
-3. 빌드
-   ```bash
-   npm run build
-   ```
+1. 백엔드 서버 실행
+
+alyac-market-server-main
+
+```bash
+npm install
+npm run start
+```
+
+2. 프론트엔드 서버 실행
+
+3rd-project
+
+```bash
+cd 3rd-project
+npm install
+npm run dev
+```
 
 ## 8. 테스트 계정
 
