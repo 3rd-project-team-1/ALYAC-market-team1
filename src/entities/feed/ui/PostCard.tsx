@@ -64,6 +64,15 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     setIsMenuOpen((prev) => !prev);
   };
 
+  // 이미지 경로 처리 함수
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath || imagePath.trim() === '') return undefined;
+    if (imagePath.startsWith('http')) return imagePath;
+    // 환경변수에서 이미지 서버 주소를 가져오고, 없으면 localhost fallback
+    const baseUrl = import.meta.env.VITE_IMAGE_BASE_URL || 'http://localhost:3000';
+    return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
+  };
+
   return (
     <article
       className="border-border relative cursor-pointer border-b px-4 py-4 hover:bg-gray-50/50"
@@ -132,12 +141,18 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       {/* 게시글 본문 내용 */}
       <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
 
-      {/* 이미지 영역 (있을 경우만 표시) */}
-      {post.image && (
+      {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
+      {post.image && post.image.trim() !== '' && (
         <img
-          src={post.image}
+          src={getImageUrl(post.image)}
           alt="게시글 이미지"
           className="border-border mt-3 w-full rounded-lg border object-cover"
+          onError={(e) => {
+            if (!e.currentTarget.dataset.fallback) {
+              e.currentTarget.src = '/default-image.png';
+              e.currentTarget.dataset.fallback = 'true';
+            }
+          }}
         />
       )}
 
