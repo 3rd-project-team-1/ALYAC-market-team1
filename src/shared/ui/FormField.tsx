@@ -10,9 +10,17 @@ interface FormFieldProps {
   register: UseFormRegisterReturn;
   error?: FieldError;
   readonly?: boolean;
+  autoComplete?: string;
 }
 
-export function FormField({ label, type = 'text', placeholder, register, error }: FormFieldProps) {
+export function FormField({
+  label,
+  type = 'text',
+  placeholder,
+  register,
+  error,
+  autoComplete,
+}: FormFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
@@ -24,6 +32,7 @@ export function FormField({ label, type = 'text', placeholder, register, error }
         id={register.name}
         type={type}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         aria-invalid={error ? 'true' : 'false'}
         {...register}
       />

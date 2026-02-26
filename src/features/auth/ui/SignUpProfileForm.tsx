@@ -46,7 +46,7 @@ export function SignUpProfileForm() {
           type="text"
           label="소개"
           placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
-          register={register('intro', { required: '필수', maxLength: 60 })}
+          register={register('intro', { required: '60자 이내로 작성해주세요', maxLength: 60 })}
           error={errors.intro}
         />
       </div>
