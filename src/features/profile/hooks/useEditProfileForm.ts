@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import axiosInstance from '@/shared/api/axios';
+import { uploadSingleImage } from '@/shared/api';
 
 export interface EditProfileFormValues {
   username: string;
@@ -33,27 +34,31 @@ export function useEditProfileForm() {
 
   const updateMutation = useMutation({
     mutationFn: async (data: EditProfileFormValues) => {
-      let imagePath = profile?.image ?? '';
-
-      if (profileImageFile) {
-        const formData = new FormData();
-        formData.append('image', profileImageFile);
-        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData);
-        imagePath = res.data.path;
+      //프로필에 계정이 있는지 체크
+      if (!profile?.accountname) {
+        throw new Error('Account name is required');
       }
+      const imagePath = profileImageFile
+        ? await uploadSingleImage(profileImageFile)
+        : (profile.image ?? '');
 
       return userApi.updateProfile({
         user: {
           username: data.username,
-          accountname: profile?.accountname ?? '',
+          accountname: profile.accountname,
           intro: data.intro,
           image: imagePath,
         },
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
+      toast.success('프로필이 업데이트되었습니다');
       navigate(-1);
+    },
+    onError: (error) => {
+      console.error('프로필 업데이트 실패:', error);
+      toast.error('프로필 업데이트에 실패했습니다');
     },
   });
 

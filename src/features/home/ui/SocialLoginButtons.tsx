@@ -1,6 +1,4 @@
-import facebooklogo from '@/shared/assets/icons/facebook.svg';
-import googlelogo from '@/shared/assets/icons/google.svg';
-import kakaologo from '@/shared/assets/icons/kakao.svg';
+import { FacebookIcon, GoogleIcon, KakaoIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 
@@ -9,17 +7,17 @@ interface SocialLoginButtonProps {
 }
 
 const logoMap = {
-  kakao: { icon: kakaologo, label: '카카오톡 계정으로 로그인', borderClass: 'border-[#FBD914]' },
-  google: { icon: googlelogo, label: '구글 계정으로 로그인', borderClass: 'border-gray-400' },
+  kakao: { Icon: KakaoIcon, label: '카카오톡 계정으로 로그인', borderClass: 'border-[#FBD914]' },
+  google: { Icon: GoogleIcon, label: '구글 계정으로 로그인', borderClass: 'border-gray-400' },
   facebook: {
-    icon: facebooklogo,
+    Icon: FacebookIcon,
     label: '페이스북 계정으로 로그인',
     borderClass: 'border-[#1877F2]',
   },
 };
 
 export function SocialLoginButton({ platform }: SocialLoginButtonProps) {
-  const { icon: logo, label, borderClass } = logoMap[platform];
+  const { Icon, label, borderClass } = logoMap[platform];
   return (
     <Button
       disabled
@@ -29,7 +27,7 @@ export function SocialLoginButton({ platform }: SocialLoginButtonProps) {
         borderClass,
       )}
     >
-      <img src={logo} alt={label} className="absolute left-6 h-5 w-5" />
+      <Icon className="absolute left-6 h-5 w-5" />
       {label}
     </Button>
   );

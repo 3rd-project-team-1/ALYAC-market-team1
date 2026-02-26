@@ -1,8 +1,7 @@
+import { useSignInForm } from '@/features/auth';
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
-
-import { useSignInForm } from '../hooks/useSignInForm';
 
 export function SignInForm() {
   const { register, handleSubmit, errors, isValid, isPending, onSubmit } = useSignInForm();
