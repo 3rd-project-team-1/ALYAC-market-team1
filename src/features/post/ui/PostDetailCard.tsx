@@ -1,6 +1,6 @@
 import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import { UploadImageIcon } from '@/shared/assets';
-import messageCircleIcon from '@/shared/assets/icons/message-circle.svg';
+import { ChatIcon } from '@/shared/assets';
 
 interface PostDetailCardProps {
   post: {
@@ -85,7 +85,9 @@ export function PostDetailCard({
           <span className="text-muted-foreground text-xs">{post.heartCount}</span>
         </button>
         <button type="button" className="flex items-center gap-1.5">
-          <img src={messageCircleIcon} alt="댓글" width={20} height={20} />
+          <ChatIcon active={false} />
+          // 여기 영재님한테 물어보고 사용할것 active 를 prop 으로 보내야하는데 어떤걸 보낼지 true
+          인지 false 인지?
           <span className="text-muted-foreground text-xs">{post.commentCount}</span>
         </button>
       </div>
