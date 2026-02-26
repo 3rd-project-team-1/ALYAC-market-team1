@@ -16,7 +16,19 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
   };
 
   return (
-    <div style={styles.wrapper}>
+    <div
+      className="bg-background border-border border-t"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '8px 8px 8px',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+      }}
+    >
       <UploadSImageIcon style={{ fontSize: 36 }} />
       <input
         style={styles.input}
@@ -39,14 +51,6 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
 }
 
 const styles = {
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '12px 16px',
-    borderTop: '1px solid #EBEBEB',
-    backgroundColor: '#fff',
-  },
   input: {
     flex: 1,
     border: 'none',

@@ -10,14 +10,18 @@ const HIDE_TAB_MENU_PATHS = [
   '/signin',
   '/signup',
   '/post',
-  '/chat-room',
+  '/chat/1',
+  '/chat/2',
+  '/chat/3',
   '/signup/profile',
   '/',
 ];
 
 export function RootLayout() {
   const location = useLocation();
-  const showTabMenu = !HIDE_TAB_MENU_PATHS.includes(location.pathname);
+  const showTabMenu = !HIDE_TAB_MENU_PATHS.some((path) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path),
+  );
 
   return (
     <div>
