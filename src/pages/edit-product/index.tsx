@@ -7,17 +7,11 @@ import type { Product } from '@/entities/product/types';
 import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import { usePriceInput } from '@/features/product/hooks/usePriceInput';
 import { useProductForm } from '@/features/product/hooks/useProductForm';
-import { validationRules } from '@/features/product/lib/validationRules';
+import { ProductFormFields, type ProductFormValues } from '@/features/product/ui/ProductFormFields';
 import { ProductImageUploader } from '@/features/product/ui/ProductImageUploader';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
-
-type FormValues = {
-  productName: string;
-  price: string;
-  link: string;
-};
 
 interface LocationState {
   product?: Product;
@@ -40,7 +34,7 @@ export function EditProductPage() {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<ProductFormValues>({
     mode: 'onChange',
     defaultValues: {
       productName: product?.itemName ?? '',
@@ -55,7 +49,7 @@ export function EditProductPage() {
     setImageFile(file);
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = (data: ProductFormValues) => {
     mutation.mutate({ ...data, imageFile });
   };
 
@@ -75,49 +69,7 @@ export function EditProductPage() {
           {/* 이미지 등록 */}
           <ProductImageUploader imagePreview={preview} onImageChange={handleImageChange} />
 
-          {/* 상품명 */}
-          <div className="flex flex-col gap-1">
-            <label className="text-foreground text-sm font-bold">상품명</label>
-            <input
-              {...register('productName', validationRules.productName)}
-              placeholder="2~15자 이내여야 합니다."
-              className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.productName ? 'border-destructive' : 'border-border'}`}
-            />
-            {errors.productName && (
-              <p className="text-destructive text-xs">{errors.productName.message}</p>
-            )}
-          </div>
-
-          {/* 가격 */}
-          <div className="flex flex-col gap-1">
-            <label className="text-foreground text-sm font-bold">가격</label>
-            <input
-              {...register('price', validationRules.price)}
-              placeholder="숫자만 입력 가능합니다."
-              inputMode="numeric"
-              onChange={handlePriceChange}
-              className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.price ? 'border-destructive' : 'border-border'}`}
-            />
-            {errors.price && <p className="text-destructive text-xs">{errors.price.message}</p>}
-          </div>
-
-          {/* 판매 링크 */}
-          <div className="flex flex-col gap-1">
-            <label className="text-foreground text-sm font-bold">판매 링크</label>
-            <input
-              {...register('link', validationRules.link)}
-              type="url"
-              placeholder="URL을 입력해 주세요."
-              className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.link ? 'border-destructive' : 'border-border'}`}
-            />
-            {errors.link ? (
-              <p className="text-destructive text-xs">{errors.link.message}</p>
-            ) : (
-              <p className="text-muted-foreground text-xs">
-                선택 사항 (http:// 또는 https://로 시작)
-              </p>
-            )}
-          </div>
+          <ProductFormFields register={register} errors={errors} onPriceChange={handlePriceChange} />
         </div>
       </form>
     </div>

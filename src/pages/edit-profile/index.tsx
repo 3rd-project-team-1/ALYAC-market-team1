@@ -1,67 +1,12 @@
-import { useState } from 'react';
-
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-
-import { userApi } from '@/entities/user/api';
-import { useProfile } from '@/entities/user/hooks/useProfile';
 import { getImageUrl } from '@/features/image/lib/getImageUrl';
-import { ProfileImageInput } from '@/features/profile/ui/ProfileImageInput';
-import axiosInstance from '@/shared/api/axios';
+import { ProfileImageInput, useEditProfileForm } from '@/features/profile';
 import { FormField } from '@/shared/ui/FormField';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
-type FormValues = {
-  username: string;
-  intro: string;
-};
-
 export function EditProfilePage() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const { profile, isLoading } = useProfile();
-  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    mode: 'onChange',
-    // profile이 로드된 후에도 defaultValues가 반영되도록 values 옵션 사용
-    values: {
-      username: profile?.username ?? '',
-      intro: profile?.intro ?? '',
-    },
-  });
-  // 프로필 수정 mutation
-  const updateMutation = useMutation({
-    mutationFn: async (data: FormValues) => {
-      let imagePath = profile?.image ?? '';
-
-      if (profileImageFile) {
-        const formData = new FormData();
-        formData.append('image', profileImageFile);
-        const res = await axiosInstance.post<{ path: string }>('/api/image/uploadfile', formData);
-        imagePath = res.data.path;
-      }
-
-      return userApi.updateProfile({
-        user: {
-          username: data.username,
-          accountname: profile?.accountname ?? '',
-          intro: data.intro,
-          image: imagePath,
-        },
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      navigate(-1);
-    },
-  });
+  const { profile, isLoading, register, errors, submitEditProfile, isPending, setProfileImageFile } =
+    useEditProfileForm();
 
   if (isLoading) {
     return <LoadingSpinner fullScreen message="프로필을 불러오는 중입니다..." />;
@@ -71,8 +16,8 @@ export function EditProfilePage() {
     <div className="bg-background flex min-h-screen flex-col pt-12">
       <TopUploadNav
         label="저장"
-        disabled={updateMutation.isPending}
-        onSubmit={() => void handleSubmit((data) => updateMutation.mutate(data))()}
+        disabled={isPending}
+        onSubmit={() => void submitEditProfile()}
       />
       <div className="mt-8">
         <ProfileImageInput
@@ -82,7 +27,7 @@ export function EditProfilePage() {
       </div>
       {/* 입력 폼 */}
       <form
-        onSubmit={handleSubmit((data) => updateMutation.mutate(data))}
+        onSubmit={submitEditProfile}
         className="flex flex-col gap-6 px-6"
       >
         {/* 사용자 이름 */}

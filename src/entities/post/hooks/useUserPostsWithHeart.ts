@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { postApi } from '@/entities/post/api';
+import { postApi } from '@/entities/post';
 import type { Post } from '@/entities/post/types';
 
 export function useUserPostsWithHeart(accountname?: string) {
