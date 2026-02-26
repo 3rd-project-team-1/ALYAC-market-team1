@@ -11,8 +11,21 @@ export function useFeedPosts() {
     const fetchFeed = async () => {
       try {
         const response = await postApi.getFeedPosts();
-        const feedPosts = response.data.post ?? [];
-        const mappedPosts: PostCardModel[] = feedPosts.map((post) => ({
+        type FeedPost = {
+          id: string;
+          content: string;
+          image?: string;
+          heartCount: number;
+          commentCount: number;
+          author: {
+            username: string;
+            accountname: string;
+            image: string;
+          };
+        };
+
+        const feedPosts = ((response.data as any).posts ?? []) as FeedPost[];
+        const mappedPosts: PostCardModel[] = feedPosts.map((post: FeedPost) => ({
           id: post.id,
           content: post.content,
           image: post.image || undefined,

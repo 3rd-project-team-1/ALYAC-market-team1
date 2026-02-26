@@ -1,4 +1,4 @@
-import { PostCardModel } from '@/entities/post';
+import { PostCardModel } from '@/entities/feed/ui/PostCard';
 
 export type FeedState = {
   isLoading: boolean;
