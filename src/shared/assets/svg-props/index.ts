@@ -1,0 +1,17 @@
+export type { IconProps } from './types';
+export { UploadFile } from './UploadFile';
+export { ImgButton } from './ImgButton';
+export { UploadImageIcon } from './UploadImageIcon';
+export { UploadSImageIcon } from './UploadSImageIcon';
+export { FullLogoAlyacPngIcon } from './FullLogoAlyacPngIcon';
+export { FullLogoAlyacNoTextIcon } from './FullLogoAlyacNoTextIcon';
+export { HomeIcon } from './HomeIcon';
+export { ChatIcon } from './ChatIcon';
+export { WriteIcon } from './WriteIcon';
+export { ProfileIcon } from './ProfileIcon';
+export { BackIcon } from './BackIcon';
+export { MoreIcon } from './MoreIcon';
+export { SunIcon } from './SunIcon';
+export { MoonIcon } from './MoonIcon';
+export { MonitorIcon } from './MonitorIcon';
+export { SearchIcon } from './SearchIcon';

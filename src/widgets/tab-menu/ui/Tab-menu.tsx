@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ChatIcon, HomeIcon, ProfileIcon, WriteIcon } from '@/shared/assets/svg-props/svg-props';
+import { ChatIcon, HomeIcon, ProfileIcon, WriteIcon } from '@/shared/assets';
 
 const tabs = [
   { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
