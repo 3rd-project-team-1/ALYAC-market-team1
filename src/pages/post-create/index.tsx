@@ -21,23 +21,26 @@ export function PostCreatePage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, images, isSubmitting, hasContent, handleImageAdd, handleImageRemove, submitPost } =
-    usePostCreateForm(state?.content ?? '');
+  const {
+    register,
+    images,
+    isSubmitting,
+    hasContent,
+    handleImageAdd,
+    handleImageRemove,
+    submitPost,
+  } = usePostCreateForm(state?.content ?? '');
 
   return (
     <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopUploadNav
         label={isSubmitting ? '업로드 중...' : '업로드'}
         disabled={!hasContent || isSubmitting}
-        onSubmit={handleSubmit(submitPost)}
+        onSubmit={submitPost}
       />
 
       {/* 본문 */}
-      <form
-        id="upload-form"
-        onSubmit={handleSubmit(submitPost)}
-        className="flex flex-1 gap-3 px-4 pt-5"
-      >
+      <form id="upload-form" onSubmit={submitPost} className="flex flex-1 gap-3 px-4 pt-5">
         {/* 프로필 아바타 */}
         <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
           <img
