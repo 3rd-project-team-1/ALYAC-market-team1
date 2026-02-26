@@ -8,8 +8,12 @@ export interface GetProfileResponse {
 
 export type SearchUsersResponse = Profile[];
 
-export interface GetFollowListResponse {
-  data: Profile[];
+export interface GetFollowersResponse {
+  follower: Profile[];
+}
+
+export interface GetFollowingsResponse {
+  following: Profile[];
 }
 
 export const userApi = {
@@ -31,11 +35,11 @@ export const userApi = {
 
   // 팔로워 목록 GET /api/profile/:accountname/follower/
   getFollowers: (accountname: string) =>
-    axiosInstance.get<GetFollowListResponse>(`/api/profile/${accountname}/follower/`),
+    axiosInstance.get<GetFollowersResponse>(`/api/profile/${accountname}/follower/`),
 
   // 팔로잉 목록 GET /api/profile/:accountname/following/
   getFollowings: (accountname: string) =>
-    axiosInstance.get<GetFollowListResponse>(`/api/profile/${accountname}/following/`),
+    axiosInstance.get<GetFollowingsResponse>(`/api/profile/${accountname}/following/`),
 
   // 프로필 수정 PUT /api/user
   updateProfile: (data: {
