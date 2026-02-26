@@ -1,4 +1,4 @@
-import { SignUpProfileForm } from '@/features/auth/ui/SignUpProfileForm';
+import { SignUpProfileForm } from '@/features/auth';
 
 export function SignUpProfilePage() {
   return (

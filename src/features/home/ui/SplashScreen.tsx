@@ -1,4 +1,4 @@
-import { FullLogoAlyacPngIcon } from '@/shared/assets/svg-props/svg-props';
+import { FullLogoAlyacPngIcon } from '@/shared/assets';
 
 export function SplashScreen() {
   return (

@@ -1,4 +1,4 @@
-import { useSignUpEmailForm } from '@/features/auth/hooks/useSignUpEmailForm';
+import { useSignUpEmailForm } from '@/features/auth';
 import { cn } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { Button } from '@/shared/ui/button';
