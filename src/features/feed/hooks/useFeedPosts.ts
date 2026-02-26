@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { PostCardModel } from '@/entities/feed/ui/PostCard';
 import { postApi } from '@/entities/post';
-import { PostCardModel } from '@/entities/post';
 
 export function useFeedPosts() {
   const [isLoading, setIsLoading] = useState(true);
