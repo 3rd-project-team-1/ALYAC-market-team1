@@ -12,7 +12,7 @@ export function useSearchUsers(keyword: string) {
 
   return useQuery({
     queryKey: ['users', 'search', trimmedKeyword],
-    queryFn: () => userApi.searchUsers(trimmedKeyword).then((res) => res.data.user),
+    queryFn: () => userApi.searchUsers(trimmedKeyword).then((res) => res.data),
     enabled: !!trimmedKeyword,
     staleTime: 1000 * 60 * 5, // 5분
   });

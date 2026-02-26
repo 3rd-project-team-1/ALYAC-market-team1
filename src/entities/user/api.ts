@@ -6,9 +6,7 @@ export interface GetProfileResponse {
   profile: Profile;
 }
 
-export interface SearchUsersResponse {
-  user: Profile[];
-}
+export type SearchUsersResponse = Profile[];
 
 export const userApi = {
   // 프로필 조회 GET /api/profile/:accountname
