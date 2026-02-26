@@ -1,4 +1,4 @@
-import { UploadFile, UploadImageIcon } from '@/shared/assets/svg-props/svg-props';
+import { UploadFile, UploadImageIcon } from '@/shared/assets';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
