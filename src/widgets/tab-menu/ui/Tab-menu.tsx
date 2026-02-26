@@ -14,44 +14,20 @@ export const TabMenu = () => {
   const navigate = useNavigate();
 
   return (
-    <nav
-      className="bg-background border-border border-t"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '8px 8px 8px',
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}
-    >
+    <nav className="bg-background border-border fixed right-0 bottom-0 left-0 flex items-center justify-between border-t px-2 py-2">
       {tabs.map(({ path, label, Icon }) => {
         const active = path.some((p) => location.pathname.startsWith(p));
         return (
           <button
             key={path[0]}
             onClick={() => navigate(path[0])}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '2px',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-            }}
+            className={`group flex flex-1 flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-[#11CC27]/10`}
           >
             <Icon active={active} />
             <span
-              style={{
-                fontSize: '10px',
-                color: active ? '#11CC27' : '#767676',
-                fontWeight: active ? 600 : 400,
-                whiteSpace: 'nowrap',
-              }}
+              className={`text-[10px] whitespace-nowrap transition-colors group-hover:font-semibold group-hover:text-[#11CC27] ${
+                active ? 'font-semibold text-[#11CC27]' : 'font-normal text-[#767676]'
+              }`}
             >
               {label}
             </span>
