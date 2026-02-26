@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 
+import { usePriceInput } from '@/features/product/hooks/usePriceInput';
+import { useProductForm } from '@/features/product/hooks/useProductForm';
+import { validationRules } from '@/features/product/lib/validationRules';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
-import { usePriceInput } from '@/shared/hooks/usePriceInput';
-import { useProductForm } from '@/shared/hooks/useProductForm';
-import { validationRules } from '@/shared/lib/validationRules';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
-import { ProductImageUploader } from '@/shared/ui/ProductImageUploader';
+import { ProductImageUploader } from '@/features/product/ui/ProductImageUploader';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {

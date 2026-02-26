@@ -1,6 +1,6 @@
 /**
  * 폼 유효성 검사 규칙 (Validation Rules)
- * 모든 페이지에서 공유 가능한 검증 규칙 정의
+ * 상품 등록/수정 폼에서 사용하는 검증 규칙 정의
  */
 
 export const validationRules = {

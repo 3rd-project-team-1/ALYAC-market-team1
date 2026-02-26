@@ -5,10 +5,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postApi } from '@/entities/post/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { getImageUrl } from '@/features/image/lib/getImageUrl';
+import { fileToBase64, uploadMultipleImages } from '@/features/image/lib/imageUpload';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
-import { fileToBase64, uploadMultipleImages } from '@/shared/lib/imageUpload';
-import { getImageUrl } from '@/shared/lib/utils';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface LocationState {

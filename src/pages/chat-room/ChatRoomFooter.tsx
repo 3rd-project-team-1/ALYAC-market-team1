@@ -4,11 +4,11 @@ import { useProfile } from '@/entities/user/hooks/useProfile';
 import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
 
-interface CommentFooterProps {
-  onSubmit?: (comment: string) => void;
+interface ChatRoomFooterProps {
+  onSubmit?: (message: string) => void;
 }
 
-export function CommentFooter({ onSubmit }: CommentFooterProps) {
+export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
   const [value, setValue] = useState('');
   const { profile } = useProfile();
 
@@ -41,7 +41,7 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
       </div>
       <input
         style={styles.input}
-        placeholder="댓글 입력하기"
+        placeholder="메시지 입력하기..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
@@ -53,7 +53,7 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
         onClick={handleSubmit}
         disabled={!value.trim()}
       >
-        게시
+        전송
       </button>
     </div>
   );

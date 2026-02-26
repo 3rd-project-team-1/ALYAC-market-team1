@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useParams } from 'react-router-dom';
 
 import type { Product } from '@/entities/product/types';
+import { getImageUrl } from '@/features/image/lib/getImageUrl';
+import { usePriceInput } from '@/features/product/hooks/usePriceInput';
+import { useProductForm } from '@/features/product/hooks/useProductForm';
+import { validationRules } from '@/features/product/lib/validationRules';
+import { ProductImageUploader } from '@/features/product/ui/ProductImageUploader';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
-import { usePriceInput } from '@/shared/hooks/usePriceInput';
-import { useProductForm } from '@/shared/hooks/useProductForm';
-import { getImageUrl } from '@/shared/lib/utils';
-import { validationRules } from '@/shared/lib/validationRules';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
-import { ProductImageUploader } from '@/shared/ui/ProductImageUploader';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 type FormValues = {

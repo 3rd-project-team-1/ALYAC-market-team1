@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import { ProfileImageInput } from '@/features/profile/ui/ProfileImageInput';
 import axiosInstance from '@/shared/api/axios';
-import { getImageUrl } from '@/shared/lib/utils';
 import { FormField } from '@/shared/ui/FormField';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
