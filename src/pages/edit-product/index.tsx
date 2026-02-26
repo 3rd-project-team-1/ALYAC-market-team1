@@ -30,7 +30,7 @@ export function EditProductPage() {
   const product = state?.product;
 
   const [imageFile, setImageFile] = useState<File | undefined>();
-  const { imagePreview } = useImageUpload(getImageUrl(product?.itemImage) ?? undefined);
+  const { preview } = useImageUpload(getImageUrl(product?.itemImage) ?? undefined);
   const { mutation, isLoading } = useProductForm({ product, productId });
 
   const {
@@ -73,7 +73,7 @@ export function EditProductPage() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-5 px-6 pt-6">
           {/* 이미지 등록 */}
-          <ProductImageUploader imagePreview={imagePreview} onImageChange={handleImageChange} />
+          <ProductImageUploader imagePreview={preview} onImageChange={handleImageChange} />
 
           {/* 상품명 */}
           <div className="flex flex-col gap-1">

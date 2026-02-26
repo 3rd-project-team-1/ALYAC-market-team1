@@ -8,6 +8,10 @@ export interface GetProfileResponse {
 
 export type SearchUsersResponse = Profile[];
 
+export interface GetFollowListResponse {
+  data: Profile[];
+}
+
 export const userApi = {
   // 프로필 조회 GET /api/profile/:accountname
   getProfile: (accountname: string) =>
@@ -24,6 +28,14 @@ export const userApi = {
 
   // 언팔로우 DELETE /api/profile/:accountname/unfollow
   unfollow: (accountname: string) => axiosInstance.delete(`/api/profile/${accountname}/unfollow`),
+
+  // 팔로워 목록 GET /api/profile/:accountname/follower/
+  getFollowers: (accountname: string) =>
+    axiosInstance.get<GetFollowListResponse>(`/api/profile/${accountname}/follower/`),
+
+  // 팔로잉 목록 GET /api/profile/:accountname/following/
+  getFollowings: (accountname: string) =>
+    axiosInstance.get<GetFollowListResponse>(`/api/profile/${accountname}/following/`),
 
   // 프로필 수정 PUT /api/user
   updateProfile: (data: {

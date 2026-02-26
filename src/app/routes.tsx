@@ -33,6 +33,12 @@ const ChatPage = lazy(() => import('@/pages/chat').then((m) => ({ default: m.Cha
 const ChatRoomPage = lazy(() =>
   import('@/pages/chat-room').then((m) => ({ default: m.ChatRoomPage })),
 );
+const FollowersPage = lazy(() =>
+  import('@/pages/followers').then((m) => ({ default: m.FollowersPage })),
+);
+const FollowingsPage = lazy(() =>
+  import('@/pages/followings').then((m) => ({ default: m.FollowingsPage })),
+);
 const NotFoundPage = lazy(() =>
   import('@/pages/not-found').then((m) => ({ default: m.NotFoundPage })),
 );
@@ -89,6 +95,14 @@ export const router = createBrowserRouter([
           {
             path: 'chat/:roomId',
             element: <ChatRoomPage />,
+          },
+          {
+            path: 'followers/:accountname',
+            element: <FollowersPage />,
+          },
+          {
+            path: 'followings/:accountname',
+            element: <FollowingsPage />,
           },
         ],
       },

@@ -19,11 +19,10 @@ type ViewMode = 'grid' | 'list';
 export function ProfilePage() {
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
-  const { profile, isLoading, isMyProfile } = useProfile(accountname);
+  const { profile, isLoading, isError, isMyProfile } = useProfile(accountname);
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const { isFollowing, followMutation } = useProfileFollow({
-    accountname: profile?.accountname,
+  const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
     initialIsFollow: profile?.isfollow,
   });
 
@@ -39,6 +38,17 @@ export function ProfilePage() {
     );
   }
 
+  if (isError || !profile) {
+    return (
+      <div className="bg-background flex min-h-screen flex-col">
+        <TopBasicNav />
+        <div className="flex flex-1 items-center justify-center">
+          <p className="text-muted-foreground text-sm">해당 계정을 찾을 수 없습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background flex min-h-screen flex-col pb-20">
       <TopBasicNav />
@@ -46,7 +56,10 @@ export function ProfilePage() {
       {/* 프로필 정보 */}
       <section className="px-6 pt-[60px] pb-6">
         <div className="flex items-center justify-center gap-12">
-          <button className="flex flex-col items-center gap-1">
+          <button
+            className="flex flex-col items-center gap-1"
+            onClick={() => navigate(`/followers/${profile.accountname}`)}
+          >
             <span className="text-foreground text-xl font-bold">{profile?.followerCount ?? 0}</span>
             <span className="text-muted-foreground text-xs">followers</span>
           </button>
@@ -63,7 +76,10 @@ export function ProfilePage() {
             )}
           </div>
 
-          <button className="flex flex-col items-center gap-1">
+          <button
+            className="flex flex-col items-center gap-1"
+            onClick={() => navigate(`/followings/${profile.accountname}`)}
+          >
             <span className="text-foreground text-xl font-bold">
               {profile?.followingCount ?? 0}
             </span>
@@ -113,8 +129,8 @@ export function ProfilePage() {
 
               <Button
                 className={`rounded-full px-8 text-sm font-semibold text-white ${isFollowing ? 'bg-muted-foreground' : 'bg-[#3C9E00] hover:bg-[#2d7a00]'}`}
-                onClick={() => followMutation.mutate()}
-                disabled={followMutation.isPending}
+                onClick={() => toggleFollow(profile.accountname)}
+                disabled={followMutation.isPending || !profile.accountname}
               >
                 {isFollowing ? '언팔로우' : '팔로우'}
               </Button>
