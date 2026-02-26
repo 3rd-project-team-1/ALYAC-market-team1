@@ -1,4 +1,4 @@
-export const UploadSImageIcon = (props: React.SVGProps<SVGSVGElement>): React.JSX.Element => (
+export const UploadImageSmallIcon = (props: React.SVGProps<SVGSVGElement>): React.JSX.Element => (
   <svg
     width="42"
     height="42"
