@@ -5,9 +5,9 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { checkAccountnameDuplicate } from '@/entities/auth';
-import { uploadProfileImage } from '@/entities/auth';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
+import { uploadSingleImage } from '@/shared/api';
 
 export interface ProfileFormData {
   username: string;
@@ -38,18 +38,16 @@ export function useSignUpProfileForm() {
   } = useForm<ProfileFormData>({ mode: 'onChange' });
 
   const onSubmit = async (data: ProfileFormData) => {
-    // 1. 중복 체크
     const isDuplicate = await checkAccountnameDuplicate(data.accountname);
     if (isDuplicate) {
       setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
       return;
     }
 
-    // 2. 이미지 업로드
     let finalImageValue = '';
     if (profileImageFile) {
       try {
-        finalImageValue = await uploadProfileImage(profileImageFile);
+        finalImageValue = await uploadSingleImage(profileImageFile);
       } catch (error) {
         console.error('이미지 업로드 실패:', error);
         alert('프로필 이미지 업로드에 실패했습니다.');
@@ -57,7 +55,6 @@ export function useSignUpProfileForm() {
       }
     }
 
-    // 3. 최종 가입 요청
     const requestData: SignupRequest = {
       user: {
         email,
