@@ -18,7 +18,6 @@ import { TopBasicNav } from '@/widgets/top-basic-nav';
 type ViewMode = 'grid' | 'list';
 
 export function ProfilePage() {
-  const myUserId = localStorage.getItem('lastUserId') ?? undefined;
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -89,7 +88,7 @@ export function ProfilePage() {
   if (isLoading) {
     return (
       <div className="bg-background flex min-h-screen flex-col">
-        <TopBasicNav userId={myUserId} />
+        <TopBasicNav />
         <LoadingSpinner fullScreen={false} message="프로필을 불러오는 중입니다..." />
       </div>
     );
@@ -97,7 +96,7 @@ export function ProfilePage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col pb-20">
-      <TopBasicNav userId={myUserId} />
+      <TopBasicNav />
 
       {/* 프로필 정보 */}
       <section className="px-6 pt-[60px] pb-6">
