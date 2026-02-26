@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useSignIn } from '@/entities/auth';
 
@@ -35,7 +36,7 @@ export const useSignInForm = () => {
             setError('email', { message: '' });
             setError('password', { message: errorMessage });
           } else {
-            alert('알 수 없는 오류가 발생했습니다.');
+            toast.error('알 수 없는 오류가 발생했습니다.');
             console.error(error);
           }
         },

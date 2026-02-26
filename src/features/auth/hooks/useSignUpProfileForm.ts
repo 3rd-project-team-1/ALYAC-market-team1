@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { checkAccountnameDuplicate } from '@/entities/auth';
 import { useSignUp } from '@/entities/auth/hooks/useSignUp';
@@ -49,8 +50,9 @@ export function useSignUpProfileForm() {
       try {
         finalImageValue = await uploadSingleImage(profileImageFile);
       } catch (error) {
-        console.error('이미지 업로드 실패:', error);
-        alert('프로필 이미지 업로드에 실패했습니다.');
+        toast.error(
+          error instanceof Error ? error.message : '프로필 이미지 업로드에 실패했습니다.',
+        );
         return;
       }
     }
@@ -61,19 +63,19 @@ export function useSignUpProfileForm() {
         password,
         username: data.username,
         accountname: data.accountname,
-        intro: data.intro || '안녕하세요! 반갑습니다.',
+        intro: data.intro || '',
         image: finalImageValue,
       },
     };
 
     signUpMutation.mutate(requestData, {
       onSuccess: () => {
-        alert('회원가입 완료!');
+        toast.success('회원가입 완료! 🎉');
         navigate('/signin');
       },
       onError: (error) => {
         if (axios.isAxiosError<ApiErrorResponse>(error))
-          alert(error.response?.data?.message || '실패했습니다.');
+          toast.error(error.response?.data?.message || '실패했습니다.');
       },
     });
   };
