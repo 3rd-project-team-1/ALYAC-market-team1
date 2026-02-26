@@ -2,7 +2,7 @@ export type { IconProps } from './types';
 export { UploadFile } from './UploadFile';
 export { ImgButton } from './ImgButton';
 export { UploadImageIcon } from './UploadImageIcon';
-export { UploadSImageIcon } from './UploadSImageIcon';
+export { UploadImageSmallIcon } from './UploadImageSmallIcon';
 export { FullLogoAlyacPngIcon } from './FullLogoAlyacPngIcon';
 export { FullLogoAlyacNoTextIcon } from './FullLogoAlyacNoTextIcon';
 export { HomeIcon } from './HomeIcon';
