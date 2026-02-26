@@ -1,76 +1,126 @@
-# React + TypeScript + Vite
+# Alyac Market
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. 프로젝트 개요
 
-Currently, two official plugins are available:
+이스트소프트 프론트엔드 개발과정 10기
+3차 프로젝트 : SNS 오픈마켓 개발
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1.1 목표
 
-## React Compiler
+- 모바일 친화적인 SNS 오픈마켓 웹 애플리케이션 개발
+- 사용자 간 상품 거래 및 소통 지원
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1.2 팀원
 
-## Expanding the ESLint configuration
+- 팀장: 김동희
+- 팀원: 김세윤, 배준우, 장영재
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1.3 마일스톤
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 1일차: 프로젝트 기획 및 역할 분담
+  - FSD 규칙 확립
+  - 김동희팀장님은 피드페이지 담당, 검색페이지 담당
+  - 김세윤팀원님은 프로필파트 담당
+  - 배준우팀원님은 로그인파트 담당
+  - 장영재팀원님은 공유파트를 담당
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- 2일차:
+  - 김동희: 2일차 체크리스트 수행과 피드페이지, 검색페이지.
+  - 김세윤: 프로필페이지 구현 시작
+  - 배준우: Auth,User타입정의 및 token.ts 작성
+  - 장영재: 버튼 svg, shared/ui/button 추가
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- 3일차:
+
+- 4일차:
+  - 로그인 중 메인nav는 설정 및 개인정보 modal로
+  - 설정 및 개인정보 눌렀을때 어떤 페이지로 이동할 것인지? → 프로필 수정 페이지 이동하기로
+  - 팔로워 페이지 팔로우nav는 팔로우페이지에 작성
+  - 프로필 저장 버튼과 게시글 업로드 버튼은 쉐어드 폴더에 따로 만들어서 각각 적용
+  - 헤더를 페이지마다 다르게 나오는데 어디서 관리해서 처리할지? → 아직 못정해서 강사님께 물어보기로..
+  - 예) 버튼헤더가 프로필과 게시글업로드에 쓰이는데 api와 버튼 이름을 어떻게 하는지
+  - format공유가 안되던 문제 해결.
+
+- 5일차:
+- 6일차:
+- 7일차
+
+### 1.4 주요 기능
+
+- 회원가입/로그인/로그아웃
+- 상품 등록, 수정, 삭제
+- 상품 목록 및 상세 조회
+- 채팅 기능
+- 댓글 및 좋아요
+- 검색 및 필터링
+
+## 2. 개발 환경 및 배포
+
+### 2.1 개발 스택
+
+- 프론트엔드: React, TypeScript, Vite
+- 백엔드: Node.js, Express
+- 데이터베이스: DB
+- 스타일: CSS Modules, TailwindCSS
+- 기타: Axios, Zustand, React Query
+
+### 2.2 배포 URL
+
+- 프론트엔드: []()
+- 백엔드: []()
+
+## 3. 라우팅 구조
+
+- / (홈)
+- /feed (피드)
+- /product/:id (상품 상세)
+- /post/:id (게시글 상세)
+- /chat (채팅 목록)
+- /chat-room/:id (채팅방)
+- /profile (내 프로필)
+- /search (검색)
+- /signin, /signup (인증)
+
+## 4. 데이터 흐름
+
+1. 클라이언트는 REST API를 통해 서버와 통신합니다.
+2. 상태 관리는 주로 Zustand, React Query로 처리합니다.
+3. 인증 정보는 로컬스토리지/쿠키에 저장됩니다.
+
+## 5. 프로젝트 구조
+
+```
+src/
+  app/           # 앱 엔트리포인트 및 라우팅
+  entities/      # 도메인별 API, 타입, 훅
+  features/      # 주요 기능 단위별 폴더
+  pages/         # 라우트별 페이지 컴포넌트
+  shared/        # 공통 컴포넌트, 훅, 유틸
+  widgets/       # UI 위젯
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 6. 아키텍처
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Atomic Design, FSD(Folder-by-Feature) 구조 적용
+- 클라이언트-서버 분리, API 통신
+- 상태 관리: 전역(Zustand), 서버 상태(React Query)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# 3rd-project
-# ALYAC-market-team1
-# ALYAC-market-team1
+## 7. 실행 방법
+
+1. 의존성 설치
+   ```bash
+   npm install
+   ```
+2. 개발 서버 실행
+   ```bash
+   npm run dev
+   ```
+3. 빌드
+   ```bash
+   npm run build
+   ```
+
+## 8. 테스트 계정
+
+- 아이디: / 비밀번호:
+- 아이디: / 비밀번호:
