@@ -1,55 +1,25 @@
-import { startTransition, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import { removeToken } from '@/entities/auth/lib/token';
+import { useTheme } from '@/shared/lib/theme';
 import { LogoutModal } from '@/shared/ui/modal';
-
-type Theme = 'light' | 'dark' | 'system';
 
 interface TopBasicNavProps {
   onSettings?: () => void;
-  userId?: string;
 }
 
-export function TopBasicNav({ onSettings, userId }: TopBasicNavProps) {
-  // userId 구조분해 추가
+export function TopBasicNav({ onSettings }: TopBasicNavProps) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const themeKey = userId ? `theme_${userId}` : 'theme';
+  const { theme, setTheme } = useTheme();
 
-  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
-    return (localStorage.getItem(themeKey) as Theme) || 'system';
-  });
-
-  useEffect(() => {
-    const saved = (localStorage.getItem(themeKey) as Theme) || 'system';
-    const isDark =
-      saved === 'dark' ||
-      (saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    document.documentElement.classList.toggle('dark', isDark);
-    // startTransition으로 감싸면 lint 경고 없이 setState 호출 가능
-    startTransition(() => {
-      setCurrentTheme(saved);
-    });
-  }, [themeKey]);
   const toggleTheme = () => {
-    const next: Record<Theme, Theme> = {
-      light: 'dark',
-      dark: 'system',
-      system: 'light',
-    };
-    const nextTheme = next[currentTheme];
-    if (nextTheme === 'system') {
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', systemDark);
-    } else {
-      document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-    }
-    localStorage.setItem(themeKey, nextTheme); // key 변경
-    setCurrentTheme(nextTheme);
+    const next = { light: 'dark', dark: 'system', system: 'light' } as const;
+    setTheme(next[theme]);
   };
 
   const handleLogout = () => {
@@ -162,7 +132,7 @@ export function TopBasicNav({ onSettings, userId }: TopBasicNavProps) {
                   className="text-foreground hover:bg-accent flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm"
                   onClick={toggleTheme}
                 >
-                  테마: {themeLabel[currentTheme]}
+                  테마: {themeLabel[theme]}
                 </button>
                 <button
                   className="text-foreground hover:bg-accent w-full px-4 py-2.5 text-left text-sm"
