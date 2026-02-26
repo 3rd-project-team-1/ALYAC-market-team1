@@ -1,40 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { ChatRoomList, DUMMY_CHAT_ROOMS } from '@/features/chat';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
-
-interface ChatRoom {
-  id: string;
-  name: string;
-  lastMessage: string;
-  date: string;
-  isOnline: boolean;
-}
-
-// 임시 더미 데이터
-const DUMMY_CHAT_ROOMS: ChatRoom[] = [
-  {
-    id: '1',
-    name: '이스트 시큐리티',
-    lastMessage: '언제 출시 되나요?',
-    date: '2020.10.25',
-    isOnline: true,
-  },
-  {
-    id: '2',
-    name: '이스트 소프트',
-    lastMessage: '궁금한 것이 있어 안배드릴겁니다. 이번에 알...',
-    date: '2020.10.25',
-    isOnline: true,
-  },
-  {
-    id: '3',
-    name: '보안 백신 전문가',
-    lastMessage: '오늘 시간되시나요? 어쩌볼 것이 있습니다. 이...',
-    date: '2020.10.25',
-    isOnline: false,
-  },
-];
 
 export function ChatPage() {
   const navigate = useNavigate();
@@ -42,38 +9,7 @@ export function ChatPage() {
   return (
     <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopBasicNav />
-
-      {/* 채팅 목록 */}
-      <ul>
-        {DUMMY_CHAT_ROOMS.map((room) => (
-          <li key={room.id}>
-            <button
-              type="button"
-              className="border-border hover:bg-accent flex w-full items-center gap-3 border-b px-4 py-4 text-left"
-              onClick={() => navigate(`/chat/${room.id}`)}
-            >
-              {/* 아바타 + 온라인 표시 */}
-              <div className="relative flex-shrink-0">
-                <div className="bg-muted h-10 w-10 overflow-hidden rounded-full">
-                  <img src={uploadImage} alt={room.name} className="h-full w-full object-cover" />
-                </div>
-                {room.isOnline && (
-                  <span className="border-background absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 bg-[#3C9E00]" />
-                )}
-              </div>
-
-              {/* 채팅 정보 */}
-              <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground text-sm font-medium">{room.name}</span>
-                  <span className="text-muted-foreground text-xs">{room.date}</span>
-                </div>
-                <p className="text-muted-foreground truncate text-xs">{room.lastMessage}</p>
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <ChatRoomList rooms={DUMMY_CHAT_ROOMS} onRoomClick={(roomId) => navigate(`/chat/${roomId}`)} />
     </div>
   );
 }
