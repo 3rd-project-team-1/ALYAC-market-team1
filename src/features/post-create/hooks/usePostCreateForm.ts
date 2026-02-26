@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import { useMutation } from '@tanstack/react-query';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { postApi } from '@/entities/post';
-import { fileToBase64, uploadMultipleImages } from '@/features/image/lib/imageUpload';
+import { uploadMultipleImages } from '@/shared/api';
 
 export interface PostCreateFormValues {
   content: string;
@@ -14,7 +16,6 @@ export function usePostCreateForm(defaultContent = '') {
   const navigate = useNavigate();
   const [images, setImages] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, control } = useForm<PostCreateFormValues>({
     mode: 'onChange',
@@ -23,42 +24,58 @@ export function usePostCreateForm(defaultContent = '') {
 
   const content = useWatch({ control, name: 'content' });
   const hasContent = content?.trim().length > 0;
+  const cleanupUrls = useCallback(() => {
+    images.forEach((url) => {
+      if (url.startsWith('blob:')) {
+        URL.revokeObjectURL(url);
+      }
+    });
+  }, [images]);
 
-  const handleImageAdd = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    return () => cleanupUrls();
+  }, [cleanupUrls]);
+
+  const createPostMutation = useMutation({
+    mutationFn: async (data: PostCreateFormValues) => {
+      const imagePaths = await uploadMultipleImages(imageFiles);
+      const imageString = imagePaths.join(',');
+      return postApi.createPost(data.content, imageString);
+    },
+    onSuccess: (res) => {
+      cleanupUrls();
+      toast.success('게시글이 업로드되었습니다');
+      navigate(`/post/${res.data.post.id}`);
+    },
+    onError: (error) => {
+      console.error('게시글 업로드 실패:', error);
+      toast.error('게시글 업로드에 실패했습니다');
+    },
+  });
+
+  const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
 
-    for (const file of files) {
-      const base64 = await fileToBase64(file);
-      setImages((prev) => [...prev, base64]);
-    }
-
+    setImages((prev) => [...prev, ...previewUrls]);
     setImageFiles((prev) => [...prev, ...files]);
     e.target.value = '';
   };
 
   const handleImageRemove = (index: number) => {
+    if (images[index].startsWith('blob:')) {
+      URL.revokeObjectURL(images[index]);
+    }
     setImages((prev) => prev.filter((_, i) => i !== index));
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const submitPost = async (data: PostCreateFormValues) => {
-    setIsSubmitting(true);
-    try {
-      const imagePaths = await uploadMultipleImages(imageFiles);
-      const res = await postApi.createPost(data.content, imagePaths);
-      navigate(`/post/${res.data.post.id}`);
-    } catch (error) {
-      console.error('게시글 업로드 실패:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const submitPost = handleSubmit((data) => createPostMutation.mutate(data));
 
   return {
     register,
-    handleSubmit,
     images,
-    isSubmitting,
+    isSubmitting: createPostMutation.isPending,
     hasContent,
     handleImageAdd,
     handleImageRemove,
