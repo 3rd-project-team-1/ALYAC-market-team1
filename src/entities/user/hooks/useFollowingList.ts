@@ -6,7 +6,7 @@ import type { Profile } from '@/entities/user/types';
 export function useFollowingList(accountname?: string) {
   const { data, isLoading } = useQuery({
     queryKey: ['followings', accountname],
-    queryFn: () => userApi.getFollowings(accountname!).then((res) => res.data.data),
+    queryFn: () => userApi.getFollowings(accountname!).then((res) => res.data.following),
     enabled: !!accountname,
   });
 
