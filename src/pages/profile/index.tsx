@@ -24,7 +24,7 @@ export function ProfilePage() {
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const { isFollowing, followMutation } = useProfileFollow({
-    accountname: profile?.accountname,
+    accountname,
     initialIsFollow: profile?.isfollow,
   });
 
