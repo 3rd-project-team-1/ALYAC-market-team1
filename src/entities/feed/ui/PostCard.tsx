@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { ChatIcon } from '@/shared/assets/svg-props';
+import { HeartIcon } from '@/shared/assets/svg-props';
 import UserAvatar from '@/shared/ui/userAvatar';
 
 // 포스트 작성자의 기본 정보 인터페이스
@@ -72,6 +74,9 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     const baseUrl = import.meta.env.VITE_IMAGE_BASE_URL || 'http://localhost:3000';
     return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
   };
+
+  // 좋아요 상태 관리 (TODO: 리팩토링 이후 세윤님 post에 있는 좋아요와 연동)
+  const [isLiked, setIsLiked] = useState(false);
 
   return (
     <article
@@ -156,9 +161,16 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
         />
       )}
 
-      {/* 좋아요 및 댓글 수 통계 */}
+      {/* 좋아요 및 댓글 수 통계 
+      TODO: 세윤님 리팩토링 이후 하트랑 댓글 아이콘 공유 
+      제대로 동작 안하는게 정상*/}
       <p className="text-muted-foreground mt-3 text-xs">
-        좋아요 {post.heartCount} · 댓글 {post.commentCount}
+        <button onClick={() => setIsLiked((prev) => !prev)}>
+          <HeartIcon
+            className={`mr-1 inline-block h-4 w-4 ${isLiked ? 'text-red-500' : 'text-gray-400'}`}
+          />
+        </button>
+        {post.heartCount} <ChatIcon active={false} /> {post.commentCount}
       </p>
     </article>
   );
