@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import { useUserProducts } from '@/entities/product/hooks/useUserProducts';
-import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';

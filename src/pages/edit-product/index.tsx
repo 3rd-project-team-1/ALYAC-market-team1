@@ -69,7 +69,11 @@ export function EditProductPage() {
           {/* 이미지 등록 */}
           <ProductImageUploader imagePreview={preview} onImageChange={handleImageChange} />
 
-          <ProductFormFields register={register} errors={errors} onPriceChange={handlePriceChange} />
+          <ProductFormFields
+            register={register}
+            errors={errors}
+            onPriceChange={handlePriceChange}
+          />
         </div>
       </form>
     </div>

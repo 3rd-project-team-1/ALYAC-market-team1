@@ -10,8 +10,7 @@ export function FollowersPage() {
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
   const tokenInfo = getTokenUserInfo();
-  const myAccountname =
-    tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
   const { followers, isLoading } = useFollowerList(accountname);
 

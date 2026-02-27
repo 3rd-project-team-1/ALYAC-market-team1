@@ -18,7 +18,11 @@ interface PostCommentsListProps {
   onOpenCommentOption: (commentId: string) => void;
 }
 
-export function PostCommentsList({ comments, myAccountname, onOpenCommentOption }: PostCommentsListProps) {
+export function PostCommentsList({
+  comments,
+  myAccountname,
+  onOpenCommentOption,
+}: PostCommentsListProps) {
   return (
     <div className="flex flex-col gap-4 px-4 py-4 pb-20">
       {comments.map((comment) => (
@@ -32,7 +36,9 @@ export function PostCommentsList({ comments, myAccountname, onOpenCommentOption 
           </div>
           <div className="flex flex-1 flex-col gap-0.5">
             <div className="flex items-center gap-2">
-              <span className="text-foreground text-sm font-semibold">{comment.author.username}</span>
+              <span className="text-foreground text-sm font-semibold">
+                {comment.author.username}
+              </span>
               <span className="text-muted-foreground text-xs">
                 {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
               </span>
@@ -40,7 +46,11 @@ export function PostCommentsList({ comments, myAccountname, onOpenCommentOption 
             <p className="text-foreground text-sm">{comment.content}</p>
           </div>
           {comment.author.accountname === myAccountname && (
-            <button type="button" onClick={() => onOpenCommentOption(comment.id)} aria-label="더보기">
+            <button
+              type="button"
+              onClick={() => onOpenCommentOption(comment.id)}
+              aria-label="더보기"
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <circle cx="5" cy="12" r="1.5" fill="currentColor" />
                 <circle cx="12" cy="12" r="1.5" fill="currentColor" />
