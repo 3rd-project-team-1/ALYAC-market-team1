@@ -2,7 +2,7 @@ import { ProfilePostsSection, ProfileProductsSection, ProfileTopSection } from '
 import { TopBasicNav, useLogoutMenu } from '@/widgets/top-basic-nav';
 
 export function ProfilePage() {
-  const { moreMenu, modal } = useLogoutMenu({ onSettings: () => {} });
+  const { moreMenu, modal } = useLogoutMenu();
 
   return (
     <div>
