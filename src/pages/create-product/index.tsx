@@ -5,9 +5,9 @@ import { useForm } from 'react-hook-form';
 import { usePriceInput } from '@/features/product/hooks/usePriceInput';
 import { useProductForm } from '@/features/product/hooks/useProductForm';
 import { ProductFormFields, type ProductFormValues } from '@/features/product/ui/ProductFormFields';
+import { ProductImageUploader } from '@/features/product/ui/ProductImageUploader';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
-import { ProductImageUploader } from '@/features/product/ui/ProductImageUploader';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 export function CreateProductPage() {
@@ -53,7 +53,11 @@ export function CreateProductPage() {
           {/* 이미지 등록 */}
           <ProductImageUploader imagePreview={preview} onImageChange={handleImageChange} />
 
-          <ProductFormFields register={register} errors={errors} onPriceChange={handlePriceChange} />
+          <ProductFormFields
+            register={register}
+            errors={errors}
+            onPriceChange={handlePriceChange}
+          />
         </div>
       </form>
     </div>

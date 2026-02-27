@@ -68,7 +68,9 @@ export function ChatRoomPage() {
       <ChatRoomFooter onSubmit={handleSendMessage} />
 
       {/* 채팅방 나가기 모달 */}
-      {showModal && <LeaveRoomModal onClose={() => setShowModal(false)} onLeave={handleLeaveRoom} />}
+      {showModal && (
+        <LeaveRoomModal onClose={() => setShowModal(false)} onLeave={handleLeaveRoom} />
+      )}
     </div>
   );
 }

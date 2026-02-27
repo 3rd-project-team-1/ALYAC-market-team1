@@ -22,7 +22,9 @@ export function useProfile(accountname?: string) {
     enabled: !!targetAccountname,
   });
 
-  const isMyProfile = normalizedAccountname ? !!myAccountname && myAccountname === normalizedAccountname : true;
+  const isMyProfile = normalizedAccountname
+    ? !!myAccountname && myAccountname === normalizedAccountname
+    : true;
 
   return { profile: data ?? null, isLoading, isError, isMyProfile };
 }

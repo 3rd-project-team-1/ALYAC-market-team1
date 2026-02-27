@@ -10,7 +10,10 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-5">
       {messages.map((msg) => (
-        <div key={msg.id} className={`flex items-end gap-2 ${msg.isMine ? 'flex-row-reverse' : 'flex-row'}`}>
+        <div
+          key={msg.id}
+          className={`flex items-end gap-2 ${msg.isMine ? 'flex-row-reverse' : 'flex-row'}`}
+        >
           {!msg.isMine && (
             <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
               <img src={uploadImage} alt="상대방 프로필" className="h-full w-full object-cover" />

@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { ChatIcon } from '@/shared/assets/svg-props';
+import { HeartIcon } from '@/shared/assets/svg-props';
+import { MoreIcon } from '@/shared/assets/svg-props';
 import UserAvatar from '@/shared/ui/userAvatar';
 
 // 포스트 작성자의 기본 정보 인터페이스
@@ -23,6 +26,7 @@ export interface PostCardModel {
 interface PostCardProps {
   post: PostCardModel;
   isMyPost?: boolean;
+  isYourPost?: boolean;
   onRewrite?: (postId: string) => void;
   onDelete?: (postId: string) => void;
   onClick?: () => void;
@@ -34,13 +38,21 @@ interface PostCardProps {
  * @param props - PostCardProps
  * @param props.post - 포스트 데이터 상세
  * @param props.isMyPost - 본인 게시글 여부 (수정/삭제 메뉴 표시여부 결정)
+ * @param props.isYourPost - 다른 사용자의 게시글 여부 (신고 메뉴 표시여부 결정)
  * @param props.onRewrite - 수정 핸들러
  * @param props.onDelete - 삭제 핸들러
  * @param props.onClick - 카드 클릭 시 상세 이동 등의 핸들러
  * @returns 게시글 카드 엘리먼트
  * @file entities/post/ui/PostCard.tsx
  */
-export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick }: PostCardProps) {
+export function PostCard({
+  post,
+  isMyPost = false,
+  isYourPost = true,
+  onRewrite,
+  onDelete,
+  onClick,
+}: PostCardProps) {
   // 수정/삭제 메뉴 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -53,6 +65,13 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
 
   // 삭제 핸들러: 이벤트 전파를 막고 props의 onDelete를 호출합니다.
   const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete?.(post.id);
+    setIsMenuOpen(false);
+  };
+
+  // 신고 핸들러: 이벤트 전파를 막고 props의 onDelete를 호출합니다.
+  const handleReport = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete?.(post.id);
     setIsMenuOpen(false);
@@ -72,6 +91,9 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     const baseUrl = import.meta.env.VITE_IMAGE_BASE_URL || 'http://localhost:3000';
     return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
   };
+
+  // 좋아요 상태 관리 (TODO: 리팩토링 이후 세윤님 post에 있는 좋아요와 연동)
+  const [isLiked, setIsLiked] = useState(false);
 
   return (
     <article
@@ -97,11 +119,7 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
               className="text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md"
               onClick={handleMenuToggle}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="5" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="19" cy="12" r="1.5" fill="currentColor" />
-              </svg>
+              <MoreIcon className="h-4 w-4" aria-label="더보기" />
             </button>
 
             {isMenuOpen && (
@@ -136,6 +154,42 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
             )}
           </div>
         )}
+        {/* 다른 사용자의 게시글일 경우 신고 메뉴 표시 */}
+        {isYourPost && (
+          <div className="relative">
+            <button
+              type="button"
+              aria-label="게시글 메뉴"
+              className="text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md"
+              onClick={handleMenuToggle}
+            >
+              <MoreIcon className="h-4 w-4" aria-label="더보기" />
+            </button>
+            {isMenuOpen && (
+              <>
+                {/* 배경 클릭 시 드롭다운 닫기 오버레이 */}
+                <button
+                  type="button"
+                  className="fixed inset-0 z-10 cursor-default"
+                  aria-label="메뉴 닫기"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMenuOpen(false);
+                  }}
+                />
+                <div className="bg-background border-border absolute top-9 right-0 z-20 w-28 overflow-hidden rounded-md border py-1 shadow-sm">
+                  <button
+                    type="button"
+                    className="hover:bg-accent text-foreground w-full px-3 py-2 text-left text-sm"
+                    onClick={handleReport}
+                  >
+                    신고
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* 게시글 본문 내용 */}
@@ -156,9 +210,16 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
         />
       )}
 
-      {/* 좋아요 및 댓글 수 통계 */}
+      {/* 좋아요 및 댓글 수 통계 
+      TODO: 세윤님 리팩토링 이후 하트랑 댓글 아이콘 공유 
+      제대로 동작 안하는게 정상*/}
       <p className="text-muted-foreground mt-3 text-xs">
-        좋아요 {post.heartCount} · 댓글 {post.commentCount}
+        <button onClick={() => setIsLiked((prev) => !prev)}>
+          <HeartIcon
+            className={`mr-1 inline-block h-4 w-4 ${isLiked ? 'text-red-500' : 'text-gray-400'}`}
+          />
+        </button>
+        {post.heartCount} <ChatIcon active={false} /> {post.commentCount}
       </p>
     </article>
   );
