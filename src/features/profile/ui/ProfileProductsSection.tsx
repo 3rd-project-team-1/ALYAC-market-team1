@@ -1,5 +1,5 @@
 import type { Product } from '@/entities/product/types';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface ProfileProductsSectionProps {
   products: Product[];

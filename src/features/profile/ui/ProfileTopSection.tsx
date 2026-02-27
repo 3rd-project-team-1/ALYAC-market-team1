@@ -1,8 +1,6 @@
 import type { Profile } from '@/entities/user/types';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
-import messageCircle from '@/shared/assets/icons/message-circle.svg';
-import shareIcon from '@/shared/assets/icons/share.svg';
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { ChatIcon, ShareIcon, UploadImageIcon } from '@/shared/assets';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { Button } from '@/shared/ui/button';
 
 interface ProfileTopSectionProps {
@@ -46,7 +44,7 @@ export function ProfileTopSection({
               className="h-full w-full object-cover"
             />
           ) : (
-            <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
+            <UploadImageIcon />
           )}
         </div>
 
@@ -93,7 +91,7 @@ export function ProfileTopSection({
               aria-label="채팅하기"
               onClick={onOpenChat}
             >
-              <img src={messageCircle} alt="채팅" width={20} height={20} />
+              <ChatIcon />
             </Button>
 
             <Button
@@ -105,7 +103,7 @@ export function ProfileTopSection({
             </Button>
 
             <Button variant="outline" size="icon-lg" className="rounded-full" aria-label="공유하기">
-              <img src={shareIcon} alt="공유" width={20} height={20} />
+              <ShareIcon />
             </Button>
           </>
         )}

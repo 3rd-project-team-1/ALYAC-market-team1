@@ -3,10 +3,10 @@ import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import { PostImagePreviewList, usePostCreateForm } from '@/features/post-create';
 import uploadFile from '@/shared/assets/icons/upload-file.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface LocationState {

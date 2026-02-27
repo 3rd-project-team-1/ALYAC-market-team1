@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { checkAccountnameDuplicate } from '@/entities/auth';
-import { useSignUp } from '@/entities/auth/hooks/useSignUp';
+import { useSignUp } from '@/entities/auth';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
 import { uploadSingleImage } from '@/shared/api';
 

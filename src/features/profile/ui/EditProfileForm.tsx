@@ -1,6 +1,6 @@
 import type { Profile } from '@/entities/user/types';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import { useEditProfileForm } from '@/features/profile';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { FormField } from '@/shared/ui/FormField';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 

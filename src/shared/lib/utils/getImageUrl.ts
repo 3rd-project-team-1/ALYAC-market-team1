@@ -5,5 +5,7 @@ const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL ?? '';
 export function getImageUrl(path: string | null | undefined): string | null {
   if (!path) return null;
   if (path.startsWith('http')) return path;
-  return `${IMAGE_BASE_URL}/${path}`;
+  if (path.startsWith('blob:')) return path;
+  const normalizedPath = path.replace(/\\/g, '/');
+  return `${IMAGE_BASE_URL}/${normalizedPath}`;
 }

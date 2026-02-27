@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface ChatRoomFooterProps {
   onSubmit?: (message: string) => void;
