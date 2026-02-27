@@ -1,9 +1,11 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
+import { getImageUrl } from '@/shared/lib';
+
 export function useImageUpload(initialImage?: string | null, onImageChange?: (file: File) => void) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrlRef = useRef<string | null>(null);
-  const [preview, setPreview] = useState<string | null>(initialImage || null);
+  const [preview, setPreview] = useState<string | null>(getImageUrl(initialImage));
 
   useEffect(() => {
     return () => {
