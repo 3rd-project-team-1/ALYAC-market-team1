@@ -9,11 +9,7 @@ import { LogoutModal } from '@/shared/ui/modal';
 
 import { MoreMenu } from '../ui/MoreMenu';
 
-interface UseLogoutMenuProps {
-  onSettings?: () => void;
-}
-
-export function useLogoutMenu({ onSettings }: UseLogoutMenuProps = {}) {
+export function useLogoutMenu() {
   const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -35,7 +31,7 @@ export function useLogoutMenu({ onSettings }: UseLogoutMenuProps = {}) {
   };
 
   const menuItems = [
-    { label: '설정 및 개인정보', onClick: () => onSettings?.() },
+    { label: '설정 및 개인정보', onClick: () => navigate('/edit-profile') },
     { label: <>테마: {themeLabel[theme]}</>, onClick: toggleTheme },
     { label: '로그아웃', onClick: () => setIsLogoutModalOpen(true) },
   ];
