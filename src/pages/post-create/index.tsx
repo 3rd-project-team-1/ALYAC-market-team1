@@ -4,8 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { PostImagePreviewList, usePostCreateForm } from '@/features/post-create';
-import uploadFile from '@/shared/assets/icons/upload-file.svg';
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
@@ -43,11 +42,17 @@ export function PostCreatePage() {
       <form id="upload-form" onSubmit={submitPost} className="flex flex-1 gap-3 px-4 pt-5">
         {/* 프로필 아바타 */}
         <div className="bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
-          <img
-            src={getImageUrl(profile?.image) ?? uploadImage}
-            alt="내 프로필"
-            className="h-full w-full object-cover"
-          />
+          {profile?.image ? (
+            <img
+              src={getImageUrl(profile.image) ?? profile.image}
+              alt="내 프로필"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <UploadImageSmallIcon />
+            </div>
+          )}
         </div>
 
         <div className="flex flex-1 flex-col gap-4">
@@ -71,7 +76,7 @@ export function PostCreatePage() {
         className="fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]"
         aria-label="이미지 추가"
       >
-        <img src={uploadFile} alt="upload-file" />
+        <UploadFile width={30} viewBox="10,10,30,30" />
       </button>
 
       <input
