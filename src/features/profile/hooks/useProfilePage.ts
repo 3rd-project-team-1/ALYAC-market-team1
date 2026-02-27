@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 
 import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import { useUserProducts } from '@/entities/product/hooks/useUserProducts';
-import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 
 export type ViewMode = 'grid' | 'list';
 

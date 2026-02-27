@@ -9,7 +9,10 @@ export function ChatPage() {
   return (
     <div className="bg-background flex min-h-screen flex-col pt-[48px]">
       <TopBasicNav />
-      <ChatRoomList rooms={DUMMY_CHAT_ROOMS} onRoomClick={(roomId) => navigate(`/chat/${roomId}`)} />
+      <ChatRoomList
+        rooms={DUMMY_CHAT_ROOMS}
+        onRoomClick={(roomId) => navigate(`/chat/${roomId}`)}
+      />
     </div>
   );
 }
