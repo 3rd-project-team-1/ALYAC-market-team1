@@ -21,12 +21,12 @@ export const TabMenu = () => {
           <button
             key={path[0]}
             onClick={() => navigate(path[0])}
-            className={`group flex flex-1 flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-[#11CC27]/10`}
+            className={`group hover:bg-primary-green/10 flex flex-1 cursor-pointer flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 transition-colors`}
           >
             <Icon active={active} />
             <span
-              className={`text-[12px] whitespace-nowrap transition-colors group-hover:font-semibold group-hover:text-[#11CC27] ${
-                active ? 'font-semibold text-[#11CC27]' : 'font-normal text-[#767676]'
+              className={`group-hover:text-primary-green text-[12px] whitespace-nowrap transition-colors group-hover:font-semibold ${
+                active ? 'text-primary-green font-semibold' : 'text-muted-foreground font-normal'
               }`}
             >
               {label}
