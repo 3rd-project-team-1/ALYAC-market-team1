@@ -1,8 +1,8 @@
 import type { Profile } from '@/entities/user/types';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { Button } from '@/shared/ui/button';
 
 interface ProfileTopSectionProps {
@@ -57,18 +57,30 @@ export function ProfileTopSection({
       </div>
 
       <div className="mt-4 flex flex-col items-center">
-        <h1 className="text-foreground text-base font-semibold">{profile.username ?? '이름 없음'}</h1>
+        <h1 className="text-foreground text-base font-semibold">
+          {profile.username ?? '이름 없음'}
+        </h1>
         <p className="text-muted-foreground mt-0.5 text-sm">@{profile.accountname ?? ''}</p>
-        {profile.intro && <p className="text-muted-foreground mt-1.5 text-center text-sm">{profile.intro}</p>}
+        {profile.intro && (
+          <p className="text-muted-foreground mt-1.5 text-center text-sm">{profile.intro}</p>
+        )}
       </div>
 
       <div className="mt-5 flex items-center justify-center gap-3">
         {isMyProfile ? (
           <>
-            <Button variant="outline" className="flex-1 rounded-full text-sm font-medium" onClick={onEditProfile}>
+            <Button
+              variant="outline"
+              className="flex-1 rounded-full text-sm font-medium"
+              onClick={onEditProfile}
+            >
               프로필 수정
             </Button>
-            <Button variant="outline" className="flex-1 rounded-full text-sm font-medium" onClick={onCreateProduct}>
+            <Button
+              variant="outline"
+              className="flex-1 rounded-full text-sm font-medium"
+              onClick={onCreateProduct}
+            >
               상품 등록
             </Button>
           </>

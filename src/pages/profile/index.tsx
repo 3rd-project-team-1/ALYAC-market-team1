@@ -4,12 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import { useUserProducts } from '@/entities/product/hooks/useUserProducts';
-import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
+import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import shareIcon from '@/shared/assets/icons/share.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { Button } from '@/shared/ui/button';
 import { TopBasicNav } from '@/widgets/top-basic-nav';

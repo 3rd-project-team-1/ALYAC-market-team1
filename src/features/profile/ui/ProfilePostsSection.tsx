@@ -1,7 +1,7 @@
 import type { Post } from '@/entities/post/types';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import messageCircle from '@/shared/assets/icons/message-circle.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 import type { ViewMode } from '../hooks/useProfilePage';
 

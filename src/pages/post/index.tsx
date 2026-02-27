@@ -5,9 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post/api';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import messageCircleIcon from '@/shared/assets/icons/message-circle.svg';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 

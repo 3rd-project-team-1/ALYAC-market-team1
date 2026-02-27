@@ -1,6 +1,6 @@
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import { UploadImageIcon } from '@/shared/assets';
 import { ChatIcon } from '@/shared/assets';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface PostDetailCardProps {
   post: {

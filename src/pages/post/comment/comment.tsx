@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface CommentFooterProps {
   onSubmit?: (comment: string) => void;
@@ -32,7 +32,9 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
         right: 0,
       }}
     >
-      <div style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+      <div
+        style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
+      >
         <img
           src={getImageUrl(profile?.image) ?? uploadImage}
           alt="내 프로필"

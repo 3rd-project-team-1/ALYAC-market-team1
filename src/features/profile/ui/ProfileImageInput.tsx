@@ -1,6 +1,6 @@
 import { UploadFile, UploadImageIcon } from '@/shared/assets';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/utils/utils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 

@@ -1,7 +1,7 @@
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import type { Profile } from '@/entities/user/types';
-import { getImageUrl } from '@/features/image/lib/getImageUrl';
 import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface FollowUserListItemProps {
   user: Profile;
@@ -18,7 +18,11 @@ export function FollowUserListItem({ user, myAccountname }: FollowUserListItemPr
     <div className="flex items-center gap-3 px-4 py-3">
       <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full bg-gray-200">
         {getImageUrl(user.image) ? (
-          <img src={getImageUrl(user.image)!} alt={user.username} className="h-full w-full object-cover" />
+          <img
+            src={getImageUrl(user.image)!}
+            alt={user.username}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
         )}
