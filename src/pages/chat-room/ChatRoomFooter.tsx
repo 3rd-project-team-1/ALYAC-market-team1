@@ -10,6 +10,7 @@ interface ChatRoomFooterProps {
 
 export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
   const [value, setValue] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
   const { profile } = useProfile();
 
   const handleSubmit = () => {
@@ -24,8 +25,8 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
       style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '8px 8px 8px',
+        gap: '8px',
+        padding: '8px 16px',
         position: 'fixed',
         bottom: 0,
         left: 0,
@@ -41,22 +42,42 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </div>
-      <input
-        style={styles.input}
-        placeholder="메시지 입력하기..."
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button
+      <div
         style={{
-          ...styles.button,
-          color: value.trim() ? '#11CC27' : '#B2B2B2',
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          border: '1px solid #D1D5DB',
+          boxShadow: isFocused ? '0 0 0 2px #1E3A8A' : 'none',
+          borderRadius: '8px',
+          padding: '6px 12px',
+          backgroundColor: '#fff',
+          transition: 'box-shadow 0.15s',
         }}
-        onClick={handleSubmit}
-        disabled={!value.trim()}
       >
-        전송
-      </button>
+        <input
+          style={styles.input}
+          placeholder="메시지 입력하기..."
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+        <button
+          style={{
+            ...styles.button,
+            backgroundColor: value.trim() ? '#3C9E00' : '#B2B2B2',
+            color: '#fff',
+            padding: '8px 18px',
+            borderRadius: '8px',
+            cursor: value.trim() ? 'pointer' : 'default',
+          }}
+          onClick={handleSubmit}
+          disabled={!value.trim()}
+        >
+          전송
+        </button>
+      </div>
     </div>
   );
 }
@@ -71,12 +92,10 @@ const styles = {
     backgroundColor: 'transparent',
   },
   button: {
-    background: 'none',
     border: 'none',
     fontSize: '14px',
     fontWeight: 600,
-    cursor: 'pointer',
-    padding: 0,
     flexShrink: 0,
+    transition: 'background-color 0.15s',
   },
 } as const;
