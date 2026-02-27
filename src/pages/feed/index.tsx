@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/entities/auth/lib/token';
@@ -10,7 +12,28 @@ export function FeedPage() {
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? '';
 
-  const { isLoading, posts, setPosts } = useFeedPosts();
+  const { isLoading, posts, setPosts, loadMore, hasMore } = useFeedPosts();
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 1 },
+    );
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [hasMore, loadMore]);
 
   const handleSearchClick = () => {
     navigate('/search');
@@ -33,13 +56,16 @@ export function FeedPage() {
     <>
       <TopMainNav title="얄약마켓 피드" />
       {posts.length > 0 ? (
-        <FeedList
-          posts={posts}
-          myAccountname={myAccountname}
-          onRewrite={handleRewritePost}
-          onDelete={handleDeletePost}
-          onClick={handlePostClick}
-        />
+        <>
+          <FeedList
+            posts={posts}
+            myAccountname={myAccountname}
+            onRewrite={handleRewritePost}
+            onDelete={handleDeletePost}
+            onClick={handlePostClick}
+          />
+          {hasMore && <div ref={observerRef} style={{ height: 40 }} />}
+        </>
       ) : (
         <FeedEmpty onSearch={handleSearchClick} />
       )}
