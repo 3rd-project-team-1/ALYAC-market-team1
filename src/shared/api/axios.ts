@@ -1,12 +1,15 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-import { getRefreshToken, getToken, removeToken, saveToken } from '@/entities/auth/lib/token';
+import { getRefreshToken, getToken, removeToken, saveToken } from '@/shared/lib';
 
 // 타입을 확장
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
-
+const AUTH_ENDPOINTS = {
+  REFRESH: '/api/user/refresh',
+  SIGNIN: '/signin',
+};
 //  기본 Axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -65,7 +68,7 @@ axiosInstance.interceptors.response.use(
       error.response?.status === 401 &&
       originalRequest &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes('/api/user/refresh') // 추가: 토큰 갱신 요청 자체가 401일 때 무한 루프 방지
+      !originalRequest.url?.includes(AUTH_ENDPOINTS.REFRESH) // 추가: 토큰 갱신 요청 자체가 401일 때 무한 루프 방지
     ) {
       if (isRefreshing) {
         // 이미 다른 요청으로 인해 토큰 갱신 중이라면 대기열(Queue)에 등록
@@ -89,11 +92,7 @@ axiosInstance.interceptors.response.use(
       try {
         //refreshToken 이 없을경우 에러 처리
         if (!refreshToken) {
-          const noTokenError = new Error('No refresh token');
-          onTokenRefreshFailed(noTokenError);
-          removeToken();
-          window.location.href = '/signin';
-          throw noTokenError;
+          throw new Error('No refresh token');
         }
         //  Body에 refreshToken을 담아서 요청 및 중복 방지
         const response = await axios.post(

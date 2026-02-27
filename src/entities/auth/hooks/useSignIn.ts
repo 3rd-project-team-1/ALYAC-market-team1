@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { signIn } from '../api/signin';
-import { saveToken } from '../lib/token';
+import { signIn } from '@/entities/auth';
+import { saveToken } from '@/shared/lib';
 
 export const useSignIn = () => {
   return useMutation({

@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth';
 import { useUserProducts } from '@/entities/product/hooks/useUserProducts';
+import { getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 export function ProfileProductsSection() {

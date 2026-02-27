@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post/api';
 import { ChatIcon, HeartIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 

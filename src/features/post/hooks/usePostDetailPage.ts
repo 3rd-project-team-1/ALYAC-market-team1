@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
 
 export function usePostDetailPage() {
   const { postId } = useParams<{ postId: string }>();

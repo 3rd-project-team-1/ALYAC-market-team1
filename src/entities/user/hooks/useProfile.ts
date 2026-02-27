@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { userApi } from '@/entities/user/api';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
 
 export function useProfile(accountname?: string) {
   const tokenInfo = getTokenUserInfo();

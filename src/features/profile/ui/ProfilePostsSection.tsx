@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth';
 import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import {
   ChatIcon,
@@ -11,6 +10,7 @@ import {
   PostListIcon,
   UploadImageSmallIcon,
 } from '@/shared/assets';
+import { getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 type ViewMode = 'grid' | 'list';

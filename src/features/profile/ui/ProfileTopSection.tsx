@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { ChatIcon, ShareIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { Button } from '@/shared/ui/button';
 
