@@ -12,7 +12,6 @@ export function useFeedPosts() {
 
   useEffect(() => {
     fetchFeed(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const fetchFeed = async (pageNum: number) => {
