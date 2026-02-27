@@ -1,6 +1,6 @@
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import type { Profile } from '@/entities/user/types';
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface FollowUserListItemProps {
@@ -24,7 +24,7 @@ export function FollowUserListItem({ user, myAccountname }: FollowUserListItemPr
             className="h-full w-full object-cover"
           />
         ) : (
-          <img src={uploadImage} alt="기본 프로필" className="h-full w-full object-cover" />
+          <UploadImageSmallIcon />
         )}
       </div>
 
