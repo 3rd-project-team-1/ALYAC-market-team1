@@ -67,7 +67,7 @@ export function EditProductPage() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-5 px-6 pt-6">
           {/* 이미지 등록 */}
-          <ProductImageUploader imagePreview={preview} onImageChange={handleImageChange} />
+          <ProductImageUploader initialImage={preview} onImageChange={handleImageChange} />
 
           <ProductFormFields
             register={register}

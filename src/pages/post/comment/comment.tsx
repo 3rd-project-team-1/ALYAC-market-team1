@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface CommentFooterProps {
@@ -17,7 +17,7 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
     onSubmit?.(value);
     setValue('');
   };
-
+  const profileImageUrl = getImageUrl(profile?.image);
   return (
     <div
       className="bg-background border-border border-t"
@@ -35,13 +35,17 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
       <div
         style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
       >
-        <img
-          src={getImageUrl(profile?.image) ?? uploadImage}
-          alt="내 프로필"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+        {profileImageUrl ? (
+          <img src={profileImageUrl} alt="내 프로필" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <UploadImageSmallIcon />
+          </div>
+        )}
       </div>
       <input
+        type="text"
+        className="pl-2"
         style={styles.input}
         placeholder="댓글 입력하기"
         value={value}
