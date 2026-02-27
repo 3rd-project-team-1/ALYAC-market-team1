@@ -1,54 +1,54 @@
-import type { Profile } from '@/entities/user/types';
-import { ChatIcon, ShareIcon, UploadImageIcon } from '@/shared/assets';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { getTokenUserInfo } from '@/entities/auth';
+import { useProfile } from '@/entities/user/hooks/useProfile';
+import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
+import { ChatIcon, ShareIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { Button } from '@/shared/ui/button';
 
-interface ProfileTopSectionProps {
-  profile: Profile;
-  isMyProfile: boolean;
-  isFollowing: boolean;
-  isFollowPending: boolean;
-  onEditProfile: () => void;
-  onCreateProduct: () => void;
-  onOpenChat: () => void;
-  onToggleFollow: () => void;
-  onFollowersClick: () => void;
-  onFollowingsClick: () => void;
-}
+export function ProfileTopSection() {
+  const { accountname } = useParams<{ accountname: string }>();
+  const navigate = useNavigate();
+  const tokenInfo = getTokenUserInfo();
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
+  const targetAccountname = accountname ?? myAccountname;
+  const { profile, isMyProfile } = useProfile(targetAccountname);
+  const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
+    initialIsFollow: profile?.isfollow,
+  });
 
-export function ProfileTopSection({
-  profile,
-  isMyProfile,
-  isFollowing,
-  isFollowPending,
-  onEditProfile,
-  onCreateProduct,
-  onOpenChat,
-  onToggleFollow,
-  onFollowersClick,
-  onFollowingsClick,
-}: ProfileTopSectionProps) {
+  if (!profile) return null;
+
   return (
     <section className="px-6 pt-[60px] pb-6">
       <div className="flex items-center justify-center gap-12">
-        <button className="flex flex-col items-center gap-1" onClick={onFollowersClick}>
+        <button
+          className="flex flex-col items-center gap-1"
+          onClick={() => navigate(`/followers/${profile.accountname}`)}
+        >
           <span className="text-foreground text-xl font-bold">{profile.followerCount ?? 0}</span>
           <span className="text-muted-foreground text-xs">followers</span>
         </button>
 
         <div className="bg-muted h-24 w-24 overflow-hidden rounded-full">
-          {getImageUrl(profile.image) ? (
+          {profile.image ? (
             <img
-              src={getImageUrl(profile.image)!}
+              src={getImageUrl(profile.image) ?? profile.image}
               alt={profile.username}
               className="h-full w-full object-cover"
             />
           ) : (
-            <UploadImageIcon />
+            <div className="flex h-full w-full items-center justify-center">
+              <UploadImageSmallIcon />
+            </div>
           )}
         </div>
 
-        <button className="flex flex-col items-center gap-1" onClick={onFollowingsClick}>
+        <button
+          className="flex flex-col items-center gap-1"
+          onClick={() => navigate(`/followings/${profile.accountname}`)}
+        >
           <span className="text-foreground text-xl font-bold">{profile.followingCount ?? 0}</span>
           <span className="text-muted-foreground text-xs">followings</span>
         </button>
@@ -70,14 +70,14 @@ export function ProfileTopSection({
             <Button
               variant="outline"
               className="flex-1 rounded-full text-sm font-medium"
-              onClick={onEditProfile}
+              onClick={() => navigate('/edit-profile')}
             >
               프로필 수정
             </Button>
             <Button
               variant="outline"
               className="flex-1 rounded-full text-sm font-medium"
-              onClick={onCreateProduct}
+              onClick={() => navigate('/create-product')}
             >
               상품 등록
             </Button>
@@ -89,15 +89,15 @@ export function ProfileTopSection({
               size="icon-lg"
               className="rounded-full"
               aria-label="채팅하기"
-              onClick={onOpenChat}
+              onClick={() => navigate('/chat')}
             >
               <ChatIcon />
             </Button>
 
             <Button
               className={`rounded-full px-8 text-sm font-semibold text-white ${isFollowing ? 'bg-muted-foreground' : 'bg-[#3C9E00] hover:bg-[#2d7a00]'}`}
-              onClick={onToggleFollow}
-              disabled={isFollowPending}
+              onClick={() => toggleFollow(profile.accountname)}
+              disabled={followMutation.isPending}
             >
               {isFollowing ? '언팔로우' : '팔로우'}
             </Button>

@@ -1,4 +1,9 @@
-import type { Post } from '@/entities/post/types';
+import { useState } from 'react';
+
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { getTokenUserInfo } from '@/entities/auth';
+import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import {
   ChatIcon,
   HeartIcon,
@@ -8,29 +13,23 @@ import {
 } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
-import type { ViewMode } from '../hooks/useProfilePage';
+type ViewMode = 'grid' | 'list';
 
-interface ProfilePostsSectionProps {
-  posts: Post[];
-  viewMode: ViewMode;
-  onViewModeChange: (mode: ViewMode) => void;
-  onPostClick: (postId: string) => void;
-  onToggleHeart: (postId: string) => void;
-}
+export function ProfilePostsSection() {
+  const { accountname } = useParams<{ accountname: string }>();
+  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const tokenInfo = getTokenUserInfo();
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
+  const targetAccountname = accountname ?? myAccountname;
+  const { posts, heartMutation } = useUserPostsWithHeart(targetAccountname);
 
-export function ProfilePostsSection({
-  posts,
-  viewMode,
-  onViewModeChange,
-  onPostClick,
-  onToggleHeart,
-}: ProfilePostsSectionProps) {
   return (
     <section className="border-border flex-1 border-t">
       <div className="border-border flex justify-end border-b">
         <button
           className="flex items-center justify-center px-5 py-2.5"
-          onClick={() => onViewModeChange('list')}
+          onClick={() => setViewMode('list')}
           aria-label="리스트 뷰"
         >
           <PostListIcon />
@@ -38,7 +37,7 @@ export function ProfilePostsSection({
 
         <button
           className="flex items-center justify-center px-5 py-2.5"
-          onClick={() => onViewModeChange('grid')}
+          onClick={() => setViewMode('grid')}
           aria-label="그리드 뷰"
         >
           <PostAlbumIcon />
@@ -52,12 +51,16 @@ export function ProfilePostsSection({
       ) : viewMode === 'list' ? (
         <div className="flex flex-col gap-4 px-4 py-4">
           {posts.map((post) => (
-            <div key={post.id} className="cursor-pointer" onClick={() => onPostClick(post.id)}>
+            <div
+              key={post.id}
+              className="cursor-pointer"
+              onClick={() => navigate(`/post/${post.id}`)}
+            >
               <div className="flex items-center gap-3">
                 <div className="bg-muted h-8 w-8 overflow-hidden rounded-full">
-                  {getImageUrl(post.author.image) ? (
+                  {post.author.image ? (
                     <img
-                      src={getImageUrl(post.author.image)!}
+                      src={getImageUrl(post.author.image) ?? post.author.image}
                       alt={post.author.username}
                       className="h-full w-full object-cover"
                     />
@@ -88,7 +91,7 @@ export function ProfilePostsSection({
                   className="text-muted-foreground flex items-center gap-1 text-xs"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onToggleHeart(post.id);
+                    heartMutation.mutate(post.id);
                   }}
                 >
                   <HeartIcon />
@@ -108,7 +111,7 @@ export function ProfilePostsSection({
             <div
               key={post.id}
               className="bg-muted aspect-square cursor-pointer overflow-hidden"
-              onClick={() => onPostClick(post.id)}
+              onClick={() => navigate(`/post/${post.id}`)}
             >
               {post.image ? (
                 <img

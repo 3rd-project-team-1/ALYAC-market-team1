@@ -1,13 +1,23 @@
-import type { Product } from '@/entities/product/types';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { getTokenUserInfo } from '@/entities/auth';
+import { useUserProducts } from '@/entities/product/hooks/useUserProducts';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
-interface ProfileProductsSectionProps {
-  products: Product[];
-  onProductClick: (product: Product) => void;
-}
+export function ProfileProductsSection() {
+  const { accountname } = useParams<{ accountname: string }>();
+  const navigate = useNavigate();
 
-export function ProfileProductsSection({ products, onProductClick }: ProfileProductsSectionProps) {
-  if (products.length === 0) return null;
+  const tokenInfo = getTokenUserInfo();
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
+  const targetAccountname = accountname ?? myAccountname;
+
+  const { products } = useUserProducts(targetAccountname);
+
+  console.log('targetAccountname:', targetAccountname);
+  console.log('products:', products);
+
+  if (!products || products.length === 0) return null;
 
   return (
     <section className="border-border border-t px-4 py-4">
@@ -17,7 +27,7 @@ export function ProfileProductsSection({ products, onProductClick }: ProfileProd
           <div
             key={product.id}
             className="flex-shrink-0 cursor-pointer"
-            onClick={() => onProductClick(product)}
+            onClick={() => navigate(`/edit-product/${product.id}`, { state: { product } })}
           >
             <div className="bg-muted h-[90px] w-[90px] overflow-hidden rounded-xl">
               <img
