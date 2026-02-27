@@ -12,7 +12,7 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
       {messages.map((msg) => (
         <div
           key={msg.id}
-          className={`flex items-end gap-2 ${msg.isMine ? 'flex-row-reverse' : 'flex-row'}`}
+          className={`flex items-start gap-2 ${msg.isMine ? 'flex-row-reverse' : 'flex-row'}`}
         >
           {!msg.isMine && (
             <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
@@ -24,8 +24,8 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
             <div
               className={`max-w-[240px] px-4 py-2.5 text-sm ${
                 msg.isMine
-                  ? 'rounded-[18px_18px_4px_18px] bg-[#3C9E00] text-white'
-                  : 'bg-muted text-foreground rounded-[18px_18px_18px_4px]'
+                  ? 'rounded-[18px_4px_18px_18px] bg-[#3C9E00] text-white'
+                  : 'bg-muted text-foreground rounded-[4px_18px_18px_18px]'
               }`}
             >
               {msg.content}
