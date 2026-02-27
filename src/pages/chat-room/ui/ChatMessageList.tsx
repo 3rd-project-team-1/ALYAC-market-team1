@@ -1,4 +1,4 @@
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadImageSmallIcon } from '@/shared/assets';
 
 import type { ChatMessage } from '../model/types';
 
@@ -16,7 +16,7 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
         >
           {!msg.isMine && (
             <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-              <img src={uploadImage} alt="상대방 프로필" className="h-full w-full object-cover" />
+              <UploadImageSmallIcon viewBox="0 0 55 55" />
             </div>
           )}
 
