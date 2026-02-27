@@ -26,7 +26,9 @@ export function ProductFormFields({ register, errors, onPriceChange }: ProductFo
           placeholder="2~15자 이내여야 합니다."
           className={`text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none ${errors.productName ? 'border-destructive' : 'border-border'}`}
         />
-        {errors.productName && <p className="text-destructive text-xs">{errors.productName.message}</p>}
+        {errors.productName && (
+          <p className="text-destructive text-xs">{errors.productName.message}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1">

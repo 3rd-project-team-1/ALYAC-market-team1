@@ -17,7 +17,7 @@
   --color-secondary-foreground: light-dark(oklch(0.208 0.042 265.755), oklch(0.984 0.003 247.858));
   --color-muted: light-dark(oklch(0.968 0.007 247.896), oklch(0.279 0.041 260.031));
   --color-muted-foreground: light-dark(oklch(0.554 0.046 257.417), oklch(0.704 0.04 256.788));
-  --color-accent: light-dark(oklch(0.968 0.007 247.896), oklch(0.279 0.041 260.031));
+  --color-accent: light-dark(oklch(0.85 0.007 247.896), oklch(0.4 0.041 260.031));
   --color-accent-foreground: light-dark(oklch(0.208 0.042 265.755), oklch(0.984 0.003 247.858));
   --color-destructive: light-dark(oklch(0.577 0.245 27.325), oklch(0.704 0.191 22.216));
   --color-border: light-dark(oklch(0.929 0.013 255.508), oklch(1 0 0 / 10%));

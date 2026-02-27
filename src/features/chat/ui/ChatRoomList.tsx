@@ -1,4 +1,4 @@
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadImageSmallIcon } from '@/shared/assets';
 
 import type { ChatRoom } from '../lib/chatRooms';
 
@@ -19,7 +19,7 @@ export function ChatRoomList({ rooms, onRoomClick }: ChatRoomListProps) {
           >
             <div className="relative flex-shrink-0">
               <div className="bg-muted h-10 w-10 overflow-hidden rounded-full">
-                <img src={uploadImage} alt={room.name} className="h-full w-full object-cover" />
+                <UploadImageSmallIcon className="h-full w-full object-cover" />
               </div>
               {room.isOnline && (
                 <span className="border-background absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 bg-[#3C9E00]" />

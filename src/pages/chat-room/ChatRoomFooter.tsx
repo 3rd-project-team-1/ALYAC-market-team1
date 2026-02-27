@@ -32,7 +32,9 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
         right: 0,
       }}
     >
-      <div style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+      <div
+        style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
+      >
         <img
           src={getImageUrl(profile?.image) ?? uploadImage}
           alt="내 프로필"

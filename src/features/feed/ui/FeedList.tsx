@@ -1,4 +1,4 @@
-import { PostCard } from '@/entities/feed/ui/PostCard';
+import { PostCard } from '@/entities/feed';
 import { FeedState } from '@/features/feed/model/feedState';
 
 interface FeedListProps {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { FullLogoAlyacNoTextIcon } from '@/shared/assets/svg-props/svg-props';
+import { FullLogoAlyacNoTextIcon } from '@/shared/assets';
 import { Button } from '@/shared/ui/button';
 
 import { SocialLoginButton } from './SocialLoginButtons';

@@ -1,6 +1,6 @@
 import type { IconProps } from './types';
 
-export const WriteIcon = ({ active }: Pick<IconProps, 'active'>) => (
+export const EditIcon = ({ active }: Pick<IconProps, 'active'>) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect
       x="3"

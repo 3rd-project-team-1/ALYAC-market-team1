@@ -10,8 +10,7 @@ export function FollowingsPage() {
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
   const tokenInfo = getTokenUserInfo();
-  const myAccountname =
-    tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
+  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
   const { followings, isLoading } = useFollowingList(accountname);
 

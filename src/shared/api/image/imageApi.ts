@@ -29,8 +29,11 @@ export const uploadSingleImage = async (file: File): Promise<string> => {
 
 // 다중 이미지 업로드 API
 export const uploadMultipleImages = async (files: File[]): Promise<string[]> => {
-  const formData = new FormData();
+  if (files.length === 0) {
+    return [];
+  }
 
+  const formData = new FormData();
   files.forEach((file) => {
     formData.append('image', file);
   });

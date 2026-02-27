@@ -1,11 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ChatIcon, HomeIcon, ProfileIcon, WriteIcon } from '@/shared/assets';
+import { ChatIcon, EditIcon, HomeIcon, ProfileIcon } from '@/shared/assets';
 
 const tabs = [
   { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
   { path: ['/chat'], label: '채팅', Icon: ChatIcon },
-  { path: ['/post-create'], label: '게시물 작성', Icon: WriteIcon },
+  { path: ['/post-create'], label: '게시물 작성', Icon: EditIcon },
   { path: ['/profile'], label: '프로필', Icon: ProfileIcon },
 ];
 
@@ -25,7 +25,7 @@ export const TabMenu = () => {
           >
             <Icon active={active} />
             <span
-              className={`text-[10px] whitespace-nowrap transition-colors group-hover:font-semibold group-hover:text-[#11CC27] ${
+              className={`text-[12px] whitespace-nowrap transition-colors group-hover:font-semibold group-hover:text-[#11CC27] ${
                 active ? 'font-semibold text-[#11CC27]' : 'font-normal text-[#767676]'
               }`}
             >
