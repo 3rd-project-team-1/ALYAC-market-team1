@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
-import { ChatIcon, ShareIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { ChatIcon, ShareIcon, UploadImageIcon } from '@/shared/assets';
 import { getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { Button } from '@/shared/ui/button';
@@ -40,7 +40,7 @@ export function ProfileTopSection() {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <UploadImageSmallIcon />
+              <UploadImageIcon />
             </div>
           )}
         </div>

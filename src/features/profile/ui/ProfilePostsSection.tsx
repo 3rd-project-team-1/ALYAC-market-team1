@@ -94,7 +94,7 @@ export function ProfilePostsSection() {
                     heartMutation.mutate(post.id);
                   }}
                 >
-                  <HeartIcon />
+                  <HeartIcon active={post.hearted} />
                   {post.heartCount}
                 </button>
                 <span className="text-muted-foreground flex items-center gap-1 text-xs">
