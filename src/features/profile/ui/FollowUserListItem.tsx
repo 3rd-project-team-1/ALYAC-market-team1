@@ -16,15 +16,15 @@ export function FollowUserListItem({ user, myAccountname }: FollowUserListItemPr
 
   return (
     <div className="flex items-center gap-3 px-4 py-3">
-      <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full bg-gray-200">
-        {getImageUrl(user.image) ? (
+      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200">
+        {user.image ? (
           <img
-            src={getImageUrl(user.image)!}
+            src={getImageUrl(user.image) ?? user.image}
             alt={user.username}
             className="h-full w-full object-cover"
           />
         ) : (
-          <UploadImageSmallIcon />
+          <UploadImageSmallIcon className="h-42 w-42" />
         )}
       </div>
 
