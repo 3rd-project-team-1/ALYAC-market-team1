@@ -14,9 +14,6 @@ export function ProfileProductsSection() {
 
   const { products } = useUserProducts(targetAccountname);
 
-  console.log('targetAccountname:', targetAccountname);
-  console.log('products:', products);
-
   if (!products || products.length === 0) return null;
 
   return (

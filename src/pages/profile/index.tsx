@@ -5,7 +5,7 @@ export function ProfilePage() {
   const { moreMenu, modal } = useLogoutMenu();
 
   return (
-    <div>
+    <div className="pb-20">
       <TopBasicNav moreMenu={moreMenu} modal={modal} />
       <ProfileTopSection />
       <ProfileProductsSection />
