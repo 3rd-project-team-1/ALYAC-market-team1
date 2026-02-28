@@ -128,7 +128,7 @@ export function PostPage() {
         {/* 게시글 내용 */}
         <p className="text-foreground mt-4 text-sm leading-relaxed">{post.content}</p>
         {/* 게시글 이미지 */}
-        {post.image ? (
+        {post.image && (
           <div className="mt-4 overflow-hidden rounded-xl">
             {(() => {
               const images = post.image.split(',').map((img) => img.trim());
@@ -152,10 +152,6 @@ export function PostPage() {
                 />
               );
             })()}
-          </div>
-        ) : (
-          <div className="mt-4 flex items-center justify-center rounded-xl bg-gray-100 p-8">
-            <UploadImageSmallIcon />
           </div>
         )}
 
