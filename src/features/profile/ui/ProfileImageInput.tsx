@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 
 interface ProfileImageInputProps {
-  onImageChange: (file: File | null) => void;
+  onImageChange: (file: File) => void;
   className?: string;
   initialImage?: string;
 }
