@@ -22,6 +22,29 @@ export const removeToken = () => {
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 };
 
+//토큰 검증
+export const checkTokenValidity = async (): Promise<boolean> => {
+  const token = getToken();
+  if (!token) return false;
+
+  try {
+    const response = await fetch('/api/user/checktoken', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.isValid;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+};
+
 // 토큰 디코딩 (사용자 정보 추출)
 export const getTokenUserInfo = () => {
   const token = getToken();

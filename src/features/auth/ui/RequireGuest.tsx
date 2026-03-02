@@ -1,15 +1,55 @@
+import { useEffect, useState } from 'react';
+
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { getToken } from '@/shared/lib';
+import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
 
 export function RequireGuest() {
   const token = getToken();
 
-  // 토큰이 있으면(이미 로그인했으면) 피드 화면으로 돌려보냄
-  if (token) {
-    return <Navigate to="/feed" replace />;
+  const [isVerifying, setIsVerifying] = useState(!!token);
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    if (!token) return;
+
+    let isMounted = true;
+
+    const verifyToken = async () => {
+      try {
+        const isTokenValid = await checkTokenValidity();
+
+        if (!isMounted) return;
+
+        if (isTokenValid) {
+          setIsValid(true);
+        } else {
+          throw new Error('Invalid Token');
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.log(error);
+          removeToken();
+        }
+      } finally {
+        if (isMounted) {
+          setIsVerifying(false);
+        }
+      }
+    };
+    verifyToken();
+    return () => {
+      isMounted = false;
+    };
+  }, [token]);
+
+  if (!token) {
+    return <Outlet />;
   }
 
-  // 로그인 안 했으면 폼 화면(Outlet) 보여줌!
-  return <Outlet />;
+  if (isVerifying) {
+    return <div>로딩 중...</div>;
+  }
+
+  return isValid ? <Navigate to="/feed" replace /> : <Outlet />;
 }
