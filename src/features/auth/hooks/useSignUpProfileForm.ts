@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { checkAccountnameDuplicate } from '@/entities/auth';
-import { useSignUp } from '@/entities/auth';
+import { useCheckAccountnameDuplicate, useSignUp } from '@/entities/auth';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
 import { uploadSingleImage } from '@/shared/api';
 
@@ -23,6 +22,7 @@ export function useSignUpProfileForm() {
 
   const { email, password } = location.state || {};
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const checkAccountMutation = useCheckAccountnameDuplicate();
 
   useEffect(() => {
     if (!email || !password) {
@@ -38,44 +38,54 @@ export function useSignUpProfileForm() {
     formState: { errors, isValid },
   } = useForm<ProfileFormData>({ mode: 'onChange' });
 
-  const onSubmit = async (data: ProfileFormData) => {
-    const isDuplicate = await checkAccountnameDuplicate(data.accountname);
-    if (isDuplicate) {
-      setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
-      return;
-    }
+  const onSubmit = (data: ProfileFormData) => {
+    //계정 ID 중복체크
+    checkAccountMutation.mutate(data.accountname, {
+      onSuccess: async (isDuplicate) => {
+        if (isDuplicate) {
+          setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
+          return;
+        }
 
-    let finalImageValue = '';
-    if (profileImageFile) {
-      try {
-        finalImageValue = await uploadSingleImage(profileImageFile);
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : '프로필 이미지 업로드에 실패했습니다.',
-        );
-        return;
-      }
-    }
+        // 이미지 업로드
+        let finalImageValue = '';
+        if (profileImageFile) {
+          try {
+            finalImageValue = await uploadSingleImage(profileImageFile);
+          } catch (error) {
+            toast.error(
+              error instanceof Error ? error.message : '프로필 이미지 업로드에 실패했습니다.',
+            );
+            return;
+          }
+        }
 
-    const requestData: SignupRequest = {
-      user: {
-        email,
-        password,
-        username: data.username,
-        accountname: data.accountname,
-        intro: data.intro || '',
-        image: finalImageValue,
-      },
-    };
+        // 회원가입 요청
+        const requestData: SignupRequest = {
+          user: {
+            email,
+            password,
+            username: data.username,
+            accountname: data.accountname,
+            intro: data.intro || '',
+            image: finalImageValue,
+          },
+        };
 
-    signUpMutation.mutate(requestData, {
-      onSuccess: () => {
-        toast.success('회원가입 완료! 🎉');
-        navigate('/signin');
+        signUpMutation.mutate(requestData, {
+          onSuccess: () => {
+            toast.success('회원가입 완료! 🎉');
+            navigate('/signin');
+          },
+          onError: (error) => {
+            if (axios.isAxiosError<ApiErrorResponse>(error))
+              toast.error(error.response?.data?.message || '실패했습니다.');
+          },
+        });
       },
       onError: (error) => {
-        if (axios.isAxiosError<ApiErrorResponse>(error))
-          toast.error(error.response?.data?.message || '실패했습니다.');
+        toast.error('계정 ID 확인 중 오류가 발생했습니다.');
+        console.error(error);
       },
     });
   };
@@ -88,5 +98,6 @@ export function useSignUpProfileForm() {
     isValid,
     setProfileImageFile,
     isPending: signUpMutation.isPending,
+    isCheckingAccount: checkAccountMutation.isPending,
   };
 }
