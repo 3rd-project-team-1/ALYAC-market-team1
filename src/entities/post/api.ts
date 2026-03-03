@@ -50,7 +50,7 @@ export const postApi = {
   getUserPosts: (accountname: string) =>
     axiosInstance.get<PostsResponse>(`/api/post/${accountname}/userpost`),
 
-  // 피드 게시글 목록 GET /api/post/feed?page=1&limit=10
-  getFeedPosts: (page = 1, limit = 10) =>
-    axiosInstance.get<PostsResponse>(`/api/post/feed?page=${page}&limit=${limit}`),
+  // 피드 게시글 목록 GET /api/post/feed?skip=0&limit=10
+  getFeedPosts: (skip = 0, limit = 10) =>
+    axiosInstance.get<PostsResponse>(`/api/post/feed?skip=${skip}&limit=${limit}`),
 };
