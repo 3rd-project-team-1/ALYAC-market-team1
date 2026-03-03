@@ -163,7 +163,7 @@ export function PostPage() {
             disabled={heartMutation.isPending}
             className="flex items-center gap-1.5"
           >
-            <HeartIcon />
+            <HeartIcon active={post.hearted} />
             <span className="text-muted-foreground text-xs">{post.heartCount}</span>
           </button>
           <button type="button" className="flex items-center gap-1.5">
