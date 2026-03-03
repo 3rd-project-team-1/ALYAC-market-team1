@@ -1,3 +1,5 @@
+import { axiosInstance } from '@/shared/api';
+
 const TOKEN_KEY = 'token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
@@ -20,6 +22,19 @@ export const getRefreshToken = (): string | null => {
 export const removeToken = () => {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+};
+
+//토큰 검증
+export const checkTokenValidity = async (): Promise<boolean> => {
+  const token = getToken();
+  if (!token) return false;
+  try {
+    const response = await axiosInstance.get('/api/user/checktoken');
+    return response.data.isValid;
+  } catch (error) {
+    console.error('Token validation failed:', error);
+    return false;
+  }
 };
 
 // 토큰 디코딩 (사용자 정보 추출)

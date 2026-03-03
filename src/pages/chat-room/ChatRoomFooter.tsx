@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface ChatRoomFooterProps {
@@ -33,27 +33,21 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
         right: 0,
       }}
     >
-      <div
-        style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
-      >
-        <img
-          src={getImageUrl(profile?.image) ?? uploadImage}
-          alt="내 프로필"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+      <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full">
+        {profile?.image ? (
+          <img
+            src={getImageUrl(profile.image) ?? profile.image}
+            alt="내 프로필"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <UploadImageSmallIcon />
+          </div>
+        )}
       </div>
       <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          border: '1px solid #D1D5DB',
-          boxShadow: isFocused ? '0 0 0 2px #1E3A8A' : 'none',
-          borderRadius: '8px',
-          padding: '6px 12px',
-          backgroundColor: '#fff',
-          transition: 'box-shadow 0.15s',
-        }}
+        className={`flex flex-1 items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 transition-all ${isFocused ? 'ring-2 ring-blue-900' : ''}`}
       >
         <input
           style={styles.input}

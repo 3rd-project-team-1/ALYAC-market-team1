@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth';
 import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import {
   ChatIcon,
@@ -11,6 +10,7 @@ import {
   PostListIcon,
   UploadImageSmallIcon,
 } from '@/shared/assets';
+import { getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 type ViewMode = 'grid' | 'list';
@@ -75,9 +75,9 @@ export function ProfilePostsSection() {
                   <p className="text-muted-foreground text-xs">@{post.author.accountname}</p>
                 </div>
               </div>
-              <p className="text-foreground mt-2 line-clamp-2 text-sm">{post.content}</p>
+              <p className="text-foreground mt-2 line-clamp-2 pl-12 text-sm">{post.content}</p>
               {post.image && (
-                <div className="mt-2 overflow-hidden rounded-xl">
+                <div className="mt-2 overflow-hidden rounded-xl pl-12">
                   <img
                     src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
                     alt="게시글 이미지"
@@ -85,7 +85,7 @@ export function ProfilePostsSection() {
                   />
                 </div>
               )}
-              <div className="mt-2 flex items-center gap-4">
+              <div className="mt-2 flex items-center gap-4 pl-12">
                 <button
                   type="button"
                   className="text-muted-foreground flex items-center gap-1 text-xs"
@@ -94,7 +94,7 @@ export function ProfilePostsSection() {
                     heartMutation.mutate(post.id);
                   }}
                 >
-                  <HeartIcon />
+                  <HeartIcon active={post.hearted} />
                   {post.heartCount}
                 </button>
                 <span className="text-muted-foreground flex items-center gap-1 text-xs">

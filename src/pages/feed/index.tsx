@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { useFeedPosts } from '@/features/feed/hooks/useFeedPosts';
 import { FeedEmpty, FeedList } from '@/features/feed/ui';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
 import { TopMainNav } from '@/widgets/top-main-nav';
 
 // 피드 페이지 컴포넌트

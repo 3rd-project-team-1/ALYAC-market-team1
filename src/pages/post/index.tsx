@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/entities/auth/lib/token';
 import { postApi } from '@/entities/post/api';
 import { ChatIcon, HeartIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
@@ -128,7 +128,7 @@ export function PostPage() {
         {/* 게시글 내용 */}
         <p className="text-foreground mt-4 text-sm leading-relaxed">{post.content}</p>
         {/* 게시글 이미지 */}
-        {post.image ? (
+        {post.image && (
           <div className="mt-4 overflow-hidden rounded-xl">
             {(() => {
               const images = post.image.split(',').map((img) => img.trim());
@@ -152,10 +152,6 @@ export function PostPage() {
                 />
               );
             })()}
-          </div>
-        ) : (
-          <div className="mt-4 flex items-center justify-center rounded-xl bg-gray-100 p-8">
-            <UploadImageSmallIcon />
           </div>
         )}
 

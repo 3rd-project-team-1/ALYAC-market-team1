@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { removeToken } from '@/entities/auth/lib/token';
 import { MonitorIcon, MoonIcon, SunIcon } from '@/shared/assets';
+import { removeToken } from '@/shared/lib';
 import { useTheme } from '@/shared/lib/theme';
 import { LogoutModal } from '@/shared/ui/modal';
 

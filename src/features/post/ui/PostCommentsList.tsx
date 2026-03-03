@@ -1,4 +1,4 @@
-import uploadImage from '@/shared/assets/icons/upload-image.svg';
+import { UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface PostComment {
@@ -28,11 +28,17 @@ export function PostCommentsList({
       {comments.map((comment) => (
         <div key={comment.id} className="flex items-start gap-3">
           <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
-            <img
-              src={getImageUrl(comment.author.image) ?? uploadImage}
-              alt={comment.author.username}
-              className="h-full w-full object-cover"
-            />
+            {comment.author.image ? (
+              <img
+                src={getImageUrl(comment.author.image) ?? comment.author.image}
+                alt={comment.author.username}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <UploadImageSmallIcon />
+              </div>
+            )}
           </div>
           <div className="flex flex-1 flex-col gap-0.5">
             <div className="flex items-center gap-2">
