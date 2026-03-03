@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-import { checkEmailDuplicate } from '@/entities/auth/';
+import { useCheckEmailDuplicate } from '@/entities/auth';
 
 export interface EmailFormData {
   email: string;
@@ -10,6 +11,8 @@ export interface EmailFormData {
 
 export function useSignUpEmailForm() {
   const navigate = useNavigate();
+  const checkEmailMutation = useCheckEmailDuplicate();
+
   const {
     register,
     handleSubmit,
@@ -18,13 +21,27 @@ export function useSignUpEmailForm() {
   } = useForm<EmailFormData>({
     mode: 'onChange',
   });
-  const onSubmit = async (data: EmailFormData) => {
-    const isDuplicate = await checkEmailDuplicate(data.email);
-    if (isDuplicate) {
-      setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
-      return;
-    }
-    navigate('/signup/profile', { state: { email: data.email, password: data.password } });
+
+  const onSubmit = (data: EmailFormData) => {
+    checkEmailMutation.mutate(data.email, {
+      onSuccess: (isDuplicate) => {
+        if (isDuplicate) {
+          setError('email', {
+            type: 'manual',
+            message: '이미 사용 중인 이메일입니다.',
+          });
+        } else {
+          // 중복 아니면 다음 단계로
+          navigate('/signup/profile', {
+            state: { email: data.email, password: data.password },
+          });
+        }
+      },
+      onError: (error) => {
+        toast.error('이메일 확인 중 오류가 발생했습니다.');
+        console.error(error);
+      },
+    });
   };
 
   return {
@@ -32,6 +49,7 @@ export function useSignUpEmailForm() {
     handleSubmit,
     errors,
     isValid,
+    isChecking: checkEmailMutation.isPending,
     onSubmit,
   };
 }

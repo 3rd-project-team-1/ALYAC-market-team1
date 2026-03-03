@@ -4,3 +4,4 @@ export { SignUpEmailForm } from './ui/SignUpEmailForm';
 export { useSignUpProfileForm } from './hooks/useSignUpProfileForm';
 export { useSignUpEmailForm } from './hooks/useSignUpEmailForm';
 export { SignUpProfileForm } from './ui/SignUpProfileForm';
+export { useAuth } from './hooks/useAuth';

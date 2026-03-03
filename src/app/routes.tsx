@@ -28,6 +28,9 @@ const EditProductPage = lazy(() =>
 const PostCreatePage = lazy(() =>
   import('@/pages/post-create').then((m) => ({ default: m.PostCreatePage })),
 );
+const EditPostPage = lazy(() =>
+  import('@/pages/edit-post').then((m) => ({ default: m.EditPostPage })),
+);
 const PostPage = lazy(() => import('@/pages/post').then((m) => ({ default: m.PostPage })));
 const ChatPage = lazy(() => import('@/pages/chat').then((m) => ({ default: m.ChatPage })));
 const ChatRoomPage = lazy(() =>
@@ -87,6 +90,10 @@ export const router = createBrowserRouter([
           {
             path: 'post/:postId',
             element: <PostPage />,
+          },
+          {
+            path: 'post/:postId/edit',
+            element: <EditPostPage />,
           },
           {
             path: 'chat',
