@@ -15,26 +15,18 @@ export function RequireAuth() {
     let isMounted = true;
 
     const verifyToken = async () => {
-      try {
-        const isTokenValid = await checkTokenValidity();
+      const isTokenValid = await checkTokenValidity();
 
-        if (!isMounted) return;
+      if (!isMounted) return;
 
-        if (isTokenValid) {
-          setIsValid(true);
-        } else {
-          throw new Error('Invalid Token');
-        }
-      } catch {
-        if (isMounted) {
-          removeToken();
-          setIsValid(false);
-        }
-      } finally {
-        if (isMounted) {
-          setIsVerifying(false);
-        }
+      if (isTokenValid) {
+        setIsValid(true);
+      } else {
+        removeToken();
+        setIsValid(false);
       }
+
+      setIsVerifying(false);
     };
 
     verifyToken();

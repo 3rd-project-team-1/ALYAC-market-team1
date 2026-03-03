@@ -1,3 +1,5 @@
+import { axiosInstance } from '@/shared/api';
+
 const TOKEN_KEY = 'token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
@@ -26,21 +28,11 @@ export const removeToken = () => {
 export const checkTokenValidity = async (): Promise<boolean> => {
   const token = getToken();
   if (!token) return false;
-
   try {
-    const response = await fetch('/api/user/checktoken', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.isValid;
-    }
-    return false;
-  } catch {
+    const response = await axiosInstance.get('/api/user/checktoken');
+    return response.data.isValid;
+  } catch (error) {
+    console.error('Token validation failed:', error);
     return false;
   }
 };

@@ -6,7 +6,6 @@ import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
 
 export function RequireGuest() {
   const token = getToken();
-
   const [isVerifying, setIsVerifying] = useState(!!token);
   const [isValid, setIsValid] = useState(false);
 
@@ -16,28 +15,22 @@ export function RequireGuest() {
     let isMounted = true;
 
     const verifyToken = async () => {
-      try {
-        const isTokenValid = await checkTokenValidity();
+      const isTokenValid = await checkTokenValidity();
 
-        if (!isMounted) return;
+      if (!isMounted) return;
 
-        if (isTokenValid) {
-          setIsValid(true);
-        } else {
-          throw new Error('Invalid Token');
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.log(error);
-          removeToken();
-        }
-      } finally {
-        if (isMounted) {
-          setIsVerifying(false);
-        }
+      if (isTokenValid) {
+        setIsValid(true);
+      } else {
+        removeToken();
+        setIsValid(false);
       }
+
+      setIsVerifying(false);
     };
+
     verifyToken();
+
     return () => {
       isMounted = false;
     };
@@ -50,6 +43,5 @@ export function RequireGuest() {
   if (isVerifying) {
     return <div>로딩 중...</div>;
   }
-
   return isValid ? <Navigate to="/feed" replace /> : <Outlet />;
 }
