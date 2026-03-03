@@ -50,6 +50,10 @@ export const postApi = {
   getUserPosts: (accountname: string) =>
     axiosInstance.get<PostsResponse>(`/api/post/${accountname}/userpost`),
 
+  // 게시글 수정 PUT /api/post/:post_id
+  updatePost: (postId: string, content: string, image: string = '') =>
+    axiosInstance.put<PostResponse>(`/api/post/${postId}`, { post: { content, image } }),
+
   // 피드 게시글 목록 GET /api/post/feed?page=1&limit=10
   getFeedPosts: (page = 1, limit = 10) =>
     axiosInstance.get<PostsResponse>(`/api/post/feed?page=${page}&limit=${limit}`),
