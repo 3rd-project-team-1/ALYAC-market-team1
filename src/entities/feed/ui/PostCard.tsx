@@ -19,6 +19,7 @@ export interface PostCardModel {
   image?: string;
   heartCount: number;
   commentCount: number;
+  createdAt: string;
   author: PostCardAuthor;
 }
 

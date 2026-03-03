@@ -1,29 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PostCardModel } from '@/entities/feed/ui/PostCard';
 import { postApi } from '@/entities/post';
 
 export function useFeedPosts() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // 초기 로딩
+  const [isFetchingMore, setIsFetchingMore] = useState(false); // 추가 로딩
   const [posts, setPosts] = useState<PostCardModel[]>([]);
-  const [page, setPage] = useState(1);
+  const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const isFetchingRef = useRef(false); // 중복 fetch 방지용 ref
   const limit = 10;
 
+  // 최초 마운트 시 한 번만 fetch
   useEffect(() => {
-    fetchFeed(page);
-  }, [page]);
+    fetchFeed(0);
+  }, []);
 
-  const fetchFeed = async (pageNum: number) => {
-    setIsLoading(true);
+  // skip이 변경될 때(추가 로드) fetch
+  useEffect(() => {
+    if (skip > 0) fetchFeed(skip);
+  }, [skip]);
+
+  const fetchFeed = async (skipNum: number) => {
+    if (isFetchingRef.current) return; // 이미 fetch 중이면 중복 방지
+    isFetchingRef.current = true;
+    if (skipNum === 0) {
+      setIsLoading(true);
+    } else {
+      setIsFetchingMore(true);
+    }
     try {
-      const response = await postApi.getFeedPosts(pageNum, limit);
+      const response = await postApi.getFeedPosts(skipNum, limit);
+      console.log('Feed API 응답(skip:', skipNum, '):', response.data);
       type FeedPost = {
         id: string;
         content: string;
         image?: string;
         heartCount: number;
         commentCount: number;
+        createdAt: string;
         author: {
           username: string;
           accountname: string;
@@ -31,32 +47,57 @@ export function useFeedPosts() {
         };
       };
       const feedPosts = ((response.data as any).posts ?? []) as FeedPost[];
+      // createdAt 기준 내림차순 정렬
+      feedPosts.sort((a, b) => {
+        if (!a.createdAt || !b.createdAt) return 0;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
       const mappedPosts: PostCardModel[] = feedPosts.map((post: FeedPost) => ({
         id: post.id,
         content: post.content,
         image: post.image && post.image.trim() !== '' ? post.image : undefined,
         heartCount: post.heartCount,
         commentCount: post.commentCount,
+        createdAt: post.createdAt,
         author: {
           username: post.author.username,
           accountname: post.author.accountname,
           image: post.author.image,
         },
       }));
-      setPosts((prev) => (pageNum === 1 ? mappedPosts : [...prev, ...mappedPosts]));
+      setPosts((prev) => {
+        let merged;
+        if (skipNum === 0) {
+          merged = mappedPosts;
+        } else {
+          merged = [...prev, ...mappedPosts];
+        }
+        // id 기준 중복 제거
+        const unique = merged.filter(
+          (post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx,
+        );
+        // 최신순 정렬
+        unique.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) return 0;
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+        return unique;
+      });
       setHasMore(feedPosts.length === limit);
     } catch (error) {
       setHasMore(false);
     } finally {
+      isFetchingRef.current = false;
       setIsLoading(false);
+      setIsFetchingMore(false);
     }
   };
 
-  const loadMore = () => {
-    if (hasMore && !isLoading) {
-      setPage((prev) => prev + 1);
+  const loadMore = useCallback(() => {
+    if (hasMore && !isFetchingRef.current) {
+      setSkip((prev) => prev + limit);
     }
-  };
+  }, [hasMore]);
 
-  return { isLoading, posts, setPosts, loadMore, hasMore };
+  return { isLoading, isFetchingMore, posts, setPosts, loadMore, hasMore };
 }
