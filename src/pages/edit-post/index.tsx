@@ -8,8 +8,8 @@ import { toast } from 'sonner';
 import { postApi } from '@/entities/post/api';
 import type { Post } from '@/entities/post/types';
 import { PostImagePreviewList } from '@/features/post-create';
-import { UploadFile } from '@/shared/assets';
 import { uploadMultipleImages } from '@/shared/api';
+import { UploadFile } from '@/shared/assets';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface PostEditFormValues {
