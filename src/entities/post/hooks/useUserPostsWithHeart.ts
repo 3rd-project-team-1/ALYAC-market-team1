@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { postApi } from '@/entities/post';
-import type { Post } from '@/entities/post/types';
+import { getUserPosts } from '../api/getUserPosts';
+import { toggleHeart } from '../api/toggleHeart';
+import type { Post } from '../types';
 
 export function useUserPostsWithHeart(accountname?: string) {
   const queryClient = useQueryClient();
@@ -9,12 +10,12 @@ export function useUserPostsWithHeart(accountname?: string) {
 
   const { data: posts = [] } = useQuery({
     queryKey,
-    queryFn: () => postApi.getUserPosts(accountname!).then((res) => res.data.post),
+    queryFn: () => getUserPosts(accountname!).then((res) => res.data.post),
     enabled: !!accountname,
   });
 
   const heartMutation = useMutation({
-    mutationFn: (postId: string) => postApi.toggleHeart(postId),
+    mutationFn: (postId: string) => toggleHeart(postId),
     onMutate: (postId) => {
       queryClient.setQueryData<Post[]>(queryKey, (old = []) =>
         old.map((post) =>
