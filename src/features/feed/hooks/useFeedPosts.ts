@@ -37,6 +37,7 @@ export function useFeedPosts() {
         id: string;
         content: string;
         image?: string;
+        hearted: boolean;
         heartCount: number;
         commentCount: number;
         createdAt: string;
@@ -56,6 +57,7 @@ export function useFeedPosts() {
         id: post.id,
         content: post.content,
         image: post.image && post.image.trim() !== '' ? post.image : undefined,
+        hearted: post.hearted ?? false,
         heartCount: post.heartCount,
         commentCount: post.commentCount,
         createdAt: post.createdAt,
