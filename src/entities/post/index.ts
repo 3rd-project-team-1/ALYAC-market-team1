@@ -39,8 +39,7 @@ export type {
   Post,
   PostAuthor,
   Comment,
-  PostResponse,
-  PostsResponse,
+  FeedPostsResponse,
   CommentsResponse,
   CommentResponse,
 } from './types';

@@ -13,10 +13,10 @@ export function FeedPage() {
   const navigate = useNavigate();
   // 토큰에서 사용자 정보 추출
   const tokenInfo = getTokenUserInfo();
-  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? '';
+  const myAccountname = tokenInfo?.accountname ?? '';
 
   // 피드 관련 상태 및 함수
-  const { isLoading, isFetchingMore, posts, setPosts, loadMore, hasMore } = useFeedPosts();
+  const { isLoading, isFetchingMore, posts, deletePost, loadMore, hasMore } = useFeedPosts();
   // 무한 스크롤을 위한 ref
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -51,7 +51,7 @@ export function FeedPage() {
   };
   // 게시글 삭제 시
   const handleDeletePost = (postId: string) => {
-    setPosts((prev) => prev.filter((post) => post.id !== postId));
+    deletePost(postId);
   };
 
   // 초기 로딩 중 표시 (페이지네이션 로딩은 하단에 별도 표시)

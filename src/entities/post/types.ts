@@ -6,6 +6,10 @@ export interface PostsResponse {
   post: Post[];
 }
 
+export interface FeedPostsResponse {
+  posts: Post[];
+}
+
 export interface CommentsResponse {
   comment: Comment[];
 }
