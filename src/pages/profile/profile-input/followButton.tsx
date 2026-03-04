@@ -20,26 +20,13 @@ export default function FollowButton({
   return (
     <button
       onClick={handleClick}
-      style={{
-        ...styles.btn,
-        backgroundColor: following ? '#fff' : '#1BC47D',
-        color: following ? '#1BC47D' : '#fff',
-        border: following ? '1px solid #1BC47D' : 'none',
-      }}
+      className={`flex-shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-[13px] font-semibold transition-all duration-150 ${
+        following
+          ? 'border border-[#1BC47D] bg-white text-[#1BC47D]'
+          : 'border-none bg-[#1BC47D] text-white'
+      }`}
     >
       {following ? '팔로잉' : '팔로우'}
     </button>
   );
 }
-
-const styles = {
-  btn: {
-    flexShrink: 0,
-    padding: '6px 16px',
-    borderRadius: 20,
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.15s ease',
-  },
-};

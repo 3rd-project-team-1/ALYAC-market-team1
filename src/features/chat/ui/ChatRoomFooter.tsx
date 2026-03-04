@@ -20,19 +20,7 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
   };
 
   return (
-    <div
-      className="bg-background border-border border-t"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        padding: '8px 16px',
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}
-    >
+    <div className="bg-background border-border fixed right-0 bottom-0 left-0 flex items-center gap-2 border-t px-4 py-2">
       <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full">
         {profile?.image ? (
           <img
@@ -50,7 +38,7 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
         className={`flex flex-1 items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 transition-all ${isFocused ? 'ring-2 ring-blue-900' : ''}`}
       >
         <input
-          style={styles.input}
+          className="flex-1 border-none bg-transparent text-sm text-[#333] outline-none"
           placeholder="메시지 입력하기..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -58,14 +46,7 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
           onBlur={() => setIsFocused(false)}
         />
         <button
-          style={{
-            ...styles.button,
-            backgroundColor: value.trim() ? '#3C9E00' : '#B2B2B2',
-            color: '#fff',
-            padding: '8px 18px',
-            borderRadius: '8px',
-            cursor: value.trim() ? 'pointer' : 'default',
-          }}
+          className={`flex-shrink-0 rounded-lg px-[18px] py-2 text-sm font-semibold text-white transition-colors ${value.trim() ? 'cursor-pointer bg-[#3C9E00]' : 'cursor-default bg-[#B2B2B2]'}`}
           onClick={handleSubmit}
           disabled={!value.trim()}
         >
@@ -75,21 +56,3 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
     </div>
   );
 }
-
-const styles = {
-  input: {
-    flex: 1,
-    border: 'none',
-    outline: 'none',
-    fontSize: '14px',
-    color: '#333',
-    backgroundColor: 'transparent',
-  },
-  button: {
-    border: 'none',
-    fontSize: '14px',
-    fontWeight: 600,
-    flexShrink: 0,
-    transition: 'background-color 0.15s',
-  },
-} as const;

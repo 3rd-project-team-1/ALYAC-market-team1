@@ -28,26 +28,10 @@ export default function UserFollowItem({
   const { username, accountname, image } = user;
 
   return (
-    <div style={styles.wrapper}>
+    <div className="box-border flex min-h-[50px] w-[358px] items-center gap-3 bg-white px-4 py-2">
       <UserAvatar src={image} username={username} />
       <UserInfo username={username} accountname={accountname} />
       <FollowButton isFollowing={isFollowing} onToggle={onFollowToggle} />
     </div>
   );
 }
-
-const styles = {
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    width: 358,
-    minHeight: 50,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    backgroundColor: '#fff',
-    boxSizing: 'border-box' as const,
-    gap: 12,
-  },
-};
