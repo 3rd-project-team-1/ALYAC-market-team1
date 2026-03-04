@@ -26,7 +26,7 @@ export function FeedPage() {
     <>
       <TopMainNav title="얄약마켓 피드" />
       {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
-      <div className="pb-[60px]">
+      <div className={cn('pb-[60px]')}>
         {posts.length > 0 ? (
           <>
             {/* 피드 리스트 - 마지막 카드에 ref 전달 */}

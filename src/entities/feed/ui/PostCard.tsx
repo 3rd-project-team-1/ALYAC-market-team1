@@ -44,14 +44,18 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
       {/* 배경 클릭 시 드롭다운 닫기 오버레이 */}
       <button
         type="button"
-        className="fixed inset-0 z-10 cursor-default"
+        className={cn('fixed inset-0 z-10 cursor-default')}
         aria-label="메뉴 닫기"
         onClick={(e) => {
           e.stopPropagation();
           onClose();
         }}
       />
-      <div className="bg-background border-border absolute top-9 right-0 z-20 w-28 overflow-hidden rounded-md border py-1 shadow-sm">
+      <div
+        className={cn(
+          'bg-background border-border absolute top-9 right-0 z-20 w-28 overflow-hidden rounded-md border py-1 shadow-sm',
+        )}
+      >
         {items.map((item) => (
           <button
             key={item.label}
@@ -153,42 +157,44 @@ export function PostCard({
 
   return (
     <article
-      className="border-border relative cursor-pointer border-b px-4 py-4 hover:bg-gray-50/50"
+      className={cn('border-border relative cursor-pointer border-b px-4 py-4 hover:bg-gray-50/50')}
       onClick={onClick}
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className={cn('flex items-start justify-between gap-3')}>
         {/* 작성자 프로필 영역 */}
-        <div className="flex items-start gap-3">
+        <div className={cn('flex items-start gap-3')}>
           {getImageUrl(post.author.image) ? (
             <img
               src={getImageUrl(post.author.image)}
               alt={post.author.username}
-              className="h-10 w-10 rounded-full object-cover"
+              className={cn("h-10 w-10 rounded-full object-cover")}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
+            <div className={cn("flex h-10 w-10 items-center justify-center rounded-full bg-gray-100")}>
               <UploadImageSmallIcon />
             </div>
           )}
           <div>
-            <p className="text-foreground text-sm font-semibold">{post.author.username}</p>
-            <p className="text-muted-foreground text-xs">@{post.author.accountname}</p>
+            <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
+            <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
           </div>
         </div>
 
         {/* 더보기 버튼 및 드롭다운 (본인 게시글일 경우만 표시) */}
         {isMyPost && (
-          <div className="relative">
+          <div className={cn('relative')}>
             <button
               type="button"
               aria-label="게시글 메뉴"
-              className="text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md"
+              className={cn(
+                'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
+              )}
               onClick={handleMenuToggle}
             >
-              <MoreIcon className="h-4 w-4" aria-label="더보기" />
+              <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
             </button>
             {isMenuOpen && (
               <PostCardDropdown
@@ -203,14 +209,16 @@ export function PostCard({
         )}
         {/* 다른 사용자의 게시글일 경우 신고 메뉴 표시 */}
         {!isMyPost && isYourPost && (
-          <div className="relative">
+          <div className={cn('relative')}>
             <button
               type="button"
               aria-label="게시글 메뉴"
-              className="text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md"
+              className={cn(
+                'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
+              )}
               onClick={handleMenuToggle}
             >
-              <MoreIcon className="h-4 w-4" aria-label="더보기" />
+              <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
             </button>
             {isMenuOpen && (
               <PostCardDropdown
@@ -223,14 +231,14 @@ export function PostCard({
       </div>
 
       {/* 게시글 본문 내용 */}
-      <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
+      <p className={cn('text-foreground mt-3 text-sm whitespace-pre-wrap')}>{post.content}</p>
 
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
       {post.image && post.image.trim() !== '' && (
         <img
           src={getImageUrl(post.image)}
           alt="게시글 이미지"
-          className="border-border mt-3 w-full rounded-lg border object-cover"
+          className={cn('border-border mt-3 w-full rounded-lg border object-cover')}
           onError={(e) => {
             if (!e.currentTarget.dataset.fallback) {
               e.currentTarget.src = '/default-image.png';
@@ -241,11 +249,11 @@ export function PostCard({
       )}
 
       {/* 좋아요 및 댓글 수 동기화 */}
-      <div className="text-muted-foreground mt-3 flex items-center text-xs">
+      <div className={cn('text-muted-foreground mt-3 flex items-center text-xs')}>
         <button onClick={handleLikeToggle}>
-          <HeartIcon active={isLiked} className="mr-1 inline-block" />
+          <HeartIcon active={isLiked} className={cn('mr-1 inline-block')} />
         </button>
-        {localHeartCount} <ChatIcon className="mr-1 ml-2" /> {post.commentCount}{' '}
+        {localHeartCount} <ChatIcon className={cn('mr-1 ml-2')} /> {post.commentCount}{' '}
       </div>
     </article>
   );
