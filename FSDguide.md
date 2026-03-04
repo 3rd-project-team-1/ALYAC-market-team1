@@ -4,27 +4,27 @@
 
 ## 레이어 한눈에
 
-| 레이어   | 핵심 책임               | 포함 예시                                        | 제외 예시                            |
-| -------- | ----------------------- | ------------------------------------------------ | ------------------------------------ |
-| app      | 앱 진입점과 전역 설정   | 엔트리, 라우팅, 전역 스타일, 레이아웃/프로바이더 | 도메인 로직, 화면 전용 상태          |
-| pages    | 라우트 화면 조립        | 페이지 컨테이너, 섹션 조합                       | 재사용 가능한 공용 섹션/컴포넌트     |
-| widgets  | 페이지 간 재사용 섹션   | 상단 네비, 탭 메뉴 같은 큰 UI 블록               | 단일 도메인 액션 로직                |
-| features | 사용자 행동 시나리오    | 로그인, 댓글 작성, 팔로우 흐름                   | 엔티티 모델 자체, 전역 공용 컴포넌트 |
-| entities | 도메인 모델과 도메인 UI | user/post/product 타입, API, 엔티티 UI           | 여러 도메인을 묶는 시나리오          |
-| shared   | 도메인 무관 공용 기반   | 공용 UI, 훅, 유틸, 타입, 기본 API 클라이언트     | 도메인 의존 UI/비즈니스 로직         |
+| 레이어   | 핵심 책임             | 포함 예시                                        | 제외 예시                            |
+| -------- | --------------------- | ------------------------------------------------ | ------------------------------------ |
+| app      | 앱 진입점과 전역 설정 | 엔트리, 라우팅, 전역 스타일, 레이아웃/프로바이더 | 도메인 로직, 화면 전용 상태          |
+| pages    | 라우트 화면 조립      | 페이지 컨테이너, features/widgets 조합           | 재사용 가능한 공용 섹션/컴포넌트     |
+| widgets  | 페이지 간 재사용 섹션 | 상단 네비, 탭 메뉴 같은 큰 UI 블록               | 단일 도메인 액션 로직                |
+| features | 사용자 행동 시나리오  | 로그인 폼+로직, 댓글 작성 UI+훅, 팔로우 버튼     | 순수 엔티티 모델, 전역 공용 컴포넌트 |
+| entities | 도메인 모델과 API     | user/post 타입, API 함수, React Query 훅         | UI 컴포넌트, 복잡한 비즈니스 로직    |
+| shared   | 도메인 무관 공용 기반 | 공용 UI, 훅, 유틸, 타입, 기본 API 클라이언트     | 도메인 의존 UI/비즈니스 로직         |
 
 ## 빠른 판단 체크리스트
 
 아래 질문을 위에서 아래 순서대로 확인하면 대부분 바로 결정됩니다.
 
-| 순서 | 질문                                      | 배치     | 판단 기준(짧게)                            |
-| ---- | ----------------------------------------- | -------- | ------------------------------------------ |
-| 1    | 앱 엔트리/라우팅/전역 레이아웃 코드인가?  | app      | 앱 시작점, 라우터, 전역 스타일/프로바이더  |
-| 2    | 라우트 1개를 조립하는 화면 코드인가?      | pages    | 페이지 단위 컨테이너, 섹션 조합            |
-| 3    | 여러 페이지에서 재사용되는 큰 섹션인가?   | widgets  | 상단 네비, 탭 메뉴처럼 페이지 간 공통 블록 |
-| 4    | 사용자 행동(시나리오) 중심 코드인가?      | features | 로그인, 댓글 작성, 팔로우 같은 액션 흐름   |
-| 5    | 특정 도메인 모델/타입/API/UI 코드인가?    | entities | user/post/product 등 도메인 중심 코드      |
-| 6    | 도메인에 무관하게 어디서나 쓰는 코드인가? | shared   | 공용 UI, 유틸, 훅, 타입, API 클라이언트    |
+| 순서 | 질문                                      | 배치     | 판단 기준(짧게)                                 |
+| ---- | ----------------------------------------- | -------- | ----------------------------------------------- |
+| 1    | 앱 엔트리/라우팅/전역 레이아웃 코드인가?  | app      | 앱 시작점, 라우터, 전역 스타일/프로바이더       |
+| 2    | 라우트 1개를 조립하는 화면 코드인가?      | pages    | 페이지 단위 컨테이너, features/widgets 조합     |
+| 3    | 여러 페이지에서 재사용되는 큰 섹션인가?   | widgets  | 상단 네비, 탭 메뉴처럼 페이지 간 공통 블록      |
+| 4    | 사용자 행동(시나리오) 중심 코드인가?      | features | 로그인 폼+로직, 댓글 작성 UI+훅, 팔로우 버튼+훅 |
+| 5    | 특정 도메인의 타입/API/훅 코드인가?       | entities | user/post 타입, API 함수, React Query 훅        |
+| 6    | 도메인에 무관하게 어디서나 쓰는 코드인가? | shared   | 공용 UI, 유틸, 훅, 타입, API 클라이언트         |
 
 - 경계가 애매하면 `features → entities → shared` 순서로 더 낮은 책임으로 분리할 수 있는지 먼저 확인합니다.
 
@@ -39,152 +39,389 @@
 
 ```text
 src/
-├── app/
-│   ├── App.css
-│   ├── App.tsx
-│   ├── index.css
-│   ├── main.tsx
-│   ├── routes.tsx
-│   ├── layouts/
-│   │   └── RootLayout.tsx
-│   └── providers/
-│       └── .gitkeep
-├── entities/
-│   ├── auth/
-│   │   ├── api/
-│   │   │   ├── signin.ts
-│   │   │   └── signup.ts
-│   │   ├── hooks/
-│   │   │   ├── useSignIn.ts
-│   │   │   └── useSignUp.ts
-│   │   └── lib/
-│   │       └── token.ts
-│   ├── chat/
-│   │   └── .gitkeep
-│   ├── post/
-│   │   ├── api.ts
-│   │   ├── index.ts
-│   │   ├── types.ts
-│   │   └── ui/
-│   │       └── PostCard.tsx
-│   ├── product/
-│   │   ├── api.ts
-│   │   └── types.ts
-│   └── user/
-│       ├── api.ts
-│       ├── types.ts
-│       ├── ui/
-│       │   └── UserSearchItem.tsx
-│       └── hooks/
-│           └── useProfile.ts
-├── features/
-│   ├── add-comment/
-│   │   └── .gitkeep
-│   └── auth/
-│       ├── hooks/
-│       │   └── useSignInForm.ts
-│       ├── login/
-│       │   └── ui/
-│       │       └── .gitkeep
-│       └── ui/
-│           ├── ProfileImageUploader.tsx
-│           ├── RequireAuth.tsx
-│           ├── RequireGuest.tsx
-│           ├── SignInForm.tsx
-│           ├── SignUpEmailForm.tsx
-│           └── SignUpProfileForm.tsx
-├── lib/
-│   └── utils.ts
-├── pages/
-│   ├── chat/
-│   │   └── index.tsx
-│   ├── chat-room/
-│   │   └── index.tsx
-│   ├── create-product/
-│   │   └── index.tsx
-│   ├── edit-profile/
-│   │   └── index.tsx
-│   ├── feed/
-│   │   └── index.tsx
-│   ├── home/
-│   │   ├── index.tsx
-│   │   └── ui/
-│   │       └── SocialLoginButtons.tsx
-│   ├── not-found/
-│   │   └── index.tsx
-│   ├── post/
-│   │   ├── index.tsx
-│   │   └── comment/
-│   │       └── comment.tsx
-│   ├── post-create/
-│   │   └── index.tsx
-│   ├── profile/
-│   │   ├── index.tsx
-│   │   └── profile-input/
-│   │       ├── followButton.tsx
-│   │       └── followItem.tsx
-│   ├── search/
-│   │   └── index.tsx
-│   ├── signin/
-│   │   └── index.tsx
-│   ├── signup/
-│   │   └── index.tsx
-│   └── signup-profile/
-│       └── index.tsx
-├── shared/
-│   ├── api/
-│   │   └── axios.ts
-│   ├── assets/
-│   │   ├── icons/
-│   │   │   └── *.svg
-│   │   ├── images/
-│   │   │   ├── full-logo.png
-│   │   │   └── logo.png
-│   │   └── svg-props/
-│   │       └── svg-props.tsx
-│   ├── config/
-│   │   └── .gitkeep
-│   ├── hooks/
-│   │   ├── useDebounce.ts
-│   │   └── useImageUpload.ts
-│   ├── lib/
-│   │   ├── .gitkeep
-│   │   └── utils.ts
-│   ├── types/
-│   │   └── .gitkeep
-│   └── ui/
-│       ├── button.tsx
-│       ├── FormField.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── userAvatar.tsx
-│       └── userInfo.tsx
-├── widgets/
-│   ├── tab-menu/
-│   │   ├── index.ts
-│   │   └── ui/
-│   │       └── Tab-menu.tsx
-│   ├── top-basic-nav/
-│   │   ├── index.ts
-│   │   └── ui/
-│   │       └── TopBasicNav.tsx
-│   ├── top-chat-nav/
-│   │   ├── index.ts
-│   │   └── ui/
-│   │       └── top-chat-nav.tsx
-│   ├── top-main-nav/
-│   │   ├── index.ts
-│   │   └── ui/
-│   │       └── top-main-nav.tsx
-│   ├── top-search-nav/
-│   │   ├── index.ts
-│   │   └── ui/
-│   │       └── top-search-nav.tsx
-│   └── top-upload-nav/
-│       ├── index.ts
-│       └── ui/
-│           └── top-upload-nav.tsx
-└── vite-env.d.ts
+├─app
+│  │  App.tsx
+│  │  index.css
+│  │  main.tsx
+│  │  queryClient.ts
+│  │  routes.tsx
+│  │
+│  ├─layouts
+│  │      RootLayout.tsx
+│  │
+│  └─providers
+│          index.tsx
+│
+├─entities
+│  ├─auth
+│  │  │  index.ts
+│  │  │
+│  │  ├─api
+│  │  │      signin.ts
+│  │  │      signup.ts
+│  │  │      validate.ts
+│  │  │
+│  │  └─hooks
+│  │          useSignIn.ts
+│  │          useSignUp.ts
+│  │          useValidation.ts
+│  │
+│  ├─feed
+│  │  │  index.ts
+│  │  │
+│  │  └─ui
+│  │          PostCard.tsx
+│  │
+│  ├─post
+│  │  │  index.ts
+│  │  │  types.ts
+│  │  │
+│  │  ├─api
+│  │  │      createComment.ts
+│  │  │      createPost.ts
+│  │  │      deleteComment.ts
+│  │  │      deletePost.ts
+│  │  │      getComments.ts
+│  │  │      getFeedPosts.ts
+│  │  │      getPost.ts
+│  │  │      getUserPosts.ts
+│  │  │      toggleHeart.ts
+│  │  │      updatePost.ts
+│  │  │
+│  │  └─hooks
+│  │          useCommentsQuery.ts
+│  │          useCreateCommentMutation.ts
+│  │          useDeleteCommentMutation.ts
+│  │          useDeletePostMutation.ts
+│  │          useHeartMutation.ts
+│  │          usePostQuery.ts
+│  │          useUserPostsWithHeart.ts
+│  │
+│  ├─product
+│  │  │  api.ts
+│  │  │  types.ts
+│  │  │
+│  │  └─hooks
+│  │          useUserProducts.ts
+│  │
+│  └─user
+│      │  api.ts
+│      │  types.ts
+│      │
+│      ├─hooks
+│      │      index.ts
+│      │      useFollowerList.ts
+│      │      useFollowingList.ts
+│      │      useProfile.ts
+│      │      useProfileFollow.ts
+│      │      useSearchUsers.ts
+│      │
+│      └─ui
+│              UserSearchItem.tsx
+│
+├─features
+│  ├─auth
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      useAuth.ts
+│  │  │      useSignInForm.ts
+│  │  │      useSignUpEmailForm.ts
+│  │  │      useSignUpProfileForm.ts
+│  │  │
+│  │  └─ui
+│  │          RequireAuth.tsx
+│  │          RequireGuest.tsx
+│  │          SignInForm.tsx
+│  │          SignUpEmailForm.tsx
+│  │          SignUpProfileForm.tsx
+│  │
+│  ├─chat
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      useChatComposer.ts
+│  │  │
+│  │  ├─lib
+│  │  │      chatRooms.ts
+│  │  │
+│  │  ├─model
+│  │  │      types.ts
+│  │  │
+│  │  └─ui
+│  │          ChatMessageList.tsx
+│  │          ChatRoomFooter.tsx
+│  │          ChatRoomList.tsx
+│  │          LeaveRoomModal.tsx
+│  │
+│  ├─feed
+│  │  │  index.tsx
+│  │  │
+│  │  ├─hooks
+│  │  │      useFeedPosts.ts
+│  │  │
+│  │  ├─model
+│  │  │      feedState.ts
+│  │  │
+│  │  └─ui
+│  │          FeedEmpty.tsx
+│  │          FeedList.tsx
+│  │          index.ts
+│  │
+│  ├─home
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      useSplashTimer.ts
+│  │  │
+│  │  └─ui
+│  │          SelectionScreen.tsx
+│  │          SocialLoginButtons.tsx
+│  │          SplashScreen.tsx
+│  │
+│  ├─post
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      useCommentComposer.ts
+│  │  │      usePostDetailPage.ts
+│  │  │
+│  │  └─ui
+│  │          CommentFooter.tsx
+│  │          PostActionSheets.tsx
+│  │          PostCommentsList.tsx
+│  │          PostDetailCard.tsx
+│  │
+│  ├─post-create
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      usePostContentField.ts
+│  │  │      usePostCreateForm.ts
+│  │  │
+│  │  └─ui
+│  │          PostImagePreviewList.tsx
+│  │
+│  ├─product
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      usePriceInput.ts
+│  │  │      useProductForm.ts
+│  │  │
+│  │  ├─lib
+│  │  │      validationRules.ts
+│  │  │
+│  │  └─ui
+│  │          ProductFormFields.tsx
+│  │          ProductImageUploader.tsx
+│  │
+│  ├─profile
+│  │  │  index.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      useEditProfileForm.ts
+│  │  │      useProfilePage.ts
+│  │  │
+│  │  └─ui
+│  │          EditProfileForm.tsx
+│  │          FollowListHeader.tsx
+│  │          FollowUserListItem.tsx
+│  │          ProfileImageInput.tsx
+│  │          ProfilePostsSection.tsx
+│  │          ProfileProductsSection.tsx
+│  │          ProfileTopSection.tsx
+│  │
+│  └─search
+│      │  index.ts
+│      │
+│      ├─model
+│      │      useUserSearch.ts
+│      │
+│      └─ui
+│              UserSearchCard.tsx
+│
+├─pages
+│  ├─chat
+│  │      index.tsx
+│  │
+│  ├─chat-room
+│  │      index.tsx
+│  │
+│  ├─create-product
+│  │      index.tsx
+│  │
+│  ├─edit-post
+│  │      index.tsx
+│  │
+│  ├─edit-product
+│  │      index.tsx
+│  │
+│  ├─edit-profile
+│  │      index.tsx
+│  │
+│  ├─feed
+│  │      index.tsx
+│  │
+│  ├─followers
+│  │      index.tsx
+│  │
+│  ├─followings
+│  │      index.tsx
+│  │
+│  ├─home
+│  │      index.tsx
+│  │
+│  ├─not-found
+│  │      index.tsx
+│  │
+│  ├─post
+│  │      index.tsx
+│  │
+│  ├─post-create
+│  │      index.tsx
+│  │
+│  ├─profile
+│  │  │  index.tsx
+│  │  │
+│  │  └─profile-input
+│  │          followButton.tsx
+│  │          followItem.tsx
+│  │
+│  ├─search
+│  │      index.tsx
+│  │
+│  ├─signin
+│  │      index.tsx
+│  │
+│  ├─signup
+│  │      index.tsx
+│  │
+│  └─signup-profile
+│          index.tsx
+│
+├─shared
+│  ├─api
+│  │  │  axios.ts
+│  │  │  index.ts
+│  │  │
+│  │  └─image
+│  │          imageApi.ts
+│  │
+│  ├─assets
+│  │  │  index.ts
+│  │  │
+│  │  └─svg-props
+│  │          BackIcon.tsx
+│  │          ChatIcon.tsx
+│  │          CloseIcon.tsx
+│  │          EditIcon.tsx
+│  │          FacebookIcon.tsx
+│  │          FullLogoAlyac404Icon.tsx
+│  │          FullLogoAlyacGrayIcon.tsx
+│  │          FullLogoAlyacNoTextIcon.tsx
+│  │          FullLogoAlyacPngIcon.tsx
+│  │          GoogleIcon.tsx
+│  │          HeartIcon.tsx
+│  │          HomeIcon.tsx
+│  │          ImageIcon.tsx
+│  │          ImgButton.tsx
+│  │          ImgLayersIcon.tsx
+│  │          index.ts
+│  │          KakaoIcon.tsx
+│  │          MonitorIcon.tsx
+│  │          MoonIcon.tsx
+│  │          MoreIcon.tsx
+│  │          MoreSmallIcon.tsx
+│  │          PostAlbumIcon.tsx
+│  │          PostListIcon.tsx
+│  │          ProfileIcon.tsx
+│  │          SearchIcon.tsx
+│  │          ShareIcon.tsx
+│  │          SunIcon.tsx
+│  │          types.ts
+│  │          UploadFile.tsx
+│  │          UploadImageIcon.tsx
+│  │          UploadImageSmallIcon.tsx
+│  │
+│  ├─config
+│  │      .gitkeep
+│  │
+│  ├─hooks
+│  │     useDebounce.ts
+│  │     useImageUpload.ts
+│  │
+│  ├─lib
+│  │  │  index.ts
+│  │  │
+│  │  ├─theme
+│  │  │     index.ts
+│  │  │     theme-context.ts
+│  │  │     ThemeProvider.tsx
+│  │  │     types.ts
+│  │  │     useTheme.ts
+│  │  │
+│  │  └─utils
+│  │         getImageUrl.ts
+│  │         token.ts
+│  │         utils.ts
+│  │
+│  ├─types
+│  │      .gitkeep
+│  │
+│  └─ui
+│      button.tsx
+│      FormField.tsx
+│      icon-button.tsx
+│      input.tsx
+│      label.tsx
+│      LoadingSpinner.tsx
+│      modal-list.tsx
+│      modal.tsx
+│      sonner.tsx
+│      userAvatar.tsx
+│      userInfo.tsx
+│
+└─widgets
+    ├─tab-menu
+    │  │  index.ts
+    │  │
+    │  └─ui
+    │     Tab-menu.tsx
+    │
+    ├─top-basic-nav
+    │  │  index.ts
+    │  │
+    │  ├─model
+    │  │   useLogoutMenu.tsx
+    │  │
+    │  └─ui
+    │      MoreMenu.tsx
+    │      TopBasicNav.tsx
+    │
+    ├─top-chat-nav
+    │  │  index.ts
+    │  │
+    │  └─ui
+    │     top-chat-nav.tsx
+    │
+    ├─top-main-nav
+    │  │  index.ts
+    │  │
+    │  └─ui
+    │     top-main-nav.tsx
+    │
+    ├─top-search-nav
+    │  │  index.ts
+    │  │
+    │  └─ui
+    │      top-search-nav.tsx
+    │
+    └─top-upload-nav
+        │  index.ts
+        │
+        └─ui
+            top-upload-nav.tsx
 ```
 
 ## 현재 페이지
