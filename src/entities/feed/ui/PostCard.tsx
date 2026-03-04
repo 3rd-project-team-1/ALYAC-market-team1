@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useHeartMutation } from '@/entities/post';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
+import { cn } from '@/shared/lib';
 
 // 포스트 카드에서 사용하는 뷰 모델 (화면 렌더링에 필요한 필드만 포함)
 export interface PostCardModel {
@@ -55,9 +56,10 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
           <button
             key={item.label}
             type="button"
-            className={`hover:bg-accent w-full px-3 py-2 text-left text-sm ${
-              item.variant === 'danger' ? 'text-destructive' : 'text-foreground'
-            }`}
+            className={cn(
+              'hover:bg-accent w-full px-3 py-2 text-left text-sm',
+              item.variant === 'danger' ? 'text-destructive' : 'text-foreground',
+            )}
             onClick={item.onClick}
           >
             {item.label}

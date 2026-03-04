@@ -1,4 +1,5 @@
 import { FeedEmpty, FeedList, useFeedPage } from '@/features/feed';
+import { cn } from '@/shared/lib';
 import { TopMainNav } from '@/widgets/top-main-nav';
 
 // 피드 페이지 컴포넌트
@@ -39,7 +40,7 @@ export function FeedPage() {
             />
             {/* 추가 로딩 인디케이터 */}
             {isFetchingMore && (
-              <div style={{ textAlign: 'center', padding: '16px' }}>
+              <div className={cn('p-4 text-center')}>
                 <span>불러오는 중...</span>
               </div>
             )}
