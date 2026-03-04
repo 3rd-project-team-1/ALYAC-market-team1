@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
+import { postApi } from '@/entities/post';
 import { ChatIcon } from '@/shared/assets/svg-props';
 import { HeartIcon } from '@/shared/assets/svg-props';
 import { MoreIcon } from '@/shared/assets/svg-props';
@@ -17,6 +20,7 @@ export interface PostCardModel {
   id: string;
   content: string;
   image?: string;
+  hearted: boolean;
   heartCount: number;
   commentCount: number;
   createdAt: string;
@@ -93,8 +97,10 @@ export function PostCard({
     return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
   };
 
-  // 좋아요 상태 관리 (TODO: 리팩토링 이후 세윤님 post에 있는 좋아요와 연동)
-  const [isLiked, setIsLiked] = useState(false);
+  // 좋아요 상태 관리 - post.hearted로 초기화하여 서버 상태 동기화
+  const [isLiked, setIsLiked] = useState(post.hearted);
+  const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
+  const queryClient = useQueryClient();
 
   return (
     <article
@@ -211,17 +217,34 @@ export function PostCard({
         />
       )}
 
-      {/* 좋아요 및 댓글 수 통계 
-      TODO: 세윤님 리팩토링 이후 하트랑 댓글 아이콘 공유 
-      제대로 동작 안하는게 정상*/}
-      <p className="text-muted-foreground mt-3 text-xs">
-        <button onClick={() => setIsLiked((prev) => !prev)}>
-          <HeartIcon
-            className={`mr-1 inline-block h-4 w-4 ${isLiked ? 'text-red-500' : 'text-gray-400'}`}
-          />
+      {/* 좋아요 및 댓글 수 동기화 */}
+      <div className="text-muted-foreground mt-3 flex items-center text-xs">
+        <button
+          onClick={async (e) => {
+            e.stopPropagation();
+            // 낙관적 업데이트: 즉시 UI 반영
+            const nextLiked = !isLiked;
+            setIsLiked(nextLiked);
+            setLocalHeartCount((prev) => (nextLiked ? prev + 1 : prev - 1));
+            try {
+              const res = await postApi.toggleHeart(post.id);
+              const updated = (res.data as any).post;
+              // 서버 응답과 동기화
+              setIsLiked(updated.hearted);
+              setLocalHeartCount(updated.heartCount);
+              // PostPage의 React Query 캐시도 업데이트하여 이동 시 최신 상태 유지
+              queryClient.setQueryData(['post', post.id], updated);
+            } catch {
+              // 실패 시 롤백
+              setIsLiked(isLiked);
+              setLocalHeartCount(localHeartCount);
+            }
+          }}
+        >
+          <HeartIcon active={isLiked} className="mr-1 inline-block" />
         </button>
-        {post.heartCount} <ChatIcon active={false} /> {post.commentCount}
-      </p>
+        {localHeartCount} <ChatIcon className="mr-1 ml-2" /> {post.commentCount}{' '}
+      </div>
     </article>
   );
 }

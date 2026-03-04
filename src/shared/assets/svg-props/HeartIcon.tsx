@@ -1,7 +1,10 @@
+import { cn } from '@/shared/lib';
+
 import type { IconProps } from './types';
 
 export const HeartIcon = ({
   active,
+  className,
   ...props
 }: Pick<IconProps, 'active'> & React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -10,7 +13,7 @@ export const HeartIcon = ({
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={active ? 'text-destructive' : 'text-[#767676]'}
+    className={cn(active ? 'text-destructive' : 'text-[#767676]', className)}
     {...props}
   >
     <path
