@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PostCardModel } from '@/entities/feed/ui/PostCard';
 import { postApi } from '@/entities/post';
+import type { Post } from '@/entities/post';
 
 export function useFeedPosts() {
   const [isLoading, setIsLoading] = useState(true); // 초기 로딩
@@ -33,27 +34,13 @@ export function useFeedPosts() {
     try {
       const response = await postApi.getFeedPosts(skipNum, limit);
       console.log('Feed API 응답(skip:', skipNum, '):', response.data);
-      type FeedPost = {
-        id: string;
-        content: string;
-        image?: string;
-        hearted: boolean;
-        heartCount: number;
-        commentCount: number;
-        createdAt: string;
-        author: {
-          username: string;
-          accountname: string;
-          image: string;
-        };
-      };
-      const feedPosts = ((response.data as any).posts ?? []) as FeedPost[];
+      const feedPosts: Post[] = response.data.post ?? [];
       // createdAt 기준 내림차순 정렬
       feedPosts.sort((a, b) => {
         if (!a.createdAt || !b.createdAt) return 0;
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
-      const mappedPosts: PostCardModel[] = feedPosts.map((post: FeedPost) => ({
+      const mappedPosts: PostCardModel[] = feedPosts.map((post) => ({
         id: post.id,
         content: post.content,
         image: post.image && post.image.trim() !== '' ? post.image : undefined,
