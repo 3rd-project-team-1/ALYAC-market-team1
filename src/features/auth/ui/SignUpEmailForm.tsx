@@ -13,13 +13,7 @@ export function SignUpEmailForm() {
           label="이메일"
           placeholder="이메일을 입력해 주세요."
           autoComplete="email"
-          register={register('email', {
-            required: '이메일을 입력해 주세요.',
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: '올바른 이메일 형식을 입력해 주세요.',
-            },
-          })}
+          register={register('email')}
           error={errors.email}
         />
       </div>
@@ -30,10 +24,7 @@ export function SignUpEmailForm() {
           label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           autoComplete="current-password"
-          register={register('password', {
-            required: '비밀번호를 입력해 주세요.',
-            minLength: { value: 6, message: '최소 6자 이상이어야 합니다.' },
-          })}
+          register={register('password')}
           error={errors.password}
         />
       </div>
@@ -42,7 +33,12 @@ export function SignUpEmailForm() {
         type="submit"
         disabled={!isValid}
         className={cn(
-          'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+          'inline-flex h-14 w-full items-center justify-center gap-2 px-4 py-2',
+          'text-base font-semibold whitespace-nowrap text-white',
+          'cursor-pointer rounded-full transition-colors',
+          'focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+          '[&_svg]:pointer-events-none [&_svg]:shrink-0',
           isValid
             ? 'bg-primary-green hover:bg-primary-green-hover active:bg-primary-green-hover'
             : 'bg-primary-green-light cursor-not-allowed text-white',

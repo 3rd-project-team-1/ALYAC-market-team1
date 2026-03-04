@@ -17,11 +17,7 @@ export function SignUpProfileForm() {
           type="text"
           label="사용자 이름"
           placeholder="2~10자 이내여야 합니다."
-          register={register('username', {
-            required: '사용자 이름을 입력해주세요.',
-            minLength: { value: 2, message: '2자 이상 입력해주세요.' },
-            maxLength: { value: 10, message: '10자 이하로 입력해주세요.' },
-          })}
+          register={register('username')}
           error={errors.username}
         />
       </div>
@@ -31,13 +27,7 @@ export function SignUpProfileForm() {
           type="text"
           label="계정 ID"
           placeholder="영문, 숫자, 특수문자(.),(_)만 사용 가능합니다."
-          register={register('accountname', {
-            required: '계정 ID를 입력해주세요.',
-            pattern: {
-              value: /^[a-zA-Z0-9._]+$/,
-              message: '*영문, 숫자, 밑줄 및 마침표만 사용할 수 있습니다.',
-            },
-          })}
+          register={register('accountname')}
           error={errors.accountname}
         />
       </div>
@@ -46,7 +36,7 @@ export function SignUpProfileForm() {
           type="text"
           label="소개"
           placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
-          register={register('intro', { required: '60자 이내로 작성해주세요', maxLength: 60 })}
+          register={register('intro')}
           error={errors.intro}
         />
       </div>

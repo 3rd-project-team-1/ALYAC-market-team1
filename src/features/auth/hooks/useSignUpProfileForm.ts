@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -9,11 +10,7 @@ import { useCheckAccountnameDuplicate, useSignUp } from '@/entities/auth';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
 
-export interface ProfileFormData {
-  username: string;
-  accountname: string;
-  intro: string;
-}
+import { type SignupProfileInput, signupProfileSchema } from '../model/signup.schema';
 
 export function useSignUpProfileForm() {
   const navigate = useNavigate();
@@ -36,9 +33,16 @@ export function useSignUpProfileForm() {
     handleSubmit,
     setError,
     formState: { errors, isValid },
-  } = useForm<ProfileFormData>({ mode: 'onChange' });
+  } = useForm<SignupProfileInput>({
+    resolver: zodResolver(signupProfileSchema),
+    defaultValues: {
+      username: '',
+      accountname: '',
+    },
+    mode: 'onChange',
+  });
 
-  const onSubmit = (data: ProfileFormData) => {
+  const onSubmit = (data: SignupProfileInput) => {
     //계정 ID 중복체크
     checkAccountMutation.mutate(data.accountname, {
       onSuccess: async (isDuplicate) => {
