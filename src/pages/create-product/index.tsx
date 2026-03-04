@@ -10,7 +10,7 @@ import {
   useProductForm,
 } from '@/features/product';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
-import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 export function CreateProductPage() {

@@ -1,5 +1,5 @@
-import UserAvatar from '@/shared/ui/user/userAvatar';
-import UserInfo from '@/shared/ui/user/userInfo';
+import { UserAvatar } from '@/shared/ui';
+import { UserInfo } from '@/shared/ui';
 
 interface User {
   _id: string;
@@ -25,7 +25,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
     <>
       {parts.map((part, i) =>
         regex.test(part) ? (
-          <span key={i} style={{ color: '#1BC47D', fontWeight: 700 }}>
+          <span key={i} className="font-bold text-[#1BC47D]">
             {part}
           </span>
         ) : (
@@ -40,7 +40,7 @@ export default function UserSearchItem({ user, searchQuery = '' }: UserSearchIte
   const { username, accountname, image } = user;
 
   return (
-    <div style={styles.wrapper}>
+    <div className="box-border flex min-h-[50px] w-[358px] items-center gap-3 bg-white px-4 py-2">
       <UserAvatar src={image} username={username} />
       <UserInfo username={username} accountname={accountname}>
         <HighlightText text={username} query={searchQuery} />
@@ -48,19 +48,3 @@ export default function UserSearchItem({ user, searchQuery = '' }: UserSearchIte
     </div>
   );
 }
-
-const styles = {
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    width: 358,
-    minHeight: 50,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    backgroundColor: '#fff',
-    boxSizing: 'border-box' as const,
-    gap: 12,
-  },
-};

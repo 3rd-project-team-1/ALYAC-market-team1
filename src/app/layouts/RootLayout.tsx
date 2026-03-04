@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { TabMenu } from '@/widgets/tab-menu/ui/Tab-menu';
+import { TabMenu } from '@/widgets/tab-menu';
 
 const HIDE_TAB_MENU_PATHS = [
   '/edit-profile',
