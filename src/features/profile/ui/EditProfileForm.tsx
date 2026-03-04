@@ -1,7 +1,7 @@
 import type { Profile } from '@/entities/user/types';
 import { useEditProfileForm } from '@/features/profile';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { FormField } from '@/shared/ui/FormField';
+import { FormField } from '@/shared/ui/form/FormField';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 import { ProfileImageInput } from './ProfileImageInput';

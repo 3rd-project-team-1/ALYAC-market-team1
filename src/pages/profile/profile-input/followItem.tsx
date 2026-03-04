@@ -1,5 +1,5 @@
-import UserAvatar from '@/shared/ui/userAvatar';
-import UserInfo from '@/shared/ui/userInfo';
+import UserAvatar from '@/shared/ui/user/userAvatar';
+import UserInfo from '@/shared/ui/user/userInfo';
 
 import FollowButton from './followButton';
 

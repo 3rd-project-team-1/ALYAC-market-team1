@@ -6,7 +6,7 @@ import {
   PostDetailCard,
   usePostDetailPage,
 } from '@/features/post';
-import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {
@@ -76,9 +76,7 @@ export function PostPage() {
         isOpen={showCommentModal}
         isDeletePending={deleteCommentMutation.isPending}
         onClose={() => setShowCommentModal(false)}
-        onDeleteComment={() =>
-          selectedCommentId && deleteCommentMutation.mutate(selectedCommentId)
-        }
+        onDeleteComment={() => selectedCommentId && deleteCommentMutation.mutate(selectedCommentId)}
       />
     </div>
   );
