@@ -1,3 +1,19 @@
+export interface PostResponse {
+  post: Post;
+}
+
+export interface PostsResponse {
+  post: Post[];
+}
+
+export interface CommentsResponse {
+  comment: Comment[];
+}
+
+export interface CommentResponse {
+  comment: Comment;
+}
+
 export interface PostAuthor {
   _id: string;
   username: string;

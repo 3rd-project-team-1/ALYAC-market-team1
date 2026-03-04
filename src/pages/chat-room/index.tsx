@@ -2,12 +2,9 @@ import { useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { ChatMessageList, ChatRoomFooter, LeaveRoomModal } from '@/features/chat';
+import type { ChatMessage } from '@/features/chat';
 import { TopChatNav } from '@/widgets/top-chat-nav';
-
-import { ChatRoomFooter } from './ChatRoomFooter';
-import type { ChatMessage } from './model/types';
-import { ChatMessageList } from './ui/ChatMessageList';
-import { LeaveRoomModal } from './ui/LeaveRoomModal';
 
 const DUMMY_MESSAGES: ChatMessage[] = [
   {

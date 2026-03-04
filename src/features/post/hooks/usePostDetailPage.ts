@@ -1,15 +1,20 @@
 import { useState } from 'react';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { postApi } from '@/entities/post';
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
+import {
+  useCommentsQuery,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
+  useDeletePostMutation,
+  useHeartMutation,
+  usePostQuery,
+} from '@/entities/post';
 
 export function usePostDetailPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const [showModal, setShowModal] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -18,49 +23,17 @@ export function usePostDetailPage() {
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
 
-  const { data: post, isLoading: isPostLoading } = useQuery({
-    queryKey: ['post', postId],
-    queryFn: () => postApi.getPost(postId!).then((res) => res.data.post),
-    enabled: !!postId,
+  const { data: post, isLoading: isPostLoading } = usePostQuery(postId);
+  const { data: comments = [] } = useCommentsQuery(postId);
+  const heartMutation = useHeartMutation(postId);
+  const createCommentMutation = useCreateCommentMutation(postId);
+  const deleteCommentMutation = useDeleteCommentMutation(postId, () => {
+    setShowCommentModal(false);
+    setSelectedCommentId(null);
   });
-
-  const { data: comments = [] } = useQuery({
-    queryKey: ['comments', postId],
-    queryFn: () => postApi.getComments(postId!).then((res) => res.data.comment),
-    enabled: !!postId,
-  });
-
-  const heartMutation = useMutation({
-    mutationFn: () => postApi.toggleHeart(postId!),
-    onSuccess: (res) => {
-      queryClient.setQueryData(['post', postId], res.data.post);
-    },
-  });
-
-  const createCommentMutation = useMutation({
-    mutationFn: (text: string) => postApi.createComment(postId!, text),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
-    },
-  });
-
-  const deleteCommentMutation = useMutation({
-    mutationFn: (commentId: string) => postApi.deleteComment(postId!, commentId),
-    onSuccess: () => {
-      setShowCommentModal(false);
-      setSelectedCommentId(null);
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
-    },
-  });
-
-  const deletePostMutation = useMutation({
-    mutationFn: () => postApi.deletePost(postId!),
-    onSuccess: () => {
-      setShowModal(false);
-      navigate(-1);
-    },
+  const deletePostMutation = useDeletePostMutation(postId, () => {
+    setShowModal(false);
+    navigate(-1);
   });
 
   const isMyPost = post?.author.accountname === myAccountname;
