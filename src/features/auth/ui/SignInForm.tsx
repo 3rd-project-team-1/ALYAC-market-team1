@@ -1,7 +1,7 @@
 import { useSignInForm } from '@/features/auth';
 import { cn } from '@/shared/lib/utils/utils';
-import { FormField } from '@/shared/ui/FormField';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/button/button';
+import { FormField } from '@/shared/ui/form/FormField';
 
 export function SignInForm() {
   const { register, handleSubmit, errors, isValid, isPending, onSubmit } = useSignInForm();

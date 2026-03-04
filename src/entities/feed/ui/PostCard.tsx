@@ -6,7 +6,7 @@ import { postApi } from '@/entities/post';
 import { ChatIcon } from '@/shared/assets/svg-props';
 import { HeartIcon } from '@/shared/assets/svg-props';
 import { MoreIcon } from '@/shared/assets/svg-props';
-import UserAvatar from '@/shared/ui/userAvatar';
+import UserAvatar from '@/shared/ui/user/userAvatar';
 
 // 포스트 작성자의 기본 정보 인터페이스
 interface PostCardAuthor {

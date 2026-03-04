@@ -1,5 +1,5 @@
 import { SelectionScreen, SplashScreen, useSplashTimer } from '@/features/home';
-import { cn } from '@/shared/lib/utils/utils';
+import { cn } from '@/shared/lib';
 
 export function HomePage() {
   const viewMode = useSplashTimer();

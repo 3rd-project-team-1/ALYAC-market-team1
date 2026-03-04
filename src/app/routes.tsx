@@ -3,8 +3,7 @@ import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import { RootLayout } from '@/app/layouts/RootLayout';
-import { RequireAuth } from '@/features/auth/ui/RequireAuth';
-import { RequireGuest } from '@/features/auth/ui/RequireGuest';
+import { RequireAuth, RequireGuest } from '@/features/auth';
 
 const HomePage = lazy(() => import('@/pages/home').then((m) => ({ default: m.HomePage })));
 const SignInPage = lazy(() => import('@/pages/signin').then((m) => ({ default: m.SignInPage })));
