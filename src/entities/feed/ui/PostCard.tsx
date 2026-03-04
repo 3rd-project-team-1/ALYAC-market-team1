@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { postApi } from '@/entities/post';
 import { ChatIcon } from '@/shared/assets/svg-props';
 import { HeartIcon } from '@/shared/assets/svg-props';
@@ -98,6 +100,7 @@ export function PostCard({
   // 좋아요 상태 관리 - post.hearted로 초기화하여 서버 상태 동기화
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
+  const queryClient = useQueryClient();
 
   return (
     <article
@@ -229,6 +232,8 @@ export function PostCard({
               // 서버 응답과 동기화
               setIsLiked(updated.hearted);
               setLocalHeartCount(updated.heartCount);
+              // PostPage의 React Query 캐시도 업데이트하여 이동 시 최신 상태 유지
+              queryClient.setQueryData(['post', post.id], updated);
             } catch {
               // 실패 시 롤백
               setIsLiked(isLiked);
