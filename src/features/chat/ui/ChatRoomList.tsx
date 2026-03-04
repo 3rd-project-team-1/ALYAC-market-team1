@@ -1,6 +1,6 @@
 import { UploadImageSmallIcon } from '@/shared/assets';
 
-import type { ChatRoom } from '../lib/chatRooms';
+import type { ChatRoom } from '@/features/chat/lib/chatRooms';
 
 interface ChatRoomListProps {
   rooms: ChatRoom[];

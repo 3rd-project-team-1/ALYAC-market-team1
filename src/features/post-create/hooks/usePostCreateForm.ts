@@ -5,7 +5,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { postApi } from '@/entities/post';
+import { createPost } from '@/entities/post';
 import { uploadMultipleImages } from '@/shared/api';
 
 export interface PostCreateFormValues {
@@ -40,7 +40,7 @@ export function usePostCreateForm(defaultContent = '') {
     mutationFn: async (data: PostCreateFormValues) => {
       const imagePaths = await uploadMultipleImages(imageFiles);
       const imageString = imagePaths.join(',');
-      return postApi.createPost(data.content, imageString);
+      return createPost(data.content, imageString);
     },
     onSuccess: (res) => {
       cleanupUrls();
