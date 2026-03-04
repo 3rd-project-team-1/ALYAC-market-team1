@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { queryClient } from '@/app/queryClient';
 import { ThemeProvider } from '@/shared/lib/theme';
-import { Toaster } from '@/shared/ui/sonner';
+import { Toaster } from '@/shared/ui';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
