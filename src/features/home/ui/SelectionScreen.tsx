@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { FullLogoAlyacNoTextIcon } from '@/shared/assets';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/button/button';
 
 import { SocialLoginButton } from './SocialLoginButtons';
 

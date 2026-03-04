@@ -1,6 +1,6 @@
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { EditProfileForm } from '@/features/profile/ui/EditProfileForm';
-import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
 
 export function EditProfilePage() {
   const { profile, isLoading } = useProfile();
