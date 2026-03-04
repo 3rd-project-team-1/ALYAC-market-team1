@@ -25,7 +25,7 @@ const EditProductPage = lazy(() =>
   import('@/pages/edit-product').then((m) => ({ default: m.EditProductPage })),
 );
 const PostCreatePage = lazy(() =>
-  import('@/pages/post-create').then((m) => ({ default: m.PostCreatePage })),
+  import('@/pages/create-post').then((m) => ({ default: m.PostCreatePage })),
 );
 const EditPostPage = lazy(() =>
   import('@/pages/edit-post').then((m) => ({ default: m.EditPostPage })),
@@ -83,7 +83,7 @@ export const router = createBrowserRouter([
           },
 
           {
-            path: 'post-create',
+            path: 'create-post',
             element: <PostCreatePage />,
           },
           {

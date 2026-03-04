@@ -5,7 +5,7 @@ import { ChatIcon, EditIcon, HomeIcon, ProfileIcon } from '@/shared/assets';
 const tabs = [
   { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
   { path: ['/chat'], label: '채팅', Icon: ChatIcon },
-  { path: ['/post-create'], label: '게시물 작성', Icon: EditIcon },
+  { path: ['/create-post'], label: '게시물 작성', Icon: EditIcon },
   { path: ['/profile'], label: '프로필', Icon: ProfileIcon },
 ];
 

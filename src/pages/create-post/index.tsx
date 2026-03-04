@@ -7,7 +7,7 @@ import {
   PostImagePreviewList,
   usePostContentField,
   usePostCreateForm,
-} from '@/features/post-create';
+} from '@/features/create-post';
 import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
