@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { useSearchUsers } from '@/entities/user/hooks';
+import { useSearchUsers } from '@/entities/user';
 import type { Profile } from '@/entities/user/types';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 

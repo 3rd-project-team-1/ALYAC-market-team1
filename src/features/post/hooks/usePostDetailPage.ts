@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/shared/lib/utils/token';
 import {
   useCommentsQuery,
   useCreateCommentMutation,
@@ -11,6 +10,7 @@ import {
   useHeartMutation,
   usePostQuery,
 } from '@/entities/post';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
 
 export function usePostDetailPage() {
   const { postId } = useParams<{ postId: string }>();

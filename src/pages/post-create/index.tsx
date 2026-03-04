@@ -3,7 +3,11 @@ import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { PostImagePreviewList, usePostContentField, usePostCreateForm } from '@/features/post-create';
+import {
+  PostImagePreviewList,
+  usePostContentField,
+  usePostCreateForm,
+} from '@/features/post-create';
 import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
@@ -29,7 +33,8 @@ export function PostCreatePage() {
     submitPost,
   } = usePostCreateForm(state?.content ?? '');
 
-  const { isFocused, showError, onFocus, onBlur, onContentChange } = usePostContentField(hasContent);
+  const { isFocused, showError, onFocus, onBlur, onContentChange } =
+    usePostContentField(hasContent);
 
   return (
     <div className="bg-background flex min-h-screen flex-col pt-[48px]">
@@ -64,14 +69,12 @@ export function PostCreatePage() {
             <textarea
               {...register('content', { required: true, onChange: onContentChange })}
               placeholder="게시글 입력하기..."
-              className="bg-background text-foreground placeholder:text-muted-foreground w-full min-h-[300px] resize-none p-2 text-sm outline-none"
+              className="bg-background text-foreground placeholder:text-muted-foreground min-h-[300px] w-full resize-none p-2 text-sm outline-none"
               onFocus={onFocus}
               onBlur={onBlur}
             />
           </div>
-          {showError && (
-            <p className="text-xs text-red-500">게시글 내용을 입력해주세요.</p>
-          )}
+          {showError && <p className="text-xs text-red-500">게시글 내용을 입력해주세요.</p>}
 
           {/* 이미지 목록 */}
           <PostImagePreviewList images={images} onRemove={handleImageRemove} />

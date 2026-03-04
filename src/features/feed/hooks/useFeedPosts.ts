@@ -1,92 +1,74 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
-import { PostCardModel } from '@/entities/feed/ui/PostCard';
+import type { PostCardModel } from '@/entities/feed';
 import { postApi } from '@/entities/post';
 import type { Post } from '@/entities/post';
 
+const LIMIT = 10;
+
+const FEED_QUERY_KEY = ['feed'] as const;
+
+function mapPost(post: Post): PostCardModel {
+  return {
+    id: post.id,
+    content: post.content,
+    image: post.image && post.image.trim() !== '' ? post.image : undefined,
+    hearted: post.hearted ?? false,
+    heartCount: post.heartCount,
+    commentCount: post.commentCount,
+    createdAt: post.createdAt,
+    author: {
+      username: post.author.username,
+      accountname: post.author.accountname,
+      image: post.author.image,
+    },
+  };
+}
+
 export function useFeedPosts() {
-  const [isLoading, setIsLoading] = useState(true); // 초기 로딩
-  const [isFetchingMore, setIsFetchingMore] = useState(false); // 추가 로딩
-  const [posts, setPosts] = useState<PostCardModel[]>([]);
-  const [skip, setSkip] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const isFetchingRef = useRef(false); // 중복 fetch 방지용 ref
-  const limit = 10;
+  const queryClient = useQueryClient();
 
-  // 최초 마운트 시 한 번만 fetch
-  useEffect(() => {
-    fetchFeed(0);
-  }, []);
+  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: FEED_QUERY_KEY,
+    queryFn: async ({ pageParam }) => {
+      const response = await postApi.getFeedPosts(pageParam, LIMIT);
+      const posts: Post[] = response.data.posts ?? [];
+      return posts;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) =>
+      lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
+  });
 
-  // skip이 변경될 때(추가 로드) fetch
-  useEffect(() => {
-    if (skip > 0) fetchFeed(skip);
-  }, [skip]);
+  // 모든 페이지를 하나로 합친 뒤 최신순 정렬 + 중복 제거
+  const posts: PostCardModel[] = (data?.pages.flat() ?? [])
+    .map(mapPost)
+    .filter((post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx)
+    .sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
-  const fetchFeed = async (skipNum: number) => {
-    if (isFetchingRef.current) return; // 이미 fetch 중이면 중복 방지
-    isFetchingRef.current = true;
-    if (skipNum === 0) {
-      setIsLoading(true);
-    } else {
-      setIsFetchingMore(true);
-    }
-    try {
-      const response = await postApi.getFeedPosts(skipNum, limit);
-      console.log('Feed API 응답(skip:', skipNum, '):', response.data);
-      const feedPosts: Post[] = response.data.post ?? [];
-      // createdAt 기준 내림차순 정렬
-      feedPosts.sort((a, b) => {
-        if (!a.createdAt || !b.createdAt) return 0;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
-      const mappedPosts: PostCardModel[] = feedPosts.map((post) => ({
-        id: post.id,
-        content: post.content,
-        image: post.image && post.image.trim() !== '' ? post.image : undefined,
-        hearted: post.hearted ?? false,
-        heartCount: post.heartCount,
-        commentCount: post.commentCount,
-        createdAt: post.createdAt,
-        author: {
-          username: post.author.username,
-          accountname: post.author.accountname,
-          image: post.author.image,
-        },
-      }));
-      setPosts((prev) => {
-        let merged;
-        if (skipNum === 0) {
-          merged = mappedPosts;
-        } else {
-          merged = [...prev, ...mappedPosts];
-        }
-        // id 기준 중복 제거
-        const unique = merged.filter(
-          (post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx,
-        );
-        // 최신순 정렬
-        unique.sort((a, b) => {
-          if (!a.createdAt || !b.createdAt) return 0;
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        });
-        return unique;
-      });
-      setHasMore(feedPosts.length === limit);
-    } catch (error) {
-      setHasMore(false);
-    } finally {
-      isFetchingRef.current = false;
-      setIsLoading(false);
-      setIsFetchingMore(false);
-    }
+  // 게시글 삭제 시 캐시에서 해당 항목 제거
+  const deletePost = (postId: string) => {
+    queryClient.setQueryData(
+      FEED_QUERY_KEY,
+      (old: { pages: Post[][]; pageParams: number[] } | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => page.filter((p) => p.id !== postId)),
+        };
+      },
+    );
   };
 
-  const loadMore = useCallback(() => {
-    if (hasMore && !isFetchingRef.current) {
-      setSkip((prev) => prev + limit);
-    }
-  }, [hasMore]);
-
-  return { isLoading, isFetchingMore, posts, setPosts, loadMore, hasMore };
+  return {
+    isLoading: isPending,
+    isFetchingMore: isFetchingNextPage,
+    posts,
+    deletePost,
+    loadMore: fetchNextPage,
+    hasMore: hasNextPage,
+  };
 }
