@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
@@ -33,10 +33,6 @@ export function PostCreatePage() {
   const [isFocused, setIsFocused] = useState(false);
   const [hadContent, setHadContent] = useState(false);
 
-  useEffect(() => {
-    if (hasContent) setHadContent(true);
-  }, [hasContent]);
-
   const showError = hadContent && !hasContent;
 
   return (
@@ -70,7 +66,10 @@ export function PostCreatePage() {
             className={`overflow-hidden rounded-lg border-2 transition-all ${isFocused ? 'border-blue-900' : 'border-transparent'}`}
           >
             <textarea
-              {...register('content', { required: true })}
+              {...register('content', {
+                required: true,
+                onChange: (e) => { if (e.target.value.trim().length > 0) setHadContent(true); },
+              })}
               placeholder="게시글 입력하기..."
               className="bg-background text-foreground placeholder:text-muted-foreground w-full min-h-[300px] resize-none p-2 text-sm outline-none"
               onFocus={() => setIsFocused(true)}
