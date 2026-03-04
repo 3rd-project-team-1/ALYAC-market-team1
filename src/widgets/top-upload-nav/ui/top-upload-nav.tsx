@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { BackIcon } from '@/shared/assets';
+import { cn } from '@/shared/lib';
 
 interface TopUploadNavProps {
   label?: string;
@@ -12,10 +13,16 @@ export function TopUploadNav({ label = '업로드', disabled = false, onSubmit }
   const navigate = useNavigate();
 
   return (
-    <header className="bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4">
+    <header
+      className={cn(
+        'bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4',
+      )}
+    >
       <button
         onClick={() => navigate(-1)}
-        className="text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors"
+        className={cn(
+          'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
+        )}
       >
         <BackIcon />
       </button>
@@ -23,7 +30,12 @@ export function TopUploadNav({ label = '업로드', disabled = false, onSubmit }
       <button
         onClick={onSubmit}
         disabled={disabled}
-        className={`rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors ${disabled ? 'cursor-default bg-[#C4C4C4]' : 'cursor-pointer bg-[#11CC27] hover:bg-[#0fb522]'}`}
+        className={cn(
+          'rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors',
+          disabled
+            ? 'cursor-default bg-[#C4C4C4]'
+            : 'cursor-pointer bg-[#11CC27] hover:bg-[#0fb522]',
+        )}
       >
         {label}
       </button>
