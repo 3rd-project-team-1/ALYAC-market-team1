@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import type { Theme } from '@/shared/lib/theme/types';
+import type { Theme } from '@/shared/lib/theme';
 
 import { ThemeContext } from './theme-context';
 
