@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { productApi } from '@/entities/product/api';
+import { getUserProducts } from '../api/getUserProducts';
 
 export function useUserProducts(accountname?: string) {
   const { data: products = [] } = useQuery({
     queryKey: ['products', accountname],
-    queryFn: () => productApi.getUserProducts(accountname!).then((res) => res.data.product),
+    queryFn: () => getUserProducts(accountname!).then((res) => res.data.product),
     enabled: !!accountname,
   });
 
