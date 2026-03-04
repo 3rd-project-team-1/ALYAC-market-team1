@@ -1,13 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCheckEmailDuplicate } from '@/entities/auth';
 
-export interface EmailFormData {
-  email: string;
-  password: string;
-}
+import { type SignupEmailInput, signupEmailSchema } from '../model/signup.schema';
 
 export function useSignUpEmailForm() {
   const navigate = useNavigate();
@@ -18,11 +16,16 @@ export function useSignUpEmailForm() {
     handleSubmit,
     setError,
     formState: { errors, isValid },
-  } = useForm<EmailFormData>({
+  } = useForm<SignupEmailInput>({
+    resolver: zodResolver(signupEmailSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
     mode: 'onChange',
   });
 
-  const onSubmit = (data: EmailFormData) => {
+  const onSubmit = (data: SignupEmailInput) => {
     checkEmailMutation.mutate(data.email, {
       onSuccess: (isDuplicate) => {
         if (isDuplicate) {
