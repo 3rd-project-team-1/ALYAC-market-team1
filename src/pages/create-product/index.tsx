@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 
 import {
   ProductFormFields,
+  type ProductFormValues,
   ProductImageUploader,
   usePriceInput,
   useProductForm,
-  type ProductFormValues,
 } from '@/features/product';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
-import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 export function CreateProductPage() {

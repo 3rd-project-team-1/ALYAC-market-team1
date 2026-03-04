@@ -1,4 +1,4 @@
-import UserAvatar from '@/shared/ui/userAvatar';
+import UserAvatar from '@/shared/ui/user/userAvatar';
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

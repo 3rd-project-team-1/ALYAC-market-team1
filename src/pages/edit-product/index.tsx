@@ -6,14 +6,14 @@ import { useLocation, useParams } from 'react-router-dom';
 import type { Product } from '@/entities/product';
 import {
   ProductFormFields,
+  type ProductFormValues,
   ProductImageUploader,
   usePriceInput,
   useProductForm,
-  type ProductFormValues,
 } from '@/features/product';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface LocationState {

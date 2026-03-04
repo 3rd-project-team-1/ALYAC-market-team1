@@ -1,6 +1,6 @@
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
-import { Input } from '@/shared/ui/input';
+import { Input } from '@/shared/ui/form/input';
 import { Label } from '@/shared/ui/label';
 
 interface FormFieldProps {
