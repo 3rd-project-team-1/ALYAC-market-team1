@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { productApi } from '@/entities/product/api';
-import type { Product } from '@/entities/product/types';
+import { createProduct, updateProduct } from '@/entities/product';
+import type { Product } from '@/entities/product';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { uploadSingleImage } from '@/shared/api';
 
@@ -54,9 +54,9 @@ export function useProductForm(options: UseProductFormOptions = {}) {
 
       // API 호출 (등록 또는 수정)
       if (isEdit) {
-        return productApi.updateProduct(productId!, submitData);
+        return updateProduct(productId!, submitData);
       } else {
-        return productApi.createProduct(submitData);
+        return createProduct(submitData);
       }
     },
     onSuccess: () => {

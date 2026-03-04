@@ -3,11 +3,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useParams } from 'react-router-dom';
 
-import type { Product } from '@/entities/product/types';
-import { usePriceInput } from '@/features/product/hooks/usePriceInput';
-import { useProductForm } from '@/features/product/hooks/useProductForm';
-import { ProductFormFields, type ProductFormValues } from '@/features/product/ui/ProductFormFields';
-import { ProductImageUploader } from '@/features/product/ui/ProductImageUploader';
+import type { Product } from '@/entities/product';
+import {
+  ProductFormFields,
+  ProductImageUploader,
+  usePriceInput,
+  useProductForm,
+  type ProductFormValues,
+} from '@/features/product';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';

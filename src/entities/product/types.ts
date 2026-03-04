@@ -10,3 +10,19 @@ export interface Product {
   createdAt: string;
   author: PostAuthor;
 }
+
+export interface ProductsResponse {
+  count: number;
+  product: Product[];
+}
+
+export interface ProductResponse {
+  product: Product;
+}
+
+export interface CreateProductInput {
+  itemName: string;
+  price: number;
+  link: string;
+  itemImage: string;
+}
