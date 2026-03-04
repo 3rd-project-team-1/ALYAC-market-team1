@@ -1,5 +1,5 @@
 import { useSignInForm } from '@/features/auth';
-import { cn } from '@/shared/lib/utils/utils';
+import { cn } from '@/shared/lib';
 import { Button } from '@/shared/ui';
 import { FormField } from '@/shared/ui';
 

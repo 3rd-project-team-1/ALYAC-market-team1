@@ -1,6 +1,6 @@
 import { useSignUpProfileForm } from '@/features/auth';
 import { ProfileImageInput } from '@/features/profile';
-import { cn } from '@/shared/lib/utils/utils';
+import { cn } from '@/shared/lib';
 import { Button } from '@/shared/ui';
 import { FormField } from '@/shared/ui';
 
