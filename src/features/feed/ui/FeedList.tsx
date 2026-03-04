@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { PostCard } from '@/entities/feed';
-import { FeedState } from '@/features/feed/model/feedState';
+import { PostCard, PostCardModel } from '@/entities/feed';
 
 interface FeedListProps {
-  posts: FeedState['posts'];
+  posts: PostCardModel[];
   myAccountname: string;
   onRewrite: (postId: string) => void;
   onDelete: (postId: string) => void;

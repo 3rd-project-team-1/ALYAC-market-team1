@@ -8,7 +8,7 @@ import { RequireAuth, RequireGuest } from '@/features/auth';
 const HomePage = lazy(() => import('@/pages/home').then((m) => ({ default: m.HomePage })));
 const SignInPage = lazy(() => import('@/pages/signin').then((m) => ({ default: m.SignInPage })));
 const SignUpPage = lazy(() => import('@/pages/signup').then((m) => ({ default: m.SignUpPage })));
-const FeedPage = lazy(() => import('@/features/feed').then((m) => ({ default: m.FeedPage })));
+const FeedPage = lazy(() => import('@/pages/feed').then((m) => ({ default: m.FeedPage })));
 const SearchPage = lazy(() => import('@/pages/search').then((m) => ({ default: m.SearchPage })));
 const ProfilePage = lazy(() => import('@/pages/profile').then((m) => ({ default: m.ProfilePage })));
 const SignUpProfilePage = lazy(() =>

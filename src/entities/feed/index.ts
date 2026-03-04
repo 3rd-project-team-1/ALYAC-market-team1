@@ -1,2 +1,2 @@
-export { PostCard } from '../../entities/feed/ui/PostCard';
-export type { PostCardModel } from '../../entities/feed/ui/PostCard';
+export { PostCard } from './ui/PostCard';
+export type { PostCardModel } from './ui/PostCard';
