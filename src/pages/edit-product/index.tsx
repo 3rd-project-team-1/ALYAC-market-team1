@@ -13,7 +13,7 @@ import {
 } from '@/features/product';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface LocationState {

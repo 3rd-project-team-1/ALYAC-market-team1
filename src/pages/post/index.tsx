@@ -6,7 +6,7 @@ import {
   PostDetailCard,
   usePostDetailPage,
 } from '@/features/post';
-import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {

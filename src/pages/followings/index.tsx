@@ -4,7 +4,7 @@ import { useFollowingList } from '@/entities/user/hooks/useFollowingList';
 import { FollowListHeader } from '@/features/profile/ui/FollowListHeader';
 import { FollowUserListItem } from '@/features/profile/ui/FollowUserListItem';
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
-import { LoadingSpinner } from '@/shared/ui/feedback/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/ui';
 
 export function FollowingsPage() {
   const { accountname } = useParams<{ accountname: string }>();

@@ -1,8 +1,8 @@
 import { useSignUpProfileForm } from '@/features/auth';
 import { ProfileImageInput } from '@/features/profile';
-import { cn } from '@/shared/lib/utils/utils';
-import { Button } from '@/shared/ui/button/button';
-import { FormField } from '@/shared/ui/form/FormField';
+import { cn } from '@/shared/lib';
+import { Button } from '@/shared/ui';
+import { FormField } from '@/shared/ui';
 
 export function SignUpProfileForm() {
   const { register, handleSubmit, onSubmit, errors, isValid, setProfileImageFile, isPending } =
