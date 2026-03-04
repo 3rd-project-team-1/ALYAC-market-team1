@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCheckAccountnameDuplicate, useSignUp } from '@/entities/auth';
-import { ApiErrorResponse, SignupRequest } from '@/entities/user/types';
+import { ApiErrorResponse, SignupRequest } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
 
 export interface ProfileFormData {
