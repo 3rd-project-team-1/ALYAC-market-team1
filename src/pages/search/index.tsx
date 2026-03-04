@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { UserSearchCard, useUserSearch } from '@/features/search';
+import { cn } from '@/shared/lib';
 import { TopSearchNav } from '@/widgets/top-search-nav';
 
 export function SearchPage() {
@@ -19,7 +20,7 @@ export function SearchPage() {
     <div>
       {/* 상단 검색 네비게이션 바 */}
       <TopSearchNav searchValue={searchValue} onSearchChange={setSearchValue} />
-      <main className="mx-auto max-w-5xl pt-[48px]">
+      <main className={cn('mx-auto max-w-5xl pt-[48px]')}>
         {/* 렌더링: 검색 결과 목록 */}
         {searchResults.map((user) => (
           <UserSearchCard

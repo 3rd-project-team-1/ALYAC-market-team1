@@ -1,3 +1,4 @@
+import { cn } from '@/shared/lib';
 import { UserAvatar } from '@/shared/ui';
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -21,16 +22,16 @@ export function UserSearchCard({ user, onClick, highlight }: UserSearchCardProps
 
   return (
     <div
-      className="border-border flex cursor-pointer items-center gap-3 border-b px-4 py-3"
+      className={cn('border-border flex cursor-pointer items-center gap-3 border-b px-4 py-3')}
       onClick={onClick}
     >
       <UserAvatar src={user.image} username={user.username} />
       <div>
         <p
-          className="text-foreground text-sm font-semibold"
+          className={cn('text-foreground text-sm font-semibold')}
           dangerouslySetInnerHTML={{ __html: highlightedUsername }}
         />
-        <p className="text-muted-foreground text-xs">@{user.accountname}</p>
+        <p className={cn('text-muted-foreground text-xs')}>@{user.accountname}</p>
       </div>
     </div>
   );

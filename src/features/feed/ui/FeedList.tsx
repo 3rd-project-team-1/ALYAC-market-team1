@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { PostCard, PostCardModel } from '@/entities/feed';
+import { cn } from '@/shared/lib';
 
 interface FeedListProps {
   posts: PostCardModel[];
@@ -20,7 +21,7 @@ export function FeedList({
   lastCardRef,
 }: FeedListProps) {
   return (
-    <main className="mx-auto max-w-5xl pt-[48px]">
+    <main className={cn('mx-auto max-w-5xl pt-[48px]')}>
       {posts.map((post, index) => (
         <div key={post.id} ref={index === posts.length - 1 ? lastCardRef : undefined}>
           <PostCard
