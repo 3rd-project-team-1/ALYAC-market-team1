@@ -5,7 +5,7 @@ import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { ChatIcon, ShareIcon, UploadImageIcon } from '@/shared/assets';
 import { getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { Button } from '@/shared/ui/button/button';
+import { Button } from '@/shared/ui';
 
 export function ProfileTopSection() {
   const { accountname } = useParams<{ accountname: string }>();

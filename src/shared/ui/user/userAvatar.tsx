@@ -3,7 +3,7 @@ interface UserAvatarProps {
   username: string;
 }
 
-export default function UserAvatar({ src, username }: UserAvatarProps) {
+export function UserAvatar({ src, username }: UserAvatarProps) {
   return src ? (
     <img src={src} alt={username} style={styles.avatar} />
   ) : (

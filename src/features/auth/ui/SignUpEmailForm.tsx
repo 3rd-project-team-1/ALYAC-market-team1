@@ -1,7 +1,7 @@
 import { useSignUpEmailForm } from '@/features/auth';
 import { cn } from '@/shared/lib/utils/utils';
-import { Button } from '@/shared/ui/button/button';
-import { FormField } from '@/shared/ui/form/FormField';
+import { Button } from '@/shared/ui';
+import { FormField } from '@/shared/ui';
 
 export function SignUpEmailForm() {
   const { register, handleSubmit, errors, isValid, onSubmit } = useSignUpEmailForm();

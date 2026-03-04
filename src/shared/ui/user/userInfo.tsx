@@ -6,7 +6,7 @@ interface UserInfoProps {
   children?: ReactNode;
 }
 
-export default function UserInfo({ username, accountname, children }: UserInfoProps) {
+export function UserInfo({ username, accountname, children }: UserInfoProps) {
   return (
     <div style={styles.info}>
       <p style={styles.name}>{children ?? username}</p>

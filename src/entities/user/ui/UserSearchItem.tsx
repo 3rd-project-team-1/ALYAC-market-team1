@@ -1,5 +1,5 @@
-import UserAvatar from '@/shared/ui/user/userAvatar';
-import UserInfo from '@/shared/ui/user/userInfo';
+import { UserAvatar } from '@/shared/ui';
+import { UserInfo } from '@/shared/ui';
 
 interface User {
   _id: string;
