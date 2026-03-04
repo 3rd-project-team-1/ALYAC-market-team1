@@ -1,4 +1,4 @@
-import axiosInstance from '@/shared/api/axios';
+import { axiosInstance } from '@/shared/api';
 
 // 이메일 중복 체크 API
 export const checkEmailDuplicate = async (email: string): Promise<boolean> => {

@@ -1,5 +1,5 @@
 import { FacebookIcon, GoogleIcon, KakaoIcon } from '@/shared/assets';
-import { cn } from '@/shared/lib/utils/utils';
+import { cn } from '@/shared/lib';
 import { Button } from '@/shared/ui/button';
 
 interface SocialLoginButtonProps {
