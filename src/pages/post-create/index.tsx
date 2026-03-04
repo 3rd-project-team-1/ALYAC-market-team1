@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
-import { PostImagePreviewList, usePostCreateForm } from '@/features/post-create';
+import { PostImagePreviewList, usePostContentField, usePostCreateForm } from '@/features/post-create';
 import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
@@ -17,7 +17,6 @@ export function PostCreatePage() {
   const state = location.state as LocationState | null;
 
   const { profile } = useProfile();
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -30,10 +29,7 @@ export function PostCreatePage() {
     submitPost,
   } = usePostCreateForm(state?.content ?? '');
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [hadContent, setHadContent] = useState(false);
-
-  const showError = hadContent && !hasContent;
+  const { isFocused, showError, onFocus, onBlur, onContentChange } = usePostContentField(hasContent);
 
   return (
     <div className="bg-background flex min-h-screen flex-col pt-[48px]">
@@ -66,14 +62,11 @@ export function PostCreatePage() {
             className={`overflow-hidden rounded-lg border-2 transition-all ${isFocused ? 'border-blue-900' : 'border-transparent'}`}
           >
             <textarea
-              {...register('content', {
-                required: true,
-                onChange: (e) => { if (e.target.value.trim().length > 0) setHadContent(true); },
-              })}
+              {...register('content', { required: true, onChange: onContentChange })}
               placeholder="게시글 입력하기..."
               className="bg-background text-foreground placeholder:text-muted-foreground w-full min-h-[300px] resize-none p-2 text-sm outline-none"
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           </div>
           {showError && (
