@@ -13,9 +13,9 @@ export const signupProfileSchema = z.object({
     .min(1, '계정 ID를 입력해주세요.')
     .regex(/^[a-zA-Z0-9._]+$/, '*영문, 숫자, 밑줄 및 마침표만 사용할 수 있습니다.'),
 
-  intro: z.string().max(60, '60자 이내로 작성해주세요').default(''),
+  intro: z.string().max(60, '60자 이내로 작성해주세요'),
 
-  image: z.string().default(''),
+  image: z.string(),
 });
 
 export type SignupEmailInput = z.infer<typeof signupEmailSchema>;
