@@ -63,30 +63,33 @@ export function FeedPage() {
   return (
     <>
       <TopMainNav title="얄약마켓 피드" />
-      {posts.length > 0 ? (
-        <>
-          {/* 피드 리스트 - 마지막 카드에 ref 전달 */}
-          <FeedList
-            posts={posts}
-            myAccountname={myAccountname}
-            onRewrite={handleRewritePost}
-            onDelete={handleDeletePost}
-            onClick={handlePostClick}
-            lastCardRef={observerRef}
-          />
-          {/* 추가 로딩 인디케이터 */}
-          {isFetchingMore && (
-            <div style={{ textAlign: 'center', padding: '16px' }}>
-              <span>불러오는 중...</span>
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          {/* 피드가 비어있을 때 */}
-          <FeedEmpty onSearch={handleSearchClick} />
-        </>
-      )}
+      {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
+      <div className="pb-[60px]">
+        {posts.length > 0 ? (
+          <>
+            {/* 피드 리스트 - 마지막 카드에 ref 전달 */}
+            <FeedList
+              posts={posts}
+              myAccountname={myAccountname}
+              onRewrite={handleRewritePost}
+              onDelete={handleDeletePost}
+              onClick={handlePostClick}
+              lastCardRef={observerRef}
+            />
+            {/* 추가 로딩 인디케이터 */}
+            {isFetchingMore && (
+              <div style={{ textAlign: 'center', padding: '16px' }}>
+                <span>불러오는 중...</span>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {/* 피드가 비어있을 때 */}
+            <FeedEmpty onSearch={handleSearchClick} />
+          </>
+        )}
+      </div>
     </>
   );
 }

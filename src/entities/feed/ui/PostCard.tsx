@@ -214,14 +214,14 @@ export function PostCard({
       {/* 좋아요 및 댓글 수 통계 
       TODO: 세윤님 리팩토링 이후 하트랑 댓글 아이콘 공유 
       제대로 동작 안하는게 정상*/}
-      <p className="text-muted-foreground mt-3 text-xs">
+      <div className="text-muted-foreground mt-3 flex items-center text-xs">
         <button onClick={() => setIsLiked((prev) => !prev)}>
           <HeartIcon
-            className={`mr-1 inline-block h-4 w-4 ${isLiked ? 'text-red-500' : 'text-gray-400'}`}
+            className={`mr-1 inline-block ${isLiked ? 'text-red-500' : 'text-gray-400'}`}
           />
         </button>
-        {post.heartCount} <ChatIcon active={false} /> {post.commentCount}
-      </p>
+        {post.heartCount} <ChatIcon className="mr-1 ml-2" /> {post.commentCount}{' '}
+      </div>
     </article>
   );
 }
