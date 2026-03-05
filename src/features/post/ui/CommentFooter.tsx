@@ -36,11 +36,7 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
           </div>
         )}
       </div>
-      <div
-        className={cn(
-          'bg-muted flex flex-1 items-center rounded-full px-4 py-1.5',
-        )}
-      >
+      <div className={cn('bg-muted flex flex-1 items-center rounded-full px-4 py-1.5')}>
         <input
           type="text"
           className={cn('text-foreground flex-1 bg-transparent text-sm outline-none')}
