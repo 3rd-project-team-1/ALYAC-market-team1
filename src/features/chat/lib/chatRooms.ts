@@ -1,10 +1,4 @@
-export interface ChatRoom {
-  id: string;
-  name: string;
-  lastMessage: string;
-  date: string;
-  isOnline: boolean;
-}
+import type { ChatRoom } from '../model/types';
 
 export const DUMMY_CHAT_ROOMS: ChatRoom[] = [
   {
