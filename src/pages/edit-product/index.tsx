@@ -9,9 +9,8 @@ import {
   usePriceInput,
   useProductForm,
 } from '@/features/product';
-import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { getImageUrl } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
@@ -26,7 +25,7 @@ export function EditProductPage() {
   const product = state?.product;
 
   const [imageFile, setImageFile] = useState<File | undefined>();
-  const { preview } = useImageUpload(getImageUrl(product?.itemImage) ?? undefined);
+
   const { form, handleSubmit, isLoading } = useProductForm({ product, productId });
 
   const { handlePriceChange } = usePriceInput(
@@ -58,7 +57,10 @@ export function EditProductPage() {
       <form onSubmit={onSubmit}>
         <div className={cn('flex flex-col gap-5 px-6 pt-6')}>
           {/* 이미지 등록 */}
-          <ProductImageUploader initialImage={preview} onImageChange={handleImageChange} />
+          <ProductImageUploader
+            initialImage={getImageUrl(product?.itemImage) ?? undefined}
+            onImageChange={handleImageChange}
+          />
           <ProductFormFields
             register={form.register}
             errors={form.formState.errors}

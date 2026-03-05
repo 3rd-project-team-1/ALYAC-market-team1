@@ -6,14 +6,13 @@ import {
   usePriceInput,
   useProductForm,
 } from '@/features/product';
-import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 export function CreateProductPage() {
   const [imageFile, setImageFile] = useState<File | undefined>();
-  const { preview } = useImageUpload();
+
   const { form, handleSubmit, isLoading } = useProductForm();
 
   const { handlePriceChange } = usePriceInput(
@@ -43,7 +42,7 @@ export function CreateProductPage() {
       <form onSubmit={onSubmit}>
         <div className={cn('flex flex-col gap-5 px-6 pt-6')}>
           {/* 이미지 등록 */}
-          <ProductImageUploader initialImage={preview} onImageChange={handleImageChange} />
+          <ProductImageUploader onImageChange={handleImageChange} />
           <ProductFormFields
             register={form.register}
             errors={form.formState.errors}

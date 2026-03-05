@@ -1,5 +1,5 @@
 import { ImageIcon } from '@/shared/assets';
-import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { useImageUpload } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 
 interface ProductImageUploaderProps {

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { type Product, useCreateProduct, useUpdateProduct } from '@/entities/product';
-import { useProfile } from '@/entities/user/hooks/useProfile';
+import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
 
 import { type ProductFormInput, productFormSchema } from '../model/product-from.schema';
