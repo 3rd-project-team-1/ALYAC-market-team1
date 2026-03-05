@@ -33,11 +33,15 @@ export function useProfileFollow({ initialIsFollow }: UseProfileFollowParams) {
     onMutate: ({ isFollowing }: FollowMutationVariables) => {
       setOptimisticFollowing(!isFollowing);
     },
-    onSuccess: (_, variables) => {
-      setOptimisticFollowing(null);
-      queryClient.invalidateQueries({ queryKey: ['profile', variables.accountname] });
+    onSuccess: () => {
+      // optimistic 상태 유지 (null로 리셋하지 않음)
+      // 모든 profile, followings, followers 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['followings'] });
+      queryClient.invalidateQueries({ queryKey: ['followers'] });
     },
     onError: () => {
+      // 에러 시에만 롤백
       setOptimisticFollowing(null);
     },
   });
