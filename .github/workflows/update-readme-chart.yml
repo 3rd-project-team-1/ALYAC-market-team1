@@ -76,7 +76,7 @@ jobs:
 
           # ── 기여자별 커밋 수 ────────────────────────────────────────
           result = subprocess.run(
-              ['git', 'log', '--format=%aN'],
+              ['git', 'log', '--format=%aN', '--no-merges'],
               capture_output=True, text=True
           )
           raw_authors = [a for a in result.stdout.strip().split('\n') if a]
@@ -103,7 +103,7 @@ jobs:
 
           # ── 일자별 커밋 수 ────────────────────────────────────────
           result2 = subprocess.run(
-              ['git', 'log', '--format=%ad', '--date=format:%m/%d'],
+              ['git', 'log', '--format=%ad', '--date=format:%m/%d', '--no-merges'],
               capture_output=True, text=True
           )
           date_counts = Counter(d for d in result2.stdout.strip().split('\n') if d)

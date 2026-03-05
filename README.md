@@ -422,7 +422,7 @@ npm run dev
 
 ## 9. 커밋 활동
 
-> **자동 업데이트** — GitHub Actions 워크플로우(`.github/workflows/update-readme-chart.yml`)가 `main` / `develop` 브랜치에 푸시될 때마다 아래 차트를 갱신합니다.
+> **자동 업데이트** — GitHub Actions 워크플로우(`.github/workflows/update-readme-chart.yml`)가 docs/README 브랜치 push 또는 00시마다 아래 차트를 갱신합니다.
 
 ### 9.1 기여자별 커밋 수
 
@@ -439,10 +439,10 @@ npm run dev
   'pieOuterStrokeColor': '#4338ca'
 } } }%%
 pie title 기여자별 커밋 수
-  "김동희" : 201
-  "배준우" : 174
-  "김세윤" : 120
-  "장영재" : 91
+  "김동희" : 137
+  "배준우" : 123
+  "김세윤" : 82
+  "장영재" : 53
 ```
 <!-- COMMIT-PIE-END -->
 
@@ -458,8 +458,8 @@ pie title 기여자별 커밋 수
 xychart-beta
   title "일자별 커밋 수"
   x-axis ["02/23", "02/24", "02/25", "02/26", "02/27", "02/28", "03/02", "03/03", "03/04", "03/05"]
-  y-axis "커밋 수" 0 --> 94
-  bar [62, 59, 49, 70, 42, 8, 3, 19, 63, 92]
+  y-axis "커밋 수" 0 --> 74
+  bar [39, 38, 33, 37, 28, 8, 2, 11, 42, 72]
 ```
 <!-- COMMIT-BAR-END -->
 
