@@ -22,6 +22,7 @@ export function useEditProfileForm() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<EditProfileInput>({
     resolver: zodResolver(editProfileSchema),
     mode: 'onChange',
@@ -71,5 +72,6 @@ export function useEditProfileForm() {
     submitEditProfile,
     isPending: updateMutation.isPending,
     setProfileImageFile,
+    watch,
   };
 }
