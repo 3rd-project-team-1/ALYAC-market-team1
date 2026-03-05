@@ -1,18 +1,17 @@
 import { useSignUpProfileForm } from '@/features/auth';
 import { ProfileImageInput } from '@/features/profile';
 import { cn } from '@/shared/lib';
-import { Button } from '@/shared/ui';
-import { FormField } from '@/shared/ui';
+import { Button, FormField } from '@/shared/ui';
 
 export function SignUpProfileForm() {
   const { register, handleSubmit, onSubmit, errors, isValid, setProfileImageFile, isPending } =
     useSignUpProfileForm();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6')}>
       <ProfileImageInput onImageChange={(file) => setProfileImageFile(file)} />
 
-      <div className="space-y-2">
+      <div className={cn('space-y-2')}>
         <FormField
           type="text"
           label="사용자 이름"
@@ -22,7 +21,7 @@ export function SignUpProfileForm() {
         />
       </div>
 
-      <div className="space-y-2">
+      <div className={cn('space-y-2')}>
         <FormField
           type="text"
           label="계정 ID"
@@ -31,7 +30,7 @@ export function SignUpProfileForm() {
           error={errors.accountname}
         />
       </div>
-      <div className="space-y-2">
+      <div className={cn('space-y-2')}>
         <FormField
           type="text"
           label="소개"

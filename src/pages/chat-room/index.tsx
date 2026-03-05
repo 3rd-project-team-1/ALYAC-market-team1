@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ChatMessageList, ChatRoomFooter, LeaveRoomModal } from '@/features/chat';
 import type { ChatMessage } from '@/features/chat';
+import { cn } from '@/shared/lib';
 import { TopChatNav } from '@/widgets/top-chat-nav';
 
 const DUMMY_MESSAGES: ChatMessage[] = [
@@ -56,7 +57,7 @@ export function ChatRoomPage() {
   };
 
   return (
-    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
+    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopChatNav title="이스트 시큐리티 알약" onMoreClick={() => setShowModal(true)} />
 
       <ChatMessageList messages={messages} />

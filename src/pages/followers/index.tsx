@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useFollowerList } from '@/entities/user/hooks/useFollowerList';
 import { FollowListHeader } from '@/features/profile/ui/FollowListHeader';
 import { FollowUserListItem } from '@/features/profile/ui/FollowUserListItem';
+import { cn } from '@/shared/lib';
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
 import { LoadingSpinner } from '@/shared/ui';
 
@@ -15,21 +16,20 @@ export function FollowersPage() {
   const { followers, isLoading } = useFollowerList(accountname);
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className={cn('bg-background flex min-h-screen flex-col')}>
       <FollowListHeader title="Followers" onBack={() => navigate(-1)} />
 
-      {/* 목록 */}
-      <main className="pt-[48px]">
+      <main className={cn('pt-[48px]')}>
         {isLoading ? (
           <LoadingSpinner fullScreen={false} message="불러오는 중..." />
         ) : followers.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <p className="text-muted-foreground text-sm">팔로워가 없습니다.</p>
+          <div className={cn('flex items-center justify-center py-20')}>
+            <p className={cn('text-muted-foreground text-sm')}>팔로워가 없습니다.</p>
           </div>
         ) : (
           <ul>
             {followers.map((user) => (
-              <li key={user._id} className="border-border border-b last:border-b-0">
+              <li key={user._id} className={cn('border-border border-b last:border-b-0')}>
                 <FollowUserListItem user={user} myAccountname={myAccountname} />
               </li>
             ))}

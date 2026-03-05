@@ -1,4 +1,5 @@
 import { ChatIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface PostDetailCardProps {
@@ -28,26 +29,26 @@ export function PostDetailCard({
   const images = post.image ? post.image.split(',').map((img) => img.trim()) : [];
 
   return (
-    <div className="px-4 pt-5">
+    <div className={cn('px-4 pt-5')}>
       {/* 작성자 정보 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-muted h-10 w-10 overflow-hidden rounded-full">
+      <div className={cn('flex items-center justify-between')}>
+        <div className={cn('flex items-center gap-3')}>
+          <div className={cn('bg-muted h-10 w-10 overflow-hidden rounded-full')}>
             {post.author.image ? (
               <img
                 src={getImageUrl(post.author.image) ?? post.author.image}
                 alt="프로필"
-                className="h-full w-full object-cover"
+                className={cn('h-full w-full object-cover')}
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center">
+              <div className={cn('flex h-full w-full items-center justify-center')}>
                 <UploadImageSmallIcon />
               </div>
             )}
           </div>
           <div>
-            <p className="text-foreground text-sm font-semibold">{post.author.username}</p>
-            <p className="text-muted-foreground text-xs">@{post.author.accountname}</p>
+            <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
+            <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
           </div>
         </div>
         <button type="button" onClick={onMoreClick} aria-label="더보기">
@@ -60,19 +61,19 @@ export function PostDetailCard({
       </div>
 
       {/* 게시글 내용 */}
-      <p className="text-foreground mt-4 text-sm leading-relaxed">{post.content}</p>
+      <p className={cn('text-foreground mt-4 text-sm leading-relaxed')}>{post.content}</p>
 
       {/* 게시글 이미지 */}
       {images.length > 0 && (
-        <div className="mt-4 overflow-hidden rounded-xl">
+        <div className={cn('mt-4 overflow-hidden rounded-xl')}>
           {images.length > 1 ? (
-            <div className="grid grid-cols-2 gap-2">
+            <div className={cn('grid grid-cols-2 gap-2')}>
               {images.map((img, index) => (
                 <img
                   key={index}
                   src={getImageUrl(img) ?? img}
                   alt={`게시글 이미지 ${index + 1}`}
-                  className="h-48 w-full rounded-lg object-cover"
+                  className={cn('h-48 w-full rounded-lg object-cover')}
                 />
               ))}
             </div>
@@ -80,19 +81,19 @@ export function PostDetailCard({
             <img
               src={getImageUrl(images[0]) ?? images[0]}
               alt="게시글 이미지"
-              className="w-full object-cover"
+              className={cn('w-full object-cover')}
             />
           )}
         </div>
       )}
 
       {/* 좋아요 / 댓글 수 */}
-      <div className="mt-3 flex items-center gap-4">
+      <div className={cn('mt-3 flex items-center gap-4')}>
         <button
           type="button"
           onClick={onToggleHeart}
           disabled={isHeartPending}
-          className="flex items-center gap-1.5"
+          className={cn('flex items-center gap-1.5')}
         >
           <svg
             width="20"
@@ -110,11 +111,11 @@ export function PostDetailCard({
               strokeLinejoin="round"
             />
           </svg>
-          <span className="text-muted-foreground text-xs">{post.heartCount}</span>
+          <span className={cn('text-muted-foreground text-xs')}>{post.heartCount}</span>
         </button>
-        <button type="button" className="flex items-center gap-1.5">
+        <button type="button" className={cn('flex items-center gap-1.5')}>
           <ChatIcon />
-          <span className="text-muted-foreground text-xs">{post.commentCount}</span>
+          <span className={cn('text-muted-foreground text-xs')}>{post.commentCount}</span>
         </button>
       </div>
     </div>
