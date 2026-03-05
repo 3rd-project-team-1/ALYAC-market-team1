@@ -24,7 +24,7 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
   return (
     <div
       className={cn(
-        'bg-background border-border fixed right-0 bottom-0 left-0 flex items-center justify-between border-t p-2',
+        'bg-background border-border fixed right-0 bottom-0 left-0 flex items-center gap-2 border-t px-4 py-2',
       )}
     >
       <div className={cn('h-9 w-9 flex-shrink-0 overflow-hidden rounded-full')}>
@@ -36,13 +36,25 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
           </div>
         )}
       </div>
-      <input
-        type="text"
-        className={cn('flex-1 bg-transparent pl-2 text-sm text-[#333] outline-none')}
-        placeholder="댓글 입력하기"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
+      <div
+        className={cn(
+          'bg-muted flex flex-1 items-center rounded-full px-4 py-1.5',
+        )}
+      >
+        <input
+          type="text"
+          className={cn('text-foreground flex-1 bg-transparent text-sm outline-none')}
+          placeholder="댓글 입력하기..."
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
+        />
+      </div>
       <button
         className={cn(
           'flex-shrink-0 text-sm font-semibold',
