@@ -167,13 +167,15 @@ export function PostCard({
             <img
               src={getImageUrl(post.author.image)}
               alt={post.author.username}
-              className={cn("h-10 w-10 rounded-full object-cover")}
+              className={cn('h-10 w-10 rounded-full object-cover')}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
           ) : (
-            <div className={cn("flex h-10 w-10 items-center justify-center rounded-full bg-gray-100")}>
+            <div
+              className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
+            >
               <UploadImageSmallIcon />
             </div>
           )}
