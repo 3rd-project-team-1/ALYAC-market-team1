@@ -24,7 +24,7 @@ export function CommentFooter({ onSubmit }: CommentFooterProps) {
   return (
     <div
       className={cn(
-        'bg-background border-border fixed right-0 bottom-0 left-0 flex items-center gap-2 border-t px-4 py-2',
+        'bg-background border-border fixed right-0 bottom-0 left-0 flex items-center gap-2 border-t px-4 py-[15px]',
       )}
     >
       <div className={cn('h-9 w-9 flex-shrink-0 overflow-hidden rounded-full')}>

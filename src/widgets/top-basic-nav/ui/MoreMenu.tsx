@@ -9,16 +9,25 @@ interface MenuItem {
 }
 
 interface MoreMenuProps {
-  items: MenuItem[];
+  items?: MenuItem[];
+  onClick?: () => void;
 }
 
-export function MoreMenu({ items }: MoreMenuProps) {
+export function MoreMenu({ items, onClick }: MoreMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      setIsOpen((prev) => !prev);
+    }
+  };
 
   return (
     <div className={cn('relative')}>
       <button
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={handleClick}
         className={cn(
           'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
         )}
@@ -26,7 +35,7 @@ export function MoreMenu({ items }: MoreMenuProps) {
         <MoreIcon />
       </button>
 
-      {isOpen && (
+      {!onClick && isOpen && (
         <>
           <div className={cn('fixed inset-0 z-10')} onClick={() => setIsOpen(false)} />
           <div
@@ -34,7 +43,7 @@ export function MoreMenu({ items }: MoreMenuProps) {
               'bg-background absolute top-10 right-0 z-20 w-44 overflow-hidden rounded-lg py-2 shadow-lg',
             )}
           >
-            {items.map((item, idx) => (
+            {items?.map((item, idx) => (
               <button
                 key={idx}
                 className={cn(
