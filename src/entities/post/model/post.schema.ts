@@ -11,7 +11,7 @@ export const postAuthorSchema = z.object({
 });
 
 export const postSchema = z.object({
-  _id: z.string(),
+  id: z.string(),
   content: z.string(),
   image: z.string(),
   createdAt: z.string(),

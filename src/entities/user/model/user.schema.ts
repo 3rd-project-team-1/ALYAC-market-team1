@@ -5,18 +5,18 @@ export const userSchema = z.object({
   username: z.string(),
   email: z.string(),
   accountname: z.string(),
-  intro: z.string(),
+  intro: z.string().default(''),
   image: z.string(),
   password: z.string(),
-  following: z.array(z.string()),
-  followers: z.array(z.string()),
+  following: z.array(z.string()).default([]),
+  followers: z.array(z.string()).default([]),
 });
 
 export const profileSchema = z.object({
   _id: z.string(),
   username: z.string(),
   accountname: z.string(),
-  intro: z.string(),
+  intro: z.string().default(''),
   image: z.string(),
   followingCount: z.number(),
   followerCount: z.number(),
