@@ -18,6 +18,25 @@
 ### 1.3 마일스톤
 
 ```mermaid
+%%{init: { 'theme': 'base', 'themeVariables': {
+  'primaryColor': '#6366f1',
+  'primaryTextColor': '#ffffff',
+  'primaryBorderColor': '#4338ca',
+  'secondaryColor': '#c7d2fe',
+  'tertiaryColor': '#e0e7ff',
+  'sectionBkgColor': '#e0e7ff',
+  'altSectionBkgColor': '#f5f3ff',
+  'doneTaskBkgColor': '#6366f1',
+  'doneTaskBorderColor': '#4338ca',
+  'activeTaskBkgColor': '#fb923c',
+  'activeTaskBorderColor': '#ea580c',
+  'gridColor': '#c7d2fe',
+  'taskTextColor': '#ffffff',
+  'taskTextDarkColor': '#1e1b4b',
+  'taskTextOutsideColor': '#1e1b4b',
+  'labelColor': '#312e81',
+  'todayLineColor': '#ec4899'
+} } }%%
 gantt
     title Alyac Market 개발 마일스톤
     dateFormat  YYYY-MM-DD
@@ -307,6 +326,20 @@ src/
 - 폼 유효성: React Hook Form + Zod 스키마 검증
 
 ```mermaid
+%%{init: { 'theme': 'base', 'themeVariables': {
+  'primaryColor': '#6366f1',
+  'primaryTextColor': '#ffffff',
+  'primaryBorderColor': '#4338ca',
+  'lineColor': '#6366f1',
+  'secondaryColor': '#e0e7ff',
+  'tertiaryColor': '#f5f3ff',
+  'mainBkg': '#e0e7ff',
+  'nodeBorder': '#6366f1',
+  'clusterBkg': '#f0f4ff',
+  'clusterBorder': '#a5b4fc',
+  'titleColor': '#1e1b4b',
+  'edgeLabelBackground': '#f0f4ff'
+} } }%%
 flowchart TD
     User([👤 사용자])
 
