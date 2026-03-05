@@ -1,24 +1,9 @@
 import { useState } from 'react';
 
+import type { PostCardModel } from '@/entities/feed';
 import { useHeartMutation } from '@/entities/post';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
 import { cn } from '@/shared/lib';
-
-// 포스트 카드에서 사용하는 뷰 모델 (화면 렌더링에 필요한 필드만 포함)
-export interface PostCardModel {
-  id: string;
-  content: string;
-  image?: string;
-  hearted: boolean;
-  heartCount: number;
-  commentCount: number;
-  createdAt: string;
-  author: {
-    username: string;
-    accountname: string;
-    image?: string;
-  };
-}
 
 // PostCard 컴포넌트의 Props
 interface PostCardProps {
@@ -85,7 +70,7 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
  * @param props.onDelete - 삭제 핸들러
  * @param props.onClick - 카드 클릭 시 상세 이동 등의 핸들러
  * @returns 게시글 카드 엘리먼트
- * @file entities/feed/ui/PostCard.tsx
+ * @file features/feed/ui/PostCard.tsx
  */
 export function PostCard({
   post,
@@ -167,13 +152,15 @@ export function PostCard({
             <img
               src={getImageUrl(post.author.image)}
               alt={post.author.username}
-              className={cn("h-10 w-10 rounded-full object-cover")}
+              className={cn('h-10 w-10 rounded-full object-cover')}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
           ) : (
-            <div className={cn("flex h-10 w-10 items-center justify-center rounded-full bg-gray-100")}>
+            <div
+              className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
+            >
               <UploadImageSmallIcon />
             </div>
           )}
