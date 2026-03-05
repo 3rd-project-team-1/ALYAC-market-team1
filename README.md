@@ -209,6 +209,40 @@ src/
 - 클라이언트-서버 분리, API 통신
 - 상태 관리: 전역(Zustand), 서버 상태(React Query)
 
+```mermaid
+flowchart TD
+    User([👤 사용자])
+
+    subgraph Client["클라이언트 (React + Vite)"]
+        direction TB
+        Pages["Pages\n라우트별 페이지"]
+        Widgets["Widgets\nUI 위젯"]
+        Features["Features\n기능 단위 모듈"]
+        Entities["Entities\n도메인 API / 타입 / 훅"]
+        Shared["Shared\n공통 컴포넌트 / 훅 / 유틸"]
+
+        Pages --> Widgets --> Features --> Entities --> Shared
+
+        subgraph State["상태 관리"]
+            Zustand["Zustand\n전역 상태"]
+            ReactQuery["React Query\n서버 상태 · 캐싱"]
+        end
+
+        Features <--> State
+        Entities <--> State
+    end
+
+    subgraph Server["백엔드 (Node.js + Express)"]
+        API["REST API"]
+        DB["DB (db.json)"]
+        API --> DB
+    end
+
+    User -->|"페이지 요청"| Pages
+    ReactQuery <-->|"HTTP (Axios)"| API
+    Zustand -->|"인증 토큰 저장"| LocalStorage[(LocalStorage)]
+```
+
 ## 7. 실행 방법
 
 1. 백엔드 서버 실행
