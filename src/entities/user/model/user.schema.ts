@@ -5,11 +5,11 @@ export const userSchema = z.object({
   username: z.string(),
   email: z.string(),
   accountname: z.string(),
-  intro: z.string(),
+  intro: z.string().optional(),
   image: z.string(),
   password: z.string(),
-  following: z.array(z.string()),
-  followers: z.array(z.string()),
+  following: z.array(z.string()).optional(),
+  followers: z.array(z.string()).optional(),
 });
 
 export const profileSchema = z.object({

@@ -1,6 +1,6 @@
-import axiosInstance from '@/shared/api/axios';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
 import type { ProductsResponse } from '../types';
 
 export const getUserProducts = (accountname: string) =>
-  axiosInstance.get<ProductsResponse>(`/api/product/${accountname}`);
+  axiosInstance.get<ProductsResponse>(API_ENDPOINT.PRODUCT_GET_USER(accountname));
