@@ -18,51 +18,53 @@
 ### 1.3 마일스톤
 
 ```mermaid
+%%{init: { 'theme': 'neutral' } }%%
 gantt
     title Alyac Market 개발 마일스톤
-    dateFormat  D
-    axisFormat  Day %d
+    dateFormat  YYYY-MM-DD
+    axisFormat  %m/%d
 
     section 기획 · 환경
-    프로젝트 기획 및 역할 분담          :done, d1, 1, 1d
-    FSD 규칙 확립 · 코드 컨벤션         :done, d1b, 1, 2d
-    개발 환경 설정 (Vite, Prettier)     :done, d3, 3, 2d
+    프로젝트 기획 및 역할 분담          :done, d1,   2026-02-24, 1d
+    FSD 규칙 확립 · 코드 컨벤션         :done, d1b,  2026-02-24, 2d
+    개발 환경 설정 (Vite, Prettier)     :done, d3,   2026-02-26, 2d
 
     section 인증 · 프로필
-    Auth / User 타입 정의               :done, d2a, 2, 1d
-    회원가입 페이지 · 유효성 검사        :done, d3a, 3, 1d
-    프로필 페이지 구현                   :done, d2b, 2, 3d
-    프로필 커스텀 훅 분리                :done, d3b, 3, 1d
-    로그인 Nav · 설정 Modal             :done, d4a, 4, 1d
+    Auth / User 타입 정의               :done, d2a,  2026-02-25, 1d
+    회원가입 페이지 · 유효성 검사        :done, d3a,  2026-02-26, 1d
+    프로필 페이지 구현                   :done, d2b,  2026-02-25, 3d
+    프로필 커스텀 훅 분리                :done, d3b,  2026-02-26, 1d
+    로그인 Nav · 설정 Modal             :done, d4a,  2026-02-27, 1d
 
     section UI · 컴포넌트
-    버튼 SVG · shared/ui/button         :done, d2c, 2, 1d
-    버튼 CVA 전환 · SVG 컴포넌트화      :done, d3c, 3, 1d
-    공통 버튼 컴포넌트 (저장 · 업로드)  :done, d4b, 4, 1d
-    SVG 아이콘 전면 교체                 :done, d6a, 6, 2d
-    피드 페이지 UI 개선                  :done, d8a, 8, 1d
-    포스트 페이지 UI (푸터 · 모달)       :done, d9a, 9, 1d
+    버튼 SVG · shared/ui/button         :done, d2c,  2026-02-25, 1d
+    버튼 CVA 전환 · SVG 컴포넌트화      :done, d3c,  2026-02-26, 1d
+    공통 버튼 컴포넌트 (저장 · 업로드)  :done, d4b,  2026-02-27, 1d
+    SVG 아이콘 전면 교체                 :done, d6a,  2026-03-01, 2d
+    피드 페이지 UI 개선                  :done, d8a,  2026-03-03, 1d
+    포스트 페이지 UI (푸터 · 모달)       :done, d9a,  2026-03-04, 1d
 
     section 라우팅
-    라우터 동적 로딩 · 경로 통일         :done, d3d, 3, 1d
-    팔로워 / 프로필 수정 라우팅          :done, d4c, 4, 1d
+    라우터 동적 로딩 · 경로 통일         :done, d3d,  2026-02-26, 1d
+    팔로워 / 프로필 수정 라우팅          :done, d4c,  2026-02-27, 1d
 
     section FSD 리팩토링
-    FSD 계층 구조 재정비                 :done, d5a, 5, 1d
-    피드 · 검색 페이지 FSD 리팩토링     :done, d6b, 6, 3d
+    FSD 계층 구조 재정비                 :done, d5a,  2026-02-28, 1d
+    피드 · 검색 페이지 FSD 리팩토링     :done, d6b,  2026-03-01, 3d
 
     section 데이터 페칭
-    useEffect → useQuery 리팩토링       :done, d5b, 5, 1d
-    QueryClient 전역 설정 · 토큰 검증   :done, d9b, 9, 1d
-    피드 무한 스크롤 (useInfiniteQuery) :done, d9c, 9, 1d
+    useEffect → useQuery 리팩토링       :done, d5b,  2026-02-28, 1d
+    QueryClient 전역 설정 · 토큰 검증   :done, d9b,  2026-03-04, 1d
+    피드 무한 스크롤 (useInfiniteQuery) :done, d9c,  2026-03-04, 1d
 
     section 검색 · 피드
-    피드 · 검색 페이지 초기 구현         :done, d1c, 1, 2d
-    검색 기능 뼈대                        :done, d6c, 6, 1d
-    검색 기능 완성 · 팔로잉 피드 연동    :done, d7a, 7, 1d
+    피드 · 검색 페이지 초기 구현         :done, d1c,  2026-02-24, 2d
+    검색 기능 뼈대                        :done, d6c,  2026-03-01, 1d
+    검색 기능 완성 · 팔로잉 피드 연동    :done, d7a,  2026-03-02, 1d
 
     section Day 10
-    TBD                                  :active, d10, 10, 1d
+    README 업데이트 · 문서화             :done,   d10a, 2026-03-05, 1d
+    최종 UI 점검 · 버그 수정             :active, d10b, 2026-03-05, 1d
 ```
 
 #### Day 1 — 프로젝트 기획 및 역할 분담
@@ -147,7 +149,10 @@ gantt
 
 ---
 
-#### Day 10 — (작업 중)
+#### Day 10 — 문서화 및 최종 점검 (2026-03-05)
+
+- README 전면 업데이트: 스택 버전 정리, 라우팅 구조 표 정리, API 엔드포인트 목록화, 아키텍처 Flowchart 추가
+- 최종 UI 점검 및 버그 수정
 
 ### 1.4 주요 기능
 
