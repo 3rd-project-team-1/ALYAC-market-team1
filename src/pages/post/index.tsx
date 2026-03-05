@@ -8,7 +8,7 @@ import {
 } from '@/features/post';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
-import { TopBasicNav } from '@/widgets/top-basic-nav';
+import { MoreMenu, TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {
   const {
@@ -43,11 +43,12 @@ export function PostPage() {
 
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
-      <TopBasicNav />
+      <TopBasicNav
+        moreMenu={<MoreMenu onClick={() => setShowModal(true)} />}
+      />
 
       <PostDetailCard
         post={post}
-        onMoreClick={() => setShowModal(true)}
         onToggleHeart={() => heartMutation.mutate()}
         isHeartPending={heartMutation.isPending}
       />
