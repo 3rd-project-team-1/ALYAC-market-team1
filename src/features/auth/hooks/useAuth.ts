@@ -2,11 +2,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import type { User } from '@/entities/user';
-import { axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 import { getToken, removeToken } from '@/shared/lib';
 
 const getCurrentUser = async (): Promise<User> => {
-  const { data } = await axiosInstance.get('/api/user/me');
+  const { data } = await axiosInstance.get(API_ENDPOINT.USER_ME);
   return data;
 };
 

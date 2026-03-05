@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
 export interface ImageUploadResponse {
   fieldname: string;
@@ -16,7 +16,7 @@ export const uploadSingleImage = async (file: File): Promise<string> => {
   formData.append('image', file);
 
   const response = await axiosInstance.post<ImageUploadResponse>(
-    '/api/image/uploadfile',
+    API_ENDPOINT.IMAGE_UPLOAD,
     formData,
     {
       headers: {
@@ -39,7 +39,7 @@ export const uploadMultipleImages = async (files: File[]): Promise<string[]> => 
   });
 
   const response = await axiosInstance.post<ImageUploadResponse[]>(
-    '/api/image/uploadfiles',
+    API_ENDPOINT.IMAGE_UPLOAD_MULTIPLE,
     formData,
     {
       headers: {

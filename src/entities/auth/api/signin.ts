@@ -1,10 +1,10 @@
 import { AuthResponse, LoginRequest } from '@/entities/user';
-import { axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
 import { authResponseSchema } from '../model/auth.schema';
 
 export const signIn = async (data: LoginRequest): Promise<AuthResponse> => {
-  const response = await axiosInstance.post('/api/user/signin', data);
+  const response = await axiosInstance.post(API_ENDPOINT.AUTH_SIGNIN, data);
 
   const result = authResponseSchema.safeParse(response.data);
   if (!result.success) {

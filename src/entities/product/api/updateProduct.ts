@@ -1,6 +1,6 @@
-import axiosInstance from '@/shared/api/axios';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
 import type { CreateProductInput, ProductResponse } from '../types';
 
 export const updateProduct = (id: string, data: CreateProductInput) =>
-  axiosInstance.put<ProductResponse>(`/api/product/${id}`, { product: data });
+  axiosInstance.put<ProductResponse>(API_ENDPOINT.PRODUCT_UPDATE(id), { product: data });

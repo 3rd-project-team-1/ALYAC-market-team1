@@ -1,4 +1,4 @@
-import axiosInstance from '@/shared/api/axios';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
 export const deleteComment = (postId: string, commentId: string) =>
-  axiosInstance.delete(`/api/post/${postId}/comments/${commentId}`);
+  axiosInstance.delete(API_ENDPOINT.POST_COMMENT_DELETE(postId, commentId));
