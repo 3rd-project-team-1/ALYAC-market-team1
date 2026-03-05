@@ -1,3 +1,5 @@
+import { cn } from '@/shared/lib';
+
 import type { IconProps } from './types';
 
 export const PostAlbumIcon = ({ active }: Pick<IconProps, 'active'>) => (
@@ -7,28 +9,28 @@ export const PostAlbumIcon = ({ active }: Pick<IconProps, 'active'>) => (
       fill="currentColor"
       stroke="currentColor"
       strokeLinecap="round"
-      className={active ? 'opacity-100' : 'opacity-30'}
+      className={cn(active ? 'opacity-100' : 'opacity-30')}
     />
     <path
       d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z"
       fill="currentColor"
       stroke="currentColor"
       strokeLinecap="round"
-      className={active ? 'opacity-100' : 'opacity-30'}
+      className={cn(active ? 'opacity-100' : 'opacity-30')}
     />
     <path
       d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z"
       fill="currentColor"
       stroke="currentColor"
       strokeLinecap="round"
-      className={active ? 'opacity-100' : 'opacity-30'}
+      className={cn(active ? 'opacity-100' : 'opacity-30')}
     />
     <path
       d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z"
       fill="currentColor"
       stroke="currentColor"
       strokeLinecap="round"
-      className={active ? 'opacity-100' : 'opacity-30'}
+      className={cn(active ? 'opacity-100' : 'opacity-30')}
     />
   </svg>
 );

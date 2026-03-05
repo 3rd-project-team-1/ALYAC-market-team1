@@ -10,6 +10,7 @@ import {
   useProductForm,
 } from '@/features/product';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
@@ -45,17 +46,16 @@ export function CreateProductPage() {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
+    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
         label={isLoading ? '저장 중...' : '저장'}
         disabled={isLoading}
         onSubmit={handleSubmit(onSubmit)}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-5 px-6 pt-6">
+        <div className={cn('flex flex-col gap-5 px-6 pt-6')}>
           {/* 이미지 등록 */}
           <ProductImageUploader initialImage={preview} onImageChange={handleImageChange} />
-
           <ProductFormFields
             register={register}
             errors={errors}

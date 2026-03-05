@@ -1,4 +1,5 @@
 import { UploadImageSmallIcon } from '@/shared/assets';
+import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface PostComment {
@@ -24,32 +25,32 @@ export function PostCommentsList({
   onOpenCommentOption,
 }: PostCommentsListProps) {
   return (
-    <div className="flex flex-col gap-4 px-4 py-4 pb-20">
+    <div className={cn('flex flex-col gap-4 px-4 py-4 pb-20')}>
       {comments.map((comment) => (
-        <div key={comment.id} className="flex items-start gap-3">
-          <div className="bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
+        <div key={comment.id} className={cn('flex items-start gap-3')}>
+          <div className={cn('bg-muted h-8 w-8 flex-shrink-0 overflow-hidden rounded-full')}>
             {comment.author.image ? (
               <img
                 src={getImageUrl(comment.author.image) ?? comment.author.image}
                 alt={comment.author.username}
-                className="h-full w-full object-cover"
+                className={cn('h-full w-full object-cover')}
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center">
+              <div className={cn('flex h-full w-full items-center justify-center')}>
                 <UploadImageSmallIcon />
               </div>
             )}
           </div>
-          <div className="flex flex-1 flex-col gap-0.5">
-            <div className="flex items-center gap-2">
-              <span className="text-foreground text-sm font-semibold">
+          <div className={cn('flex flex-1 flex-col gap-0.5')}>
+            <div className={cn('flex items-center gap-2')}>
+              <span className={cn('text-foreground text-sm font-semibold')}>
                 {comment.author.username}
               </span>
-              <span className="text-muted-foreground text-xs">
+              <span className={cn('text-muted-foreground text-xs')}>
                 {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
               </span>
             </div>
-            <p className="text-foreground text-sm">{comment.content}</p>
+            <p className={cn('text-foreground text-sm')}>{comment.content}</p>
           </div>
           {comment.author.accountname === myAccountname && (
             <button
