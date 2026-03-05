@@ -37,7 +37,7 @@ jobs:
               'seyunkims':     '김세윤',
               'seyun':         '김세윤',
               'youngjaejang7': '장영재',
-              'Youngjae Jang': '장영재',
+              'youngjaejang':  '장영재',
           }
 
           def normalize(name):
