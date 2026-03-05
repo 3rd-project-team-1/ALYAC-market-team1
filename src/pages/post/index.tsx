@@ -1,7 +1,6 @@
 import {
   CommentActionSheet,
   CommentFooter,
-  PostActionSheet,
   PostCommentsList,
   PostDetailCard,
   usePostDetailPage,
@@ -17,8 +16,6 @@ export function PostPage() {
     isPostLoading,
     myAccountname,
     isMyPost,
-    showModal,
-    setShowModal,
     showCommentModal,
     setShowCommentModal,
     selectedCommentId,
@@ -44,7 +41,21 @@ export function PostPage() {
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopBasicNav
-        moreMenu={<MoreMenu onClick={() => setShowModal(true)} />}
+        moreMenu={
+          <MoreMenu
+            items={[
+              { label: '신고하기', onClick: () => {} },
+              ...(isMyPost
+                ? [
+                    {
+                      label: <span className={cn('text-destructive')}>삭제</span>,
+                      onClick: () => deletePostMutation.mutate(),
+                    },
+                  ]
+                : []),
+            ]}
+          />
+        }
       />
 
       <PostDetailCard
@@ -65,14 +76,6 @@ export function PostPage() {
       />
 
       <CommentFooter onSubmit={(text) => createCommentMutation.mutate(text)} />
-
-      <PostActionSheet
-        isOpen={showModal}
-        isMyPost={isMyPost}
-        isDeletePending={deletePostMutation.isPending}
-        onClose={() => setShowModal(false)}
-        onDeletePost={() => deletePostMutation.mutate()}
-      />
 
       <CommentActionSheet
         isOpen={showCommentModal}
