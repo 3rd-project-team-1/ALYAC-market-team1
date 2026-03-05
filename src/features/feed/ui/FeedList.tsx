@@ -1,8 +1,9 @@
 import React from 'react';
 
+import type { PostCardModel } from '@/entities/feed';
 import { cn } from '@/shared/lib';
 
-import { PostCard, PostCardModel } from './PostCard';
+import { PostCard } from './PostCard';
 
 interface FeedListProps {
   posts: PostCardModel[];
