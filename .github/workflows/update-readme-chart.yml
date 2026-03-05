@@ -106,6 +106,45 @@ jobs:
           with open('README.md', 'w', encoding='utf-8') as f:
               f.write(content)
 
+          # ── 날짜별 커밋 로그 ────────────────────────────────────
+          result3 = subprocess.run(
+              ['git', 'log', '--format=%ad|%s', '--date=format:%Y-%m-%d', '--no-merges'],
+              capture_output=True, text=True
+          )
+
+          from collections import defaultdict
+          log_by_date = defaultdict(list)
+          for line in result3.stdout.strip().split('\n'):
+              if '|' not in line:
+                  continue
+              date, msg = line.split('|', 1)
+              # [skip ci] 등 자동 커밋 제외
+              if '[skip ci]' in msg or msg.startswith('docs: 커밋 활동'):
+                  continue
+              log_by_date[date].append(msg.strip())
+
+          log_lines = ['| 날짜 | 커밋 내역 |', '| ---- | --------- |']
+          for date in sorted(log_by_date.keys(), reverse=True):
+              msgs = log_by_date[date]
+              # 첫 번째 메시지는 그대로, 추가 메시지는 줄바꿈
+              cell = ' · '.join(msgs)
+              log_lines.append(f'| {date} | {cell} |')
+
+          log_block = '\n'.join(log_lines)
+
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          content = re.sub(
+              r'<!-- COMMIT-LOG-START -->.*?<!-- COMMIT-LOG-END -->',
+              f'<!-- COMMIT-LOG-START -->\n{log_block}\n<!-- COMMIT-LOG-END -->',
+              content,
+              flags=re.DOTALL
+          )
+
+          with open('README.md', 'w', encoding='utf-8') as f:
+              f.write(content)
+
           print("✅ 차트 업데이트 완료")
           PYEOF
 

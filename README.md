@@ -450,3 +450,11 @@ xychart-beta
 ```
 
 <!-- COMMIT-BAR-END -->
+
+### 9.3 날짜별 커밋 로그
+
+<!-- COMMIT-LOG-START -->
+| 날짜 | 커밋 내역 |
+| ---- | --------- |
+| 업데이트 대기 중 | - |
+<!-- COMMIT-LOG-END -->
