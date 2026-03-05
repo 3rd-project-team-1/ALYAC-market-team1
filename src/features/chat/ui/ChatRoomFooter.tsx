@@ -5,20 +5,16 @@ import { UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
+import { useChatComposer } from '../hooks/useChatComposer';
+
 interface ChatRoomFooterProps {
   onSubmit?: (message: string) => void;
 }
 
 export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
-  const [value, setValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const { profile } = useProfile();
-
-  const handleSubmit = () => {
-    if (!value.trim()) return;
-    onSubmit?.(value);
-    setValue('');
-  };
+  const { value, setValue, canSubmit, submit } = useChatComposer(onSubmit);
 
   return (
     <div
@@ -41,25 +37,31 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
       </div>
       <div
         className={cn(
-          'flex flex-1 items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 transition-all',
+          'border-border bg-background flex flex-1 items-center rounded-lg border px-3 py-1.5 transition-all',
           isFocused && 'ring-2 ring-blue-900',
         )}
       >
         <input
-          className={cn('flex-1 border-none bg-transparent text-sm text-[#333] outline-none')}
+          className={cn('text-foreground flex-1 border-none bg-transparent text-sm outline-none')}
           placeholder="메시지 입력하기..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
         <button
           className={cn(
             'flex-shrink-0 rounded-lg px-[18px] py-2 text-sm font-semibold text-white transition-colors',
-            value.trim() ? 'cursor-pointer bg-[#3C9E00]' : 'cursor-default bg-[#B2B2B2]',
+            canSubmit ? 'cursor-pointer bg-[#3C9E00]' : 'cursor-default bg-[#B2B2B2]',
           )}
-          onClick={handleSubmit}
-          disabled={!value.trim()}
+          onClick={submit}
+          disabled={!canSubmit}
         >
           전송
         </button>
