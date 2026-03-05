@@ -1,6 +1,7 @@
-import type { ChatMessage } from '@/features/chat/model/types';
 import { UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+
+import type { ChatMessage } from '../model/types';
 
 interface ChatMessageListProps {
   messages: ChatMessage[];
