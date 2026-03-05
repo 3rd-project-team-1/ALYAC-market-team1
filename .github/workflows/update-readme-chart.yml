@@ -3,8 +3,6 @@ name: 📊 Update README Commit Chart
 on:
   push:
     branches:
-      - main
-      - develop
       - docs/README
   schedule:
     - cron: '0 15 * * *' # 매일 자정 KST (UTC 15:00)
