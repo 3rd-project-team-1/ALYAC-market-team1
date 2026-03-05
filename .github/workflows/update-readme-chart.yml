@@ -27,12 +27,14 @@ jobs:
       - name: 커밋 분석 및 차트 생성
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           python3 << 'PYEOF'
           import subprocess
           import re
           import os
           from collections import Counter, defaultdict
+          from datetime import datetime, timezone, timedelta
           from openai import OpenAI
 
           ai_client = OpenAI(
@@ -181,11 +183,18 @@ jobs:
                   if m:
                       existing_rows[m.group(1).strip()] = row.strip()
 
+          # ── 자정 스케줄 실행 시 당일 날짜 강제 재요약 ──────────
+          # UTC 15:00 = KST 00:00. 이 시점의 UTC 날짜 = 방금 끝난 KST 날짜
+          force_date = None
+          if os.environ.get('EVENT_NAME') == 'schedule':
+              force_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+              print(f'📅 자정 실행: {force_date} 강제 재요약')
+
           # ── 새 날짜만 AI 요약, 기존 날짜는 그대로 ────────────────
           all_dates = sorted(log_by_date.keys(), reverse=True)
           log_lines = ['| 날짜 | 요약 |', '| ---- | ---- |']
           for date in all_dates:
-              if date in existing_rows:
+              if date in existing_rows and date != force_date:
                   log_lines.append(existing_rows[date])
               else:
                   summary = summarize_commits(date, log_by_date[date])
