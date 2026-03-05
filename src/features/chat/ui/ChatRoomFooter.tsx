@@ -46,6 +46,12 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
           placeholder="메시지 입력하기..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
