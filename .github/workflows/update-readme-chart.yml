@@ -21,12 +21,41 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: openai 패키지 설치
+        run: pip install openai
+
       - name: 커밋 분석 및 차트 생성
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 << 'PYEOF'
           import subprocess
           import re
+          import os
           from collections import Counter, defaultdict
+          from openai import OpenAI
+
+          ai_client = OpenAI(
+              base_url="https://models.inference.ai.azure.com",
+              api_key=os.environ["GITHUB_TOKEN"],
+          )
+
+          def summarize_commits(date, messages):
+              joined = '\n'.join(f'- {m}' for m in messages)
+              prompt = (
+                  f"{date}의 Git 커밋 메시지를 한국어로 2~4문장으로 간결하게 요약해줘. "
+                  "핵심 작업만 남기고 중복·세부 표현은 제거해. 마크다운 없이 평문으로만 작성해.\n\n"
+                  f"커밋 메시지:\n{joined}"
+              )
+              try:
+                  resp = ai_client.chat.completions.create(
+                      model="gpt-4o-mini",
+                      messages=[{"role": "user", "content": prompt}],
+                      max_tokens=200,
+                  )
+                  return resp.choices[0].message.content.strip().replace('|', '｜')
+              except Exception as e:
+                  return ' · '.join(messages)
 
           # ── 이름 정규화 매핑 ──────────────────────────────────────
           NAME_MAP = {
@@ -127,7 +156,6 @@ jobs:
               capture_output=True, text=True
           )
 
-          from collections import defaultdict
           log_by_date = defaultdict(list)
           for line in result3.stdout.strip().split('\n'):
               if '|' not in line:
@@ -138,12 +166,11 @@ jobs:
                   continue
               log_by_date[date].append(msg.strip())
 
-          log_lines = ['| 날짜 | 커밋 내역 |', '| ---- | --------- |']
+          log_lines = ['| 날짜 | 요약 |', '| ---- | ---- |']
           for date in sorted(log_by_date.keys(), reverse=True):
               msgs = log_by_date[date]
-              # 첫 번째 메시지는 그대로, 추가 메시지는 줄바꿈
-              cell = ' · '.join(msgs)
-              log_lines.append(f'| {date} | {cell} |')
+              summary = summarize_commits(date, msgs)
+              log_lines.append(f'| {date} | {summary} |')
 
           log_block = '\n'.join(log_lines)
 
