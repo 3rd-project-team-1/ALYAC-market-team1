@@ -166,11 +166,30 @@ jobs:
                   continue
               log_by_date[date].append(msg.strip())
 
+          # ── 기존 요약 행 파싱 (이미 처리된 날짜 보존) ────────────
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          existing_rows = {}
+          log_section = re.search(
+              r'<!-- COMMIT-LOG-START -->(.*?)<!-- COMMIT-LOG-END -->',
+              content, flags=re.DOTALL
+          )
+          if log_section:
+              for row in log_section.group(1).strip().splitlines():
+                  m = re.match(r'\|\s*(\d{4}-\d{2}-\d{2})\s*\|(.*)\|', row)
+                  if m:
+                      existing_rows[m.group(1).strip()] = row.strip()
+
+          # ── 새 날짜만 AI 요약, 기존 날짜는 그대로 ────────────────
+          all_dates = sorted(log_by_date.keys(), reverse=True)
           log_lines = ['| 날짜 | 요약 |', '| ---- | ---- |']
-          for date in sorted(log_by_date.keys(), reverse=True):
-              msgs = log_by_date[date]
-              summary = summarize_commits(date, msgs)
-              log_lines.append(f'| {date} | {summary} |')
+          for date in all_dates:
+              if date in existing_rows:
+                  log_lines.append(existing_rows[date])
+              else:
+                  summary = summarize_commits(date, log_by_date[date])
+                  log_lines.append(f'| {date} | {summary} |')
 
           log_block = '\n'.join(log_lines)
 
