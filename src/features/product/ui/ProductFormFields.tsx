@@ -2,7 +2,6 @@ import type { ChangeEvent } from 'react';
 
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 
-// 🔥 import 변경
 import { cn } from '@/shared/lib';
 
 import type { ProductFormInput } from '../model/product-from.schema';
