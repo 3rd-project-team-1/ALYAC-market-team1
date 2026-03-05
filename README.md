@@ -151,22 +151,38 @@ gantt
 
 ### 1.4 주요 기능
 
-- 회원가입/로그인/로그아웃
-- 상품 등록, 수정, 삭제
-- 상품 목록 및 상세 조회
-- 채팅 기능
-- 댓글 및 좋아요
-- 검색 및 필터링
+| 기능   | 설명                                          |
+| ------ | --------------------------------------------- |
+| 인증   | 회원가입 · 로그인 · 로그아웃 · 토큰 자동 갱신 |
+| 프로필 | 프로필 조회 · 수정 · 팔로우 / 언팔로우        |
+| 팔로우 | 팔로워 / 팔로잉 목록 조회                     |
+| 피드   | 팔로잉 사용자 게시글 무한 스크롤              |
+| 게시글 | 작성 · 수정 · 삭제 · 이미지 첨부 (최대 3장)   |
+| 좋아요 | 게시글 좋아요 / 취소                          |
+| 댓글   | 댓글 작성 · 목록 · 삭제 · 신고                |
+| 상품   | 상품 등록 · 수정 · 삭제 · 목록 조회           |
+| 검색   | 계정명 기반 사용자 검색                       |
+| 채팅   | 채팅 목록 · 채팅방 (UI 구현)                  |
 
 ## 2. 개발 환경 및 배포
 
 ### 2.1 개발 스택
 
-- 프론트엔드: React, TypeScript, Vite
-- 백엔드: Node.js, Express
-- 데이터베이스: DB
-- 스타일: CSS Modules, TailwindCSS
-- 기타: Axios, Zustand, React Query
+| 분류        | 기술                         | 버전  |
+| ----------- | ---------------------------- | ----- |
+| 프레임워크  | React                        | 19.2  |
+| 언어        | TypeScript                   | 5.9   |
+| 빌드        | Vite                         | 7.3   |
+| 라우팅      | React Router DOM             | 7.13  |
+| 서버 상태   | TanStack Query (React Query) | 5.90  |
+| 전역 상태   | Zustand                      | 5.0   |
+| HTTP        | Axios                        | 1.13  |
+| 폼 / 검증   | React Hook Form + Zod        | 7 / 4 |
+| 스타일      | Tailwind CSS v4              | 4.1   |
+| UI 컴포넌트 | Radix UI · CVA · shadcn/ui   | -     |
+| 토스트      | Sonner                       | 2.0   |
+| 백엔드      | Node.js · Express            | -     |
+| DB          | JSON Server (db.json)        | -     |
 
 ### 2.2 배포 URL
 
@@ -175,72 +191,164 @@ gantt
 
 ## 3. 라우팅 구조
 
-- / (홈)
-- /feed (피드)
-- /product/:id (상품 상세)
-- /post/:id (게시글 상세)
-- /chat (채팅 목록)
-- /chat-room/:id (채팅방)
-- /profile (내 프로필)
-- /search (검색)
-- /signin, /signup (인증)
+### 3.1 비인증 페이지 (RequireGuest)
+
+| 경로              | 페이지                      |
+| ----------------- | --------------------------- |
+| `/`               | 홈 (스플래시 · 서비스 소개) |
+| `/signin`         | 로그인                      |
+| `/signup`         | 회원가입                    |
+| `/signup/profile` | 회원가입 — 프로필 설정      |
+
+### 3.2 인증 필요 페이지 (RequireAuth)
+
+| 경로                       | 페이지                    |
+| -------------------------- | ------------------------- |
+| `/feed`                    | 팔로잉 피드               |
+| `/search`                  | 사용자 검색               |
+| `/profile`                 | 내 프로필                 |
+| `/profile/:accountname`    | 타 사용자 프로필          |
+| `/edit-profile`            | 프로필 수정               |
+| `/create-product`          | 상품 등록                 |
+| `/edit-product/:productId` | 상품 수정                 |
+| `/create-post`             | 게시글 작성               |
+| `/post/:postId`            | 게시글 상세 (댓글·좋아요) |
+| `/post/:postId/edit`       | 게시글 수정               |
+| `/chat`                    | 채팅 목록                 |
+| `/chat/:roomId`            | 채팅방                    |
+| `/followers/:accountname`  | 팔로워 목록               |
+| `/followings/:accountname` | 팔로잉 목록               |
+| `*`                        | 404 Not Found             |
 
 ## 4. 데이터 흐름
 
-1. 클라이언트는 REST API를 통해 서버와 통신합니다.
-2. 상태 관리는 주로 Zustand, React Query로 처리합니다.
-3. 인증 정보는 로컬스토리지/쿠키에 저장됩니다.
+1. 클라이언트는 Axios를 통해 `/api/*` 경로로 REST API 요청을 보냅니다. (Vite 프록시 → `http://localhost:3000`)
+2. 서버 상태는 **TanStack Query**가 캐싱·동기화하고, 전역 UI 상태는 **Zustand**로 관리합니다.
+3. 인증 토큰(accessToken · refreshToken)은 **LocalStorage**에 저장되며, Axios 인터셉터가 요청마다 자동 첨부합니다.
+4. 토큰 만료 시 `/api/user/refresh` 로 자동 재발급 후 원래 요청을 재시도합니다.
+
+### 4.1 주요 API 엔드포인트
+
+| 분류   | 메서드 | 경로                                      | 설명                           |
+| ------ | ------ | ----------------------------------------- | ------------------------------ |
+| 인증   | POST   | `/api/user`                               | 회원가입                       |
+| 인증   | POST   | `/api/user/signin`                        | 로그인                         |
+| 인증   | POST   | `/api/user/refresh`                       | 토큰 재발급                    |
+| 인증   | GET    | `/api/user/checktoken`                    | 토큰 유효성 검사               |
+| 인증   | POST   | `/api/user/emailvalid`                    | 이메일 중복 확인               |
+| 인증   | POST   | `/api/user/accountnamevalid`              | 계정명 중복 확인               |
+| 사용자 | GET    | `/api/user/myinfo`                        | 내 정보 조회                   |
+| 사용자 | PUT    | `/api/user`                               | 프로필 수정                    |
+| 사용자 | GET    | `/api/user/searchuser`                    | 사용자 검색                    |
+| 프로필 | GET    | `/api/profile/:accountname`               | 프로필 조회                    |
+| 프로필 | POST   | `/api/profile/:accountname/follow`        | 팔로우                         |
+| 프로필 | DELETE | `/api/profile/:accountname/unfollow`      | 언팔로우                       |
+| 프로필 | GET    | `/api/profile/:accountname/following`     | 팔로잉 목록                    |
+| 프로필 | GET    | `/api/profile/:accountname/follower`      | 팔로워 목록                    |
+| 게시글 | POST   | `/api/post`                               | 게시글 작성                    |
+| 게시글 | GET    | `/api/post/feed`                          | 팔로잉 피드                    |
+| 게시글 | GET    | `/api/post/:accountname/userpost`         | 사용자 게시글                  |
+| 게시글 | GET    | `/api/post/:post_id`                      | 게시글 상세                    |
+| 게시글 | PUT    | `/api/post/:post_id`                      | 게시글 수정                    |
+| 게시글 | DELETE | `/api/post/:post_id`                      | 게시글 삭제                    |
+| 좋아요 | POST   | `/api/post/:post_id/heart`                | 좋아요                         |
+| 좋아요 | DELETE | `/api/post/:post_id/unheart`              | 좋아요 취소                    |
+| 댓글   | POST   | `/api/post/:post_id/comments`             | 댓글 작성                      |
+| 댓글   | GET    | `/api/post/:post_id/comments`             | 댓글 목록                      |
+| 댓글   | DELETE | `/api/post/:post_id/comments/:comment_id` | 댓글 삭제                      |
+| 상품   | POST   | `/api/product`                            | 상품 등록                      |
+| 상품   | GET    | `/api/product/:accountname`               | 사용자 상품 목록               |
+| 상품   | GET    | `/api/product/detail/:product_id`         | 상품 상세                      |
+| 상품   | PUT    | `/api/product/:product_id`                | 상품 수정                      |
+| 상품   | DELETE | `/api/product/:product_id`                | 상품 삭제                      |
+| 이미지 | POST   | `/api/image/uploadfile`                   | 단일 이미지 업로드             |
+| 이미지 | POST   | `/api/image/uploadfiles`                  | 다중 이미지 업로드 (최대 10개) |
 
 ## 5. 프로젝트 구조
 
+FSD(Feature-Sliced Design) 아키텍처를 적용합니다. 상위 레이어는 하위 레이어만 참조할 수 있습니다.
+
 ```
 src/
-  app/           # 앱 엔트리포인트 및 라우팅
-  entities/      # 도메인별 API, 타입, 훅
-  features/      # 주요 기능 단위별 폴더
-  pages/         # 라우트별 페이지 컴포넌트
-  shared/        # 공통 컴포넌트, 훅, 유틸
-  widgets/       # UI 위젯
+  app/           # 앱 진입점 · 라우터 · QueryClient · 전역 Provider
+  pages/         # 라우트별 페이지 조립 (18개 페이지)
+  widgets/       # 독립적 UI 블록 (TopNav 6종, TabMenu)
+  features/      # 사용자 시나리오 단위 (auth, feed, post, product, profile, chat, search, home, create-post)
+  entities/      # 도메인 모델 · API · 훅 (auth, feed, post, product, user)
+  shared/        # 도메인 무관 공용 기반 (axiosInstance, ui/, hooks/, lib/)
 ```
+
+### 5.1 레이어별 도메인
+
+| 레이어           | 포함 도메인 / 모듈                                                                                   |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| **entities**     | `auth` · `feed` · `post` · `product` · `user`                                                        |
+| **features**     | `auth` · `chat` · `create-post` · `feed` · `home` · `post` · `product` · `profile` · `search`        |
+| **widgets**      | `top-basic-nav` · `top-chat-nav` · `top-main-nav` · `top-search-nav` · `top-upload-nav` · `tab-menu` |
+| **shared/ui**    | `button` · `feedback` · `form` · `modal` · `user`                                                    |
+| **shared/hooks** | `useDebounce` · `useImageUpload`                                                                     |
+| **shared/lib**   | `cn` · `getImageUrl` · token 관리 · theme                                                            |
 
 ## 6. 아키텍처
 
-- Atomic Design, FSD(Folder-by-Feature) 구조 적용
-- 클라이언트-서버 분리, API 통신
-- 상태 관리: 전역(Zustand), 서버 상태(React Query)
+- FSD(Feature-Sliced Design) 계층 구조 적용 (`app → pages → widgets → features → entities → shared`)
+- 클라이언트-서버 분리, Axios 기반 REST API 통신 (Vite 프록시)
+- 상태 관리: 전역 UI(Zustand) + 서버 상태·캐싱(TanStack Query)
+- 폼 유효성: React Hook Form + Zod 스키마 검증
 
 ```mermaid
 flowchart TD
     User([👤 사용자])
 
-    subgraph Client["클라이언트 (React + Vite)"]
+    subgraph Client["클라이언트 (React 19 + Vite 7)"]
         direction TB
-        Pages["Pages\n라우트별 페이지"]
-        Widgets["Widgets\nUI 위젯"]
-        Features["Features\n기능 단위 모듈"]
-        Entities["Entities\n도메인 API / 타입 / 훅"]
-        Shared["Shared\n공통 컴포넌트 / 훅 / 유틸"]
 
-        Pages --> Widgets --> Features --> Entities --> Shared
+        subgraph FSD["FSD 레이어"]
+            direction TB
+            Pages["Pages\n18개 라우트 페이지"]
+            Widgets["Widgets\nTopNav 6종 · TabMenu"]
+            Features["Features\nauth · feed · post · product\nprofile · chat · search · home"]
+            Entities["Entities\nauth · feed · post · product · user\n(API 함수 · 타입 · 쿼리 훅)"]
+            Shared["Shared\naxios · ui/ · hooks/ · lib/"]
+
+            Pages --> Widgets --> Features --> Entities --> Shared
+        end
 
         subgraph State["상태 관리"]
-            Zustand["Zustand\n전역 상태"]
-            ReactQuery["React Query\n서버 상태 · 캐싱"]
+            Zustand["Zustand\n전역 UI 상태\n(auth, modal 등)"]
+            ReactQuery["TanStack Query\n서버 상태 · 캐싱\n무한 스크롤"]
+        end
+
+        subgraph Form["폼 · 검증"]
+            RHF["React Hook Form"]
+            Zod["Zod 스키마"]
+            RHF --> Zod
         end
 
         Features <--> State
-        Entities <--> State
+        Entities <--> ReactQuery
+        Features <--> Form
     end
 
     subgraph Server["백엔드 (Node.js + Express)"]
-        API["REST API"]
-        DB["DB (db.json)"]
-        API --> DB
+        direction TB
+        AuthAPI["인증 API\n/api/user/*"]
+        PostAPI["게시글 API\n/api/post/*"]
+        ProductAPI["상품 API\n/api/product/*"]
+        ProfileAPI["프로필 API\n/api/profile/*"]
+        ImageAPI["이미지 API\n/api/image/*"]
+        DB[("db.json\nusers · posts · comments\nhearts · products · reports")]
+
+        AuthAPI & PostAPI & ProductAPI & ProfileAPI & ImageAPI --> DB
     end
 
     User -->|"페이지 요청"| Pages
-    ReactQuery <-->|"HTTP (Axios)"| API
-    Zustand -->|"인증 토큰 저장"| LocalStorage[(LocalStorage)]
+    ReactQuery <-->|"HTTP (Axios)\nVite Proxy /api"| AuthAPI
+    ReactQuery <-->|"HTTP (Axios)"| PostAPI
+    ReactQuery <-->|"HTTP (Axios)"| ProductAPI
+    ReactQuery <-->|"HTTP (Axios)"| ProfileAPI
+    Shared <-->|"이미지 업로드"| ImageAPI
+    Zustand -->|"accessToken · refreshToken"| LocalStorage[(LocalStorage)]
 ```
 
 ## 7. 실행 방법
