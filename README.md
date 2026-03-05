@@ -38,52 +38,68 @@
   'todayLineColor': '#ec4899'
 } } }%%
 gantt
-    title Alyac Market 개발 마일스톤
+    title Alyac Market 개발 현황 (커밋 기반)
     dateFormat  YYYY-MM-DD
     axisFormat  %m/%d
 
     section 기획 · 환경
-    프로젝트 기획 및 역할 분담          :done, d1,   2026-02-13, 1d
-    FSD 규칙 확립 · 코드 컨벤션         :done, d1b,  2026-02-13, 1d
-    개발 환경 설정 (Vite, Prettier)     :done, d3,   2026-02-20, 1d
-    README 전면 업데이트 · 문서화        :done, d10a, 2026-03-04, 1d
+    FSD 폴더 구조 초기화 · 라우팅 설정     :done, g1, 2026-02-13, 1d
+    Axios 인스턴스 · 토큰 관리 구축        :done, g2, 2026-02-14, 1d
+    라우터 동적 로딩 · 페이지 분리         :done, g3, 2026-02-20, 1d
+    Prettier 팀 동기화 완료               :done, g4, 2026-02-23, 1d
 
-    section 인증 · 프로필
-    Auth / User 타입 정의               :done, d2a,  2026-02-19, 1d
-    회원가입 페이지 · 유효성 검사        :done, d3a,  2026-02-20, 1d
-    프로필 페이지 구현                   :done, d2b,  2026-02-19, 1d
-    프로필 커스텀 훅 분리                :done, d3b,  2026-02-20, 1d
-    로그인 Nav · 설정 Modal             :done, d4a,  2026-02-23, 1d
+    section 인증 · 검증
+    Auth · User 타입 정의                  :done, a1, 2026-02-14, 1d
+    로그인 페이지 구현 (signin)            :done, a2, 2026-02-19, 1d
+    회원가입 페이지 · 2단계 유효성 검사    :done, a3, 2026-02-20, 2d
+    계정 중복 검증 추가                   :done, a4, 2026-02-21, 1d
+    토큰 유효성 확인 · 라우터 가드        :done, a5, 2026-03-02, 1d
+    useAuth 훅 · Zustand 도입             :done, a6, 2026-03-03, 1d
+    Zod 스키마 · zodResolver 전면 적용    :done, a7, 2026-03-04, 2d
+
+    section 프로필 · 팔로우
+    프로필 · 프로필 수정 페이지 구현      :done, p1, 2026-02-19, 1d
+    useProfile · useImageUpload 훅 분리  :done, p2, 2026-02-20, 1d
+    프로필 이미지 업로드 API 연동         :done, p3, 2026-02-22, 1d
+    profile · edit-profile API 연동      :done, p4, 2026-02-23, 1d
+    헤더 widgets 컴포넌트화              :done, p5, 2026-02-24, 1d
+    팔로워 · 팔로잉 목록 페이지 구현     :done, p6, 2026-02-26, 1d
+    프로필 페이지 리팩토링 · 컴포넌트 분리:done, p7, 2026-02-27, 1d
+    팔로우 토글 optimistic 처리 개선     :done, p8, 2026-03-05, 1d
+
+    section 피드 · 게시글
+    홈 · 검색 페이지 · 메인 Nav 생성     :done, f1, 2026-02-19, 1d
+    post · chat · 채팅방 페이지 초기 구현:done, f2, 2026-02-23, 1d
+    게시글 상세 · 이미지 처리            :done, f3, 2026-02-26, 2d
+    피드 페이지 UI 개선                  :done, f4, 2026-02-27, 1d
+    이미지 버그 수정 · 신고 기능         :done, f5, 2026-02-28, 1d
+    피드 무한 스크롤 (useInfiniteQuery)  :done, f6, 2026-03-03, 1d
+    게시글 수정 페이지 · 포스트 UI 고도화:done, f7, 2026-03-03, 1d
+    좋아요 기능 · useMutation 전환       :done, f8, 2026-03-04, 1d
+
+    section 상품 · 검색
+    상품 등록 API 연동                   :done, s1, 2026-02-24, 1d
+    검색 기능 완성 (UserSearchCard)      :done, s2, 2026-02-24, 1d
+    search FSD 방식으로 재구성           :done, s3, 2026-02-25, 1d
+    상품 수정 페이지 추가                :done, s4, 2026-02-25, 1d
 
     section UI · 컴포넌트
-    버튼 SVG · shared/ui/button         :done, d2c,  2026-02-19, 1d
-    버튼 CVA 전환 · SVG 컴포넌트화      :done, d3c,  2026-02-20, 1d
-    공통 버튼 컴포넌트 (저장 · 업로드)  :done, d4b,  2026-02-23, 1d
-    SVG 아이콘 전면 교체                 :done, d6a,  2026-02-25, 2d
-    피드 페이지 UI 개선                  :done, d8a,  2026-02-27, 1d
-    포스트 페이지 UI (푸터 · 모달)       :done, d9a,  2026-03-03, 1d
-    cn 유틸 · Zod 스키마 도입            :done, d10b, 2026-03-04, 1d
-
-    section 라우팅
-    라우터 동적 로딩 · 경로 통일         :done, d3d,  2026-02-20, 1d
-    팔로워 / 프로필 수정 라우팅          :done, d4c,  2026-02-23, 1d
+    버튼 CVA 전환 · FormField 공통화     :done, u1, 2026-02-20, 1d
+    탭메뉴 · 헤더 · useDebounce 훅      :done, u2, 2026-02-21, 1d
+    TanStack Query · shadcn 컴포넌트    :done, u3, 2026-02-24, 1d
+    SVG 파일 전체 컴포넌트화            :done, u4, 2026-02-25, 3d
+    shadcn 토스트 · chat-room UI 개선   :done, u5, 2026-02-26, 2d
+    cn 유틸 · shared/ui 구조 개선       :done, u6, 2026-03-04, 2d
 
     section FSD 리팩토링
-    FSD 계층 구조 재정비                 :done, d5a,  2026-02-24, 1d
-    피드 · 검색 페이지 FSD 리팩토링     :done, d6b,  2026-02-25, 3d
-    레거시 코드 · 임포트 경로 정리       :done, d10d, 2026-03-04, 1d
-    FSD 구조 최종 재정비                 :done, d10e, 2026-03-04, 1d
+    FSD 레이어 전면 정리                 :done, r1, 2026-02-25, 1d
+    feed · search FSD 구조화           :done, r2, 2026-02-26, 2d
+    token.ts · 이미지 API shared 이동  :done, r3, 2026-02-27, 1d
+    API 구조 단순화 · 경로 통일         :done, r4, 2026-03-04, 2d
 
-    section 데이터 페칭
-    useEffect → useQuery 리팩토링       :done, d5b,  2026-02-24, 1d
-    QueryClient 전역 설정 · 토큰 검증   :done, d9b,  2026-03-03, 1d
-    피드 무한 스크롤 (useInfiniteQuery) :done, d9c,  2026-03-03, 1d
-    좋아요 기능 임시 구현                :done, d10c, 2026-03-04, 1d
-
-    section 검색 · 피드
-    피드 · 검색 페이지 초기 구현         :done, d1c,  2026-02-23, 2d
-    검색 기능 뼈대                        :done, d6c,  2026-02-28, 1d
-    검색 기능 완성 · 팔로잉 피드 연동    :done, d7a,  2026-03-01, 1d
+    section 문서화 · 자동화
+    README 전면 업데이트                 :done, d1, 2026-03-04, 1d
+    커밋 자동 업데이트 · AI 요약         :done, d2, 2026-03-05, 1d
 ```
 
 #### Day 1 — 프로젝트 기획 및 역할 분담 (2026-02-13)
@@ -411,6 +427,7 @@ npm run dev
 ### 9.1 기여자별 커밋 수
 
 <!-- COMMIT-PIE-START -->
+
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': {
   'primaryColor': '#6366f1',
@@ -428,11 +445,13 @@ pie title 기여자별 커밋 수
   "김세윤" : 110
   "장영재" : 85
 ```
+
 <!-- COMMIT-PIE-END -->
 
 ### 9.2 일자별 커밋 수
 
 <!-- COMMIT-BAR-START -->
+
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': {
   'xyChart': {
@@ -445,6 +464,7 @@ xychart-beta
   y-axis "커밋 수" 0 --> 72
   bar [62, 59, 49, 70, 42, 8, 3, 19, 63, 53]
 ```
+
 <!-- COMMIT-BAR-END -->
 
 ### 9.3 날짜별 커밋 로그
