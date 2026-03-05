@@ -14,5 +14,11 @@ export const refreshResponseSchema = z.object({
   refreshToken: z.string(),
 });
 
+export const validationResponseSchema = z.object({
+  ok: z.boolean(),
+  message: z.string(),
+});
+
 export type AuthResponseSchema = z.infer<typeof authResponseSchema>;
 export type RefreshResponseSchema = z.infer<typeof refreshResponseSchema>;
+export type ValidationResponseSchema = z.infer<typeof validationResponseSchema>;
