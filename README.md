@@ -403,3 +403,50 @@ npm run dev
 
 - 아이디: / 비밀번호:
 - 아이디: / 비밀번호:
+
+## 9. 커밋 활동
+
+> **자동 업데이트** — GitHub Actions 워크플로우(`.github/workflows/update-readme-chart.yml`)가 `main` / `develop` 브랜치에 푸시될 때마다 아래 차트를 갱신합니다.
+
+### 9.1 기여자별 커밋 수
+
+<!-- COMMIT-PIE-START -->
+
+```mermaid
+%%{init: { 'theme': 'base', 'themeVariables': {
+  'primaryColor': '#6366f1',
+  'primaryTextColor': '#ffffff',
+  'primaryBorderColor': '#4338ca',
+  'secondaryColor': '#c7d2fe',
+  'tertiaryColor': '#e0e7ff',
+  'pieLegendTextColor': '#1e1b4b',
+  'pieStrokeColor': '#ffffff',
+  'pieOuterStrokeColor': '#4338ca'
+} } }%%
+pie title 기여자별 커밋 수
+  "김동희" : 25
+  "김세윤" : 25
+  "배준우" : 25
+  "장영재" : 25
+```
+
+<!-- COMMIT-PIE-END -->
+
+### 9.2 일자별 커밋 수
+
+<!-- COMMIT-BAR-START -->
+
+```mermaid
+%%{init: { 'theme': 'base', 'themeVariables': {
+  'xyChart': {
+    'plotColorPalette': '#6366f1'
+  }
+} } }%%
+xychart-beta
+  title "일자별 커밋 수"
+  x-axis ["02/13", "02/19", "02/20", "02/23", "02/24", "02/25", "02/26", "02/27", "03/03", "03/04"]
+  y-axis "커밋 수" 0 --> 20
+  bar [4, 5, 8, 6, 5, 7, 4, 4, 6, 8]
+```
+
+<!-- COMMIT-BAR-END -->

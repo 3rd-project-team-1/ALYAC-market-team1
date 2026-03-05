@@ -1,0 +1,118 @@
+name: 📊 Update README Commit Chart
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  schedule:
+    - cron: '0 15 * * *' # 매일 자정 KST (UTC 15:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-chart:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (전체 히스토리)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 커밋 분석 및 차트 생성
+        run: |
+          python3 << 'PYEOF'
+          import subprocess
+          import re
+          from collections import Counter, defaultdict
+
+          # ── 기여자별 커밋 수 ────────────────────────────────────────
+          result = subprocess.run(
+              ['git', 'log', '--format=%aN'],
+              capture_output=True, text=True
+          )
+          authors = Counter(a for a in result.stdout.strip().split('\n') if a)
+
+          pie_lines = [
+              '```mermaid',
+              "%%{init: { 'theme': 'base', 'themeVariables': {",
+              "  'primaryColor': '#6366f1',",
+              "  'primaryTextColor': '#ffffff',",
+              "  'primaryBorderColor': '#4338ca',",
+              "  'secondaryColor': '#c7d2fe',",
+              "  'tertiaryColor': '#e0e7ff',",
+              "  'pieLegendTextColor': '#1e1b4b',",
+              "  'pieStrokeColor': '#ffffff',",
+              "  'pieOuterStrokeColor': '#4338ca'",
+              "} } }%%",
+              'pie title 기여자별 커밋 수',
+          ]
+          for author, count in authors.most_common():
+              pie_lines.append(f'  "{author}" : {count}')
+          pie_lines.append('```')
+          pie_block = '\n'.join(pie_lines)
+
+          # ── 일자별 커밋 수 ────────────────────────────────────────
+          result2 = subprocess.run(
+              ['git', 'log', '--format=%ad', '--date=format:%m/%d'],
+              capture_output=True, text=True
+          )
+          date_counts = Counter(d for d in result2.stdout.strip().split('\n') if d)
+          sorted_dates = sorted(date_counts.keys())
+          # 최근 10개 일자만 표시
+          recent_dates = sorted_dates[-10:]
+          max_count = max(date_counts[d] for d in recent_dates) if recent_dates else 10
+          y_max = max_count + 2
+
+          x_labels = '[' + ', '.join(f'"{d}"' for d in recent_dates) + ']'
+          y_values = '[' + ', '.join(str(date_counts[d]) for d in recent_dates) + ']'
+
+          bar_lines = [
+              '```mermaid',
+              "%%{init: { 'theme': 'base', 'themeVariables': {",
+              "  'xyChart': {",
+              "    'plotColorPalette': '#6366f1'",
+              "  }",
+              "} } }%%",
+              'xychart-beta',
+              '  title "일자별 커밋 수"',
+              f'  x-axis {x_labels}',
+              f'  y-axis "커밋 수" 0 --> {y_max}',
+              f'  bar {y_values}',
+              '```',
+          ]
+          bar_block = '\n'.join(bar_lines)
+
+          # ── README 마커 구간 교체 ────────────────────────────────
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          content = re.sub(
+              r'<!-- COMMIT-PIE-START -->.*?<!-- COMMIT-PIE-END -->',
+              f'<!-- COMMIT-PIE-START -->\n{pie_block}\n<!-- COMMIT-PIE-END -->',
+              content,
+              flags=re.DOTALL
+          )
+          content = re.sub(
+              r'<!-- COMMIT-BAR-START -->.*?<!-- COMMIT-BAR-END -->',
+              f'<!-- COMMIT-BAR-START -->\n{bar_block}\n<!-- COMMIT-BAR-END -->',
+              content,
+              flags=re.DOTALL
+          )
+
+          with open('README.md', 'w', encoding='utf-8') as f:
+              f.write(content)
+
+          print("✅ 차트 업데이트 완료")
+          PYEOF
+
+      - name: 변경 사항 커밋
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'docs: 커밋 활동 차트 자동 업데이트 [skip ci]'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          file_pattern: README.md
