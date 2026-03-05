@@ -28,12 +28,28 @@ jobs:
           import re
           from collections import Counter, defaultdict
 
+          # ── 이름 정규화 매핑 ──────────────────────────────────────
+          NAME_MAP = {
+              'kimdonghei':    '김동희',
+              'dongheikim':    '김동희',
+              'junwoo':        '배준우',
+              'junwoo01':      '배준우',
+              'seyunkims':     '김세윤',
+              'seyun':         '김세윤',
+              'youngjae jang': '장영재',
+              'youngjaejang7': '장영재',
+          }
+
+          def normalize(name):
+              return NAME_MAP.get(name.lower().replace(' ', ''), name)
+
           # ── 기여자별 커밋 수 ────────────────────────────────────────
           result = subprocess.run(
               ['git', 'log', '--format=%aN'],
               capture_output=True, text=True
           )
-          authors = Counter(a for a in result.stdout.strip().split('\n') if a)
+          raw_authors = [a for a in result.stdout.strip().split('\n') if a]
+          authors = Counter(normalize(a) for a in raw_authors)
 
           pie_lines = [
               '```mermaid',
