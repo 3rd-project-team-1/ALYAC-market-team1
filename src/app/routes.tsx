@@ -6,7 +6,7 @@ import { RootLayout } from '@/app/layouts/RootLayout';
 import { RequireAuth, RequireGuest } from '@/features/auth';
 
 const lazyPage = (path: string, name: string) =>
-  lazy(() => import(`@/pages/${path}`).then((m) => ({ default: m[name] })));
+  lazy(() => import(`@/pages/${path}/index.tsx`).then((m) => ({ default: m[name] })));
 
 const HomePage = lazyPage('home', 'HomePage');
 const SignInPage = lazyPage('signin', 'SignInPage');
