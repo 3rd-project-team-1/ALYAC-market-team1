@@ -1,5 +1,5 @@
-import { UserAvatar } from '@/shared/ui';
-import { UserInfo } from '@/shared/ui';
+import { cn } from '@/shared/lib';
+import { UserAvatar, UserInfo } from '@/shared/ui';
 
 interface User {
   _id: string;
@@ -25,7 +25,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
     <>
       {parts.map((part, i) =>
         regex.test(part) ? (
-          <span key={i} className="font-bold text-[#1BC47D]">
+          <span key={i} className={cn('font-bold text-[#1BC47D]')}>
             {part}
           </span>
         ) : (
@@ -40,7 +40,9 @@ export default function UserSearchItem({ user, searchQuery = '' }: UserSearchIte
   const { username, accountname, image } = user;
 
   return (
-    <div className="box-border flex min-h-[50px] w-[358px] items-center gap-3 bg-white px-4 py-2">
+    <div
+      className={cn('box-border flex min-h-[50px] w-[358px] items-center gap-3 bg-white px-4 py-2')}
+    >
       <UserAvatar src={image} username={username} />
       <UserInfo username={username} accountname={accountname}>
         <HighlightText text={username} query={searchQuery} />

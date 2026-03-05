@@ -1,13 +1,12 @@
 import { useSignUpEmailForm } from '@/features/auth';
 import { cn } from '@/shared/lib';
-import { Button } from '@/shared/ui';
-import { FormField } from '@/shared/ui';
+import { Button, FormField } from '@/shared/ui';
 
 export function SignUpEmailForm() {
   const { register, handleSubmit, errors, isValid, onSubmit } = useSignUpEmailForm();
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6')}>
+      <div className={cn('space-y-2')}>
         <FormField
           type="email"
           label="이메일"
@@ -18,7 +17,7 @@ export function SignUpEmailForm() {
         />
       </div>
 
-      <div className="space-y-2">
+      <div className={cn('space-y-2')}>
         <FormField
           type="password"
           label="비밀번호"

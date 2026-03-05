@@ -6,6 +6,7 @@ import {
   PostDetailCard,
   usePostDetailPage,
 } from '@/features/post';
+import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
@@ -34,14 +35,14 @@ export function PostPage() {
 
   if (!post) {
     return (
-      <div className="bg-background flex h-screen items-center justify-center">
-        <p className="text-muted-foreground text-sm">게시글을 찾을 수 없습니다.</p>
+      <div className={cn('bg-background flex h-screen items-center justify-center')}>
+        <p className={cn('text-muted-foreground text-sm')}>게시글을 찾을 수 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
+    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopBasicNav />
 
       <PostDetailCard
@@ -51,7 +52,7 @@ export function PostPage() {
         isHeartPending={heartMutation.isPending}
       />
 
-      <div className="border-border mt-4 border-t" />
+      <div className={cn('border-border mt-4 border-t')} />
 
       <PostCommentsList
         comments={comments}

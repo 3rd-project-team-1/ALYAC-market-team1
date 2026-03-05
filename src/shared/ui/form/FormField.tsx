@@ -1,7 +1,7 @@
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
-import { Label } from '@/shared/ui';
-import { Input } from '@/shared/ui';
+import { cn } from '@/shared/lib';
+import { Input, Label } from '@/shared/ui';
 
 interface FormFieldProps {
   label?: string;
@@ -22,9 +22,9 @@ export function FormField({
   autoComplete,
 }: FormFieldProps) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn('flex flex-col gap-1.5')}>
       {label && (
-        <Label htmlFor={register.name} className="text-sm font-medium">
+        <Label htmlFor={register.name} className={cn('text-sm font-medium')}>
           {label}
         </Label>
       )}
@@ -36,7 +36,7 @@ export function FormField({
         aria-invalid={error ? 'true' : 'false'}
         {...register}
       />
-      {error && <p className="text-destructive mt-1 text-sm">{error.message}</p>}
+      {error && <p className={cn('text-destructive mt-1 text-sm')}>{error.message}</p>}
     </div>
   );
 }

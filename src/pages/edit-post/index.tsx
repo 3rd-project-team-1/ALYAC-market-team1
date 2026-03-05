@@ -7,8 +7,9 @@ import { toast } from 'sonner';
 
 import { postApi } from '@/entities/post/api';
 import type { Post } from '@/entities/post/types';
-import { PostImagePreviewList } from '@/features/post-create';
+import { PostImagePreviewList } from '@/features/create-post';
 import { UploadFile } from '@/shared/assets';
+import { cn } from '@/shared/lib';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface PostEditFormValues {
@@ -53,19 +54,21 @@ export function EditPostPage() {
   const submitPost = handleSubmit((data) => updatePostMutation.mutate(data));
 
   return (
-    <div className="bg-background flex min-h-screen flex-col pt-[48px]">
+    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
         label={updatePostMutation.isPending ? '저장 중...' : '저장'}
         disabled={!hasContent || updatePostMutation.isPending}
         onSubmit={submitPost}
       />
 
-      <form id="edit-post-form" onSubmit={submitPost} className="flex flex-1 gap-3 px-4 pt-5">
-        <div className="flex flex-1 flex-col gap-4">
+      <form id="edit-post-form" onSubmit={submitPost} className={cn('flex flex-1 gap-3 px-4 pt-5')}>
+        <div className={cn('flex flex-1 flex-col gap-4')}>
           <textarea
             {...register('content', { required: true })}
             placeholder="게시글 입력하기..."
-            className="bg-background text-foreground placeholder:text-muted-foreground w-full resize-none text-sm outline-none"
+            className={cn(
+              'bg-background text-foreground placeholder:text-muted-foreground w-full resize-none text-sm outline-none',
+            )}
             rows={4}
           />
 
@@ -81,13 +84,15 @@ export function EditPostPage() {
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]"
+        className={cn(
+          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]',
+        )}
         aria-label="이미지 추가"
       >
         <UploadFile width={30} viewBox="10,10,30,30" />
       </button>
 
-      <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" />
+      <input ref={fileInputRef} type="file" accept="image/*" multiple className={cn('hidden')} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 
+import { cn } from '@/shared/lib';
 import { useTheme } from '@/shared/lib/theme';
 
 const Toaster = ({ ...props }: ToasterProps) => {
@@ -16,16 +17,16 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       {...props}
       theme={theme as ToasterProps['theme']}
-      className="toaster group"
+      className={cn('toaster group')}
       position="top-right"
       richColors
       expand={false}
       icons={{
-        success: <CircleCheckIcon className="size-4" />,
-        info: <InfoIcon className="size-4" />,
-        warning: <TriangleAlertIcon className="size-4" />,
-        error: <OctagonXIcon className="size-4" />,
-        loading: <Loader2Icon className="size-4 animate-spin" />,
+        success: <CircleCheckIcon className={cn('size-4')} />,
+        info: <InfoIcon className={cn('size-4')} />,
+        warning: <TriangleAlertIcon className={cn('size-4')} />,
+        error: <OctagonXIcon className={cn('size-4')} />,
+        loading: <Loader2Icon className={cn('size-4 animate-spin')} />,
       }}
       style={
         {
