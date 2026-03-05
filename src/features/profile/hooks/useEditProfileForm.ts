@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -9,10 +10,7 @@ import { userApi } from '@/entities/user/api';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { uploadSingleImage } from '@/shared/api';
 
-export interface EditProfileFormValues {
-  username: string;
-  intro: string;
-}
+import { type EditProfileInput, editProfileSchema } from '../model/edit-profile.schema';
 
 export function useEditProfileForm() {
   const navigate = useNavigate();
@@ -24,7 +22,9 @@ export function useEditProfileForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<EditProfileFormValues>({
+    watch,
+  } = useForm<EditProfileInput>({
+    resolver: zodResolver(editProfileSchema),
     mode: 'onChange',
     values: {
       username: profile?.username ?? '',
@@ -33,7 +33,7 @@ export function useEditProfileForm() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async (data: EditProfileFormValues) => {
+    mutationFn: async (data: EditProfileInput) => {
       //프로필에 계정이 있는지 체크
       if (!profile?.accountname) {
         throw new Error('Account name is required');
@@ -46,7 +46,7 @@ export function useEditProfileForm() {
         user: {
           username: data.username,
           accountname: profile.accountname,
-          intro: data.intro,
+          intro: data.intro ?? '',
           image: imagePath,
         },
       });
@@ -72,5 +72,6 @@ export function useEditProfileForm() {
     submitEditProfile,
     isPending: updateMutation.isPending,
     setProfileImageFile,
+    watch,
   };
 }

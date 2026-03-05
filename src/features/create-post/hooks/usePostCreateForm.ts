@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -8,16 +9,15 @@ import { toast } from 'sonner';
 import { createPost } from '@/entities/post';
 import { uploadMultipleImages } from '@/shared/api';
 
-export interface PostCreateFormValues {
-  content: string;
-}
+import { type CreatePostInput, createPostSchema } from '../model/create-post.schema';
 
 export function usePostCreateForm(defaultContent = '') {
   const navigate = useNavigate();
   const [images, setImages] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
 
-  const { register, handleSubmit, control } = useForm<PostCreateFormValues>({
+  const { register, handleSubmit, control } = useForm<CreatePostInput>({
+    resolver: zodResolver(createPostSchema),
     mode: 'onChange',
     defaultValues: { content: defaultContent },
   });
@@ -37,7 +37,7 @@ export function usePostCreateForm(defaultContent = '') {
   }, [cleanupUrls]);
 
   const createPostMutation = useMutation({
-    mutationFn: async (data: PostCreateFormValues) => {
+    mutationFn: async (data: CreatePostInput) => {
       const imagePaths = await uploadMultipleImages(imageFiles);
       const imageString = imagePaths.join(',');
       return createPost(data.content, imageString);
