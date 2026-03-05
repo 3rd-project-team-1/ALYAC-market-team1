@@ -43,52 +43,50 @@ gantt
     axisFormat  %m/%d
 
     section 기획 · 환경
-    프로젝트 기획 및 역할 분담          :done, d1,   2026-02-23, 1d
-    FSD 규칙 확립 · 코드 컨벤션         :done, d1b,  2026-02-23, 2d
-    개발 환경 설정 (Vite, Prettier)     :done, d3,   2026-02-25, 2d
+    프로젝트 기획 및 역할 분담          :done, d1,   2026-02-13, 1d
+    FSD 규칙 확립 · 코드 컨벤션         :done, d1b,  2026-02-13, 1d
+    개발 환경 설정 (Vite, Prettier)     :done, d3,   2026-02-20, 1d
+    README 전면 업데이트 · 문서화        :done, d10a, 2026-03-04, 1d
 
     section 인증 · 프로필
-    Auth / User 타입 정의               :done, d2a,  2026-02-24, 1d
-    회원가입 페이지 · 유효성 검사        :done, d3a,  2026-02-25, 1d
-    프로필 페이지 구현                   :done, d2b,  2026-02-24, 3d
-    프로필 커스텀 훅 분리                :done, d3b,  2026-02-25, 1d
-    로그인 Nav · 설정 Modal             :done, d4a,  2026-02-26, 1d
+    Auth / User 타입 정의               :done, d2a,  2026-02-19, 1d
+    회원가입 페이지 · 유효성 검사        :done, d3a,  2026-02-20, 1d
+    프로필 페이지 구현                   :done, d2b,  2026-02-19, 1d
+    프로필 커스텀 훅 분리                :done, d3b,  2026-02-20, 1d
+    로그인 Nav · 설정 Modal             :done, d4a,  2026-02-23, 1d
 
     section UI · 컴포넌트
-    버튼 SVG · shared/ui/button         :done, d2c,  2026-02-24, 1d
-    버튼 CVA 전환 · SVG 컴포넌트화      :done, d3c,  2026-02-25, 1d
-    공통 버튼 컴포넌트 (저장 · 업로드)  :done, d4b,  2026-02-26, 1d
-    SVG 아이콘 전면 교체                 :done, d6a,  2026-02-28, 2d
-    피드 페이지 UI 개선                  :done, d8a,  2026-03-02, 1d
+    버튼 SVG · shared/ui/button         :done, d2c,  2026-02-19, 1d
+    버튼 CVA 전환 · SVG 컴포넌트화      :done, d3c,  2026-02-20, 1d
+    공통 버튼 컴포넌트 (저장 · 업로드)  :done, d4b,  2026-02-23, 1d
+    SVG 아이콘 전면 교체                 :done, d6a,  2026-02-25, 2d
+    피드 페이지 UI 개선                  :done, d8a,  2026-02-27, 1d
     포스트 페이지 UI (푸터 · 모달)       :done, d9a,  2026-03-03, 1d
+    cn 유틸 · Zod 스키마 도입            :done, d10b, 2026-03-04, 1d
 
     section 라우팅
-    라우터 동적 로딩 · 경로 통일         :done, d3d,  2026-02-25, 1d
-    팔로워 / 프로필 수정 라우팅          :done, d4c,  2026-02-26, 1d
+    라우터 동적 로딩 · 경로 통일         :done, d3d,  2026-02-20, 1d
+    팔로워 / 프로필 수정 라우팅          :done, d4c,  2026-02-23, 1d
 
     section FSD 리팩토링
-    FSD 계층 구조 재정비                 :done, d5a,  2026-02-27, 1d
-    피드 · 검색 페이지 FSD 리팩토링     :done, d6b,  2026-02-28, 3d
+    FSD 계층 구조 재정비                 :done, d5a,  2026-02-24, 1d
+    피드 · 검색 페이지 FSD 리팩토링     :done, d6b,  2026-02-25, 3d
+    레거시 코드 · 임포트 경로 정리       :done, d10d, 2026-03-04, 1d
+    FSD 구조 최종 재정비                 :done, d10e, 2026-03-04, 1d
 
     section 데이터 페칭
-    useEffect → useQuery 리팩토링       :done, d5b,  2026-02-27, 1d
+    useEffect → useQuery 리팩토링       :done, d5b,  2026-02-24, 1d
     QueryClient 전역 설정 · 토큰 검증   :done, d9b,  2026-03-03, 1d
     피드 무한 스크롤 (useInfiniteQuery) :done, d9c,  2026-03-03, 1d
+    좋아요 기능 임시 구현                :done, d10c, 2026-03-04, 1d
 
     section 검색 · 피드
     피드 · 검색 페이지 초기 구현         :done, d1c,  2026-02-23, 2d
     검색 기능 뼈대                        :done, d6c,  2026-02-28, 1d
     검색 기능 완성 · 팔로잉 피드 연동    :done, d7a,  2026-03-01, 1d
-
-    section Day 10
-    README 전면 업데이트 · 문서화        :done,   d10a, 2026-03-04, 1d
-    cn 유틸 · Zod 스키마 도입            :done,   d10b, 2026-03-04, 1d
-    좋아요 기능 임시 구현                :done,   d10c, 2026-03-04, 1d
-    레거시 코드 · 임포트 경로 정리       :done,   d10d, 2026-03-04, 1d
-    FSD 구조 최종 재정비                 :active, d10e, 2026-03-04, 1d
 ```
 
-#### Day 1 — 프로젝트 기획 및 역할 분담
+#### Day 1 — 프로젝트 기획 및 역할 분담 (2026-02-13)
 
 | 팀원          | 담당 파트                  |
 | ------------- | -------------------------- |
@@ -102,7 +100,7 @@ gantt
 
 ---
 
-#### Day 2 — 기능별 초기 구현 시작
+#### Day 2 — 기능별 초기 구현 시작 (2026-02-19)
 
 - 피드 페이지·검색 페이지 초기 구현
 - 프로필 페이지 구현 시작
@@ -111,7 +109,7 @@ gantt
 
 ---
 
-#### Day 3 — 회원가입·프로필·라우팅·환경 설정
+#### Day 3 — 회원가입·프로필·라우팅·환경 설정 (2026-02-20)
 
 - **회원가입 및 프로필 기능 구현**: 회원가입(SignUp) 페이지와 프로필 관련 API 호출 로직 작성, 유효성 검사 추가
 - **컴포넌트 리팩터링 및 UI 고도화**: 버튼을 CVA 기반으로 전환, SVG 컴포넌트화, 커스텀 훅(`useProfile`, `useImageUpload`) 분리
@@ -121,7 +119,7 @@ gantt
 
 ---
 
-#### Day 4 — 네비게이션 구조 및 공통 UI 정의
+#### Day 4 — 네비게이션 구조 및 공통 UI 정의 (2026-02-23)
 
 - 로그인 후 메인 Nav의 "설정 및 개인정보" 항목을 Modal로 구현, 클릭 시 프로필 수정 페이지로 이동
 - 팔로워 페이지 전용 팔로우 Nav 컴포넌트를 팔로우 페이지 내에 작성
@@ -131,7 +129,7 @@ gantt
 
 ---
 
-#### Day 5 — FSD 구조 정비 및 데이터 페칭 리팩토링
+#### Day 5 — FSD 구조 정비 및 데이터 페칭 리팩토링 (2026-02-24)
 
 - FSD 계층 구조(`app → pages → widgets → features → entities → shared`) 전면 재점검 및 정리
 - `useEffect` 기반 수동 API 호출 방식을 `useQuery`(React Query) 방식으로 일괄 리팩토링
@@ -139,7 +137,7 @@ gantt
 
 ---
 
-#### Day 6 — 검색 뼈대 구현 및 환경 이슈 해결
+#### Day 6 — 검색 뼈대 구현 및 환경 이슈 해결 (2026-02-25)
 
 - 검색 기능 UI·라우팅 뼈대 구현 (로직 미완성)
 - SVG 아이콘 전면 교체 작업 진행 중
@@ -148,21 +146,21 @@ gantt
 
 ---
 
-#### Day 7 — 검색 기능 완성 및 피드 연동
+#### Day 7 — 검색 기능 완성 및 피드 연동 (2026-02-26)
 
 - 검색 기능 완료: 팔로잉한 사용자의 게시글·상품이 피드에 노출되도록 구현
 - `feed` 페이지·`search` 페이지 FSD 리팩토링 거의 완료
 
 ---
 
-#### Day 8 — 피드 페이지 UI 개선
+#### Day 8 — 피드 페이지 UI 개선 (2026-02-27)
 
 - 피드 페이지 전체 UI 수정 완료
 - `feed` 페이지·`search` 페이지 FSD 리팩토링 마무리 단계
 
 ---
 
-#### Day 9 — 무한 스크롤 및 포스트 UI 고도화
+#### Day 9 — 무한 스크롤 및 포스트 UI 고도화 (2026-03-03)
 
 - 피드 페이지 무한 스크롤(`useInfiniteQuery`) 구현
 - 포스트 페이지 UI 개선: 푸터, 이미지 미리보기, 모달 추가
@@ -326,20 +324,6 @@ src/
 - 폼 유효성: React Hook Form + Zod 스키마 검증
 
 ```mermaid
-%%{init: { 'theme': 'base', 'themeVariables': {
-  'primaryColor': '#6366f1',
-  'primaryTextColor': '#ffffff',
-  'primaryBorderColor': '#4338ca',
-  'lineColor': '#6366f1',
-  'secondaryColor': '#e0e7ff',
-  'tertiaryColor': '#f5f3ff',
-  'mainBkg': '#e0e7ff',
-  'nodeBorder': '#6366f1',
-  'clusterBkg': '#f0f4ff',
-  'clusterBorder': '#a5b4fc',
-  'titleColor': '#1e1b4b',
-  'edgeLabelBackground': '#f0f4ff'
-} } }%%
 flowchart TD
     User([👤 사용자])
 
