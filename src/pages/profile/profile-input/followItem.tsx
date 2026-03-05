@@ -1,5 +1,5 @@
-import { UserAvatar } from '@/shared/ui';
-import { UserInfo } from '@/shared/ui';
+import { cn } from '@/shared/lib';
+import { UserAvatar, UserInfo } from '@/shared/ui';
 
 import FollowButton from './followButton';
 
@@ -28,7 +28,9 @@ export default function UserFollowItem({
   const { username, accountname, image } = user;
 
   return (
-    <div className="box-border flex min-h-[50px] w-[358px] items-center gap-3 bg-white px-4 py-2">
+    <div
+      className={cn('box-border flex min-h-[50px] w-[358px] items-center gap-3 bg-white px-4 py-2')}
+    >
       <UserAvatar src={image} username={username} />
       <UserInfo username={username} accountname={accountname} />
       <FollowButton isFollowing={isFollowing} onToggle={onFollowToggle} />

@@ -1,3 +1,5 @@
+import { cn } from '@/shared/lib';
+
 interface PostActionSheetProps {
   isOpen: boolean;
   isMyPost: boolean;
@@ -25,17 +27,20 @@ export function PostActionSheet({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/30" onClick={onClose}>
+    <div
+      className={cn('fixed inset-0 z-50 flex items-end justify-center bg-black/30')}
+      onClick={onClose}
+    >
       <div
-        className="bg-background w-full max-w-md rounded-t-2xl pb-8"
+        className={cn('bg-background w-full max-w-md rounded-t-2xl pb-8')}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-center py-3">
-          <div className="bg-muted-foreground/30 h-1 w-10 rounded-full" />
+        <div className={cn('flex justify-center py-3')}>
+          <div className={cn('bg-muted-foreground/30 h-1 w-10 rounded-full')} />
         </div>
         <button
           type="button"
-          className="text-foreground hover:bg-accent w-full px-6 py-4 text-left text-sm"
+          className={cn('text-foreground hover:bg-accent w-full px-6 py-4 text-left text-sm')}
           onClick={onClose}
         >
           신고하기
@@ -43,7 +48,7 @@ export function PostActionSheet({
         {isMyPost && (
           <button
             type="button"
-            className="text-destructive hover:bg-accent w-full px-6 py-4 text-left text-sm"
+            className={cn('text-destructive hover:bg-accent w-full px-6 py-4 text-left text-sm')}
             onClick={onDeletePost}
             disabled={isDeletePending}
           >
@@ -66,17 +71,20 @@ export function CommentActionSheet({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/30" onClick={onClose}>
+    <div
+      className={cn('fixed inset-0 z-50 flex items-end justify-center bg-black/30')}
+      onClick={onClose}
+    >
       <div
-        className="bg-background w-full max-w-md rounded-t-2xl pb-8"
+        className={cn('bg-background w-full max-w-md rounded-t-2xl pb-8')}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-center py-3">
-          <div className="bg-muted-foreground/30 h-1 w-10 rounded-full" />
+        <div className={cn('flex justify-center py-3')}>
+          <div className={cn('bg-muted-foreground/30 h-1 w-10 rounded-full')} />
         </div>
         <button
           type="button"
-          className="text-destructive hover:bg-accent w-full px-6 py-4 text-left text-sm"
+          className={cn('text-destructive hover:bg-accent w-full px-6 py-4 text-left text-sm')}
           onClick={onDeleteComment}
           disabled={isDeletePending}
         >

@@ -1,3 +1,5 @@
+import { cn } from '@/shared/lib';
+
 import type { IconProps } from './types';
 
 export const ChatIcon = ({
@@ -10,7 +12,7 @@ export const ChatIcon = ({
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={active ? 'text-primary-green' : 'text-[#767676]'}
+    className={cn(active ? 'text-primary-green' : 'text-[#767676]')}
     {...props}
   >
     <path
