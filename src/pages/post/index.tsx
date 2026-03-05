@@ -1,14 +1,13 @@
 import {
   CommentActionSheet,
   CommentFooter,
-  PostActionSheet,
   PostCommentsList,
   PostDetailCard,
   usePostDetailPage,
 } from '@/features/post';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
-import { TopBasicNav } from '@/widgets/top-basic-nav';
+import { MoreMenu, TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {
   const {
@@ -17,8 +16,6 @@ export function PostPage() {
     isPostLoading,
     myAccountname,
     isMyPost,
-    showModal,
-    setShowModal,
     showCommentModal,
     setShowCommentModal,
     selectedCommentId,
@@ -43,11 +40,26 @@ export function PostPage() {
 
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
-      <TopBasicNav />
+      <TopBasicNav
+        moreMenu={
+          <MoreMenu
+            items={[
+              { label: '신고하기', onClick: () => {} },
+              ...(isMyPost
+                ? [
+                    {
+                      label: <span className={cn('text-destructive')}>삭제</span>,
+                      onClick: () => deletePostMutation.mutate(),
+                    },
+                  ]
+                : []),
+            ]}
+          />
+        }
+      />
 
       <PostDetailCard
         post={post}
-        onMoreClick={() => setShowModal(true)}
         onToggleHeart={() => heartMutation.mutate()}
         isHeartPending={heartMutation.isPending}
       />
@@ -64,14 +76,6 @@ export function PostPage() {
       />
 
       <CommentFooter onSubmit={(text) => createCommentMutation.mutate(text)} />
-
-      <PostActionSheet
-        isOpen={showModal}
-        isMyPost={isMyPost}
-        isDeletePending={deletePostMutation.isPending}
-        onClose={() => setShowModal(false)}
-        onDeletePost={() => deletePostMutation.mutate()}
-      />
 
       <CommentActionSheet
         isOpen={showCommentModal}
