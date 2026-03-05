@@ -18,7 +18,6 @@
 ### 1.3 마일스톤
 
 ```mermaid
-%%{init: { 'theme': 'neutral' } }%%
 gantt
     title Alyac Market 개발 마일스톤
     dateFormat  YYYY-MM-DD
