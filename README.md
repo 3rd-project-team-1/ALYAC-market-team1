@@ -423,7 +423,7 @@ npm run dev
   'pieOuterStrokeColor': '#4338ca'
 } } }%%
 pie title 기여자별 커밋 수
-  "김동희" : 170
+  "김동희" : 173
   "배준우" : 167
   "김세윤" : 110
   "장영재" : 51
@@ -444,7 +444,7 @@ xychart-beta
   title "일자별 커밋 수"
   x-axis ["02/23", "02/24", "02/25", "02/26", "02/27", "02/28", "03/02", "03/03", "03/04", "03/05"]
   y-axis "커밋 수" 0 --> 72
-  bar [62, 59, 49, 70, 42, 8, 3, 19, 63, 38]
+  bar [62, 59, 49, 70, 42, 8, 3, 19, 63, 41]
 ```
 <!-- COMMIT-BAR-END -->
 
@@ -453,7 +453,7 @@ xychart-beta
 <!-- COMMIT-LOG-START -->
 | 날짜 | 커밋 내역 |
 | ---- | --------- |
-| 2026-03-05 | docs:readme - 계정 유저 매핑 · docs:readme - 계정 유저 매핑 · docs:readme - 계정 유저 매핑 · docs:readme - 절대 업데이트를 디벨롭과 메인으로 하면안됨 · docs: readme - 브랜치 추가 · docs:readme - 커밋자동 업데이트 기능 추가중 · docs: readme - ai한테 물어보니 코밋을 가져와서 쓴다길래 함 추가. · docs:readme - 차트에 10일차내용 분류 - 1~9일차 날짜 수정 · docs: readme - 머메이드 색상 고정화 · docs:readme - 머메이드 수정중 · docs: readme - 10일차가 5일로 된것을 수정 - 다크모드에서 머메이드 차트 글자가 안보임 - 10일차 내용 추가 및 대폭 수정 · docs:readme - 머메이드 수정 · docs: readme - 많은 부분을 수정 · fix: } 대괄호 빠진거 추가 · fix: 팔로우/언팔로우 시 즉시 버튼 상태 변경 및 캐시 갱신 · feat: 팔로우 토글 optimistic 처리 개선 · fix: className(cn추가) 모든 파일 · feat:watch 추가해서 글자입력수 체크 및 검증은 스키마에서 처리되게 중복되는거 삭제 · fix:zodResolver 로 zod연동(useEditProfileForm) · feat: editProfile 스키마 검증 추가 · docs: readme · fix:zodResover 로 zod연동 (usePostCreateForm) · fix: cn 통일화 · feat:게시글 작성에 대한 zod 스키마 작성 · fix:format |
+| 2026-03-05 | docs:readme - 기여자 누락 수정중 · docs:readme - 계정 유저 매핑 · docs:readme - 계정 유저 매핑 · docs:readme - 계정 유저 매핑 · docs:readme - 절대 업데이트를 디벨롭과 메인으로 하면안됨 · docs: readme - 브랜치 추가 · docs:readme - 커밋자동 업데이트 기능 추가중 · docs: readme - ai한테 물어보니 코밋을 가져와서 쓴다길래 함 추가. · docs:readme - 차트에 10일차내용 분류 - 1~9일차 날짜 수정 · docs: readme - 머메이드 색상 고정화 · docs:readme - 머메이드 수정중 · docs: readme - 10일차가 5일로 된것을 수정 - 다크모드에서 머메이드 차트 글자가 안보임 - 10일차 내용 추가 및 대폭 수정 · docs:readme - 머메이드 수정 · docs: readme - 많은 부분을 수정 · fix: } 대괄호 빠진거 추가 · fix: 팔로우/언팔로우 시 즉시 버튼 상태 변경 및 캐시 갱신 · feat: 팔로우 토글 optimistic 처리 개선 · fix: className(cn추가) 모든 파일 · feat:watch 추가해서 글자입력수 체크 및 검증은 스키마에서 처리되게 중복되는거 삭제 · fix:zodResolver 로 zod연동(useEditProfileForm) · feat: editProfile 스키마 검증 추가 · docs: readme · fix:zodResover 로 zod연동 (usePostCreateForm) · fix: cn 통일화 · feat:게시글 작성에 대한 zod 스키마 작성 · fix:format |
 | 2026-03-04 | fix:스키마 검증에서  이미지랑 소개 선택사항으로 수정 · fix: register() 안의 검증문 삭제 · feat:zodResolver 로 zod 적용(useSignUpProfileForm) · refactor:register() 안의 검증 옵션은 이제  Zod가 처리하므로 삭제 · feat:zodResolver 로 zod 적용 (useSignUpEmailForm) · fix: 회원가입이 2단계 구조이므로 스키마검증도 그 단계에 맞게 수정 · fix: api명세에 맞게 signup schema 수정 · refactor:register() 안의 검증 옵션은 이제  Zod가 처리하므로 삭제 · feat: zodResolver로 Zod 연결(useSignInForm) · feature: zod 설치및 signin,signup schema 작성 · fix: cn으로 변경 · docs: shadcn · refactor: post-create를 create-post로 디렉토리 및 라우트 이름 변경 · docs: feedpage - cn 추가 · fix: format · refactor: feedpage - 구버전 코드 교체 및 삭제 · refactor: styles 객체 제거 및 Tailwind (className)클래스로 변환 · repactor: import 변경 · refactor: 루트 수정 · fix: 폴더 구조 개선 중 오류 수정 · refactor: 경로수정 및 index.ts 생성 · refactor: shared/ui  폴더 구조 개선 · fix: feedpage  - 리팩토링 도중에 머지했다가 꼬인 코드 수정 · refactor: product 엔티티 API export 구조 단순화 및 단일 진입점 추가 · refactor: post 엔티티 API export 구조 단순화 및 단일 진입점 추가 · fix: FSDguide 현재 전략에 맞게 수정 · refactor: product 엔티티 API 구조 분리 및 상품 등록/수정 페이지 연동 개선 · fix: useFeedPosts - any 수정 · refactor: PostDetailCard 개선 및 PostPage 코드 축소 · refactor: post entities/features 구조 FSD 기준으로 리팩토링 · refactor: chat 관련 파일 features/chat으로 이동 및 절대경로 수정 · docs: README - 2일차 수정 · docs: README - 작업일자 보기 좋게 수정 · fix: Postcard - feedpage에서 좋아요를 누르고 post로 넘어갔을때 좋아요카운트가 바로 안늘어나는 현상 수정 · fix: useFeedPosts - 좋아요 기능 구현 · fix: postcard - 좋아요카운트를 포스트와 동기화 · fix: HeartIcon - 색상클래스가 덮어지는 현상을 수정 · refactor: post-create textarea 상태 로직을 usePostContentField 훅으로 분리 · fix:feedpage - 좋아요와 댓글 이미지 사이즈 동일화 - 좋아요와 댓글 이미지 줄맞춤 - feedpage에 postcard를 전부다 road해오면 footer에 마지막 postcard가 짤리는 현상 수정 · post-create 페이지 react-hooks 린트 오류 수정 · feat: post-create 페이지 textarea 포커스 테두리 및 유효성 메시지 추가 · docs : readme.md - 9일차 내용 개선 - 10일차 기록시작 |
 | 2026-03-03 | fix:format · fix:feedpage - 무한스크롤 동작 · fix: 기존 async awit 방식에서 mutate 로 수정 및 검증 확인 오류시 toast 알림추가 · feat:validation 도 useMutaion으로 감싸기 추가 · fix: useSiginIn 수정(캐쉬에 user 정보 저장) · feat:useAuth 추가 · fix:format · feat: 일단 zustand 설치만 함 · fix: chaticon, hearticon 수정 · feat: 게시글 수정 페이지(edit-post) 추가 · refactor: token.ts fetch쓴거 axios 로 변환 |
 | 2026-03-02 | refactor: 토큰이 유효한지 확인 추가 및 라우터 가드 수정 · queryclient 추가 |
