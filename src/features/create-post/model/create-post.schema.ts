@@ -7,4 +7,4 @@ export const createPostSchema = z.object({
     .max(2200, '게시글은 최대 2200자까지 입력 가능합니다.'),
 });
 
-export type CreatePostSchema = z.infer<typeof createPostSchema>;
+export type CreatePostInput = z.infer<typeof createPostSchema>;
