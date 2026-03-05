@@ -41,12 +41,12 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
       </div>
       <div
         className={cn(
-          'flex flex-1 items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 transition-all',
+          'flex flex-1 items-center rounded-lg border border-border bg-background px-3 py-1.5 transition-all',
           isFocused && 'ring-2 ring-blue-900',
         )}
       >
         <input
-          className={cn('flex-1 border-none bg-transparent text-sm text-[#333] outline-none')}
+          className={cn('flex-1 border-none bg-transparent text-sm text-foreground outline-none')}
           placeholder="메시지 입력하기..."
           value={value}
           onChange={(e) => setValue(e.target.value)}

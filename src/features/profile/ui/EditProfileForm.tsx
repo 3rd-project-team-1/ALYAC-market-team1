@@ -71,7 +71,7 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
               'border-border text-foreground placeholder:text-muted-foreground w-full resize-none border-b py-2 text-sm outline-none',
             )}
           />
-          {errors.intro && <p className="text-destructive text-xs">{errors.intro.message}</p>
+          {errors.intro && <p className="text-destructive text-xs">{errors.intro.message}</p>}
         </div>
       </form>
     </div>
