@@ -1,79 +1,92 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-import { createProduct, updateProduct } from '@/entities/product';
-import type { Product } from '@/entities/product';
+import { type Product, useCreateProduct, useUpdateProduct } from '@/entities/product';
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { uploadSingleImage } from '@/shared/api';
+
+import { type ProductFormInput, productFormSchema } from '../model/product-from.schema';
 
 interface UseProductFormOptions {
   product?: Product;
   productId?: string;
-  onSuccess?: () => void;
 }
 
-interface ProductFormData {
-  productName: string;
-  price: string;
-  link: string;
-}
-
-/**
- * 상품 등록/수정 폼 로직 커스텀 훅
- * create-product, edit-product에서 공유
- */
 export function useProductForm(options: UseProductFormOptions = {}) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { profile } = useProfile();
-  const { product, productId, onSuccess } = options;
+  const { product, productId } = options;
 
   const isEdit = !!productId;
 
-  const mutation = useMutation({
-    mutationFn: async (data: ProductFormData & { imageFile?: File }) => {
-      const { imageFile, ...formData } = data;
+  const createMutation = useCreateProduct();
+  const updateMutation = useUpdateProduct();
 
-      // 이미지 업로드 처리
-      let itemImage = product?.itemImage ?? 'uploadFiles/default.png';
-      if (imageFile) {
-        itemImage = await uploadSingleImage(imageFile);
-      }
-
-      // 기본 링크 설정
-      const link =
-        formData.link ||
-        `${window.location.origin}/${isEdit ? 'edit-product' : 'create-product'}${isEdit ? '/' + productId : ''}`;
-
-      const submitData = {
-        itemName: formData.productName,
-        price: Number(formData.price),
-        link,
-        itemImage,
-      };
-
-      // API 호출 (등록 또는 수정)
-      if (isEdit) {
-        return updateProduct(productId!, submitData);
-      } else {
-        return createProduct(submitData);
-      }
-    },
-    onSuccess: () => {
-      // 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
-
-      // 콜백 실행
-      onSuccess?.();
-
-      // 프로필 페이지로 이동
-      navigate('/profile');
+  const form = useForm<ProductFormInput>({
+    resolver: zodResolver(productFormSchema),
+    mode: 'onChange',
+    defaultValues: {
+      productName: product?.itemName ?? '',
+      price: product?.price?.toString() ?? '',
+      link: product?.link ?? '',
     },
   });
 
+  const handleSubmit = async (imageFile?: File) => {
+    const formData = form.getValues();
+    let itemImage = product?.itemImage ?? 'uploadFiles/default.png';
+    if (imageFile) {
+      try {
+        itemImage = await uploadSingleImage(imageFile);
+      } catch (error) {
+        toast.error('이미지 업로드에 실패했습니다');
+        console.log(error);
+        return;
+      }
+    }
+
+    const submitData = {
+      itemName: formData.productName,
+      price: Number(formData.price),
+      link: formData.link,
+      itemImage,
+    };
+
+    if (isEdit) {
+      updateMutation.mutate(
+        { productId: productId!, data: submitData },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
+            toast.success('상품이 수정되었습니다');
+            navigate('/profile');
+          },
+          onError: () => {
+            toast.error('상품 수정에 실패했습니다');
+          },
+        },
+      );
+    } else {
+      createMutation.mutate(submitData, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
+          toast.success('상품이 등록되었습니다');
+          navigate('/profile');
+        },
+        onError: () => {
+          toast.error('상품 등록에 실패했습니다');
+        },
+      });
+    }
+  };
+
   return {
-    mutation,
-    isLoading: mutation.isPending,
-    error: mutation.error,
+    form,
+    handleSubmit,
+    isLoading: createMutation.isPending || updateMutation.isPending,
   };
 }
