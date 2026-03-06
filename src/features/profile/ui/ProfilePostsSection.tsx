@@ -15,6 +15,7 @@ import {
 } from '@/shared/assets';
 import { cn, getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { LogoutModal } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 type ViewMode = 'grid' | 'list';
@@ -24,6 +25,7 @@ export function ProfilePostsSection() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [deleteTargetPostId, setDeleteTargetPostId] = useState<string | null>(null);
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
   const targetAccountname = accountname ?? myAccountname;
@@ -107,7 +109,7 @@ export function ProfilePostsSection() {
                         },
                         {
                           label: <span className={cn('text-destructive')}>삭제</span>,
-                          onClick: () => deletePostMutation.mutate(post.id),
+                          onClick: () => setDeleteTargetPostId(post.id),
                         },
                       ]}
                     />
@@ -173,6 +175,21 @@ export function ProfilePostsSection() {
             </div>
           ))}
         </div>
+      )}
+
+      {deleteTargetPostId && (
+        <LogoutModal
+          title="게시글을 삭제할까요?"
+          confirmText="삭제"
+          cancelText="취소"
+          onConfirm={() => {
+            if (!deletePostMutation.isPending) {
+              deletePostMutation.mutate(deleteTargetPostId);
+            }
+            setDeleteTargetPostId(null);
+          }}
+          onCancel={() => setDeleteTargetPostId(null)}
+        />
       )}
     </section>
   );
