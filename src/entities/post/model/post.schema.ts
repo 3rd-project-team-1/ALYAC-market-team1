@@ -52,7 +52,7 @@ export const commentResponseSchema = z.object({
 });
 
 export const commentsResponseSchema = z.object({
-  comments: z.array(commentSchema),
+  comment: z.array(commentSchema),
 });
 
 export type PostAuthorSchema = z.infer<typeof postAuthorSchema>;

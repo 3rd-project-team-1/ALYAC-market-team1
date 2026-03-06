@@ -10,7 +10,7 @@ export function useUserPostsWithHeart(accountname?: string) {
 
   const { data: posts = [] } = useQuery({
     queryKey,
-    queryFn: () => getUserPosts(accountname!).then((res) => res.data.post),
+    queryFn: () => getUserPosts(accountname!).then((res) => res.post),
     enabled: !!accountname,
   });
 
