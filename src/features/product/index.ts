@@ -1,5 +1,11 @@
 export { usePriceInput } from './hooks/usePriceInput';
-export { useProductForm } from './hooks/useProductForm';
+export { useProductFormState } from './hooks/useProductFormState';
+export { useProductImageFile } from './hooks/useProductImageFile';
+export { useCreateProductAction } from './hooks/useCreateProductAction';
+export { useUpdateProductAction } from './hooks/useUpdateProductAction';
+export { useCreateProductPage } from './hooks/useCreateProductPage';
+export { useEditProductPage } from './hooks/useEditProductPage';
 export * from './lib/validationRules';
 export { ProductFormFields } from './ui/ProductFormFields';
 export { ProductImageUploader } from './ui/ProductImageUploader';
+export { ProductEditorForm } from './ui/ProductEditorForm';

@@ -1,11 +1,3 @@
-import { useState } from 'react';
-
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
-
-import { deletePost } from '@/entities/post/api/deletePost';
-import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import {
   ChatIcon,
   HeartIcon,
@@ -13,32 +5,27 @@ import {
   PostListIcon,
   UploadImageSmallIcon,
 } from '@/shared/assets';
-import { cn, getTokenUserInfo } from '@/shared/lib';
+import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { LogoutModal } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
-type ViewMode = 'grid' | 'list';
+import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
 
 export function ProfilePostsSection() {
-  const { accountname } = useParams<{ accountname: string }>();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const tokenInfo = getTokenUserInfo();
-  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
-  const targetAccountname = accountname ?? myAccountname;
-  const { posts, heartMutation } = useUserPostsWithHeart(targetAccountname);
-
-  const deletePostMutation = useMutation({
-    mutationFn: (postId: string) => deletePost(postId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userPosts', targetAccountname] });
-      toast.success('게시글이 삭제되었습니다');
-    },
-    onError: () => {
-      toast.error('게시글 삭제에 실패했습니다');
-    },
-  });
+  const {
+    posts,
+    myAccountname,
+    viewMode,
+    setViewMode,
+    deleteTargetPostId,
+    setDeleteTargetPostId,
+    handleDeleteConfirm,
+    handleDeleteCancel,
+    handleEditPost,
+    handlePostDetail,
+    heartMutation,
+  } = useProfilePostsSection();
 
   return (
     <section className={cn('border-border flex-1 border-t')}>
@@ -99,11 +86,11 @@ export function ProfilePostsSection() {
                       items={[
                         {
                           label: '수정',
-                          onClick: () => navigate(`/post/${post.id}/edit`, { state: { post } }),
+                          onClick: () => handleEditPost(post),
                         },
                         {
                           label: <span className={cn('text-destructive')}>삭제</span>,
-                          onClick: () => deletePostMutation.mutate(post.id),
+                          onClick: () => setDeleteTargetPostId(post.id),
                         },
                       ]}
                     />
@@ -137,7 +124,7 @@ export function ProfilePostsSection() {
                 <button
                   type="button"
                   className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
-                  onClick={() => navigate(`/post/${post.id}`)}
+                  onClick={() => handlePostDetail(post.id)}
                 >
                   <ChatIcon />
                   {post.commentCount}
@@ -166,6 +153,16 @@ export function ProfilePostsSection() {
             </div>
           ))}
         </div>
+      )}
+
+      {deleteTargetPostId && (
+        <LogoutModal
+          title="게시글을 삭제할까요?"
+          confirmText="삭제"
+          cancelText="취소"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
       )}
     </section>
   );

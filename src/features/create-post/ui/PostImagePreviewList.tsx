@@ -1,4 +1,5 @@
 import { cn } from '@/shared/lib';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface PostImagePreviewListProps {
   images: string[];
@@ -12,7 +13,7 @@ export function PostImagePreviewList({ images, onRemove }: PostImagePreviewListP
     <div className={cn('flex flex-col gap-3')}>
       {images.map((src, index) => (
         <div key={index} className={cn('relative overflow-hidden rounded-xl')}>
-          <img src={src} alt={`업로드 이미지 ${index + 1}`} className={cn('w-full object-cover')} />
+          <img src={getImageUrl(src) ?? src} alt={`업로드 이미지 ${index + 1}`} className={cn('w-full object-cover')} />
           <button
             type="button"
             onClick={() => onRemove(index)}
