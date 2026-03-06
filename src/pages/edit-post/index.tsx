@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 import { useForm, useWatch } from 'react-hook-form';
@@ -7,9 +7,12 @@ import { toast } from 'sonner';
 
 import { postApi } from '@/entities/post/api';
 import type { Post } from '@/entities/post/types';
+import { useProfile } from '@/entities/user/hooks/useProfile';
 import { PostImagePreviewList } from '@/features/create-post';
-import { UploadFile } from '@/shared/assets';
+import { uploadMultipleImages } from '@/shared/api';
+import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 interface PostEditFormValues {
@@ -27,7 +30,23 @@ export function EditPostPage() {
   const state = location.state as LocationState | null;
   const post = state?.post;
 
+  const { profile } = useProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [images, setImages] = useState<string[]>(() =>
+    post?.image ? post.image.split(',').map((img) => img.trim()).filter(Boolean) : [],
+  );
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  const cleanupUrls = useCallback(() => {
+    images.forEach((url) => {
+      if (url.startsWith('blob:')) URL.revokeObjectURL(url);
+    });
+  }, [images]);
+
+  useEffect(() => {
+    return () => cleanupUrls();
+  }, [cleanupUrls]);
 
   const { register, handleSubmit, control } = useForm<PostEditFormValues>({
     mode: 'onChange',
@@ -39,10 +58,14 @@ export function EditPostPage() {
 
   const updatePostMutation = useMutation({
     mutationFn: async (data: PostEditFormValues) => {
-      const existingImages = post?.image ?? '';
-      return postApi.updatePost(postId!, data.content, existingImages);
+      const newImagePaths =
+        imageFiles.length > 0 ? await uploadMultipleImages(imageFiles) : [];
+      const existingPaths = images.filter((img) => !img.startsWith('blob:'));
+      const allImages = [...existingPaths, ...newImagePaths].join(',');
+      return postApi.updatePost(postId!, data.content, allImages);
     },
     onSuccess: (res) => {
+      cleanupUrls();
       toast.success('게시글이 수정되었습니다');
       navigate(`/post/${res.data.post.id}`, { replace: true });
     },
@@ -53,15 +76,48 @@ export function EditPostPage() {
 
   const submitPost = handleSubmit((data) => updatePostMutation.mutate(data));
 
+  const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
+    setImages((prev) => [...prev, ...previewUrls]);
+    setImageFiles((prev) => [...prev, ...files]);
+    e.target.value = '';
+  };
+
+  const handleImageRemove = (index: number) => {
+    const url = images[index];
+    if (url.startsWith('blob:')) {
+      URL.revokeObjectURL(url);
+      const blobIndex = images.slice(0, index).filter((img) => img.startsWith('blob:')).length;
+      setImageFiles((prev) => prev.filter((_, i) => i !== blobIndex));
+    }
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
-        label={updatePostMutation.isPending ? '저장 중...' : '저장'}
+        label={updatePostMutation.isPending ? '수정 중...' : '수정'}
         disabled={!hasContent || updatePostMutation.isPending}
         onSubmit={submitPost}
       />
 
       <form id="edit-post-form" onSubmit={submitPost} className={cn('flex flex-1 gap-3 px-4 pt-5')}>
+        {/* 프로필 아바타 */}
+        <div className={cn('bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full')}>
+          {profile?.image ? (
+            <img
+              src={getImageUrl(profile.image) ?? profile.image}
+              alt="내 프로필"
+              className={cn('h-full w-full object-cover')}
+            />
+          ) : (
+            <div className={cn('flex h-full w-full items-center justify-center')}>
+              <UploadImageSmallIcon />
+            </div>
+          )}
+        </div>
+
         <div className={cn('flex flex-1 flex-col gap-4')}>
           <textarea
             {...register('content', { required: true })}
@@ -72,11 +128,8 @@ export function EditPostPage() {
             rows={4}
           />
 
-          {post?.image && (
-            <PostImagePreviewList
-              images={post.image.split(',').map((img) => img.trim())}
-              onRemove={() => {}}
-            />
+          {images.length > 0 && (
+            <PostImagePreviewList images={images} onRemove={handleImageRemove} />
           )}
         </div>
       </form>
@@ -92,7 +145,14 @@ export function EditPostPage() {
         <UploadFile width={30} viewBox="10,10,30,30" />
       </button>
 
-      <input ref={fileInputRef} type="file" accept="image/*" multiple className={cn('hidden')} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className={cn('hidden')}
+        onChange={handleImageAdd}
+      />
     </div>
   );
 }
