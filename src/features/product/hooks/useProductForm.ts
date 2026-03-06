@@ -1,17 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { type Product, useCreateProduct, useUpdateProduct } from '@/entities/product';
+import { useCreateProduct, useUpdateProduct } from '@/entities/product';
 import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
 
 import { type ProductFormInput, productFormSchema } from '../model/product-from.schema';
 
+interface EditableProduct {
+  itemName: string;
+  price: number;
+  link: string;
+  itemImage: string;
+}
+
 interface UseProductFormOptions {
-  product?: Product;
+  product?: EditableProduct;
   productId?: string;
 }
 
@@ -35,6 +43,16 @@ export function useProductForm(options: UseProductFormOptions = {}) {
       link: product?.link ?? '',
     },
   });
+
+  useEffect(() => {
+    if (!product) return;
+
+    form.reset({
+      productName: product.itemName,
+      price: product.price.toString(),
+      link: product.link,
+    });
+  }, [product, form]);
 
   const handleSubmit = async (imageFile?: File) => {
     const formData = form.getValues();

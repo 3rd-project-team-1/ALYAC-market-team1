@@ -31,7 +31,7 @@ export function ProfileProductsSection() {
           <div
             key={product.id}
             className={cn('relative flex-shrink-0 cursor-pointer')}
-            onClick={() => navigate(`/edit-product/${product.id}`, { state: { product } })}
+            onClick={() => navigate(`/edit-product/${product.id}`)}
           >
             <div className={cn('group bg-muted relative h-[90px] w-[90px] overflow-hidden rounded-xl')}>
               <img
