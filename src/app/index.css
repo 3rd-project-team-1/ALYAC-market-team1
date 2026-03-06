@@ -69,3 +69,7 @@
     cursor: pointer;
   }
 }
+
+.tsqd-open-btn-container {
+  bottom: 80px !important;
+}
