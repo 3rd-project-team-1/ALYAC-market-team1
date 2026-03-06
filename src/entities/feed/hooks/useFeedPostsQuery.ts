@@ -42,17 +42,14 @@ export function useFeedPostsQuery() {
       lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
   });
 
-  // 모든 페이지를 하나로 합친 뒤 최신순 정렬 + 중복 제거
+  // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)
   const posts: PostCardModel[] = (data?.pages.flat() ?? [])
     .map(mapPost)
-    .filter((post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx)
-    .sort((a, b) => {
-      if (!a.createdAt || !b.createdAt) return 0;
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
+    .filter((post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx);
 
-  // 게시글 삭제 시 캐시에서 해당 항목 제거
-  const deletePost = (postId: string) => {
+  // 게시글 삭제: 실제 API 호출 후 캐시에서 해당 항목 제거
+  const deletePost = async (postId: string) => {
+    await postApi.deletePost(postId);
     queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
       if (!old) return old;
       return {
@@ -68,6 +65,6 @@ export function useFeedPostsQuery() {
     posts,
     deletePost,
     loadMore: fetchNextPage,
-    hasMore: hasNextPage,
+    hasMore: hasNextPage ?? false,
   };
 }

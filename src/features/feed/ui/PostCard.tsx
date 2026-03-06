@@ -229,7 +229,7 @@ export function PostCard({
 
       {/* 좋아요 및 댓글 수 동기화 */}
       <div className={cn('text-muted-foreground mt-3 flex items-center text-xs')}>
-        <button onClick={handleLikeToggle}>
+        <button type="button" onClick={handleLikeToggle}>
           <HeartIcon active={isLiked} className={cn('mr-1 inline-block')} />
         </button>
         {localHeartCount} <ChatIcon className={cn('mr-1 ml-2')} /> {post.commentCount}{' '}

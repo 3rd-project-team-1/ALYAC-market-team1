@@ -38,6 +38,11 @@ export function useFeedPage() {
     navigate(`/post/${postId}/edit`);
   };
 
+  // 신고 기능 (추후 신고 API 구현시 업데이트 예정)
+  const handleReportPost = (_postId: string) => {
+    alert('신고 기능은 추후 업데이트 예정입니다.');
+  };
+
   return {
     myAccountname,
     observerRef,
@@ -47,6 +52,7 @@ export function useFeedPage() {
     deletePost,
     handlePostClick,
     handleRewritePost,
+    handleReportPost,
     onSearch: () => navigate('/search'),
   };
 }

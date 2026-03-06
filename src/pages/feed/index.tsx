@@ -13,6 +13,7 @@ export function FeedPage() {
     deletePost,
     handlePostClick,
     handleRewritePost,
+    handleReportPost,
     onSearch,
   } = useFeedPage();
 
@@ -35,6 +36,7 @@ export function FeedPage() {
               myAccountname={myAccountname}
               onRewrite={handleRewritePost}
               onDelete={deletePost}
+              onReport={handleReportPost}
               onClick={handlePostClick}
               lastCardRef={observerRef}
             />
