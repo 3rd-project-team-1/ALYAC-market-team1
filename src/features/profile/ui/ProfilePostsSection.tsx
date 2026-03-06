@@ -67,10 +67,7 @@ export function ProfilePostsSection() {
       ) : viewMode === 'list' ? (
         <div className={cn('flex flex-col gap-4 px-4 py-4')}>
           {posts.map((post) => (
-            <div
-              key={post.id}
-              className={cn('')}
-            >
+            <div key={post.id} className={cn('')}>
               <div className={cn('flex items-center justify-between')}>
                 <div className={cn('flex items-center gap-3')}>
                   <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
@@ -102,8 +99,7 @@ export function ProfilePostsSection() {
                       items={[
                         {
                           label: '수정',
-                          onClick: () =>
-                            navigate(`/post/${post.id}/edit`, { state: { post } }),
+                          onClick: () => navigate(`/post/${post.id}/edit`, { state: { post } }),
                         },
                         {
                           label: <span className={cn('text-destructive')}>삭제</span>,
@@ -153,10 +149,7 @@ export function ProfilePostsSection() {
       ) : (
         <div className={cn('grid grid-cols-3 gap-0.5')}>
           {posts.map((post) => (
-            <div
-              key={post.id}
-              className={cn('bg-muted aspect-square overflow-hidden')}
-            >
+            <div key={post.id} className={cn('bg-muted aspect-square overflow-hidden')}>
               {post.image ? (
                 <img
                   src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}

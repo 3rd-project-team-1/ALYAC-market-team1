@@ -1,12 +1,14 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import type { InfiniteData } from '@tanstack/react-query';
 
-import type { PostCardModel } from '@/entities/feed';
 import { postApi } from '@/entities/post';
 import type { Post } from '@/entities/post';
 
+import type { PostCardModel } from '../types';
+
 const LIMIT = 10;
 
-const FEED_QUERY_KEY = ['feed'] as const;
+export const FEED_QUERY_KEY = ['feed'] as const;
 
 function mapPost(post: Post): PostCardModel {
   return {
@@ -25,7 +27,7 @@ function mapPost(post: Post): PostCardModel {
   };
 }
 
-export function useFeedPosts() {
+export function useFeedPostsQuery() {
   const queryClient = useQueryClient();
 
   const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
@@ -51,16 +53,13 @@ export function useFeedPosts() {
 
   // 게시글 삭제 시 캐시에서 해당 항목 제거
   const deletePost = (postId: string) => {
-    queryClient.setQueryData(
-      FEED_QUERY_KEY,
-      (old: { pages: Post[][]; pageParams: number[] } | undefined) => {
-        if (!old) return old;
-        return {
-          ...old,
-          pages: old.pages.map((page) => page.filter((p) => p.id !== postId)),
-        };
-      },
-    );
+    queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
+      if (!old) return old;
+      return {
+        ...old,
+        pages: old.pages.map((page) => page.filter((p) => p.id !== postId)),
+      };
+    });
   };
 
   return {

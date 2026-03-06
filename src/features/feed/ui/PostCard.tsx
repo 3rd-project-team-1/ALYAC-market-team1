@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { PostCardModel } from '@/entities/feed';
 import { useHeartMutation } from '@/entities/post';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
-import { cn } from '@/shared/lib';
+import { cn, getImageUrl } from '@/shared/lib';
 
 // PostCard 컴포넌트의 Props
 interface PostCardProps {
@@ -75,7 +75,7 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
 export function PostCard({
   post,
   isMyPost = false,
-  isYourPost = true,
+  isYourPost = false,
   onRewrite,
   onDelete,
   onReport,
@@ -132,14 +132,6 @@ export function PostCard({
     }
   };
 
-  // 이미지 경로 처리 함수
-  const getImageUrl = (imagePath?: string) => {
-    if (!imagePath || imagePath.trim() === '') return undefined;
-    if (imagePath.startsWith('http')) return imagePath;
-    const baseUrl = import.meta.env.VITE_IMAGE_BASE_URL || 'http://localhost:3000';
-    return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
-  };
-
   return (
     <article
       className={cn('border-border relative cursor-pointer border-b px-4 py-4 hover:bg-gray-50/50')}
@@ -150,7 +142,7 @@ export function PostCard({
         <div className={cn('flex items-start gap-3')}>
           {getImageUrl(post.author.image) ? (
             <img
-              src={getImageUrl(post.author.image)}
+              src={getImageUrl(post.author.image) ?? undefined}
               alt={post.author.username}
               className={cn('h-10 w-10 rounded-full object-cover')}
               onError={(e) => {
@@ -223,7 +215,7 @@ export function PostCard({
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
       {post.image && post.image.trim() !== '' && (
         <img
-          src={getImageUrl(post.image)}
+          src={getImageUrl(post.image) ?? undefined}
           alt="게시글 이미지"
           className={cn('border-border mt-3 w-full rounded-lg border object-cover')}
           onError={(e) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { RefObject } from 'react';
 
 import type { PostCardModel } from '@/entities/feed';
 import { cn } from '@/shared/lib';
@@ -11,7 +11,7 @@ interface FeedListProps {
   onRewrite: (postId: string) => void;
   onDelete: (postId: string) => void;
   onClick: (postId: string) => void;
-  lastCardRef?: React.RefObject<HTMLDivElement | null>;
+  lastCardRef?: RefObject<HTMLDivElement | null>;
 }
 
 export function FeedList({

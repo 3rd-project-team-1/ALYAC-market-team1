@@ -34,7 +34,12 @@ export function EditPostPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [images, setImages] = useState<string[]>(() =>
-    post?.image ? post.image.split(',').map((img) => img.trim()).filter(Boolean) : [],
+    post?.image
+      ? post.image
+          .split(',')
+          .map((img) => img.trim())
+          .filter(Boolean)
+      : [],
   );
   const [imageFiles, setImageFiles] = useState<File[]>([]);
 
@@ -58,8 +63,7 @@ export function EditPostPage() {
 
   const updatePostMutation = useMutation({
     mutationFn: async (data: PostEditFormValues) => {
-      const newImagePaths =
-        imageFiles.length > 0 ? await uploadMultipleImages(imageFiles) : [];
+      const newImagePaths = imageFiles.length > 0 ? await uploadMultipleImages(imageFiles) : [];
       const existingPaths = images.filter((img) => !img.startsWith('blob:'));
       const allImages = [...existingPaths, ...newImagePaths].join(',');
       return postApi.updatePost(postId!, data.content, allImages);

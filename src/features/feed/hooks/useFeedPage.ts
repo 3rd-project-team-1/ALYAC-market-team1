@@ -2,16 +2,15 @@ import { useEffect, useRef } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/shared/lib/utils/token';
-
-import { useFeedPosts } from './useFeedPosts';
+import { useFeedPostsQuery } from '@/entities/feed';
+import { getTokenUserInfo } from '@/shared/lib';
 
 export function useFeedPage() {
   const navigate = useNavigate();
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? '';
 
-  const { isLoading, isFetchingMore, posts, deletePost, loadMore, hasMore } = useFeedPosts();
+  const { isLoading, isFetchingMore, posts, deletePost, loadMore, hasMore } = useFeedPostsQuery();
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   // 무한 스크롤: 마지막 PostCard가 화면에 보이면 loadMore 호출
@@ -29,7 +28,7 @@ export function useFeedPage() {
     return () => {
       observer.disconnect();
     };
-  }, [hasMore, loadMore, posts]);
+  }, [hasMore, loadMore]);
 
   const handlePostClick = (postId: string) => {
     navigate(`/post/${postId}`);
