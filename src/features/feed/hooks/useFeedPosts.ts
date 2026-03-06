@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { PostCardModel } from '@/entities/feed';
 import { postApi } from '@/entities/post';
-import type { Post } from '@/entities/post';
+import type { Post } from '@/entities/post/model/post.schema';
 
 const LIMIT = 10;
 
@@ -32,7 +32,7 @@ export function useFeedPosts() {
     queryKey: FEED_QUERY_KEY,
     queryFn: async ({ pageParam }) => {
       const response = await postApi.getFeedPosts(pageParam, LIMIT);
-      const posts: Post[] = response.data.posts ?? [];
+      const posts: Post[] = response.posts ?? [];
       return posts;
     },
     initialPageParam: 0,

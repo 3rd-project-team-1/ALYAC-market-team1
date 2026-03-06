@@ -55,11 +55,11 @@ export const commentsResponseSchema = z.object({
   comment: z.array(commentSchema),
 });
 
-export type PostAuthorSchema = z.infer<typeof postAuthorSchema>;
-export type PostSchema = z.infer<typeof postSchema>;
-export type CommentSchema = z.infer<typeof commentSchema>;
-export type PostResponseSchema = z.infer<typeof postResponseSchema>;
-export type PostsResponseSchema = z.infer<typeof postsResponseSchema>;
-export type FeedPostsResponseSchema = z.infer<typeof feedPostsResponseSchema>;
-export type CommentResponseSchema = z.infer<typeof commentResponseSchema>;
-export type CommentsResponseSchema = z.infer<typeof commentsResponseSchema>;
+export type PostAuthor = z.infer<typeof postAuthorSchema>;
+export type Post = z.infer<typeof postSchema>;
+export type Comment = z.infer<typeof commentSchema>;
+export type PostResponse = z.infer<typeof postResponseSchema>;
+export type PostsResponse = z.infer<typeof postsResponseSchema>;
+export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>;
+export type CommentResponse = z.infer<typeof commentResponseSchema>;
+export type CommentsResponse = z.infer<typeof commentsResponseSchema>;
