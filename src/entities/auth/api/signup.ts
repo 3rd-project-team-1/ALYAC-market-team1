@@ -1,7 +1,7 @@
-import { AuthResponse, SignupRequest } from '@/entities/user';
+import type { SignupRequest } from '@/entities/user';
 import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
-import { authResponseSchema } from '../model/auth.schema';
+import { type AuthResponse, authResponseSchema } from '../model/auth.schema';
 
 export const signUp = async (data: SignupRequest): Promise<AuthResponse> => {
   const response = await axiosInstance.post(API_ENDPOINT.AUTH_SIGNUP, data);

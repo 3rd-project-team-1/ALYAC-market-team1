@@ -1,17 +1,3 @@
-export {
-  postApi,
-  createComment,
-  createPost,
-  deleteComment,
-  deletePost,
-  getComments,
-  getFeedPosts,
-  getPost,
-  getUserPosts,
-  toggleHeart,
-  updatePost,
-} from './api';
-
 export type {
   Post,
   PostAuthor,
