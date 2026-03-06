@@ -15,49 +15,34 @@ interface PostDetailCardProps {
     heartCount: number;
     commentCount: number;
   };
-  onMoreClick: () => void;
   onToggleHeart: () => void;
   isHeartPending: boolean;
 }
 
-export function PostDetailCard({
-  post,
-  onMoreClick,
-  onToggleHeart,
-  isHeartPending,
-}: PostDetailCardProps) {
+export function PostDetailCard({ post, onToggleHeart, isHeartPending }: PostDetailCardProps) {
   const images = post.image ? post.image.split(',').map((img) => img.trim()) : [];
 
   return (
     <div className={cn('px-4 pt-5')}>
       {/* 작성자 정보 */}
-      <div className={cn('flex items-center justify-between')}>
-        <div className={cn('flex items-center gap-3')}>
-          <div className={cn('bg-muted h-10 w-10 overflow-hidden rounded-full')}>
-            {post.author.image ? (
-              <img
-                src={getImageUrl(post.author.image) ?? post.author.image}
-                alt="프로필"
-                className={cn('h-full w-full object-cover')}
-              />
-            ) : (
-              <div className={cn('flex h-full w-full items-center justify-center')}>
-                <UploadImageSmallIcon />
-              </div>
-            )}
-          </div>
-          <div>
-            <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-            <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
-          </div>
+      <div className={cn('flex items-center gap-3')}>
+        <div className={cn('bg-muted h-10 w-10 overflow-hidden rounded-full')}>
+          {post.author.image ? (
+            <img
+              src={getImageUrl(post.author.image) ?? post.author.image}
+              alt="프로필"
+              className={cn('h-full w-full object-cover')}
+            />
+          ) : (
+            <div className={cn('flex h-full w-full items-center justify-center')}>
+              <UploadImageSmallIcon />
+            </div>
+          )}
         </div>
-        <button type="button" onClick={onMoreClick} aria-label="더보기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="5" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="19" cy="12" r="1.5" fill="currentColor" />
-          </svg>
-        </button>
+        <div>
+          <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
+          <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
+        </div>
       </div>
 
       {/* 게시글 내용 */}
