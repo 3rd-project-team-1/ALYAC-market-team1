@@ -1,8 +1,9 @@
 import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
-import type { CommentResponse } from '../types';
-
-export const createComment = (postId: string, content: string) =>
-  axiosInstance.post<CommentResponse>(API_ENDPOINT.POST_COMMENTS(postId), {
+export const createComment = async (postId: string, content: string) => {
+  const response = await axiosInstance.post(API_ENDPOINT.POST_COMMENTS(postId), {
     comment: { content },
   });
+
+  return response;
+};

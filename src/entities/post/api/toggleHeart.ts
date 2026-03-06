@@ -1,6 +1,7 @@
 import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
-import type { PostResponse } from '../types';
+export const toggleHeart = async (postId: string) => {
+  const response = await axiosInstance.post(API_ENDPOINT.POST_HEART(postId));
 
-export const toggleHeart = (postId: string) =>
-  axiosInstance.post<PostResponse>(API_ENDPOINT.POST_HEART(postId));
+  return response;
+};

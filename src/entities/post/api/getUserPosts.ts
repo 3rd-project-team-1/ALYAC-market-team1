@@ -1,6 +1,7 @@
 import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
-import type { PostsResponse } from '../types';
+export const getUserPosts = async (accountname: string) => {
+  const response = await axiosInstance.get(API_ENDPOINT.POST_USER(accountname));
 
-export const getUserPosts = (accountname: string) =>
-  axiosInstance.get<PostsResponse>(API_ENDPOINT.POST_USER(accountname));
+  return response;
+};

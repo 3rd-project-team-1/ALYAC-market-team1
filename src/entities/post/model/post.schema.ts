@@ -6,6 +6,9 @@ export const postAuthorSchema = z.object({
   accountname: z.string(),
   image: z.string(),
   intro: z.string(),
+  isfollow: z.boolean(),
+  following: z.array(z.string()),
+  follower: z.array(z.string()),
   followingCount: z.number(),
   followerCount: z.number(),
 });
@@ -19,7 +22,7 @@ export const postSchema = z.object({
   hearted: z.boolean(),
   heartCount: z.number(),
   commentCount: z.number(),
-  authorId: z.string(),
+  authorId: z.string().optional(),
   author: postAuthorSchema,
 });
 
@@ -27,8 +30,8 @@ export const commentSchema = z.object({
   id: z.string(),
   content: z.string(),
   createdAt: z.string(),
-  postId: z.string(),
-  authorId: z.string(),
+  postId: z.string().optional(),
+  authorId: z.string().optional(),
   author: postAuthorSchema,
 });
 

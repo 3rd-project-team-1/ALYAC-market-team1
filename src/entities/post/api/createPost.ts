@@ -1,6 +1,7 @@
 import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
-import type { PostResponse } from '../types';
+export const createPost = async (content: string, image: string = '') => {
+  const response = await axiosInstance.post(API_ENDPOINT.POST_CREATE, { post: { content, image } });
 
-export const createPost = (content: string, image: string = '') =>
-  axiosInstance.post<PostResponse>(API_ENDPOINT.POST_CREATE, { post: { content, image } });
+  return response;
+};
