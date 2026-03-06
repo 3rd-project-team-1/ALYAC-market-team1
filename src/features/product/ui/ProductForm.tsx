@@ -9,7 +9,7 @@ import type { ProductFormInput } from '../model/product-from.schema';
 import { ProductFormFields } from './ProductFormFields';
 import { ProductImageUploader } from './ProductImageUploader';
 
-interface ProductEditorFormProps {
+interface ProductFormProps {
   form: UseFormReturn<ProductFormInput>;
   onSubmit: () => void;
   isSubmitting: boolean;
@@ -18,14 +18,14 @@ interface ProductEditorFormProps {
   initialImage?: string;
 }
 
-export function ProductEditorForm({
+export function ProductForm({
   form,
   onSubmit,
   isSubmitting,
   onImageChange,
   onPriceChange,
   initialImage,
-}: ProductEditorFormProps) {
+}: ProductFormProps) {
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
