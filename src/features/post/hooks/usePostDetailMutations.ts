@@ -16,7 +16,12 @@ export function usePostDetailMutations(postId: string | undefined) {
   const deleteCommentMutation = useDeleteCommentMutation(postId, () => {
     toast.success('삭제가 완료되었습니다.');
   });
-  const deletePostMutation = useDeletePostMutation(postId, () => navigate(-1));
+  const deletePostMutation = useDeletePostMutation(postId, {
+    onSuccess: () => {
+      toast.success('삭제가 완료되었습니다.');
+      navigate(-1);
+    },
+  });
 
   return {
     heartMutation,
