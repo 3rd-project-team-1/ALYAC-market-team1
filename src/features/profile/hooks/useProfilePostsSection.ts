@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useDeleteUserPostMutation, useUserPostsWithHeart } from '@/entities/post';
-import type { Post } from '@/entities/post';
+import type { Post } from '@/entities/post/model/post.schema';
 
 import { useProfileTargetAccount } from './useProfileTargetAccount';
 

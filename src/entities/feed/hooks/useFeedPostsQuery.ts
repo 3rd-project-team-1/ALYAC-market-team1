@@ -3,7 +3,7 @@ import type { InfiniteData } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { postApi } from '@/entities/post';
-import type { Post } from '@/entities/post';
+import type { Post } from '@/entities/post/model/post.schema';
 
 import type { PostCardModel } from '../types';
 
@@ -35,7 +35,7 @@ export function useFeedPostsQuery() {
     queryKey: FEED_QUERY_KEY,
     queryFn: async ({ pageParam }) => {
       const response = await postApi.getFeedPosts(pageParam, LIMIT);
-      const posts: Post[] = response.data.posts ?? [];
+      const posts: Post[] = response.posts ?? [];
       return posts;
     },
     initialPageParam: 0,

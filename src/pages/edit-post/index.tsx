@@ -14,11 +14,15 @@ export function EditPostPage() {
   const { profile } = useProfile();
 
   const initialImages = post?.image
-    ? post.image.split(',').map((image) => image.trim()).filter(Boolean)
+    ? post.image
+        .split(',')
+        .map((image) => image.trim())
+        .filter(Boolean)
     : [];
 
   const { form, hasContent } = usePostEditorForm(post?.content ?? '');
-  const { isFocused, showError, onFocus, onBlur, handleContentChange } = usePostEditorFocus(hasContent);
+  const { isFocused, showError, onFocus, onBlur, handleContentChange } =
+    usePostEditorFocus(hasContent);
   const {
     images,
     existingImagePaths,
