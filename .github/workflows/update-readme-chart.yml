@@ -24,7 +24,7 @@ jobs:
       - name: 커밋 분석 및 차트 생성
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GH_PAT: ${{ secrets.GH_PAT }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
           python3 << 'PYEOF'
@@ -36,7 +36,8 @@ jobs:
           from openai import OpenAI
 
           ai_client = OpenAI(
-              api_key=os.environ["OPENAI_API_KEY"],
+              base_url="https://models.inference.ai.azure.com",
+              api_key=os.environ["GH_PAT"],
           )
 
           def summarize_commits(date, messages):
