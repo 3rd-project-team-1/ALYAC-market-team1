@@ -13,15 +13,6 @@ export function EditPostPage() {
   const { postId, post, isPostLoading } = useEditPostSource();
   const { profile } = useProfile();
 
-<<<<<<< HEAD
-  const [images, setImages] = useState<string[]>(() =>
-    post?.image
-      ? post.image
-          .split(',')
-          .map((img) => img.trim())
-          .filter(Boolean)
-      : [],
-=======
   const initialImages = post?.image
     ? post.image.split(',').map((image) => image.trim()).filter(Boolean)
     : [];
@@ -41,7 +32,6 @@ export function EditPostPage() {
     existingImagePaths,
     newImageFiles,
     cleanupPreviewUrls,
->>>>>>> develop
   );
 
   const contentTextareaProps = form.register('content', {
@@ -49,29 +39,8 @@ export function EditPostPage() {
     onChange: handleContentChange,
   });
 
-<<<<<<< HEAD
-  const content = useWatch({ control, name: 'content' });
-  const hasContent = content?.trim().length > 0;
-
-  const updatePostMutation = useMutation({
-    mutationFn: async (data: PostEditFormValues) => {
-      const newImagePaths = imageFiles.length > 0 ? await uploadMultipleImages(imageFiles) : [];
-      const existingPaths = images.filter((img) => !img.startsWith('blob:'));
-      const allImages = [...existingPaths, ...newImagePaths].join(',');
-      return postApi.updatePost(postId!, data.content, allImages);
-    },
-    onSuccess: (res) => {
-      cleanupUrls();
-      toast.success('게시글이 수정되었습니다');
-      navigate(`/post/${res.data.post.id}`, { replace: true });
-    },
-    onError: () => {
-      toast.error('게시글 수정에 실패했습니다');
-    },
-=======
   const onSubmit = form.handleSubmit((data) => {
     submit(data.content);
->>>>>>> develop
   });
 
   if (isPostLoading) {

@@ -86,11 +86,7 @@ export function ProfilePostsSection() {
                       items={[
                         {
                           label: '수정',
-<<<<<<< HEAD
-                          onClick: () => navigate(`/post/${post.id}/edit`, { state: { post } }),
-=======
                           onClick: () => handleEditPost(post),
->>>>>>> develop
                         },
                         {
                           label: <span className={cn('text-destructive')}>삭제</span>,
