@@ -2,11 +2,12 @@ import { useRef } from 'react';
 
 import type { UseFormRegisterReturn } from 'react-hook-form';
 
-import { PostImagePreviewList } from '@/features/create-post/ui/PostImagePreviewList';
 import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
+
+import { PostImagePreviewList } from './PostImagePreviewList';
 
 interface PostEditorLayoutProps {
   submitLabel: string;
