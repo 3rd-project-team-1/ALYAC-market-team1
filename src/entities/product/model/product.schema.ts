@@ -31,6 +31,15 @@ export const productsResponseSchema = z.object({
   product: z.array(productSchema),
 });
 
+export const createProductInputSchema = z.object({
+  itemName: z.string(),
+  price: z.number(),
+  link: z.string(),
+  itemImage: z.string(),
+});
+
+export type CreateProductInput = z.infer<typeof createProductInputSchema>;
+
 export type ProductAuthor = z.infer<typeof productAuthorSchema>;
 export type Product = z.infer<typeof productSchema>;
 export type ProductResponse = z.infer<typeof productResponseSchema>;
