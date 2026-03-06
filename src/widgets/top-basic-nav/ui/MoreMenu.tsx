@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { MoreIcon } from '@/shared/assets';
+import { MoreIcon, MoreSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 
 interface MenuItem {
@@ -11,9 +11,10 @@ interface MenuItem {
 interface MoreMenuProps {
   items?: MenuItem[];
   onClick?: () => void;
+  small?: boolean;
 }
 
-export function MoreMenu({ items, onClick }: MoreMenuProps) {
+export function MoreMenu({ items, onClick, small = false }: MoreMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
@@ -29,10 +30,11 @@ export function MoreMenu({ items, onClick }: MoreMenuProps) {
       <button
         onClick={handleClick}
         className={cn(
-          'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
+          'text-foreground hover:bg-accent flex cursor-pointer items-center justify-center rounded-md transition-colors',
+          small ? 'h-[24px] w-[24px]' : 'h-[32px] w-[32px]',
         )}
       >
-        <MoreIcon />
+        {small ? <MoreSmallIcon /> : <MoreIcon />}
       </button>
 
       {!onClick && isOpen && (
