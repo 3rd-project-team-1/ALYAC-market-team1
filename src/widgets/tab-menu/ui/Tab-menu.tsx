@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ChatIcon, EditIcon, HomeIcon, ProfileIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
-import { IconButton } from '@/shared/ui/button/icon-button';
+import { IconButton } from '@/shared/ui';
 
 const tabs = [
   { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
