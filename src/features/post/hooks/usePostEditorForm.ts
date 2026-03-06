@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 
-import { type CreatePostInput, createPostSchema } from '@/features/create-post/model/create-post.schema';
+import { type CreatePostInput, createPostSchema } from '../model/create-post.schema';
 
 export function usePostEditorForm(defaultContent = '') {
   const form = useForm<CreatePostInput>({

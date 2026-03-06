@@ -1,11 +1,12 @@
 import { useProfile } from '@/entities/user';
-import { useEditPostSource, useEditPostSubmit } from '@/features/edit-post';
 import {
   PostEditorLayout,
+  useEditPostSource,
+  useEditPostSubmit,
   usePostEditorFocus,
   usePostEditorForm,
   usePostEditorImages,
-} from '@/features/post-editor';
+} from '@/features/post';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 

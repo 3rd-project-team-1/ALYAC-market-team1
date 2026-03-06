@@ -1,11 +1,12 @@
 import { useProfile } from '@/entities/user';
-import { useCreatePostDefaultContent, useCreatePostSubmit } from '@/features/create-post';
 import {
   PostEditorLayout,
+  useCreatePostDefaultContent,
+  useCreatePostSubmit,
   usePostEditorFocus,
   usePostEditorForm,
   usePostEditorImages,
-} from '@/features/post-editor';
+} from '@/features/post';
 
 export function PostCreatePage() {
   const { defaultContent } = useCreatePostDefaultContent();
