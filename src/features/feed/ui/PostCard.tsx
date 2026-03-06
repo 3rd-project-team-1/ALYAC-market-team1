@@ -122,7 +122,7 @@ export function PostCard({
     setLocalHeartCount((prev) => (nextLiked ? prev + 1 : prev - 1));
     try {
       const result = await toggleHeart();
-      const updated = result.data.post;
+      const updated = result.post;
       setIsLiked(updated.hearted);
       setLocalHeartCount(updated.heartCount);
     } catch {
