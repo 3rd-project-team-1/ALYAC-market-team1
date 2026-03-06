@@ -23,16 +23,15 @@ export const productSchema = z.object({
   author: productAuthorSchema,
 });
 
-export const productsResponseSchema = z.object({
-  product: z.array(productSchema),
-});
-
 export const productResponseSchema = z.object({
   product: productSchema,
 });
 
-// 타입 추론
+export const productsResponseSchema = z.object({
+  product: z.array(productSchema),
+});
+
 export type ProductAuthor = z.infer<typeof productAuthorSchema>;
 export type Product = z.infer<typeof productSchema>;
-export type ProductsResponse = z.infer<typeof productsResponseSchema>;
 export type ProductResponse = z.infer<typeof productResponseSchema>;
+export type ProductsResponse = z.infer<typeof productsResponseSchema>;
