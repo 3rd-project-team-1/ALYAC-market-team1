@@ -31,19 +31,23 @@ export function ProfilePostsSection() {
     <section className={cn('border-border flex-1 border-t')}>
       <div className={cn('border-border flex justify-end border-b')}>
         <button
-          className={cn('flex items-center justify-center px-5 py-2.5')}
+          className={cn(
+            'hover:bg-accent flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+          )}
           onClick={() => setViewMode('list')}
           aria-label="리스트 뷰"
         >
-          <PostListIcon />
+          <PostListIcon active={viewMode === 'list'} />
         </button>
 
         <button
-          className={cn('flex items-center justify-center px-5 py-2.5')}
+          className={cn(
+            'hover:bg-accent flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+          )}
           onClick={() => setViewMode('grid')}
           aria-label="그리드 뷰"
         >
-          <PostAlbumIcon />
+          <PostAlbumIcon active={viewMode === 'grid'} />
         </button>
       </div>
 
