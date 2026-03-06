@@ -1,22 +1,34 @@
-import { PostPageContent, usePostPage } from '@/features/post';
+import {
+  PostPageContent,
+  usePostDetailData,
+  usePostDetailMutations,
+  usePostDialog,
+  usePostMoreMenu,
+  usePostRouteInfo,
+} from '@/features/post';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 
 export function PostPage() {
+  const { postId, myAccountname } = usePostRouteInfo();
+  const { post, comments, isPostLoading } = usePostDetailData(postId);
+  const { heartMutation, createCommentMutation, deleteCommentMutation, deletePostMutation } =
+    usePostDetailMutations(postId);
+
+  const isMyPost = post?.author.accountname === myAccountname;
+
   const {
-    post,
-    comments,
-    isPostLoading,
-    myAccountname,
-    heartMutation,
-    createCommentMutation,
-    deleteCommentMutation,
-    moreMenuItems,
     postDialogType,
+    openReportDialog,
+    openDeleteDialog,
+    closeDialog,
     handleReportConfirm,
     handleDeleteConfirm,
-    handleCloseDialog,
-  } = usePostPage();
+  } = usePostDialog(() => {
+    deletePostMutation.mutate();
+  });
+
+  const { moreMenuItems } = usePostMoreMenu(!!isMyPost, openReportDialog, openDeleteDialog);
 
   if (isPostLoading) {
     return <LoadingSpinner fullScreen message="게시글을 불러오는 중입니다..." />;
@@ -43,7 +55,7 @@ export function PostPage() {
       onCreateComment={(text) => createCommentMutation.mutate(text)}
       onReportConfirm={handleReportConfirm}
       onDeleteConfirm={handleDeleteConfirm}
-      onCloseDialog={handleCloseDialog}
+      onCloseDialog={closeDialog}
     />
   );
 }

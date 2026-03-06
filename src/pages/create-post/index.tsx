@@ -1,21 +1,30 @@
-import { useCreatePostPage } from '@/features/create-post';
-import { PostEditorLayout } from '@/features/post-editor';
+import { useProfile } from '@/entities/user';
+import { useCreatePostDefaultContent, useCreatePostSubmit } from '@/features/create-post';
+import {
+  PostEditorLayout,
+  usePostEditorFocus,
+  usePostEditorForm,
+  usePostEditorImages,
+} from '@/features/post-editor';
 
 export function PostCreatePage() {
-  const {
-    profileImage,
-    isFocused,
-    showError,
-    onFocus,
-    onBlur,
-    hasContent,
-    images,
-    isSubmitting,
-    contentTextareaProps,
-    onSubmit,
-    handleImageAdd,
-    handleImageRemove,
-  } = useCreatePostPage();
+  const { defaultContent } = useCreatePostDefaultContent();
+  const { profile } = useProfile();
+
+  const { form, hasContent } = usePostEditorForm(defaultContent);
+  const { isFocused, showError, onFocus, onBlur, handleContentChange } = usePostEditorFocus(hasContent);
+  const { images, newImageFiles, cleanupPreviewUrls, handleImageAdd, handleImageRemove } =
+    usePostEditorImages();
+  const { submit, isSubmitting } = useCreatePostSubmit(newImageFiles, cleanupPreviewUrls);
+
+  const contentTextareaProps = form.register('content', {
+    required: true,
+    onChange: handleContentChange,
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    submit(data.content);
+  });
 
   return (
     <PostEditorLayout
@@ -28,7 +37,7 @@ export function PostCreatePage() {
       onContentFocus={onFocus}
       onContentBlur={onBlur}
       images={images}
-      profileImage={profileImage}
+      profileImage={profile?.image}
       onSubmit={onSubmit}
       onImageAdd={handleImageAdd}
       onImageRemove={handleImageRemove}

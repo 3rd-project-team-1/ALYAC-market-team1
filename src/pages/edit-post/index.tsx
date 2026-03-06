@@ -1,25 +1,47 @@
-import { useEditPostPage } from '@/features/edit-post';
-import { PostEditorLayout } from '@/features/post-editor';
+import { useProfile } from '@/entities/user';
+import { useEditPostSource, useEditPostSubmit } from '@/features/edit-post';
+import {
+  PostEditorLayout,
+  usePostEditorFocus,
+  usePostEditorForm,
+  usePostEditorImages,
+} from '@/features/post-editor';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 
 export function EditPostPage() {
+  const { postId, post, isPostLoading } = useEditPostSource();
+  const { profile } = useProfile();
+
+  const initialImages = post?.image
+    ? post.image.split(',').map((image) => image.trim()).filter(Boolean)
+    : [];
+
+  const { form, hasContent } = usePostEditorForm(post?.content ?? '');
+  const { isFocused, showError, onFocus, onBlur, handleContentChange } = usePostEditorFocus(hasContent);
   const {
-    post,
-    profileImage,
-    isPostLoading,
-    isFocused,
-    showError,
-    onFocus,
-    onBlur,
-    hasContent,
     images,
-    isSubmitting,
-    contentTextareaProps,
-    onSubmit,
+    existingImagePaths,
+    newImageFiles,
+    cleanupPreviewUrls,
     handleImageAdd,
     handleImageRemove,
-  } = useEditPostPage();
+  } = usePostEditorImages(initialImages);
+  const { submit, isSubmitting } = useEditPostSubmit(
+    postId,
+    existingImagePaths,
+    newImageFiles,
+    cleanupPreviewUrls,
+  );
+
+  const contentTextareaProps = form.register('content', {
+    required: true,
+    onChange: handleContentChange,
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    submit(data.content);
+  });
 
   if (isPostLoading) {
     return <LoadingSpinner fullScreen message="게시글을 불러오는 중입니다..." />;
@@ -44,7 +66,7 @@ export function EditPostPage() {
       onContentFocus={onFocus}
       onContentBlur={onBlur}
       images={images}
-      profileImage={profileImage}
+      profileImage={profile?.image}
       onSubmit={onSubmit}
       onImageAdd={handleImageAdd}
       onImageRemove={handleImageRemove}
