@@ -1,14 +1,16 @@
 import { z } from 'zod';
 
-import { userSchema } from '@/entities/user/model/user.schema';
-
 export const authResponseSchema = z.object({
-  user: userSchema.omit({ password: true }).extend({
+  user: z.object({
+    _id: z.string(),
+    username: z.string(),
+    email: z.string(),
+    accountname: z.string(),
+    image: z.string(),
     accessToken: z.string(),
     refreshToken: z.string(),
   }),
 });
-
 export const refreshResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
@@ -19,6 +21,6 @@ export const validationResponseSchema = z.object({
   message: z.string(),
 });
 
-export type AuthResponseSchema = z.infer<typeof authResponseSchema>;
-export type RefreshResponseSchema = z.infer<typeof refreshResponseSchema>;
-export type ValidationResponseSchema = z.infer<typeof validationResponseSchema>;
+export type AuthResponse = z.infer<typeof authResponseSchema>;
+export type RefreshResponse = z.infer<typeof refreshResponseSchema>;
+export type ValidationResponse = z.infer<typeof validationResponseSchema>;
