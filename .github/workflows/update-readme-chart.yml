@@ -1,9 +1,6 @@
 name: 📊 Update README Commit Chart
 
 on:
-  push:
-    branches:
-      - docs/README
   schedule:
     - cron: '0 16 * * *' # 매일 새벽1시 KST (UTC 16:00) default branch에서만 실행됨
   workflow_dispatch:
