@@ -1,11 +1,8 @@
 name: 📊 Update README Commit Chart
 
 on:
-  push:
-    branches:
-      - docs/README
   schedule:
-    - cron: '0 15 * * *' # 매일 자정 KST (UTC 15:00)
+    - cron: '0 16 * * *' # 매일 새벽1시 KST (UTC 16:00) default branch에서만 실행됨
   workflow_dispatch:
 
 permissions:
@@ -27,19 +24,21 @@ jobs:
       - name: 커밋 분석 및 차트 생성
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
           python3 << 'PYEOF'
           import subprocess
           import re
           import os
+          import time
           from collections import Counter, defaultdict
           from datetime import datetime, timezone, timedelta
           from openai import OpenAI
 
           ai_client = OpenAI(
               base_url="https://models.inference.ai.azure.com",
-              api_key=os.environ["GITHUB_TOKEN"],
+              api_key=os.environ["GH_PAT"],
           )
 
           def summarize_commits(date, messages):
@@ -57,7 +56,10 @@ jobs:
                   )
                   return resp.choices[0].message.content.strip().replace('|', '｜')
               except Exception as e:
+                  print(f'⚠️ AI 요약 실패 ({date}): {e}')
                   return ' · '.join(messages)
+              finally:
+                  time.sleep(5)  # 분당 15회 제한 방지
 
           # ── 이름 정규화 매핑 ──────────────────────────────────────
           NAME_MAP = {
@@ -184,7 +186,7 @@ jobs:
                       existing_rows[m.group(1).strip()] = row.strip()
 
           # ── 자정 스케줄 실행 시 당일 날짜 강제 재요약 ──────────
-          # UTC 15:00 = KST 00:00. 이 시점의 UTC 날짜 = 방금 끝난 KST 날짜
+          # UTC 16:00 = KST 01:00. 이 시점의 UTC 날짜 = 방금 끝난 KST 날짜
           force_date = None
           if os.environ.get('EVENT_NAME') == 'schedule':
               force_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
