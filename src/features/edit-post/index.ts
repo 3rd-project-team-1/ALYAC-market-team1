@@ -1,1 +1,2 @@
-export { useEditPostPage } from './hooks/useEditPostPage';
+export { useEditPostSource } from './hooks/useEditPostSource';
+export { useEditPostSubmit } from './hooks/useEditPostSubmit';
