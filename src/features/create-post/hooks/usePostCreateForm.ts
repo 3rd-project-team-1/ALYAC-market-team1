@@ -45,7 +45,7 @@ export function usePostCreateForm(defaultContent = '') {
     onSuccess: (res) => {
       cleanupUrls();
       toast.success('게시글이 업로드되었습니다');
-      navigate(`/post/${res.data.post.id}`);
+      navigate(`/post/${res.post.id}`);
     },
     onError: (error) => {
       console.error('게시글 업로드 실패:', error);
