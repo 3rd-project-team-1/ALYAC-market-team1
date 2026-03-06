@@ -26,3 +26,5 @@ export interface CreateProductInput {
   link: string;
   itemImage: string;
 }
+
+// TODO: product.schema.ts의 z.infer<>로 대체 예정, 차후 삭제
