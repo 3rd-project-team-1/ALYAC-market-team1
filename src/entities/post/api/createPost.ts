@@ -8,7 +8,7 @@ export const createPost = async (content: string, image: string = '') => {
   const result = postResponseSchema.safeParse(response.data);
 
   if (!result.success) {
-    console.error('createPost 응답 검증 실패:', result.error);
+    console.error('게시글 생성 응답 검증 실패:', result.error);
     throw new Error('잘못된 서버 응답');
   }
 
