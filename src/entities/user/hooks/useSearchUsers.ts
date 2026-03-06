@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { userApi } from '@/entities/user/api';
+import { searchUsers } from '../api/searchUsers';
 
 /**
  * 유저를 검색하는 훅
@@ -12,8 +12,8 @@ export function useSearchUsers(keyword: string) {
 
   return useQuery({
     queryKey: ['users', 'search', trimmedKeyword],
-    queryFn: () => userApi.searchUsers(trimmedKeyword).then((res) => res.data),
+    queryFn: () => searchUsers(trimmedKeyword),
     enabled: !!trimmedKeyword,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 5,
   });
 }
