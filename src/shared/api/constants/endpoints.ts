@@ -19,7 +19,7 @@ export const API_ENDPOINT = {
   PROFILE_FOLLOWERS: (accountname: string) => `/api/profile/${accountname}/follower/`,
   PROFILE_FOLLOWINGS: (accountname: string) => `/api/profile/${accountname}/following/`,
 
-  // 게시글 부분 교체
+  // 게시글
   POST_CREATE: '/api/post',
   POST_FEED: (skip: number, limit: number) => `/api/post/feed?skip=${skip}&limit=${limit}`,
   POST_GET: (postId: string) => `/api/post/${postId}`,
