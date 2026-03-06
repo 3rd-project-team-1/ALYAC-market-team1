@@ -1,32 +1,30 @@
-import { useNavigate, useParams } from 'react-router-dom';
-
-import { useProfile } from '@/entities/user/hooks/useProfile';
-import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { ChatIcon, ShareIcon, UploadImageIcon } from '@/shared/assets';
-import { cn, getTokenUserInfo } from '@/shared/lib';
+import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { Button } from '@/shared/ui';
 
+import { useProfileTopSection } from '../hooks/useProfileTopSection';
+
 export function ProfileTopSection() {
-  const { accountname } = useParams<{ accountname: string }>();
-  const navigate = useNavigate();
-  const tokenInfo = getTokenUserInfo();
-  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
-  const targetAccountname = accountname ?? myAccountname;
-  const { profile, isMyProfile } = useProfile(targetAccountname);
-  const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
-    initialIsFollow: profile?.isfollow,
-  });
+  const {
+    profile,
+    isMyProfile,
+    isFollowing,
+    isFollowPending,
+    handleFollowersClick,
+    handleFollowingsClick,
+    handleEditProfileClick,
+    handleCreateProductClick,
+    handleChatClick,
+    handleToggleFollow,
+  } = useProfileTopSection();
 
   if (!profile) return null;
 
   return (
     <section className={cn('px-6 pt-[60px] pb-6')}>
       <div className={cn('flex items-center justify-center gap-12')}>
-        <button
-          className={cn('flex flex-col items-center gap-1')}
-          onClick={() => navigate(`/followers/${profile.accountname}`)}
-        >
+        <button className={cn('flex flex-col items-center gap-1')} onClick={handleFollowersClick}>
           <span className={cn('text-foreground text-xl font-bold')}>
             {profile.followerCount ?? 0}
           </span>
@@ -47,10 +45,7 @@ export function ProfileTopSection() {
           )}
         </div>
 
-        <button
-          className={cn('flex flex-col items-center gap-1')}
-          onClick={() => navigate(`/followings/${profile.accountname}`)}
-        >
+        <button className={cn('flex flex-col items-center gap-1')} onClick={handleFollowingsClick}>
           <span className={cn('text-foreground text-xl font-bold')}>
             {profile.followingCount ?? 0}
           </span>
@@ -74,14 +69,14 @@ export function ProfileTopSection() {
             <Button
               variant="outline"
               className={cn('flex-1 rounded-full text-sm font-medium')}
-              onClick={() => navigate('/edit-profile')}
+              onClick={handleEditProfileClick}
             >
               프로필 수정
             </Button>
             <Button
               variant="outline"
               className={cn('flex-1 rounded-full text-sm font-medium')}
-              onClick={() => navigate('/create-product')}
+              onClick={handleCreateProductClick}
             >
               상품 등록
             </Button>
@@ -93,7 +88,7 @@ export function ProfileTopSection() {
               size="icon-lg"
               className={cn('rounded-full')}
               aria-label="채팅하기"
-              onClick={() => navigate('/chat')}
+              onClick={handleChatClick}
             >
               <ChatIcon />
             </Button>
@@ -103,8 +98,8 @@ export function ProfileTopSection() {
                 'rounded-full px-8 text-sm font-semibold text-white',
                 isFollowing ? 'bg-muted-foreground' : 'bg-[#3C9E00] hover:bg-[#2d7a00]',
               )}
-              onClick={() => toggleFollow(profile.accountname)}
-              disabled={followMutation.isPending}
+              onClick={handleToggleFollow}
+              disabled={isFollowPending}
             >
               {isFollowing ? '언팔로우' : '팔로우'}
             </Button>
