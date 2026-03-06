@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - docs/README
-      - develop
-  #  schedule:
-  #    - cron: '0 16 * * *'  # 매일 새벽1시 KST (UTC 16:00) default branch에서만 실행됨
+  schedule:
+    - cron: '0 16 * * *' # 매일 새벽1시 KST (UTC 16:00) default branch에서만 실행됨
   workflow_dispatch:
 
 permissions:
