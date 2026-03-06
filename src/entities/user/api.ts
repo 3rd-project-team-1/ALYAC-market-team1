@@ -18,15 +18,18 @@ export interface GetFollowingsResponse {
 
 export const userApi = {
   // 프로필 조회 GET /api/profile/:accountname
-  getProfile: (accountname: string) =>
-    axiosInstance.get<GetProfileResponse>(API_ENDPOINT.PROFILE(accountname)),
+  getProfile: async (accountname: string) => {
+    const response = await axiosInstance.get(API_ENDPOINT.PROFILE(accountname));
+    console.log('getProfile response:', JSON.stringify(response.data, null, 2));
+    return response;
+  },
 
   // 유저 검색 GET /api/user/searchuser/?keyword=:keyword
-  searchUsers: (keyword: string) =>
-    axiosInstance.get<SearchUsersResponse>(API_ENDPOINT.USER_SEARCH, {
-      params: { keyword },
-    }),
-
+  searchUsers: async (keyword: string) => {
+    const response = await axiosInstance.get(API_ENDPOINT.USER_SEARCH, { params: { keyword } });
+    console.log('searchUsers response:', JSON.stringify(response.data, null, 2));
+    return response;
+  },
   // 팔로우 POST /api/profile/:accountname/follow
   follow: (accountname: string) => axiosInstance.post(API_ENDPOINT.PROFILE_FOLLOW(accountname)),
 
@@ -35,12 +38,18 @@ export const userApi = {
     axiosInstance.delete(API_ENDPOINT.PROFILE_UNFOLLOW(accountname)),
 
   // 팔로워 목록 GET /api/profile/:accountname/follower/
-  getFollowers: (accountname: string) =>
-    axiosInstance.get<GetFollowersResponse>(API_ENDPOINT.PROFILE_FOLLOWERS(accountname)),
+  getFollowers: async (accountname: string) => {
+    const response = await axiosInstance.get(API_ENDPOINT.PROFILE_FOLLOWERS(accountname));
+    console.log('getFollowers response:', JSON.stringify(response.data, null, 2));
+    return response;
+  },
 
   // 팔로잉 목록 GET /api/profile/:accountname/following/
-  getFollowings: (accountname: string) =>
-    axiosInstance.get<GetFollowingsResponse>(API_ENDPOINT.PROFILE_FOLLOWINGS(accountname)),
+  getFollowings: async (accountname: string) => {
+    const response = await axiosInstance.get(API_ENDPOINT.PROFILE_FOLLOWINGS(accountname));
+    console.log('getFollowings response:', JSON.stringify(response.data, null, 2));
+    return response;
+  },
 
   // 프로필 수정 PUT /api/user
   updateProfile: (data: {
