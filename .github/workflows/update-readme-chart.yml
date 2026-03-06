@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - docs/README
-  schedule:
-    - cron: '0 15 * * *' # 매일 자정 KST (UTC 15:00)
+      - develop
+  #  schedule:
+  #    - cron: '0 16 * * *'  # 매일 새벽1시 KST (UTC 16:00) default branch에서만 실행됨
   workflow_dispatch:
 
 permissions:
@@ -184,7 +185,7 @@ jobs:
                       existing_rows[m.group(1).strip()] = row.strip()
 
           # ── 자정 스케줄 실행 시 당일 날짜 강제 재요약 ──────────
-          # UTC 15:00 = KST 00:00. 이 시점의 UTC 날짜 = 방금 끝난 KST 날짜
+          # UTC 16:00 = KST 01:00. 이 시점의 UTC 날짜 = 방금 끝난 KST 날짜
           force_date = None
           if os.environ.get('EVENT_NAME') == 'schedule':
               force_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
