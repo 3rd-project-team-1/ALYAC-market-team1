@@ -24,6 +24,14 @@ export function PostCommentsList({
   myAccountname,
   onOpenCommentOption,
 }: PostCommentsListProps) {
+  if (comments.length === 0) {
+    return (
+      <div className={cn('flex items-center justify-center py-10 pb-20')}>
+        <p className={cn('text-muted-foreground text-sm')}>아직 댓글이 없습니다</p>
+      </div>
+    );
+  }
+
   return (
     <div className={cn('flex flex-col gap-4 px-4 py-4 pb-20')}>
       {comments.map((comment) => (
