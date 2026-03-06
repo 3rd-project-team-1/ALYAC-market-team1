@@ -1,12 +1,15 @@
+import { useState } from 'react';
+
+import { toast } from 'sonner';
+
 import {
-  CommentActionSheet,
   CommentFooter,
   PostCommentsList,
   PostDetailCard,
   usePostDetailPage,
 } from '@/features/post';
 import { cn } from '@/shared/lib';
-import { LoadingSpinner } from '@/shared/ui';
+import { LoadingSpinner, LogoutModal } from '@/shared/ui';
 import { MoreMenu, TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function PostPage() {
@@ -16,15 +19,13 @@ export function PostPage() {
     isPostLoading,
     myAccountname,
     isMyPost,
-    showCommentModal,
-    setShowCommentModal,
-    selectedCommentId,
-    setSelectedCommentId,
     heartMutation,
     createCommentMutation,
     deleteCommentMutation,
     deletePostMutation,
   } = usePostDetailPage();
+
+  const [postDialogType, setPostDialogType] = useState<'report' | 'delete' | null>(null);
 
   if (isPostLoading) {
     return <LoadingSpinner fullScreen message="게시글을 불러오는 중입니다..." />;
@@ -44,12 +45,12 @@ export function PostPage() {
         moreMenu={
           <MoreMenu
             items={[
-              { label: '신고하기', onClick: () => {} },
+              { label: '신고하기', onClick: () => setPostDialogType('report') },
               ...(isMyPost
                 ? [
                     {
                       label: <span className={cn('text-destructive')}>삭제</span>,
-                      onClick: () => deletePostMutation.mutate(),
+                      onClick: () => setPostDialogType('delete'),
                     },
                   ]
                 : []),
@@ -69,20 +70,36 @@ export function PostPage() {
       <PostCommentsList
         comments={comments}
         myAccountname={myAccountname}
-        onOpenCommentOption={(commentId) => {
-          setSelectedCommentId(commentId);
-          setShowCommentModal(true);
-        }}
+        onDeleteComment={(commentId) => deleteCommentMutation.mutate(commentId)}
       />
 
       <CommentFooter onSubmit={(text) => createCommentMutation.mutate(text)} />
 
-      <CommentActionSheet
-        isOpen={showCommentModal}
-        isDeletePending={deleteCommentMutation.isPending}
-        onClose={() => setShowCommentModal(false)}
-        onDeleteComment={() => selectedCommentId && deleteCommentMutation.mutate(selectedCommentId)}
-      />
+      {postDialogType === 'report' && (
+        <LogoutModal
+          title="신고하시겠습니까?"
+          confirmText="신고"
+          cancelText="취소"
+          onConfirm={() => {
+            toast.success('게시글이 신고되었습니다.');
+            setPostDialogType(null);
+          }}
+          onCancel={() => setPostDialogType(null)}
+        />
+      )}
+
+      {postDialogType === 'delete' && (
+        <LogoutModal
+          title="게시글을 삭제할까요?"
+          confirmText="삭제"
+          cancelText="취소"
+          onConfirm={() => {
+            deletePostMutation.mutate();
+            setPostDialogType(null);
+          }}
+          onCancel={() => setPostDialogType(null)}
+        />
+      )}
     </div>
   );
 }
