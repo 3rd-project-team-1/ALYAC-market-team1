@@ -5,7 +5,7 @@ import { getPost } from '../api/getPost';
 export function usePostQuery(postId: string | undefined) {
   return useQuery({
     queryKey: ['post', postId],
-    queryFn: () => getPost(postId!).then((res) => res.data.post),
+    queryFn: () => getPost(postId!).then((res) => res.post),
     enabled: !!postId,
   });
 }
