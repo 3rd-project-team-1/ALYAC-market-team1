@@ -136,7 +136,7 @@ export function ProfilePostsSection() {
       ) : (
         <div className={cn('grid grid-cols-3 gap-0.5')}>
           {posts.map((post) => (
-            <div key={post.id} className={cn('bg-muted aspect-square overflow-hidden')}>
+            <div key={post.id} className={cn('bg-muted aspect-square cursor-pointer overflow-hidden')} onClick={() => handlePostDetail(post.id)}>
               {post.image ? (
                 <img
                   src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
