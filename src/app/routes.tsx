@@ -2,8 +2,9 @@ import { lazy } from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
 
-import { RootLayout } from '@/app/layouts/RootLayout';
 import { RequireAuth, RequireGuest } from '@/features/auth';
+
+import { RootLayout } from './layouts/RootLayout';
 
 const lazyPage = (path: string, name: string) =>
   lazy(() => import(`@/pages/${path}/index.tsx`).then((m) => ({ default: m[name] })));
