@@ -1,38 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-
-import { useMutation } from '@tanstack/react-query';
-import { useForm, useWatch } from 'react-hook-form';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
-
-import { postApi } from '@/entities/post/api';
-import type { Post } from '@/entities/post/types';
-import { useProfile } from '@/entities/user/hooks/useProfile';
-import { PostImagePreviewList } from '@/features/create-post';
-import { uploadMultipleImages } from '@/shared/api';
-import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
+import { useProfile } from '@/entities/user';
+import { useEditPostSource, useEditPostSubmit } from '@/features/edit-post';
+import {
+  PostEditorLayout,
+  usePostEditorFocus,
+  usePostEditorForm,
+  usePostEditorImages,
+} from '@/features/post-editor';
 import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { TopUploadNav } from '@/widgets/top-upload-nav';
-
-interface PostEditFormValues {
-  content: string;
-}
-
-interface LocationState {
-  post?: Post;
-}
+import { LoadingSpinner } from '@/shared/ui';
 
 export function EditPostPage() {
-  const { postId } = useParams<{ postId: string }>();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const state = location.state as LocationState | null;
-  const post = state?.post;
-
+  const { postId, post, isPostLoading } = useEditPostSource();
   const { profile } = useProfile();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
+<<<<<<< HEAD
   const [images, setImages] = useState<string[]>(() =>
     post?.image
       ? post.image
@@ -40,24 +21,35 @@ export function EditPostPage() {
           .map((img) => img.trim())
           .filter(Boolean)
       : [],
+=======
+  const initialImages = post?.image
+    ? post.image.split(',').map((image) => image.trim()).filter(Boolean)
+    : [];
+
+  const { form, hasContent } = usePostEditorForm(post?.content ?? '');
+  const { isFocused, showError, onFocus, onBlur, handleContentChange } = usePostEditorFocus(hasContent);
+  const {
+    images,
+    existingImagePaths,
+    newImageFiles,
+    cleanupPreviewUrls,
+    handleImageAdd,
+    handleImageRemove,
+  } = usePostEditorImages(initialImages);
+  const { submit, isSubmitting } = useEditPostSubmit(
+    postId,
+    existingImagePaths,
+    newImageFiles,
+    cleanupPreviewUrls,
+>>>>>>> develop
   );
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
-  const cleanupUrls = useCallback(() => {
-    images.forEach((url) => {
-      if (url.startsWith('blob:')) URL.revokeObjectURL(url);
-    });
-  }, [images]);
-
-  useEffect(() => {
-    return () => cleanupUrls();
-  }, [cleanupUrls]);
-
-  const { register, handleSubmit, control } = useForm<PostEditFormValues>({
-    mode: 'onChange',
-    defaultValues: { content: post?.content ?? '' },
+  const contentTextareaProps = form.register('content', {
+    required: true,
+    onChange: handleContentChange,
   });
 
+<<<<<<< HEAD
   const content = useWatch({ control, name: 'content' });
   const hasContent = content?.trim().length > 0;
 
@@ -76,87 +68,39 @@ export function EditPostPage() {
     onError: () => {
       toast.error('게시글 수정에 실패했습니다');
     },
+=======
+  const onSubmit = form.handleSubmit((data) => {
+    submit(data.content);
+>>>>>>> develop
   });
 
-  const submitPost = handleSubmit((data) => updatePostMutation.mutate(data));
+  if (isPostLoading) {
+    return <LoadingSpinner fullScreen message="게시글을 불러오는 중입니다..." />;
+  }
 
-  const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    const previewUrls = files.map((file) => URL.createObjectURL(file));
-    setImages((prev) => [...prev, ...previewUrls]);
-    setImageFiles((prev) => [...prev, ...files]);
-    e.target.value = '';
-  };
-
-  const handleImageRemove = (index: number) => {
-    const url = images[index];
-    if (url.startsWith('blob:')) {
-      URL.revokeObjectURL(url);
-      const blobIndex = images.slice(0, index).filter((img) => img.startsWith('blob:')).length;
-      setImageFiles((prev) => prev.filter((_, i) => i !== blobIndex));
-    }
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
+  if (!post) {
+    return (
+      <div className={cn('bg-background flex h-screen items-center justify-center')}>
+        <p className={cn('text-muted-foreground text-sm')}>게시글을 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
-      <TopUploadNav
-        label={updatePostMutation.isPending ? '수정 중...' : '수정'}
-        disabled={!hasContent || updatePostMutation.isPending}
-        onSubmit={submitPost}
-      />
-
-      <form id="edit-post-form" onSubmit={submitPost} className={cn('flex flex-1 gap-3 px-4 pt-5')}>
-        {/* 프로필 아바타 */}
-        <div className={cn('bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full')}>
-          {profile?.image ? (
-            <img
-              src={getImageUrl(profile.image) ?? profile.image}
-              alt="내 프로필"
-              className={cn('h-full w-full object-cover')}
-            />
-          ) : (
-            <div className={cn('flex h-full w-full items-center justify-center')}>
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </div>
-
-        <div className={cn('flex flex-1 flex-col gap-4')}>
-          <textarea
-            {...register('content', { required: true })}
-            placeholder="게시글 입력하기..."
-            className={cn(
-              'bg-background text-foreground placeholder:text-muted-foreground w-full resize-none text-sm outline-none',
-            )}
-            rows={4}
-          />
-
-          {images.length > 0 && (
-            <PostImagePreviewList images={images} onRemove={handleImageRemove} />
-          )}
-        </div>
-      </form>
-
-      <button
-        type="button"
-        onClick={() => fileInputRef.current?.click()}
-        className={cn(
-          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]',
-        )}
-        aria-label="이미지 추가"
-      >
-        <UploadFile width={30} viewBox="10,10,30,30" />
-      </button>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className={cn('hidden')}
-        onChange={handleImageAdd}
-      />
-    </div>
+    <PostEditorLayout
+      submitLabel={isSubmitting ? '수정 중...' : '수정'}
+      isSubmitting={isSubmitting}
+      hasContent={hasContent}
+      textareaProps={contentTextareaProps}
+      isFocused={isFocused}
+      showError={showError}
+      onContentFocus={onFocus}
+      onContentBlur={onBlur}
+      images={images}
+      profileImage={profile?.image}
+      onSubmit={onSubmit}
+      onImageAdd={handleImageAdd}
+      onImageRemove={handleImageRemove}
+    />
   );
 }
