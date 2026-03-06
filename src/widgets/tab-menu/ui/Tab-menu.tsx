@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ChatIcon, EditIcon, HomeIcon, ProfileIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { IconButton } from '@/shared/ui';
 
 const tabs = [
   { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
@@ -15,31 +16,22 @@ export const TabMenu = () => {
   const navigate = useNavigate();
 
   return (
-    <nav
-      className={cn(
-        'bg-background border-border fixed right-0 bottom-0 left-0 flex items-center justify-between border-t px-2 py-2',
-      )}
-    >
+    <nav className="bg-background border-border fixed right-0 bottom-0 left-0 flex items-center justify-between border-t px-2 py-2">
       {tabs.map(({ path, label, Icon }) => {
         const active = path.some((p) => location.pathname.startsWith(p));
         return (
-          <button
+          <IconButton
             key={path[0]}
+            label={label}
+            active={active}
+            Icon={Icon}
             onClick={() => navigate(path[0])}
-            className={cn(
-              'group hover:bg-primary-green/10 flex flex-1 cursor-pointer flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 transition-colors',
+            className="group hover:bg-primary-green/10 flex-1 rounded-lg px-2 py-1.5"
+            labelClassName={cn(
+              'group-hover:text-primary-green group-hover:font-semibold',
+              active ? 'text-primary-green font-semibold' : 'text-muted-foreground font-normal',
             )}
-          >
-            <Icon active={active} />
-            <span
-              className={cn(
-                'group-hover:text-primary-green text-[12px] whitespace-nowrap transition-colors group-hover:font-semibold',
-                active ? 'text-primary-green font-semibold' : 'text-muted-foreground font-normal',
-              )}
-            >
-              {label}
-            </span>
-          </button>
+          />
         );
       })}
     </nav>
