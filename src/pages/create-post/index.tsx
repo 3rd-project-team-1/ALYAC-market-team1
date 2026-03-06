@@ -1,112 +1,46 @@
-import { useRef } from 'react';
-
-import { useLocation } from 'react-router-dom';
-
-import { useProfile } from '@/entities/user/hooks/useProfile';
+import { useProfile } from '@/entities/user';
+import { useCreatePostDefaultContent, useCreatePostSubmit } from '@/features/create-post';
 import {
-  PostImagePreviewList,
-  usePostContentField,
-  usePostCreateForm,
-} from '@/features/create-post';
-import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
-import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { TopUploadNav } from '@/widgets/top-upload-nav';
-
-interface LocationState {
-  content?: string;
-}
+  PostEditorLayout,
+  usePostEditorFocus,
+  usePostEditorForm,
+  usePostEditorImages,
+} from '@/features/post-editor';
 
 export function PostCreatePage() {
-  const location = useLocation();
-  const state = location.state as LocationState | null;
-
+  const { defaultContent } = useCreatePostDefaultContent();
   const { profile } = useProfile();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    images,
-    isSubmitting,
-    hasContent,
-    handleImageAdd,
-    handleImageRemove,
-    submitPost,
-  } = usePostCreateForm(state?.content ?? '');
+  const { form, hasContent } = usePostEditorForm(defaultContent);
+  const { isFocused, showError, onFocus, onBlur, handleContentChange } = usePostEditorFocus(hasContent);
+  const { images, newImageFiles, cleanupPreviewUrls, handleImageAdd, handleImageRemove } =
+    usePostEditorImages();
+  const { submit, isSubmitting } = useCreatePostSubmit(newImageFiles, cleanupPreviewUrls);
 
-  const { isFocused, showError, onFocus, onBlur, onContentChange } =
-    usePostContentField(hasContent);
+  const contentTextareaProps = form.register('content', {
+    required: true,
+    onChange: handleContentChange,
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    submit(data.content);
+  });
 
   return (
-    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
-      <TopUploadNav
-        label={isSubmitting ? '업로드 중...' : '업로드'}
-        disabled={!hasContent || isSubmitting}
-        onSubmit={submitPost}
-      />
-
-      {/* 본문 */}
-      <form id="upload-form" onSubmit={submitPost} className={cn('flex flex-1 gap-3 px-4 pt-5')}>
-        {/* 프로필 아바타 */}
-        <div className={cn('bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full')}>
-          {profile?.image ? (
-            <img
-              src={getImageUrl(profile.image) ?? profile.image}
-              alt="내 프로필"
-              className={cn('h-full w-full object-cover')}
-            />
-          ) : (
-            <div className={cn('flex h-full w-full items-center justify-center')}>
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </div>
-
-        <div className={cn('flex flex-1 flex-col gap-2')}>
-          {/* 텍스트 입력 */}
-          <div
-            className={cn(
-              'overflow-hidden rounded-lg border-2 transition-all',
-              isFocused ? 'border-blue-900' : 'border-transparent',
-            )}
-          >
-            <textarea
-              {...register('content', { required: true, onChange: onContentChange })}
-              placeholder="게시글 입력하기..."
-              className={cn(
-                'bg-background text-foreground placeholder:text-muted-foreground min-h-[300px] w-full resize-none p-2 text-sm outline-none',
-              )}
-              onFocus={onFocus}
-              onBlur={onBlur}
-            />
-          </div>
-          {showError && <p className={cn('text-xs text-red-500')}>게시글 내용을 입력해주세요.</p>}
-
-          {/* 이미지 목록 */}
-          <PostImagePreviewList images={images} onRemove={handleImageRemove} />
-        </div>
-      </form>
-
-      {/* 이미지 추가 버튼 (우하단 고정) */}
-      <button
-        type="button"
-        onClick={() => fileInputRef.current?.click()}
-        className={cn(
-          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]',
-        )}
-        aria-label="이미지 추가"
-      >
-        <UploadFile width={30} viewBox="10,10,30,30" />
-      </button>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className={cn('hidden')}
-        onChange={handleImageAdd}
-      />
-    </div>
+    <PostEditorLayout
+      submitLabel={isSubmitting ? '업로드 중...' : '업로드'}
+      isSubmitting={isSubmitting}
+      hasContent={hasContent}
+      textareaProps={contentTextareaProps}
+      isFocused={isFocused}
+      showError={showError}
+      onContentFocus={onFocus}
+      onContentBlur={onBlur}
+      images={images}
+      profileImage={profile?.image}
+      onSubmit={onSubmit}
+      onImageAdd={handleImageAdd}
+      onImageRemove={handleImageRemove}
+    />
   );
 }
