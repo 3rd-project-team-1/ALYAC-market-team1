@@ -1,7 +1,10 @@
 import { useState } from 'react';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
+import { deletePost } from '@/entities/post/api/deletePost';
 import { useUserPostsWithHeart } from '@/entities/post/hooks/useUserPostsWithHeart';
 import {
   ChatIcon,
@@ -12,17 +15,30 @@ import {
 } from '@/shared/assets';
 import { cn, getTokenUserInfo } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { MoreMenu } from '@/widgets/top-basic-nav';
 
 type ViewMode = 'grid' | 'list';
 
 export function ProfilePostsSection() {
   const { accountname } = useParams<{ accountname: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const tokenInfo = getTokenUserInfo();
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
   const targetAccountname = accountname ?? myAccountname;
   const { posts, heartMutation } = useUserPostsWithHeart(targetAccountname);
+
+  const deletePostMutation = useMutation({
+    mutationFn: (postId: string) => deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userPosts', targetAccountname] });
+      toast.success('게시글이 삭제되었습니다');
+    },
+    onError: () => {
+      toast.error('게시글 삭제에 실패했습니다');
+    },
+  });
 
   return (
     <section className={cn('border-border flex-1 border-t')}>
@@ -53,29 +69,50 @@ export function ProfilePostsSection() {
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('cursor-pointer')}
-              onClick={() => navigate(`/post/${post.id}`)}
+              className={cn('')}
             >
-              <div className={cn('flex items-center gap-3')}>
-                <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
-                  {post.author.image ? (
-                    <img
-                      src={getImageUrl(post.author.image) ?? post.author.image}
-                      alt={post.author.username}
-                      className={cn('h-full w-full object-cover')}
+              <div className={cn('flex items-center justify-between')}>
+                <div className={cn('flex items-center gap-3')}>
+                  <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
+                    {post.author.image ? (
+                      <img
+                        src={getImageUrl(post.author.image) ?? post.author.image}
+                        alt={post.author.username}
+                        className={cn('h-full w-full object-cover')}
+                      />
+                    ) : (
+                      <div className={cn('flex h-full w-full items-center justify-center')}>
+                        <UploadImageSmallIcon />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className={cn('text-foreground text-sm font-semibold')}>
+                      {post.author.username}
+                    </p>
+                    <p className={cn('text-muted-foreground text-xs')}>
+                      @{post.author.accountname}
+                    </p>
+                  </div>
+                </div>
+                {myAccountname === post.author.accountname && (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <MoreMenu
+                      small
+                      items={[
+                        {
+                          label: '수정',
+                          onClick: () =>
+                            navigate(`/post/${post.id}/edit`, { state: { post } }),
+                        },
+                        {
+                          label: <span className={cn('text-destructive')}>삭제</span>,
+                          onClick: () => deletePostMutation.mutate(post.id),
+                        },
+                      ]}
                     />
-                  ) : (
-                    <div className={cn('flex h-full w-full items-center justify-center')}>
-                      <UploadImageSmallIcon />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <p className={cn('text-foreground text-sm font-semibold')}>
-                    {post.author.username}
-                  </p>
-                  <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
-                </div>
+                  </div>
+                )}
               </div>
               <p className={cn('text-foreground mt-2 line-clamp-2 pl-12 text-sm')}>
                 {post.content}
@@ -101,10 +138,14 @@ export function ProfilePostsSection() {
                   <HeartIcon active={post.hearted} />
                   {post.heartCount}
                 </button>
-                <span className={cn('text-muted-foreground flex items-center gap-1 text-xs')}>
+                <button
+                  type="button"
+                  className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
+                  onClick={() => navigate(`/post/${post.id}`)}
+                >
                   <ChatIcon />
                   {post.commentCount}
-                </span>
+                </button>
               </div>
             </div>
           ))}
@@ -114,8 +155,7 @@ export function ProfilePostsSection() {
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('bg-muted aspect-square cursor-pointer overflow-hidden')}
-              onClick={() => navigate(`/post/${post.id}`)}
+              className={cn('bg-muted aspect-square overflow-hidden')}
             >
               {post.image ? (
                 <img
