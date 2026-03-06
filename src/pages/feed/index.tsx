@@ -19,7 +19,12 @@ export function FeedPage() {
 
   // 초기 로딩 중 표시 (페이지네이션 로딩은 하단에 별도 표시)
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <>
+        <TopMainNav title="얄약마켓 피드" />
+        <div>로딩 중...</div>
+      </>
+    );
   }
 
   // 피드 렌더링

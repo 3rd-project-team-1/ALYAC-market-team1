@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import type { InfiniteData } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { postApi } from '@/entities/post';
 import type { Post } from '@/entities/post';
@@ -49,14 +50,19 @@ export function useFeedPostsQuery() {
 
   // 게시글 삭제: 실제 API 호출 후 캐시에서 해당 항목 제거
   const deletePost = async (postId: string) => {
-    await postApi.deletePost(postId);
-    queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
-      if (!old) return old;
-      return {
-        ...old,
-        pages: old.pages.map((page) => page.filter((p) => p.id !== postId)),
-      };
-    });
+    try {
+      await postApi.deletePost(postId);
+      queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => page.filter((p) => p.id !== postId)),
+        };
+      });
+      toast.success('게시글이 삭제되었습니다.');
+    } catch {
+      toast.error('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
+    }
   };
 
   return {

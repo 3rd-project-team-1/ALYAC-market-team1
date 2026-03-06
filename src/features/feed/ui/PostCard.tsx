@@ -9,7 +9,6 @@ import { cn, getImageUrl } from '@/shared/lib';
 interface PostCardProps {
   post: PostCardModel;
   isMyPost?: boolean;
-  isYourPost?: boolean;
   onRewrite?: (postId: string) => void;
   onDelete?: (postId: string) => void;
   onReport?: (postId: string) => void;
@@ -75,7 +74,6 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
 export function PostCard({
   post,
   isMyPost = false,
-  isYourPost = false,
   onRewrite,
   onDelete,
   onReport,
@@ -187,7 +185,7 @@ export function PostCard({
           </div>
         )}
         {/* 다른 사용자의 게시글일 경우 신고 메뉴 표시 */}
-        {!isMyPost && isYourPost && (
+        {!isMyPost && (
           <div className={cn('relative')}>
             <button
               type="button"

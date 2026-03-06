@@ -31,7 +31,6 @@ export function FeedList({
           <PostCard
             post={post}
             isMyPost={post.author.accountname === myAccountname}
-            isYourPost={post.author.accountname !== myAccountname}
             onRewrite={onRewrite}
             onDelete={onDelete}
             onReport={onReport}
