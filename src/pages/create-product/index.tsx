@@ -1,4 +1,4 @@
-import { ProductEditorForm, useCreateProductPage } from '@/features/product';
+import { ProductForm, useCreateProductPage } from '@/features/product';
 import { LoadingSpinner } from '@/shared/ui';
 
 export function CreateProductPage() {
@@ -9,7 +9,7 @@ export function CreateProductPage() {
   }
 
   return (
-    <ProductEditorForm
+    <ProductForm
       form={form}
       onSubmit={onSubmit}
       isSubmitting={isSubmitting}

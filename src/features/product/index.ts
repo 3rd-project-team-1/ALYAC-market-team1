@@ -8,4 +8,4 @@ export { useEditProductPage } from './hooks/useEditProductPage';
 export * from './lib/validationRules';
 export { ProductFormFields } from './ui/ProductFormFields';
 export { ProductImageUploader } from './ui/ProductImageUploader';
-export { ProductEditorForm } from './ui/ProductEditorForm';
+export { ProductForm } from './ui/ProductForm';

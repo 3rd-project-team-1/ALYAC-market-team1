@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { ProductEditorForm, useEditProductPage } from '@/features/product';
+import { ProductForm, useEditProductPage } from '@/features/product';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 
@@ -35,7 +35,7 @@ export function EditProductPage() {
   }
 
   return (
-    <ProductEditorForm
+    <ProductForm
       form={form}
       onSubmit={onSubmit}
       isSubmitting={isSubmitting}
