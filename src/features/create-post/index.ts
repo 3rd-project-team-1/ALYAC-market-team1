@@ -1,3 +1,2 @@
-export { usePostCreateForm } from './hooks/usePostCreateForm';
-export { usePostContentField } from './hooks/usePostContentField';
+export { useCreatePostPage } from './hooks/useCreatePostPage';
 export { PostImagePreviewList } from './ui/PostImagePreviewList';

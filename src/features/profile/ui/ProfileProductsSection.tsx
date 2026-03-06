@@ -1,25 +1,21 @@
-import { useState } from 'react';
-
 import { X } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
 
-import { useDeleteProduct, useUserProducts } from '@/entities/product';
-import { cn, getTokenUserInfo } from '@/shared/lib';
+import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LogoutModal } from '@/shared/ui';
 
+import { useProfileProductsSection } from '../hooks/useProfileProductsSection';
+
 export function ProfileProductsSection() {
-  const { accountname } = useParams<{ accountname: string }>();
-  const navigate = useNavigate();
-
-  const tokenInfo = getTokenUserInfo();
-  const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? null;
-  const targetAccountname = accountname ?? myAccountname;
-  const isMyProfile = !accountname || accountname === myAccountname;
-
-  const { products } = useUserProducts(targetAccountname);
-  const deleteProductMutation = useDeleteProduct(targetAccountname ?? null);
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const {
+    products,
+    isMyProfile,
+    deleteTargetId,
+    handleProductClick,
+    handleDeleteClick,
+    handleDeleteConfirm,
+    handleDeleteCancel,
+  } = useProfileProductsSection();
 
   if (!products || products.length === 0) return null;
 
@@ -31,7 +27,7 @@ export function ProfileProductsSection() {
           <div
             key={product.id}
             className={cn('relative flex-shrink-0 cursor-pointer')}
-            onClick={() => navigate(`/edit-product/${product.id}`)}
+            onClick={() => handleProductClick(product.id)}
           >
             <div className={cn('group bg-muted relative h-[90px] w-[90px] overflow-hidden rounded-xl')}>
               <img
@@ -45,7 +41,7 @@ export function ProfileProductsSection() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setDeleteTargetId(product.id);
+                    handleDeleteClick(product.id);
                   }}
                   className={cn(
                     'absolute top-1 right-1 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white opacity-0 transition-all group-hover:opacity-100 hover:bg-black/65',
@@ -69,13 +65,8 @@ export function ProfileProductsSection() {
           title="상품을 삭제할까요?"
           confirmText="삭제"
           cancelText="취소"
-          onConfirm={() => {
-            if (!deleteProductMutation.isPending) {
-              deleteProductMutation.mutate(deleteTargetId);
-            }
-            setDeleteTargetId(null);
-          }}
-          onCancel={() => setDeleteTargetId(null)}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
         />
       )}
     </section>
