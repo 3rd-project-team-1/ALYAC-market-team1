@@ -1,8 +1,8 @@
-import axiosInstance from '@/shared/api/axios';
+import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 
 import type { CommentResponse } from '../types';
 
 export const createComment = (postId: string, content: string) =>
-  axiosInstance.post<CommentResponse>(`/api/post/${postId}/comments`, {
+  axiosInstance.post<CommentResponse>(API_ENDPOINT.POST_COMMENTS(postId), {
     comment: { content },
   });
