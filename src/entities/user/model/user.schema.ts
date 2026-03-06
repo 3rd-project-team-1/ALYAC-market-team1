@@ -25,6 +25,19 @@ export const profileSchema = z.object({
   followerCount: z.number(),
 });
 
+export const updateProfileResponseSchema = z.object({
+  user: z.object({
+    _id: z.string(),
+    username: z.string(),
+    accountname: z.string(),
+    intro: z.string(),
+    image: z.string(),
+    following: z.array(z.string()),
+    follower: z.array(z.string()),
+    followerCount: z.number(),
+    followingCount: z.number(),
+  }),
+});
 export const searchUserSchema = profileSchema.omit({ isfollow: true }).extend({
   email: z.string(),
 });
@@ -50,3 +63,4 @@ export type GetProfileResponse = z.infer<typeof getProfileResponseSchema>;
 export type SearchUsersResponse = z.infer<typeof searchUsersResponseSchema>;
 export type GetFollowersResponse = z.infer<typeof getFollowersResponseSchema>;
 export type GetFollowingsResponse = z.infer<typeof getFollowingsResponseSchema>;
+export type UpdateProfileResponse = z.infer<typeof updateProfileResponseSchema>;
