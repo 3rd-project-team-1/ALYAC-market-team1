@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { updateProduct } from '../api';
-import type { CreateProductInput } from '../types';
+import type { CreateProductInput } from '../model/product.schema';
 
 export function useUpdateProduct() {
   return useMutation({
