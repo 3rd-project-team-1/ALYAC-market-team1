@@ -1,6 +1,6 @@
-import { API_ENDPOINT, axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, api } from '@/shared/api';
 
-export const deleteProduct = async (id: string): Promise<{ message: string }> => {
-  const response = await axiosInstance.delete(API_ENDPOINT.PRODUCT_DELETE(id));
-  return response.data;
-};
+import { type DeleteProductResponse, deleteProductResponseSchema } from '../model/product.schema';
+
+export const deleteProduct = (id: string): Promise<DeleteProductResponse> =>
+  api.delete(API_ENDPOINT.PRODUCT_DELETE(id), deleteProductResponseSchema);

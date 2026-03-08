@@ -1,16 +1,15 @@
-import type { LoginRequest } from '@/entities/user';
-import { API_ENDPOINT, axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, api } from '@/shared/api';
 
-import { type AuthResponse, authResponseSchema } from '../model/auth.schema';
+import {
+  type SigninRequest,
+  type SigninResponse,
+  signinResponseSchema,
+} from '../model/auth.schema';
 
-export const signIn = async (data: LoginRequest): Promise<AuthResponse> => {
-  const response = await axiosInstance.post(API_ENDPOINT.AUTH_SIGNIN, data);
-
-  const result = authResponseSchema.safeParse(response.data);
-  if (!result.success) {
-    console.error('로그인 응답 검증 실패:', result.error);
-    throw new Error('잘못된 서버 응답');
-  }
-
-  return result.data;
-};
+/**
+ * 로그인 API
+ * @param data - 로그인 요청 데이터 (email, password)
+ * @returns 로그인 응답 (user, accessToken, refreshToken)
+ */
+export const signIn = (data: SigninRequest): Promise<SigninResponse> =>
+  api.post(API_ENDPOINT.AUTH_SIGNIN, data, signinResponseSchema);

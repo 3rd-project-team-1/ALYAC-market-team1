@@ -1,4 +1,6 @@
-import { API_ENDPOINT, axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, api } from '@/shared/api';
 
-export const follow = (accountname: string) =>
-  axiosInstance.post(API_ENDPOINT.PROFILE_FOLLOW(accountname));
+import { type FollowResponse, followResponseSchema } from '../model/user.schema';
+
+export const follow = (accountname: string): Promise<FollowResponse> =>
+  api.post(API_ENDPOINT.PROFILE_FOLLOW(accountname), {}, followResponseSchema);

@@ -1,4 +1,6 @@
-import { API_ENDPOINT, axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, api } from '@/shared/api';
 
-export const unfollow = (accountname: string) =>
-  axiosInstance.delete(API_ENDPOINT.PROFILE_UNFOLLOW(accountname));
+import { type FollowResponse, followResponseSchema } from '../model/user.schema';
+
+export const unfollow = (accountname: string): Promise<FollowResponse> =>
+  api.delete(API_ENDPOINT.PROFILE_UNFOLLOW(accountname), followResponseSchema);

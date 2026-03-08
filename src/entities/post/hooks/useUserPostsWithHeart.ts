@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getUserPosts } from '../api/getUserPosts';
 import { toggleHeart } from '../api/toggleHeart';
-import type { Post } from '../types';
+import type { Post } from '../model/post.schema';
 
 export function useUserPostsWithHeart(accountname?: string) {
   const queryClient = useQueryClient();
