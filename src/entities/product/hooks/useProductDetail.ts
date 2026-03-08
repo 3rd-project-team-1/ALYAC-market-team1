@@ -15,3 +15,4 @@ export function useProductDetail(productId?: string) {
     isError,
   };
 }
+// 리턴을 응답 온 그대로 보내는게 좋아보임!
