@@ -1,7 +1,6 @@
-import type { LoginRequest } from '@/entities/user';
 import { API_ENDPOINT, api } from '@/shared/api';
 
-import { type AuthResponse, authResponseSchema } from '../model/auth.schema';
+import { type SigninResponse, signinResponseSchema } from '../model/auth.schema';
 
-export const signIn = (data: LoginRequest): Promise<AuthResponse> =>
-  api.post(API_ENDPOINT.AUTH_SIGNIN, data, authResponseSchema);
+export const signIn = (data: unknown): Promise<SigninResponse> =>
+  api.post(API_ENDPOINT.AUTH_SIGNIN, data, signinResponseSchema);
