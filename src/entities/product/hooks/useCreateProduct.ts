@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { createProduct } from '../api';
-import { CreateProductInput } from '../model/product.schema';
+import { createProduct } from '../api/createProduct';
 
 export function useCreateProduct() {
   return useMutation({
-    mutationFn: (data: CreateProductInput) => createProduct(data),
+    mutationFn: createProduct,
   });
 }

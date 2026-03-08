@@ -41,7 +41,7 @@ export type ProductRequest = {
   itemImage: string;
 };
 
-export type deleteProductResponse = z.infer<typeof deleteProductResponseSchema>;
+export type DeleteProductResponse = z.infer<typeof deleteProductResponseSchema>;
 export type ProductAuthor = z.infer<typeof productAuthorSchema>;
 export type Product = z.infer<typeof productSchema>;
 export type ProductResponse = z.infer<typeof productResponseSchema>;
