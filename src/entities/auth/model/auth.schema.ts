@@ -35,7 +35,23 @@ export const validationResponseSchema = z.object({
 });
 
 //  타입 export
+export type SigninRequest = {
+  user: {
+    email: string;
+    password: string;
+  };
+};
 
+export type SignupRequest = {
+  user: {
+    username: string;
+    email: string;
+    password: string;
+    accountname: string;
+    intro?: string;
+    image?: string;
+  };
+};
 export type SignupResponse = z.infer<typeof signupResponseSchema>;
 export type SigninResponse = z.infer<typeof signinResponseSchema>;
 export type RefreshResponse = z.infer<typeof refreshResponseSchema>;
