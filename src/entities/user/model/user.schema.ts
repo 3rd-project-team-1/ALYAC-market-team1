@@ -56,6 +56,18 @@ export const getFollowingsResponseSchema = z.object({
   following: z.array(profileSchema),
 });
 
+export const followResponseSchema = z.object({
+  profile: profileSchema,
+});
+
+export type UpdateProfileRequest = {
+  user: {
+    username: string;
+    accountname: string;
+    intro: string;
+    image: string;
+  };
+};
 export type User = z.infer<typeof userSchema>;
 export type Profile = z.infer<typeof profileSchema>;
 export type SearchUser = z.infer<typeof searchUserSchema>;
@@ -64,3 +76,4 @@ export type SearchUsersResponse = z.infer<typeof searchUsersResponseSchema>;
 export type GetFollowersResponse = z.infer<typeof getFollowersResponseSchema>;
 export type GetFollowingsResponse = z.infer<typeof getFollowingsResponseSchema>;
 export type UpdateProfileResponse = z.infer<typeof updateProfileResponseSchema>;
+export type FollowResponse = z.infer<typeof followResponseSchema>;
