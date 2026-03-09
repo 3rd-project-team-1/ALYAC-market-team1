@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import type { PostCardModel } from '@/entities/feed';
 import { useHeartMutation } from '@/entities/post';
+import type { PostCardModel } from '@/features/feed';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
 import { cn, getImageUrl } from '@/shared/lib';
 

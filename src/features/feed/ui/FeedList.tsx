@@ -1,6 +1,6 @@
 import InfiniteScroll from 'react-infinite-scroller';
 
-import type { PostCardModel } from '@/entities/feed';
+import type { PostCardModel } from '@/features/feed';
 import { cn } from '@/shared/lib';
 
 import { PostCard } from './PostCard';

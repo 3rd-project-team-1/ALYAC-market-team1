@@ -6,7 +6,7 @@ import { deletePost as deletePostApi } from '@/entities/post/api/deletePost';
 import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
 import type { Post } from '@/entities/post/model/post.schema';
 
-import type { PostCardModel } from '../types';
+import type { PostCardModel } from '../model/types';
 
 const LIMIT = 10;
 

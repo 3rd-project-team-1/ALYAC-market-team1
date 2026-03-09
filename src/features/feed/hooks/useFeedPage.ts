@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useFeedPostsQuery } from '@/entities/feed';
+import { useFeedPostsQuery } from '@/features/feed';
 import { getTokenUserInfo } from '@/shared/lib';
 
 export function useFeedPage() {
