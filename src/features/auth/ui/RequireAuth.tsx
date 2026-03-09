@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import { LoadingSpinner } from '@/shared/ui';
 
-import { useTokenVerification } from '../lib/use-token-verification';
+import { useTokenVerification } from '../hooks/useTokenVerification';
 
 /**
  * 인증된 사용자만 접근 가능한 라우트 가드
