@@ -1,43 +1,16 @@
-import { useEffect, useState } from 'react';
-
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
+import { useTokenVerification } from '../lib/use-token-verification';
 
+/**
+ * 인증된 사용자만 접근 가능한 라우트 가드
+ * 토큰이 없거나 유효하지 않으면 홈으로 리다이렉트
+ */
 export function RequireAuth() {
-  const token = getToken();
-  const [isVerifying, setIsVerifying] = useState(!!token);
-  const [isValid, setIsValid] = useState(false);
-
-  useEffect(() => {
-    if (!token) return;
-
-    let isMounted = true;
-    // TODO: GUSET랑 중복되는 부분을 컴포넌트로?
-    const verifyToken = async () => {
-      const isTokenValid = await checkTokenValidity();
-
-      if (!isMounted) return;
-
-      if (isTokenValid) {
-        setIsValid(true);
-      } else {
-        removeToken();
-        setIsValid(false);
-      }
-
-      setIsVerifying(false);
-    };
-
-    verifyToken();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [token]);
+  const { token, isVerifying, isValid } = useTokenVerification();
 
   if (!token) {
-    return <Navigate to="/" replace />; //TODO :여기도 하드코딩 바꾸기
+    return <Navigate to="/" replace />;
   }
 
   if (isVerifying) {

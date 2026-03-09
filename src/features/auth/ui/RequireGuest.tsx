@@ -1,40 +1,13 @@
-import { useEffect, useState } from 'react';
-
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
+import { useTokenVerification } from '../lib/use-token-verification';
 
+/**
+ * 비인증 사용자만 접근 가능한 라우트 가드
+ * 유효한 토큰이 있으면 피드로 리다이렉트
+ */
 export function RequireGuest() {
-  const token = getToken();
-  const [isVerifying, setIsVerifying] = useState(!!token);
-  const [isValid, setIsValid] = useState(false);
-
-  useEffect(() => {
-    if (!token) return;
-
-    let isMounted = true;
-
-    const verifyToken = async () => {
-      const isTokenValid = await checkTokenValidity();
-
-      if (!isMounted) return;
-
-      if (isTokenValid) {
-        setIsValid(true);
-      } else {
-        removeToken();
-        setIsValid(false);
-      }
-
-      setIsVerifying(false);
-    };
-
-    verifyToken();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [token]);
+  const { token, isVerifying, isValid } = useTokenVerification();
 
   if (!token) {
     return <Outlet />;
@@ -43,5 +16,6 @@ export function RequireGuest() {
   if (isVerifying) {
     return <div>로딩 중...</div>;
   }
-  return isValid ? <Navigate to="/feed" replace /> : <Outlet />; //TODO: 여기도 하드코딩 바꾸기
+
+  return isValid ? <Navigate to="/feed" replace /> : <Outlet />;
 }
