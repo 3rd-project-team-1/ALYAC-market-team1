@@ -5,7 +5,11 @@ import { useProductImageFile } from './useProductImageFile';
 import { useUpdateProductAction } from './useUpdateProductAction';
 
 export function useEditProductPage(productId: string | undefined) {
-  const { product, isLoading: isProductLoading, isError: isProductError } = useProductDetail(productId);
+  const {
+    product,
+    isLoading: isProductLoading,
+    isError: isProductError,
+  } = useProductDetail(productId);
 
   const { form, handlePriceChange } = useProductFormState(product);
   const { imageFile, handleImageChange } = useProductImageFile();

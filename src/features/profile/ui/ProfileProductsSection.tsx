@@ -29,7 +29,9 @@ export function ProfileProductsSection() {
             className={cn('relative flex-shrink-0 cursor-pointer')}
             onClick={() => handleProductClick(product.id)}
           >
-            <div className={cn('group bg-muted relative h-[90px] w-[90px] overflow-hidden rounded-xl')}>
+            <div
+              className={cn('group bg-muted relative h-[90px] w-[90px] overflow-hidden rounded-xl')}
+            >
               <img
                 src={getImageUrl(product.itemImage) ?? product.itemImage}
                 alt={product.itemName}

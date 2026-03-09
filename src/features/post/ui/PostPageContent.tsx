@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 
-import { CommentFooter } from './CommentFooter';
-import { PostCommentsList } from './PostCommentsList';
-import { PostDetailCard } from './PostDetailCard';
 import { cn } from '@/shared/lib';
 import { LogoutModal } from '@/shared/ui';
 import { MoreMenu, TopBasicNav } from '@/widgets/top-basic-nav';
+
+import { CommentFooter } from './CommentFooter';
+import { PostCommentsList } from './PostCommentsList';
+import { PostDetailCard } from './PostDetailCard';
 
 interface PostPageContentProps {
   post: {

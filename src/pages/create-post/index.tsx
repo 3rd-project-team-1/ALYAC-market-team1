@@ -13,7 +13,8 @@ export function PostCreatePage() {
   const { profile } = useProfile();
 
   const { form, hasContent } = usePostEditorForm(defaultContent);
-  const { isFocused, showError, onFocus, onBlur, handleContentChange } = usePostEditorFocus(hasContent);
+  const { isFocused, showError, onFocus, onBlur, handleContentChange } =
+    usePostEditorFocus(hasContent);
   const { images, newImageFiles, cleanupPreviewUrls, handleImageAdd, handleImageRemove } =
     usePostEditorImages();
   const { submit, isSubmitting } = useCreatePostSubmit(newImageFiles, cleanupPreviewUrls);
