@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCreateProduct } from '@/entities/product';
+import { productQueryKeys } from '@/entities/product';
 import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
 
@@ -36,7 +37,9 @@ export function useCreateProductAction() {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
+          queryClient.invalidateQueries({
+            queryKey: productQueryKeys.products(profile?.accountname),
+          });
           toast.success('상품이 등록되었습니다');
           navigate('/profile');
         },

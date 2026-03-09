@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import type { User } from '@/entities/user';
+import { userQueryKeys } from '@/entities/user';
 import { API_ENDPOINT, axiosInstance } from '@/shared/api';
 import { getToken, removeToken } from '@/shared/lib';
 
@@ -16,7 +17,7 @@ export function useAuth() {
   const hasToken = !!getToken();
 
   const { data: user, isLoading } = useQuery({
-    queryKey: ['currentUser'],
+    queryKey: userQueryKeys.currentUser(),
     queryFn: getCurrentUser,
     enabled: hasToken,
     staleTime: 5 * 60 * 1000,

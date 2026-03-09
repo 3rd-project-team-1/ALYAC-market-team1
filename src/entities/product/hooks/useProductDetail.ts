@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getProductDetail } from '../api/getProductDetail';
+import { productQueryKeys } from '../api/queryKeys';
 
 export function useProductDetail(productId?: string) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['product', productId],
+    queryKey: productQueryKeys.product(productId),
     queryFn: () => getProductDetail(productId!).then((res) => res.product),
     enabled: !!productId,
   });
