@@ -1,5 +1,5 @@
-import { ProfileImageInput } from '@/features/profile';
 import { cn } from '@/shared/lib';
+import { ProfileImageInput } from '@/shared/ui';
 import { Button, FormField } from '@/shared/ui';
 
 import { useSignUpProfileForm } from '../hooks/useSignUpProfileForm';
