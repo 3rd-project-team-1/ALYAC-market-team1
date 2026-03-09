@@ -11,7 +11,12 @@ interface FollowListBodyProps {
   emptyMessage: string;
 }
 
-export function FollowListBody({ users, isLoading, myAccountname, emptyMessage }: FollowListBodyProps) {
+export function FollowListBody({
+  users,
+  isLoading,
+  myAccountname,
+  emptyMessage,
+}: FollowListBodyProps) {
   if (isLoading) {
     return <LoadingSpinner fullScreen={false} message="불러오는 중..." />;
   }
