@@ -223,10 +223,7 @@ export function PostCard({
           alt="게시글 이미지"
           className={cn('border-border mt-3 w-full rounded-lg border object-cover')}
           onError={(e) => {
-            if (!e.currentTarget.dataset.fallback) {
-              e.currentTarget.src = '/default-image.png';
-              e.currentTarget.dataset.fallback = 'true';
-            }
+            e.currentTarget.style.display = 'none';
           }}
         />
       )}

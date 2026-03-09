@@ -9,6 +9,7 @@ interface FeedListProps {
   posts: PostCardModel[];
   myAccountname: string;
   hasMore: boolean;
+  isFetchingMore?: boolean;
   onLoadMore: () => void;
   onRewrite: (postId: string) => void;
   onDelete: (postId: string) => void;
@@ -20,6 +21,7 @@ export function FeedList({
   posts,
   myAccountname,
   hasMore,
+  isFetchingMore = false,
   onLoadMore,
   onRewrite,
   onDelete,
@@ -30,7 +32,7 @@ export function FeedList({
     <main className={cn('mx-auto max-w-5xl pt-[48px]')}>
       <InfiniteScroll
         loadMore={onLoadMore}
-        hasMore={hasMore}
+        hasMore={hasMore && !isFetchingMore}
         loader={
           <div key="loader" className={cn('p-4 text-center text-sm text-gray-400')}>
             불러오는 중...
