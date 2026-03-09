@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { follow } from '../api/follow';
+import { userQueryKeys } from '../api/queryKeys';
 import { unfollow } from '../api/unfollow';
 
 interface UseProfileFollowParams {
@@ -32,10 +33,10 @@ export function useProfileFollow({ initialIsFollow }: UseProfileFollowParams) {
     onSuccess: () => {
       // optimistic 상태 유지 (null로 리셋하지 않음)
       // 프로필 카운트 즉시 갱신
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.profile() });
       // 목록은 stale 처리만 (즉시 refetch 안 함 → 뒤로가기/탭 이동/새로고침 시 반영)
-      queryClient.invalidateQueries({ queryKey: ['followings'], refetchType: 'none' });
-      queryClient.invalidateQueries({ queryKey: ['followers'], refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.followings(), refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.followers(), refetchType: 'none' });
     },
     onError: () => {
       // 에러 시에만 롤백
