@@ -5,19 +5,27 @@ import type { PostCardModel } from '@/features/feed';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
 import { cn, getImageUrl } from '@/shared/lib';
 
-// PostCard 컴포넌트의 Props
+/** PostCard 컴포넌트의 Props */
 interface PostCardProps {
+  /** 렌더링할 게시글 뷰 모델 */
   post: PostCardModel;
+  /** 본인 게시글 여부 — true이면 수정/삭제 메뉴, false이면 신고 메뉴 표시 */
   isMyPost?: boolean;
+  /** 수정 버튼 클릭 핸들러 */
   onRewrite?: (postId: string) => void;
+  /** 삭제 버튼 클릭 핸들러 */
   onDelete?: (postId: string) => void;
+  /** 신고 버튼 클릭 핸들러 */
   onReport?: (postId: string) => void;
+  /** 카드 클릭 시 상세 페이지 이동 핸들러 */
   onClick?: () => void;
 }
 
-// 드롭다운 메뉴 아이템 정의
+/** 게시글 카드 더보기(⋮) 드롭다운 메뉴의 Props */
 interface PostCardDropdownProps {
+  /** 드롭다운 닫기 콜백 */
   onClose: () => void;
+  /** 메뉴 아이템 목록 (label, 클릭 핸들러, 스타일 변형) */
   items: { label: string; onClick: (e: React.MouseEvent) => void; variant?: 'danger' }[];
 }
 
@@ -79,9 +87,9 @@ export function PostCard({
   onReport,
   onClick,
 }: PostCardProps) {
-  // 수정/삭제 메뉴 드롭다운 열림 상태
+  // 더보기(⋮) 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // 좋아요 상태 - post.hearted로 초기화하여 서버 상태 동기화 (낙관적 업데이트)
+  // 좋아요 낙관적 업데이트용 로컬 상태 — post.hearted/heartCount로 초기화
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
 
@@ -116,21 +124,28 @@ export function PostCard({
     setIsMenuOpen((prev) => !prev);
   };
 
+  /**
+   * 좋아요 토글 핸들러 (낙관적 업데이트)
+   * 1. 즉시 로컬 상태를 반전시켜 UI에 반영
+   * 2. API 호출 후 서버 응답으로 실제 값 동기화
+   * 3. 실패 시 이전 상태로 롤백
+   */
   const handleLikeToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const prevLiked = isLiked;
     const prevCount = localHeartCount;
-    // 낙관적 업데이트
+    // Step 1: 낙관적 업데이트 — 서버 응답 전에 UI 먼저 반영
     const nextLiked = !isLiked;
     setIsLiked(nextLiked);
     setLocalHeartCount((prev) => (nextLiked ? prev + 1 : prev - 1));
     try {
+      // Step 2: 서버 응답값으로 실제 상태 동기화
       const result = await toggleHeart();
       const updated = result.post;
       setIsLiked(updated.hearted);
       setLocalHeartCount(updated.heartCount);
     } catch {
-      // 실패 시 롤백
+      // Step 3: API 실패 시 이전 상태로 롤백
       setIsLiked(prevLiked);
       setLocalHeartCount(prevCount);
     }
