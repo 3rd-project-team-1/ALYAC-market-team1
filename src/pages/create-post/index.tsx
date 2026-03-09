@@ -1,23 +1,23 @@
 import { useProfile } from '@/entities/user';
 import {
   PostEditorLayout,
-  useCreatePostDefaultContent,
-  useCreatePostSubmit,
-  usePostEditorFocus,
-  usePostEditorForm,
-  usePostEditorImages,
+  useCreatePostInitialContent,
+  useCreatePostAction,
+  usePostContentFocus,
+  usePostFormState,
+  usePostImageManager,
 } from '@/features/post';
 
 export function PostCreatePage() {
-  const { defaultContent } = useCreatePostDefaultContent();
+  const { initialContent } = useCreatePostInitialContent();
   const { profile } = useProfile();
 
   const { form, hasContent } = usePostEditorForm(defaultContent);
   const { isFocused, showError, onFocus, onBlur, handleContentChange } =
     usePostEditorFocus(hasContent);
   const { images, newImageFiles, cleanupPreviewUrls, handleImageAdd, handleImageRemove } =
-    usePostEditorImages();
-  const { submit, isSubmitting } = useCreatePostSubmit(newImageFiles, cleanupPreviewUrls);
+    usePostImageManager();
+  const { submit, isSubmitting } = useCreatePostAction(newImageFiles, cleanupPreviewUrls);
 
   const contentTextareaProps = form.register('content', {
     required: true,

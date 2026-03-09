@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { useCreatePostMutation } from '@/entities/post';
 import { uploadMultipleImages } from '@/shared/api';
 
-export function useCreatePostSubmit(imageFiles: File[], cleanupPreviewUrls: () => void) {
+export function useCreatePostAction(imageFiles: File[], cleanupPreviewUrls: () => void) {
   const navigate = useNavigate();
   const createPostMutation = useCreatePostMutation();
 

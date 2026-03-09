@@ -4,11 +4,11 @@ interface LocationState {
   content?: string;
 }
 
-export function useCreatePostDefaultContent() {
+export function useCreatePostInitialContent() {
   const location = useLocation();
   const state = location.state as LocationState | null;
 
   return {
-    defaultContent: state?.content ?? '',
+    initialContent: state?.content ?? '',
   };
 }
