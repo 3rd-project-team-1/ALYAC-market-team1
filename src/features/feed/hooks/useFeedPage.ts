@@ -1,5 +1,3 @@
-import { useEffect, useRef } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 import { useFeedPostsQuery } from '@/entities/feed';
@@ -11,24 +9,6 @@ export function useFeedPage() {
   const myAccountname = tokenInfo?.accountname ?? '';
 
   const { isLoading, isFetchingMore, posts, deletePost, loadMore, hasMore } = useFeedPostsQuery();
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
-  // 무한 스크롤: 마지막 PostCard가 화면에 보이면 loadMore 호출
-  useEffect(() => {
-    if (!hasMore || !observerRef.current) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore();
-        }
-      },
-      { threshold: 0.8 },
-    );
-    observer.observe(observerRef.current);
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasMore, loadMore]);
 
   const handlePostClick = (postId: string) => {
     navigate(`/post/${postId}`);
@@ -45,14 +25,15 @@ export function useFeedPage() {
 
   return {
     myAccountname,
-    observerRef,
     isLoading,
     isFetchingMore,
+    hasMore,
     posts,
     deletePost,
     handlePostClick,
     handleRewritePost,
     handleReportPost,
+    loadMore,
     onSearch: () => navigate('/search'),
   };
 }

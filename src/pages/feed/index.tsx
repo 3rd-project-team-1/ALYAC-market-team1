@@ -6,9 +6,9 @@ import { TopMainNav } from '@/widgets/top-main-nav';
 export function FeedPage() {
   const {
     myAccountname,
-    observerRef,
     isLoading,
-    isFetchingMore,
+    hasMore,
+    loadMore,
     posts,
     deletePost,
     handlePostClick,
@@ -34,29 +34,18 @@ export function FeedPage() {
       {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
       <div className={cn('pb-[60px]')}>
         {posts.length > 0 ? (
-          <>
-            {/* 피드 리스트 - 마지막 카드에 ref 전달 */}
-            <FeedList
-              posts={posts}
-              myAccountname={myAccountname}
-              onRewrite={handleRewritePost}
-              onDelete={deletePost}
-              onReport={handleReportPost}
-              onClick={handlePostClick}
-              lastCardRef={observerRef}
-            />
-            {/* 추가 로딩 인디케이터 */}
-            {isFetchingMore && (
-              <div className={cn('p-4 text-center')}>
-                <span>불러오는 중...</span>
-              </div>
-            )}
-          </>
+          <FeedList
+            posts={posts}
+            myAccountname={myAccountname}
+            hasMore={hasMore}
+            onLoadMore={loadMore}
+            onRewrite={handleRewritePost}
+            onDelete={deletePost}
+            onReport={handleReportPost}
+            onClick={handlePostClick}
+          />
         ) : (
-          <>
-            {/* 피드가 비어있을 때 */}
-            <FeedEmpty onSearch={onSearch} />
-          </>
+          <FeedEmpty onSearch={onSearch} />
         )}
       </div>
     </>
