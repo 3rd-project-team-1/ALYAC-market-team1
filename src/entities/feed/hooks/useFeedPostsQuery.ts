@@ -2,7 +2,8 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import type { InfiniteData } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { postApi } from '@/entities/post';
+import { deletePost as deletePostApi } from '@/entities/post/api/deletePost';
+import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
 import type { Post } from '@/entities/post/model/post.schema';
 
 import type { PostCardModel } from '../types';
@@ -51,7 +52,7 @@ export function useFeedPostsQuery() {
   // 게시글 삭제: 실제 API 호출 후 캐시에서 해당 항목 제거
   const deletePost = async (postId: string) => {
     try {
-      await postApi.deletePost(postId);
+      await deletePostApi(postId);
       queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
         if (!old) return old;
         return {

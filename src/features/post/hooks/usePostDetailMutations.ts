@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import {
   useCreateCommentMutation,
@@ -14,7 +13,7 @@ export function usePostDetailMutations(postId: string | undefined) {
   const heartMutation = useHeartMutation(postId!);
   const createCommentMutation = useCreateCommentMutation(postId!);
   const deleteCommentMutation = useDeleteCommentMutation(postId!);
-  const deletePostMutation = useDeletePostMutation(postId!, () => navigate(-1));
+  const deletePostMutation = useDeletePostMutation(postId!, { onSuccess: () => navigate(-1) });
 
   return {
     heartMutation,
