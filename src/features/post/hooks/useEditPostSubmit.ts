@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUpdatePostMutation } from '@/entities/post';
+import { ROUTE_PATHS } from '@/shared/router/routePaths';
 
 export function useEditPostSubmit(
   postId: string | undefined,
@@ -23,7 +24,7 @@ export function useEditPostSubmit(
         onSuccess: (res) => {
           cleanupPreviewUrls();
           toast.success('게시글이 수정되었습니다');
-          navigate(`/post/${res.post.id}`, { replace: true });
+          navigate(ROUTE_PATHS.POST(res.post.id), { replace: true });
         },
         onError: () => {
           toast.error('게시글 수정에 실패했습니다');

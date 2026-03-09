@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
-import { getTokenUserInfo } from '@/shared/lib';
+import { getTokenUserInfo } from '@/shared/lib/utils/token';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import { useFeedPostsQuery } from './useFeedPostsQuery';
 
@@ -23,12 +24,12 @@ export function useFeedPage() {
 
   // 게시글 클릭 → 상세 페이지 이동
   const handlePostClick = (postId: string) => {
-    navigate(`/post/${postId}`);
+    navigate(ROUTE_PATHS.POST(postId));
   };
 
   // 수정 버튼 클릭 → 게시글 수정 페이지 이동
   const handleRewritePost = (postId: string) => {
-    navigate(`/post/${postId}/edit`);
+    navigate(ROUTE_PATHS.EDIT_POST(postId));
   };
 
   // 신고 기능 (추후 신고 API 구현시 업데이트 예정)
@@ -45,9 +46,6 @@ export function useFeedPage() {
     deletePost,
     handlePostClick,
     handleRewritePost,
-    handleReportPost,
-    loadMore,
-    // 피드가 비어있을 때 검색 페이지로 이동
-    onSearch: () => navigate('/search'),
+    onSearch: () => navigate(ROUTE_PATHS.SEARCH),
   };
 }

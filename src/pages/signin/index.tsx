@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { SignInForm } from '@/features/auth';
 import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/router';
 
 export function SignInPage() {
   return (
@@ -17,7 +18,7 @@ export function SignInPage() {
         <SignInForm />
         <div className={cn('text-center')}>
           <Link
-            to="/signup"
+            to={ROUTE_PATHS.SIGNUP}
             className={cn('text-muted-foreground hover:text-foreground text-sm transition-colors')}
           >
             이메일로 회원가입

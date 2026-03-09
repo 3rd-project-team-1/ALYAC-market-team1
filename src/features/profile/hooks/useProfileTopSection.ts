@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import { useProfileTargetAccount } from './useProfileTargetAccount';
 
@@ -16,24 +17,24 @@ export function useProfileTopSection() {
 
   const handleFollowersClick = () => {
     if (!profile) return;
-    navigate(`/followers/${profile.accountname}`);
+    navigate(ROUTE_PATHS.FOLLOWERS(profile.accountname));
   };
 
   const handleFollowingsClick = () => {
     if (!profile) return;
-    navigate(`/followings/${profile.accountname}`);
+    navigate(ROUTE_PATHS.FOLLOWINGS(profile.accountname));
   };
 
   const handleEditProfileClick = () => {
-    navigate('/edit-profile');
+    navigate(ROUTE_PATHS.EDIT_PROFILE);
   };
 
   const handleCreateProductClick = () => {
-    navigate('/create-product');
+    navigate(ROUTE_PATHS.CREATE_PRODUCT);
   };
 
   const handleChatClick = () => {
-    navigate('/chat');
+    navigate(ROUTE_PATHS.CHAT);
   };
 
   const handleToggleFollow = () => {
