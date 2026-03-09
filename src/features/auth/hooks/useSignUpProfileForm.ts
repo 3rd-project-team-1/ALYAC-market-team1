@@ -26,7 +26,7 @@ export function useSignUpProfileForm() {
   useEffect(() => {
     if (!email || !password) {
       alert('잘못된 접근입니다. 이메일부터 다시 입력해 주세요.');
-      navigate('/signup');
+      navigate('/signup'); //TODO: 하드코딩 된거 없애기!
     }
   }, [email, password, navigate]);
 
@@ -54,7 +54,7 @@ export function useSignUpProfileForm() {
     setIsSubmitting(true);
 
     try {
-      // 1. 계정 ID 중복 체크
+      // 계정 ID 중복 체크
       const isDuplicate = await checkAccountMutation.mutateAsync(data.accountname);
 
       if (isDuplicate) {
@@ -63,7 +63,7 @@ export function useSignUpProfileForm() {
         return;
       }
 
-      // 2. 이미지 업로드
+      // 이미지 업로드
       let finalImageValue = '';
       if (profileImageFile) {
         try {
@@ -77,7 +77,7 @@ export function useSignUpProfileForm() {
         }
       }
 
-      // 3. 회원가입 요청
+      //  회원가입 요청
       const requestData: SignupRequest = {
         user: {
           email,

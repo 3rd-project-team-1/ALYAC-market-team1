@@ -36,6 +36,7 @@ export function useSignUpEmailForm() {
         } else {
           // 중복 아니면 다음 단계로
           navigate('/signup/profile', {
+            //TODO: 여기도 하드코딩된거 바꾸기
             state: { email: data.email, password: data.password },
           });
         }
