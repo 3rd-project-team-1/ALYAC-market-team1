@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-export function usePostEditorImages(initialImages: string[] = []) {
+export function usePostImageManager(initialImages: string[] = []) {
   const [removedInitialIndexes, setRemovedInitialIndexes] = useState<number[]>([]);
   const [addedPreviewUrls, setAddedPreviewUrls] = useState<string[]>([]);
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);

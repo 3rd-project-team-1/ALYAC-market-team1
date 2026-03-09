@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export function usePostEditorFocus(hasContent: boolean) {
+export function usePostContentFocus(hasContent: boolean) {
   const [isFocused, setIsFocused] = useState(false);
   const [hadContent, setHadContent] = useState(false);
 
