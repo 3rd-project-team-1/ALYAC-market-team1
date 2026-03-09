@@ -1,7 +1,9 @@
 import { UploadFile, UploadImageIcon } from '@/shared/assets';
 import { useImageUpload } from '@/shared/hooks/useImageUpload';
 import { cn } from '@/shared/lib';
-import { Button, Input } from '@/shared/ui';
+
+import { Button } from '../button/button';
+import { Input } from '../form/input';
 
 interface ProfileImageInputProps {
   onImageChange: (file: File) => void;
