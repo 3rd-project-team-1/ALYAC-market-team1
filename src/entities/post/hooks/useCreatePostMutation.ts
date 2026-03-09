@@ -1,14 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { uploadMultipleImages } from '@/shared/api';
+
 import { createPost } from '../api/createPost';
 
 interface CreatePostPayload {
   content: string;
-  image?: string;
+  imageFiles?: File[];
 }
 
 export function useCreatePostMutation() {
   return useMutation({
-    mutationFn: ({ content, image = '' }: CreatePostPayload) => createPost(content, image),
+    mutationFn: async ({ content, imageFiles = [] }: CreatePostPayload) => {
+      const imagePaths = await uploadMultipleImages(imageFiles);
+      const image = imagePaths.join(',');
+      return createPost(content, image);
+    },
   });
 }

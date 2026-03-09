@@ -2,18 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCreatePostMutation } from '@/entities/post';
-import { uploadMultipleImages } from '@/shared/api';
 
 export function useCreatePostAction(imageFiles: File[], cleanupPreviewUrls: () => void) {
   const navigate = useNavigate();
   const createPostMutation = useCreatePostMutation();
 
   const submit = async (content: string) => {
-    const imagePaths = await uploadMultipleImages(imageFiles);
-    const image = imagePaths.join(',');
-
     createPostMutation.mutate(
-      { content, image },
+      { content, imageFiles },
       {
         onSuccess: (res) => {
           cleanupPreviewUrls();
