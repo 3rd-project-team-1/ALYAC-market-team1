@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useHeartMutation } from '@/entities/post';
 import type { PostCardModel } from '@/features/feed';
-import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
+import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { cn, getImageUrl } from '@/shared/lib';
 
 /** PostCard 컴포넌트의 Props */
@@ -67,17 +67,11 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
 }
 
 /**
- * 포스트 정보를 카드 형태로 렌더링하는 컴포넌트입니다.
+ * 게시글 한 건을 카드 형태로 렌더링하는 컴포넌트입니다.
  *
- * @param props - PostCardProps
- * @param props.post - 포스트 뷰 모델 데이터
- * @param props.isMyPost - 본인 게시글 여부 (수정/삭제 메뉴 표시여부 결정)
- * @param props.isYourPost - 다른 사용자의 게시글 여부 (신고 메뉴 표시여부 결정)
- * @param props.onRewrite - 수정 핸들러
- * @param props.onDelete - 삭제 핸들러
- * @param props.onClick - 카드 클릭 시 상세 이동 등의 핸들러
- * @returns 게시글 카드 엘리먼트
- * @file features/feed/ui/PostCard.tsx
+ * - `isMyPost === true` : 더보기 메뉴에 수정/삭제 표시
+ * - `isMyPost === false`: 더보기 메뉴에 신고 표시
+ * - 좋아요는 낙관적 업데이트로 즉시 반영하고, API 완료 후 서버 값으로 동기화합니다.
  */
 export function PostCard({
   post,
@@ -123,6 +117,14 @@ export function PostCard({
     e.stopPropagation();
     setIsMenuOpen((prev) => !prev);
   };
+
+  // isMyPost에 따라 드롭다운 메뉴 아이템 결정
+  const menuItems = isMyPost
+    ? [
+        { label: '수정', onClick: handleRewrite },
+        { label: '삭제', onClick: handleDelete, variant: 'danger' as const },
+      ]
+    : [{ label: '신고', onClick: handleReport }];
 
   /**
    * 좋아요 토글 핸들러 (낙관적 업데이트)
@@ -181,58 +183,29 @@ export function PostCard({
           </div>
         </div>
 
-        {/* 더보기 버튼 및 드롭다운 (본인 게시글일 경우만 표시) */}
-        {isMyPost && (
-          <div className={cn('relative')}>
-            <button
-              type="button"
-              aria-label="게시글 메뉴"
-              className={cn(
-                'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
-              )}
-              onClick={handleMenuToggle}
-            >
-              <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
-            </button>
-            {isMenuOpen && (
-              <PostCardDropdown
-                onClose={() => setIsMenuOpen(false)}
-                items={[
-                  { label: '수정', onClick: handleRewrite },
-                  { label: '삭제', onClick: handleDelete, variant: 'danger' },
-                ]}
-              />
+        {/* 더보기 버튼 및 드롭다운 (본인: 수정/삭제, 타인: 신고) */}
+        <div className={cn('relative')}>
+          <button
+            type="button"
+            aria-label="게시글 메뉴"
+            className={cn(
+              'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
             )}
-          </div>
-        )}
-        {/* 다른 사용자의 게시글일 경우 신고 메뉴 표시 */}
-        {!isMyPost && (
-          <div className={cn('relative')}>
-            <button
-              type="button"
-              aria-label="게시글 메뉴"
-              className={cn(
-                'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
-              )}
-              onClick={handleMenuToggle}
-            >
-              <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
-            </button>
-            {isMenuOpen && (
-              <PostCardDropdown
-                onClose={() => setIsMenuOpen(false)}
-                items={[{ label: '신고', onClick: handleReport }]}
-              />
-            )}
-          </div>
-        )}
+            onClick={handleMenuToggle}
+          >
+            <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
+          </button>
+          {isMenuOpen && (
+            <PostCardDropdown onClose={() => setIsMenuOpen(false)} items={menuItems} />
+          )}
+        </div>
       </div>
 
       {/* 게시글 본문 내용 */}
       <p className={cn('text-foreground mt-3 text-sm whitespace-pre-wrap')}>{post.content}</p>
 
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
-      {post.image && post.image.trim() !== '' && (
+      {post.image && (
         <img
           src={getImageUrl(post.image) ?? undefined}
           alt="게시글 이미지"

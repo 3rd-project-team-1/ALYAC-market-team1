@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useFeedPostsQuery } from '@/features/feed';
 import { getTokenUserInfo } from '@/shared/lib';
+
+import { useFeedPostsQuery } from './useFeedPostsQuery';
 
 /**
  * 피드 페이지의 비즈니스 로직을 담당하는 커스텀 훅입니다.
@@ -16,8 +17,7 @@ import { getTokenUserInfo } from '@/shared/lib';
 export function useFeedPage() {
   const navigate = useNavigate();
   // JWT 토큰에서 현재 로그인 유저의 accountname 추출 (게시글 수정/삭제 권한 판별에 사용)
-  const tokenInfo = getTokenUserInfo();
-  const myAccountname = tokenInfo?.accountname ?? '';
+  const myAccountname = getTokenUserInfo()?.accountname ?? '';
 
   const { isLoading, isFetchingMore, posts, deletePost, loadMore, hasMore } = useFeedPostsQuery();
 

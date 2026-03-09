@@ -23,7 +23,7 @@ function mapPost(post: Post): PostCardModel {
     id: post.id,
     content: post.content,
     image: post.image && post.image.trim() !== '' ? post.image : undefined,
-    hearted: post.hearted ?? false,
+    hearted: post.hearted,
     heartCount: post.heartCount,
     commentCount: post.commentCount,
     createdAt: post.createdAt,
