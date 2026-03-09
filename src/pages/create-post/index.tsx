@@ -1,20 +1,21 @@
 import { useProfile } from '@/entities/user';
 import {
   PostEditorLayout,
-  useCreatePostInitialContent,
   useCreatePostAction,
+  useCreatePostInitialContent,
   usePostContentFocus,
   usePostFormState,
   usePostImageManager,
 } from '@/features/post';
+import type { CreatePostInput } from '@/features/post/model/create-post.schema';
 
 export function PostCreatePage() {
   const { initialContent } = useCreatePostInitialContent();
   const { profile } = useProfile();
 
-  const { form, hasContent } = usePostEditorForm(defaultContent);
+  const { form, hasContent } = usePostFormState(initialContent);
   const { isFocused, showError, onFocus, onBlur, handleContentChange } =
-    usePostEditorFocus(hasContent);
+    usePostContentFocus(hasContent);
   const { images, newImageFiles, cleanupPreviewUrls, handleImageAdd, handleImageRemove } =
     usePostImageManager();
   const { submit, isSubmitting } = useCreatePostAction(newImageFiles, cleanupPreviewUrls);
@@ -24,7 +25,7 @@ export function PostCreatePage() {
     onChange: handleContentChange,
   });
 
-  const onSubmit = form.handleSubmit((data) => {
+  const onSubmit = form.handleSubmit((data: CreatePostInput) => {
     submit(data.content);
   });
 
