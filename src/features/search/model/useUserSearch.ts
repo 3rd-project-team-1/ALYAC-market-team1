@@ -4,14 +4,13 @@ import type { Profile } from '@/entities/user';
 import { useSearchUsers } from '@/entities/user';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 
-export type SearchResultUser = Pick<Profile, 'username' | 'accountname' | 'image'>;
+export type SearchResultUser = Pick<SearchUser, 'username' | 'accountname' | 'image'>;
 
-const toSearchResultUser = (profile: Profile): SearchResultUser => ({
-  username: profile.username,
-  accountname: profile.accountname,
-  image: profile.image,
+const toSearchResultUser = (user: SearchUser): SearchResultUser => ({
+  username: user.username,
+  accountname: user.accountname,
+  image: user.image,
 });
-
 export const useUserSearch = (initialSearchValue = '') => {
   const [searchValue, setSearchValue] = useState(initialSearchValue);
   const debouncedSearchValue = useDebounce(searchValue, 100);

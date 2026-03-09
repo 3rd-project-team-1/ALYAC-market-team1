@@ -2,7 +2,8 @@ import { useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { userApi } from '@/entities/user/api';
+import { follow } from '../api/follow';
+import { unfollow } from '../api/unfollow';
 
 interface UseProfileFollowParams {
   initialIsFollow?: boolean;
@@ -22,13 +23,8 @@ export function useProfileFollow({ initialIsFollow }: UseProfileFollowParams) {
   const followMutation = useMutation({
     mutationFn: ({ accountname, isFollowing }: FollowMutationVariables) => {
       const normalizedAccountname = accountname.replace(/^@/, '').trim();
-      if (!normalizedAccountname) {
-        throw new Error('accountname is required');
-      }
-
-      return isFollowing
-        ? userApi.unfollow(normalizedAccountname)
-        : userApi.follow(normalizedAccountname);
+      if (!normalizedAccountname) throw new Error('accountname is required');
+      return isFollowing ? unfollow(normalizedAccountname) : follow(normalizedAccountname);
     },
     onMutate: ({ isFollowing }: FollowMutationVariables) => {
       setOptimisticFollowing(!isFollowing);

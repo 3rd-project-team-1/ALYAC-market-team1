@@ -34,7 +34,7 @@ export function useFeedPostsQuery() {
   const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: FEED_QUERY_KEY,
     queryFn: async ({ pageParam }) => {
-      const response = await postApi.getFeedPosts(pageParam, LIMIT);
+      const response = await getFeedPosts(pageParam, LIMIT);
       const posts: Post[] = response.posts ?? [];
       return posts;
     },

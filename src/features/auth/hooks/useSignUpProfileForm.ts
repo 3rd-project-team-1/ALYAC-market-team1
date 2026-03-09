@@ -1,3 +1,4 @@
+// features/auth/signup-profile/model/use-signup-profile-form.ts
 import { useEffect, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,10 +17,11 @@ export function useSignUpProfileForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const signUpMutation = useSignUp();
+  const checkAccountMutation = useCheckAccountnameDuplicate();
 
   const { email, password } = location.state || {};
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
-  const checkAccountMutation = useCheckAccountnameDuplicate();
+  const [isSubmitting, setIsSubmitting] = useState(false); //  중복 방지
 
   useEffect(() => {
     if (!email || !password) {
@@ -42,56 +44,64 @@ export function useSignUpProfileForm() {
     mode: 'onChange',
   });
 
-  const onSubmit = (data: SignupProfileInput) => {
-    //계정 ID 중복체크
-    checkAccountMutation.mutate(data.accountname, {
-      onSuccess: async (isDuplicate) => {
-        if (isDuplicate) {
-          setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
+  const onSubmit = async (data: SignupProfileInput) => {
+    //  중복 실행 방지
+    if (isSubmitting) {
+      console.log('⚠️ 이미 처리 중입니다');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // 1. 계정 ID 중복 체크
+      const isDuplicate = await checkAccountMutation.mutateAsync(data.accountname);
+
+      if (isDuplicate) {
+        setError('accountname', { type: 'manual', message: '이미 사용 중인 ID입니다.' });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 2. 이미지 업로드
+      let finalImageValue = '';
+      if (profileImageFile) {
+        try {
+          finalImageValue = await uploadSingleImage(profileImageFile);
+        } catch (error) {
+          toast.error(
+            error instanceof Error ? error.message : '프로필 이미지 업로드에 실패했습니다.',
+          );
+          setIsSubmitting(false);
           return;
         }
+      }
 
-        // 이미지 업로드
-        let finalImageValue = '';
-        if (profileImageFile) {
-          try {
-            finalImageValue = await uploadSingleImage(profileImageFile);
-          } catch (error) {
-            toast.error(
-              error instanceof Error ? error.message : '프로필 이미지 업로드에 실패했습니다.',
-            );
-            return;
-          }
-        }
+      // 3. 회원가입 요청
+      const requestData: SignupRequest = {
+        user: {
+          email,
+          password,
+          username: data.username,
+          accountname: data.accountname,
+          intro: data.intro || '',
+          image: finalImageValue,
+        },
+      };
 
-        // 회원가입 요청
-        const requestData: SignupRequest = {
-          user: {
-            email,
-            password,
-            username: data.username,
-            accountname: data.accountname,
-            intro: data.intro || '',
-            image: finalImageValue,
-          },
-        };
+      await signUpMutation.mutateAsync(requestData);
 
-        signUpMutation.mutate(requestData, {
-          onSuccess: () => {
-            toast.success('회원가입 완료! 🎉');
-            navigate('/signin');
-          },
-          onError: (error) => {
-            if (axios.isAxiosError<ApiErrorResponse>(error))
-              toast.error(error.response?.data?.message || '실패했습니다.');
-          },
-        });
-      },
-      onError: (error) => {
-        toast.error('계정 ID 확인 중 오류가 발생했습니다.');
-        console.error(error);
-      },
-    });
+      toast.success('회원가입 완료! 🎉');
+      navigate('/signin');
+    } catch (error) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        toast.error(error.response?.data?.message || '회원가입에 실패했습니다.');
+      } else {
+        toast.error('오류가 발생했습니다.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {
@@ -101,7 +111,6 @@ export function useSignUpProfileForm() {
     errors,
     isValid,
     setProfileImageFile,
-    isPending: signUpMutation.isPending,
-    isCheckingAccount: checkAccountMutation.isPending,
+    isPending: isSubmitting,
   };
 }

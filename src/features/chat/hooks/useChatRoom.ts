@@ -23,7 +23,7 @@ const DUMMY_MESSAGES: ChatMessage[] = [
     content: 'Treat Inside 입니다.',
     isMine: true,
     time: '12:50',
-    image: 'https://via.placeholder.com/280x180/111827/ffffff?text=Treat+Inside',
+    image: '/Reactangle.webp',
   },
 ];
 

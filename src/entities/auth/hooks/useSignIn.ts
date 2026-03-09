@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { signIn } from '@/entities/auth';
 import { saveToken } from '@/shared/lib';
+
+import { signIn } from '../api/signin';
 
 export const useSignIn = () => {
   const queryClient = useQueryClient();

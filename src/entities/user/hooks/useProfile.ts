@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { userApi } from '@/entities/user/api';
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
+
+import { getProfile } from '../api/getProfile';
 
 export function useProfile(accountname?: string) {
   const tokenInfo = getTokenUserInfo();
@@ -18,10 +19,9 @@ export function useProfile(accountname?: string) {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['profile', targetAccountname],
-    queryFn: () => userApi.getProfile(targetAccountname).then((res) => res.data.profile),
+    queryFn: () => getProfile(targetAccountname).then((res) => res.profile),
     enabled: !!targetAccountname,
   });
-
   const isMyProfile = normalizedAccountname
     ? !!myAccountname && myAccountname === normalizedAccountname
     : true;

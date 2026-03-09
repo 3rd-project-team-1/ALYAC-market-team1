@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { checkAccountnameDuplicate, checkEmailDuplicate } from '@/entities/auth';
+import { checkAccountnameDuplicate, checkEmailDuplicate } from '../api/validate';
 
 export const useCheckEmailDuplicate = () => {
   return useMutation({

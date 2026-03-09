@@ -43,7 +43,7 @@ export function FollowUserListItem({ user, myAccountname }: FollowUserListItemPr
           onClick={() => toggleFollow(user.accountname)}
           disabled={followMutation.isPending}
           className={cn(
-            'flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors',
+            'w-[76px] flex-shrink-0 rounded-full py-1.5 text-center text-xs font-semibold transition-colors',
             isFollowing
               ? 'border border-gray-300 bg-white text-gray-500'
               : 'bg-[#3C9E00] text-white hover:bg-[#2d7a00]',
