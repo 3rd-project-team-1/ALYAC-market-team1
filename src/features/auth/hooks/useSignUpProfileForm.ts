@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useCheckAccountnameDuplicate, useSignUp } from '@/entities/auth';
 import { ApiErrorResponse, SignupRequest } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import { type SignupProfileInput, signupProfileSchema } from '../model/signup.schema';
 
@@ -26,7 +27,7 @@ export function useSignUpProfileForm() {
   useEffect(() => {
     if (!email || !password) {
       alert('잘못된 접근입니다. 이메일부터 다시 입력해 주세요.');
-      navigate('/signup'); //TODO: 하드코딩 된거 없애기!
+      navigate(ROUTE_PATHS.SIGNUP);
     }
   }, [email, password, navigate]);
 
@@ -92,7 +93,7 @@ export function useSignUpProfileForm() {
       await signUpMutation.mutateAsync(requestData);
 
       toast.success('회원가입 완료! 🎉');
-      navigate('/signin');
+      navigate(ROUTE_PATHS.SIGNIN);
     } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
         toast.error(error.response?.data?.message || '회원가입에 실패했습니다.');

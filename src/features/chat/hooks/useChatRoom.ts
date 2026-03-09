@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { ROUTE_PATHS } from '@/shared/router';
+
 import type { ChatMessage } from '../model/types';
 
 const DUMMY_MESSAGES: ChatMessage[] = [
@@ -48,7 +50,7 @@ export function useChatRoom() {
 
   const handleLeaveRoom = () => {
     setShowModal(false);
-    navigate('/chat');
+    navigate(ROUTE_PATHS.CHAT);
   };
 
   return {

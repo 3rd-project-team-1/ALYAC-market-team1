@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ChatRoomList, DUMMY_CHAT_ROOMS } from '@/features/chat';
 import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/router';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function ChatPage() {
@@ -12,7 +13,7 @@ export function ChatPage() {
       <TopBasicNav />
       <ChatRoomList
         rooms={DUMMY_CHAT_ROOMS}
-        onRoomClick={(roomId) => navigate(`/chat/${roomId}`)}
+        onRoomClick={(roomId) => navigate(ROUTE_PATHS.CHAT_ROOM(roomId))}
       />
     </div>
   );

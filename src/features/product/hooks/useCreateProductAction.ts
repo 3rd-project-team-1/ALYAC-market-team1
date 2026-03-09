@@ -6,6 +6,7 @@ import { useCreateProduct } from '@/entities/product';
 import { productQueryKeys } from '@/entities/product';
 import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import type { ProductFormInput } from '../model/product-from.schema';
 
@@ -41,7 +42,7 @@ export function useCreateProductAction() {
             queryKey: productQueryKeys.products(profile?.accountname),
           });
           toast.success('상품이 등록되었습니다');
-          navigate('/profile');
+          navigate(ROUTE_PATHS.PROFILE);
         },
         onError: () => {
           toast.error('상품 등록에 실패했습니다');

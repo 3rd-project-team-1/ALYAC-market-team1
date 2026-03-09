@@ -6,6 +6,7 @@ import { useUpdateProduct } from '@/entities/product';
 import { productQueryKeys } from '@/entities/product';
 import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import type { ProductFormInput } from '../model/product-from.schema';
 
@@ -49,7 +50,7 @@ export function useUpdateProductAction(productId: string | undefined, initialIma
           });
           queryClient.invalidateQueries({ queryKey: productQueryKeys.product(productId) });
           toast.success('상품이 수정되었습니다');
-          navigate('/profile');
+          navigate(ROUTE_PATHS.PROFILE);
         },
         onError: () => {
           toast.error('상품 수정에 실패했습니다');

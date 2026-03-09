@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import { useFeedPosts } from './useFeedPosts';
 
@@ -32,11 +33,11 @@ export function useFeedPage() {
   }, [hasMore, loadMore, posts]);
 
   const handlePostClick = (postId: string) => {
-    navigate(`/post/${postId}`);
+    navigate(ROUTE_PATHS.POST(postId));
   };
 
   const handleRewritePost = (postId: string) => {
-    navigate(`/post/${postId}/edit`);
+    navigate(ROUTE_PATHS.EDIT_POST(postId));
   };
 
   return {
@@ -48,6 +49,6 @@ export function useFeedPage() {
     deletePost,
     handlePostClick,
     handleRewritePost,
-    onSearch: () => navigate('/search'),
+    onSearch: () => navigate(ROUTE_PATHS.SEARCH),
   };
 }
