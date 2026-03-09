@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 
 import { useDeleteUserPostMutation, useUserPostsWithHeart } from '@/entities/post';
 import type { Post } from '@/entities/post/model/post.schema';
+import { ROUTE_PATHS } from '@/shared/router';
 
 import { useProfileTargetAccount } from './useProfileTargetAccount';
 
@@ -28,11 +29,11 @@ export function useProfilePostsSection() {
   });
 
   const handleEditPost = (post: Post) => {
-    navigate(`/post/${post.id}/edit`, { state: { post } });
+    navigate(ROUTE_PATHS.EDIT_POST(post.id), { state: { post } });
   };
 
   const handlePostDetail = (postId: string) => {
-    navigate(`/post/${postId}`);
+    navigate(ROUTE_PATHS.POST(postId));
   };
 
   const handleDeleteConfirm = () => {

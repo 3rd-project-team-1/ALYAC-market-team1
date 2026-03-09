@@ -2,13 +2,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ChatIcon, EditIcon, HomeIcon, ProfileIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/router';
 import { IconButton } from '@/shared/ui';
 
 const tabs = [
-  { path: ['/feed', '/search'], label: '홈', Icon: HomeIcon },
-  { path: ['/chat'], label: '채팅', Icon: ChatIcon },
-  { path: ['/create-post'], label: '게시물 작성', Icon: EditIcon },
-  { path: ['/profile'], label: '프로필', Icon: ProfileIcon },
+  { path: [ROUTE_PATHS.FEED, ROUTE_PATHS.SEARCH], label: '홈', Icon: HomeIcon },
+  { path: [ROUTE_PATHS.CHAT], label: '채팅', Icon: ChatIcon },
+  { path: [ROUTE_PATHS.CREATE_POST], label: '게시물 작성', Icon: EditIcon },
+  { path: [ROUTE_PATHS.PROFILE], label: '프로필', Icon: ProfileIcon },
 ];
 
 export const TabMenu = () => {

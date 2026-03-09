@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SearchIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/router';
 
 interface TopMainNavProps {
   title: string;
@@ -18,7 +19,7 @@ export function TopMainNav({ title }: TopMainNavProps) {
     >
       <span className={cn('text-foreground text-base font-semibold')}>{title}</span>
       <button
-        onClick={() => navigate('/search')}
+        onClick={() => navigate(ROUTE_PATHS.SEARCH)}
         className={cn(
           'hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
         )}
