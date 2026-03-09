@@ -43,7 +43,6 @@ export function FeedList({
   onLoadMore,
   onRewrite,
   onDelete,
-  onReport,
   onClick,
 }: FeedListProps) {
   return (
@@ -66,7 +65,6 @@ export function FeedList({
             isMyPost={post.author.accountname === myAccountname}
             onRewrite={onRewrite}
             onDelete={onDelete}
-            onReport={onReport}
             onClick={() => onClick(post.id)}
           />
         ))}

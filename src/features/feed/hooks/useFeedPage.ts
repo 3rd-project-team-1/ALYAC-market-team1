@@ -32,16 +32,17 @@ export function useFeedPage() {
     navigate(ROUTE_PATHS.EDIT_POST(postId));
   };
 
-  // 신고 기능 (추후 신고 API 구현시 업데이트 예정)
-  const handleReportPost = (_postId: string) => {
-    alert('신고 기능은 추후 업데이트 예정입니다.');
-  };
+  // // 신고 기능 (추후 신고 API 구현시 업데이트 예정)
+  // const handleReportPost = (_postId: string) => {
+  //   alert('신고 기능은 추후 업데이트 예정입니다.');
+  // };
 
   return {
     myAccountname,
     isLoading,
     isFetchingMore,
     hasMore,
+    loadMore,
     posts,
     deletePost,
     handlePostClick,

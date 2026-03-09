@@ -22,7 +22,6 @@ export function FeedPage() {
     deletePost,
     handlePostClick,
     handleRewritePost,
-    handleReportPost,
     onSearch,
   } = useFeedPage();
 
@@ -45,7 +44,6 @@ export function FeedPage() {
             onLoadMore={loadMore}
             onRewrite={handleRewritePost}
             onDelete={deletePost}
-            onReport={handleReportPost}
             onClick={handlePostClick}
           />
         ) : (
