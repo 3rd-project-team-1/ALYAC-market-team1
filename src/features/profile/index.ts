@@ -1,4 +1,3 @@
-export { ProfileImageInput } from './ui/ProfileImageInput';
 export { useEditProfileForm } from './hooks/useEditProfileForm';
 export { useProfileTargetAccount } from './hooks/useProfileTargetAccount';
 export { useProfileTopSection } from './hooks/useProfileTopSection';

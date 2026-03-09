@@ -1,7 +1,8 @@
-import { useSignUpProfileForm } from '@/features/auth';
-import { ProfileImageInput } from '@/features/profile';
 import { cn } from '@/shared/lib';
+import { ProfileImageInput } from '@/shared/ui';
 import { Button, FormField } from '@/shared/ui';
+
+import { useSignUpProfileForm } from '../hooks/useSignUpProfileForm';
 
 export function SignUpProfileForm() {
   const { register, handleSubmit, onSubmit, errors, isValid, setProfileImageFile, isPending } =
@@ -43,10 +44,15 @@ export function SignUpProfileForm() {
         type="submit"
         disabled={!isValid || isPending}
         className={cn(
-          'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-2 text-base font-semibold whitespace-nowrap text-white transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+          'inline-flex h-14 w-full items-center justify-center gap-2 px-4 py-2',
+          'text-base font-semibold whitespace-nowrap text-white',
+          'cursor-pointer rounded-full transition-colors',
+          'focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+          '[&_svg]:pointer-events-none [&_svg]:shrink-0',
           isValid
-            ? 'bg-[var(--color-primary-green)] hover:bg-[var(--color-primary-green-hover)] active:bg-[var(--color-primary-green-hover)]'
-            : 'cursor-not-allowed bg-[var(--color-primary-green-light)] text-white',
+            ? 'bg-primary-green hover:bg-primary-green-hover active:bg-primary-green-hover'
+            : 'bg-primary-green-light cursor-not-allowed text-white',
         )}
       >
         {isPending ? '처리 중...' : '알약마켓 시작하기'}

@@ -30,7 +30,7 @@ export const useSignInForm = () => {
 
   const onSubmit = (data: SigninInput) => {
     loginMutation.mutate(data, {
-      onSuccess: () => navigate('/feed'),
+      onSuccess: () => navigate('/feed'), //TODO: 하드코딩된거 개선하기
       onError: (error) => {
         if (axios.isAxiosError<{ message: string }>(error)) {
           const errorMessage =

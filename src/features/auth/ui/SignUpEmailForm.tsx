@@ -1,6 +1,7 @@
-import { useSignUpEmailForm } from '@/features/auth';
 import { cn } from '@/shared/lib';
 import { Button, FormField } from '@/shared/ui';
+
+import { useSignUpEmailForm } from '../hooks/useSignUpEmailForm';
 
 export function SignUpEmailForm() {
   const { register, handleSubmit, errors, isValid, onSubmit } = useSignUpEmailForm();
