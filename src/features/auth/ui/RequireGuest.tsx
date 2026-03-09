@@ -43,5 +43,5 @@ export function RequireGuest() {
   if (isVerifying) {
     return <div>로딩 중...</div>;
   }
-  return isValid ? <Navigate to="/feed" replace /> : <Outlet />;
+  return isValid ? <Navigate to="/feed" replace /> : <Outlet />; //TODO: 여기도 하드코딩 바꾸기
 }

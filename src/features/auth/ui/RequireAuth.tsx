@@ -13,7 +13,7 @@ export function RequireAuth() {
     if (!token) return;
 
     let isMounted = true;
-
+    // TODO: GUSET랑 중복되는 부분을 컴포넌트로?
     const verifyToken = async () => {
       const isTokenValid = await checkTokenValidity();
 
@@ -37,7 +37,7 @@ export function RequireAuth() {
   }, [token]);
 
   if (!token) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />; //TODO :여기도 하드코딩 바꾸기
   }
 
   if (isVerifying) {
