@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUpdateProduct } from '@/entities/product';
+import { productQueryKeys } from '@/entities/product';
 import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
 
@@ -43,8 +44,10 @@ export function useUpdateProductAction(productId: string | undefined, initialIma
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['products', profile?.accountname] });
-          queryClient.invalidateQueries({ queryKey: ['product', productId] });
+          queryClient.invalidateQueries({
+            queryKey: productQueryKeys.products(profile?.accountname),
+          });
+          queryClient.invalidateQueries({ queryKey: productQueryKeys.product(productId) });
           toast.success('상품이 수정되었습니다');
           navigate('/profile');
         },

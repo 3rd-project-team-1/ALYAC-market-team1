@@ -1,12 +1,13 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { PostCardModel } from '@/entities/feed';
+import { postQueryKeys } from '@/entities/post/';
 import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
 import type { Post } from '@/entities/post/model/post.schema';
 
 const LIMIT = 10;
 
-const FEED_QUERY_KEY = ['feed'] as const;
+const FEED_QUERY_KEY = postQueryKeys.feed();
 
 function mapPost(post: Post): PostCardModel {
   return {

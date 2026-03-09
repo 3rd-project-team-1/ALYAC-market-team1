@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { userQueryKeys } from '../api/queryKeys';
 import { searchUsers } from '../api/searchUsers';
 
 /**
@@ -11,7 +12,7 @@ export function useSearchUsers(keyword: string) {
   const trimmedKeyword = keyword.trim();
 
   return useQuery({
-    queryKey: ['users', 'search', trimmedKeyword],
+    queryKey: userQueryKeys.searchUsers(trimmedKeyword),
     queryFn: () => searchUsers(trimmedKeyword),
     enabled: !!trimmedKeyword,
     staleTime: 1000 * 60 * 5,
