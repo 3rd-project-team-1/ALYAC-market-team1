@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
+import { LoadingSpinner } from '@/shared/ui';
 
 export function RequireAuth() {
   const token = getToken();
@@ -41,7 +42,7 @@ export function RequireAuth() {
   }
 
   if (isVerifying) {
-    return <div>권한 확인 중...</div>;
+    return <LoadingSpinner fullScreen message="권한 확인 중..." />;
   }
 
   return isValid ? <Outlet /> : <Navigate to="/" replace />;

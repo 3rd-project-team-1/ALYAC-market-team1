@@ -2,6 +2,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import type { PostCardModel } from '@/features/feed';
 import { cn } from '@/shared/lib';
+import { LoadingSpinner } from '@/shared/ui';
 
 import { PostCard } from './PostCard';
 
@@ -34,8 +35,8 @@ export function FeedList({
         loadMore={onLoadMore}
         hasMore={hasMore && !isFetchingMore}
         loader={
-          <div key="loader" className={cn('p-4 text-center text-sm text-gray-400')}>
-            불러오는 중...
+          <div key="loader" className={cn('py-6')}>
+            <LoadingSpinner message="피드를 불러오는 중..." />
           </div>
         }
       >
