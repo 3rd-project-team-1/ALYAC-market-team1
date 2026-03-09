@@ -1,5 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
+import { LoadingSpinner } from '@/shared/ui';
+
 import { useTokenVerification } from '../lib/use-token-verification';
 
 /**
@@ -14,7 +16,7 @@ export function RequireGuest() {
   }
 
   if (isVerifying) {
-    return <div>로딩 중...</div>;
+    return <LoadingSpinner fullScreen message="로딩 중..." />;
   }
 
   return isValid ? <Navigate to="/feed" replace /> : <Outlet />;

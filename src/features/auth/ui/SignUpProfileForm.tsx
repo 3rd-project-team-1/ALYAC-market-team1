@@ -1,7 +1,8 @@
-import { useSignUpProfileForm } from '@/features/auth';
 import { ProfileImageInput } from '@/features/profile';
 import { cn } from '@/shared/lib';
 import { Button, FormField } from '@/shared/ui';
+
+import { useSignUpProfileForm } from '../hooks/useSignUpProfileForm';
 
 export function SignUpProfileForm() {
   const { register, handleSubmit, onSubmit, errors, isValid, setProfileImageFile, isPending } =

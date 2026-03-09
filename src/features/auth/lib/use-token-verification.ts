@@ -1,3 +1,4 @@
+// features/auth/lib/use-token-verification.ts
 import { useEffect, useState } from 'react';
 
 import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
@@ -8,7 +9,8 @@ import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
  */
 export function useTokenVerification() {
   const token = getToken();
-  const [isVerifying, setIsVerifying] = useState(false);
+
+  const [isVerifying, setIsVerifying] = useState(() => !!token);
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {

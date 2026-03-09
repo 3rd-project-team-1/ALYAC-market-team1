@@ -1,5 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
+import { LoadingSpinner } from '@/shared/ui';
+
 import { useTokenVerification } from '../lib/use-token-verification';
 
 /**
@@ -14,7 +16,7 @@ export function RequireAuth() {
   }
 
   if (isVerifying) {
-    return <div>권한 확인 중...</div>;
+    return <LoadingSpinner fullScreen message="권한 확인 중..." />;
   }
 
   return isValid ? <Outlet /> : <Navigate to="/" replace />;
