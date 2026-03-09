@@ -5,7 +5,7 @@ import { useForm, useWatch } from 'react-hook-form';
 
 import { type CreatePostInput, createPostSchema } from '../model/create-post.schema';
 
-export function usePostEditorForm(defaultContent = '') {
+export function usePostFormState(defaultContent = '') {
   const form = useForm<CreatePostInput>({
     resolver: zodResolver(createPostSchema),
     mode: 'onChange',

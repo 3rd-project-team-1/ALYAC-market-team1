@@ -3,9 +3,9 @@ import {
   PostEditorLayout,
   useEditPostSource,
   useEditPostSubmit,
-  usePostEditorFocus,
-  usePostEditorForm,
-  usePostEditorImages,
+  usePostContentFocus,
+  usePostFormState,
+  usePostImageManager,
 } from '@/features/post';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
@@ -21,9 +21,9 @@ export function EditPostPage() {
         .filter(Boolean)
     : [];
 
-  const { form, hasContent } = usePostEditorForm(post?.content ?? '');
+  const { form, hasContent } = usePostFormState(post?.content ?? '');
   const { isFocused, showError, onFocus, onBlur, handleContentChange } =
-    usePostEditorFocus(hasContent);
+    usePostContentFocus(hasContent);
   const {
     images,
     existingImagePaths,
@@ -31,7 +31,7 @@ export function EditPostPage() {
     cleanupPreviewUrls,
     handleImageAdd,
     handleImageRemove,
-  } = usePostEditorImages(initialImages);
+  } = usePostImageManager(initialImages);
   const { submit, isSubmitting } = useEditPostSubmit(
     postId,
     existingImagePaths,
