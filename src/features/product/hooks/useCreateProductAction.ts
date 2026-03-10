@@ -13,7 +13,7 @@ import type { ProductFormInput } from '../model/product-from.schema';
 export function useCreateProductAction() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
   const createMutation = useCreateProduct();
 
   const submit = async (formData: ProductFormInput, imageFile?: File) => {

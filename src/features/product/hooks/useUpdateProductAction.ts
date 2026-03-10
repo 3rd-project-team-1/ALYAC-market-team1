@@ -13,7 +13,7 @@ import type { ProductFormInput } from '../model/product-from.schema';
 export function useUpdateProductAction(productId: string | undefined, initialImage?: string) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
   const updateMutation = useUpdateProduct();
 
   const submit = async (formData: ProductFormInput, imageFile?: File) => {

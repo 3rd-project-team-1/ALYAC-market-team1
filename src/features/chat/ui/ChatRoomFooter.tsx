@@ -13,7 +13,7 @@ interface ChatRoomFooterProps {
 
 export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
   const [isFocused, setIsFocused] = useState(false);
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
   const { value, setValue, canSubmit, submit } = useChatComposer(onSubmit);
 
   return (

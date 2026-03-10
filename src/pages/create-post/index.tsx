@@ -11,7 +11,7 @@ import type { CreatePostInput } from '@/features/post/model/create-post.schema';
 
 export function PostCreatePage() {
   const { initialContent } = useCreatePostInitialContent();
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
 
   const { form, hasContent } = usePostFormState(initialContent);
   const { isFocused, showError, onFocus, onBlur, handleContentChange } =

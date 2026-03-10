@@ -14,7 +14,7 @@ import { type EditProfileInput, editProfileSchema } from '../model/edit-profile.
 export function useEditProfileForm() {
   const navigate = useNavigate();
 
-  const { profile, isLoading } = useProfile();
+  const { data: profile, isLoading } = useProfile();
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
 
   const {

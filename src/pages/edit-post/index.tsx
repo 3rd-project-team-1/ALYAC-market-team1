@@ -12,7 +12,7 @@ import { LoadingSpinner } from '@/shared/ui';
 
 export function EditPostPage() {
   const { postId, post, isPostLoading } = useEditPostSource();
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
 
   const initialImages = post?.image
     ? post.image
