@@ -9,7 +9,7 @@ import type { Post } from '@/entities/post/model/post.schema';
 import type { PostCardModel } from '../model/types';
 
 /** 한 번에 불러올 게시글 수 */
-const LIMIT = 10;
+const LIMIT = 4;
 
 /** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
 export const FEED_QUERY_KEY = ['feed'] as const;
