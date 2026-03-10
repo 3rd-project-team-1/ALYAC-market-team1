@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getComments } from '../api/getComments';
-import { postQueryKeys } from '../api/queryKeys';
+import { postQueryKeys } from '../model/queryKeys';
 
 export function useCommentsQuery(postId: string | undefined) {
   return useQuery({

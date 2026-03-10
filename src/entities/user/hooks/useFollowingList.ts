@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getFollowing } from '../api/getFollowing';
-import { userQueryKeys } from '../api/queryKeys';
+import { userQueryKeys } from '../model/queryKeys';
 
 export function useFollowingList(accountname?: string) {
   const { data, isLoading } = useQuery({

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { uploadMultipleImages } from '@/shared/api';
 
-import { postQueryKeys } from '../api/queryKeys';
+import { postQueryKeys } from '../model/queryKeys';
 import { updatePost } from '../api/updatePost';
 
 interface UpdatePostPayload {
