@@ -1,28 +1,76 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 
 import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
-import type { Post } from '@/entities/post/model/post.schema';
 
+import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
 
 /** 게시글 하나를 불러온 후 다음 게시글까지 대기 시간 (ms) */
-const SLOW_LOAD_DELAY_MS = 800;
+const SLOW_LOAD_DELAY_MS = 30000;
 
-function mapPost(post: Post): PostCardModel {
-  return {
-    id: post.id,
-    content: post.content,
-    image: post.image && post.image.trim() !== '' ? post.image : undefined,
-    hearted: post.hearted,
-    heartCount: post.heartCount,
-    commentCount: post.commentCount,
-    createdAt: post.createdAt,
-    author: {
-      username: post.author.username,
-      accountname: post.author.accountname,
-      image: post.author.image,
-    },
-  };
+// ─── 상태 타입 ────────────────────────────────────────────────────────────────
+
+type State = {
+  posts: PostCardModel[];
+  isFetching: boolean;
+  isDone: boolean;
+};
+
+/** 폴백 로딩 상태를 변경하는 액션 유니온 타입 */
+type Action =
+  | { type: 'RESET' } // 폴백 세션 초기화
+  | { type: 'FETCH_START' } // 게시글 요청 시작
+  | { type: 'FETCH_SUCCESS'; post: PostCardModel } // 게시글 수신 성공
+  | { type: 'DONE' }; // 모든 게시글 소진 또는 오류 종료
+
+const initialState: State = { posts: [], isFetching: false, isDone: false };
+
+// ─── 헬퍼 ─────────────────────────────────────────────────────────────────────
+
+/**
+ * AbortSignal을 지원하는 지연 함수입니다.
+ * signal이 abort되면 Promise가 reject되어 대기 중인 sleep을 즉시 종료합니다.
+ */
+function sleep(ms: number, signal: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) {
+      reject(new DOMException('Aborted', 'AbortError'));
+      return;
+    }
+    const id = setTimeout(resolve, ms);
+    signal.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(id);
+        reject(new DOMException('Aborted', 'AbortError'));
+      },
+      { once: true },
+    );
+  });
+}
+
+// ─── Reducer ──────────────────────────────────────────────────────────────────
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'RESET':
+      // isEnabled가 true로 다시 활성화될 때 상태를 완전히 초기화
+      return initialState;
+    case 'FETCH_START':
+      return { ...state, isFetching: true };
+    case 'FETCH_SUCCESS': {
+      // 동일 id가 이미 목록에 있으면 추가하지 않음 (중복 방지)
+      const isDuplicate = state.posts.some((p) => p.id === action.post.id);
+      return {
+        ...state,
+        isFetching: false,
+        posts: isDuplicate ? state.posts : [...state.posts, action.post],
+      };
+    }
+    case 'DONE':
+      // 더 불러올 게시글이 없거나 오류 발생 시 로딩을 종료
+      return { ...state, isFetching: false, isDone: true };
+  }
 }
 
 /**
@@ -39,59 +87,47 @@ function mapPost(post: Post): PostCardModel {
  * - `isDone`     - 더 이상 불러올 게시글이 없거나 오류가 발생해 종료된 경우 true
  */
 export function useSlowFeedFallback(isEnabled: boolean) {
-  const [posts, setPosts] = useState<PostCardModel[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [isDone, setIsDone] = useState(false);
-
-  const skipRef = useRef(0);
-  const stoppedRef = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     if (!isEnabled) return;
 
-    // 새로운 폴백 세션 시작 — 이전 상태 초기화
-    stoppedRef.current = false;
-    skipRef.current = 0;
-    setPosts([]);
-    setIsDone(false);
+    // AbortController로 비동기 페치·sleep 취소를 한 곳에서 관리
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    // skip은 동일 effect 실행 내 재귀 호출 간 클로저로 공유되므로 ref 불필요
+    let skip = 0;
+
+    dispatch({ type: 'RESET' });
 
     const fetchOne = async () => {
-      if (stoppedRef.current) return;
+      if (signal.aborted) return;
 
-      setIsFetching(true);
+      dispatch({ type: 'FETCH_START' });
 
       try {
-        const response = await getFeedPosts(skipRef.current, 1);
+        const { posts = [] } = await getFeedPosts(skip, 1);
 
-        if (stoppedRef.current) return;
+        // 비동기 응답이 돌아왔을 때 이미 중단 상태이면 무시
+        if (signal.aborted) return;
 
-        const fetched = response.posts ?? [];
-
-        if (fetched.length === 0) {
-          // 더 이상 게시글 없음 → 종료
-          setIsFetching(false);
-          setIsDone(true);
+        if (posts.length === 0) {
+          // 더 불러올 게시글 없음 → 폴백 종료
+          dispatch({ type: 'DONE' });
           return;
         }
 
-        const mapped = mapPost(fetched[0]);
-        setPosts((prev) => {
-          // 중복 방지
-          if (prev.some((p) => p.id === mapped.id)) return prev;
-          return [...prev, mapped];
-        });
-        skipRef.current += 1;
-        setIsFetching(false);
+        dispatch({ type: 'FETCH_SUCCESS', post: mapPost(posts[0]) });
+        skip += 1;
 
-        // 다음 게시글 예약
-        timerRef.current = setTimeout(() => {
-          fetchOne();
-        }, SLOW_LOAD_DELAY_MS);
+        // SLOW_LOAD_DELAY_MS 대기 후 다음 게시글 요청 (abort 시 즉시 중단)
+        await sleep(SLOW_LOAD_DELAY_MS, signal);
+        fetchOne();
       } catch {
-        if (!stoppedRef.current) {
-          setIsFetching(false);
-          setIsDone(true);
+        // AbortError 또는 네트워크 오류 — abort된 경우 DONE 미발행
+        if (!signal.aborted) {
+          dispatch({ type: 'DONE' });
         }
       }
     };
@@ -99,12 +135,10 @@ export function useSlowFeedFallback(isEnabled: boolean) {
     fetchOne();
 
     return () => {
-      stoppedRef.current = true;
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      // 언마운트 또는 isEnabled 변경 시 진행 중인 페치·타이머 일괄 취소
+      controller.abort();
     };
   }, [isEnabled]);
 
-  return { posts, isFetching, isDone };
+  return state;
 }
