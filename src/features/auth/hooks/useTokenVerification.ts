@@ -1,4 +1,3 @@
-// features/auth/lib/use-token-verification.ts
 import { useEffect, useState } from 'react';
 
 import { checkTokenValidity, getToken, removeToken } from '@/shared/lib';
