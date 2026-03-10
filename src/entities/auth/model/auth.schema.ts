@@ -6,8 +6,14 @@ const baseUserSchema = z.object({
   username: z.string(),
   email: z.string(),
   accountname: z.string(),
-  intro: z.string().optional().default(''),
-  image: z.string().optional().default(''),
+  intro: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
+  image: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? ''),
 });
 
 // 회원가입 응답 스키마
