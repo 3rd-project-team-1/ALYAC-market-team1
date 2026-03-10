@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ChatIcon, EditIcon, HomeIcon, ProfileIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { IconButton } from '@/shared/ui';
 
 const tabs = [

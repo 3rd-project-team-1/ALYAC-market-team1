@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCheckEmailDuplicate } from '@/entities/auth';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { type SignupEmailInput, signupEmailSchema } from '../model/signup.schema';
 

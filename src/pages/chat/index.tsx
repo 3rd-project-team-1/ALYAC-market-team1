@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ChatRoomList, DUMMY_CHAT_ROOMS } from '@/features/chat';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { TopBasicNav } from '@/widgets/top-basic-nav';
 
 export function ChatPage() {

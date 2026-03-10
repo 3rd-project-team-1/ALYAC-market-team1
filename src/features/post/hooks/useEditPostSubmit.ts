@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUpdatePostMutation } from '@/entities/post';
-import { ROUTE_PATHS } from '@/shared/router/routePaths';
+import { ROUTE_PATHS } from '@/shared/routes/routePaths';
 
 export function useEditPostSubmit(
   postId: string | undefined,

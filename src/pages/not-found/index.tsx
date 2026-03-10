@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { FullLogoAlyac404Icon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { Button } from '@/shared/ui';
 
 export function NotFoundPage() {
