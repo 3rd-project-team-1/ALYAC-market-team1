@@ -12,6 +12,7 @@ export function useDeleteCommentMutation(postId: string | undefined, onSuccess?:
       onSuccess?.();
       queryClient.invalidateQueries({ queryKey: postQueryKeys.comments(postId) });
       queryClient.invalidateQueries({ queryKey: postQueryKeys.post(postId) });
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] });
     },
   });
 }
