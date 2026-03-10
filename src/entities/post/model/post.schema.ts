@@ -6,7 +6,7 @@ export const postAuthorSchema = z.object({
   accountname: z.string(),
   image: z.string(),
   intro: z.string(),
-  isfollow: z.boolean(),
+  isfollow: z.boolean().optional(),
   following: z.array(z.string()),
   follower: z.array(z.string()),
   followingCount: z.number(),
@@ -55,6 +55,7 @@ export const commentResponseSchema = z.object({
 });
 
 export const commentsResponseSchema = z.object({
+  id: z.string().optional(),
   comment: z.array(commentSchema),
 });
 export const deleteCommentResponseSchema = z.object({
