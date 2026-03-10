@@ -6,6 +6,7 @@ import { deletePost as deletePostApi } from '@/entities/post/api/deletePost';
 import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
 import type { Post } from '@/entities/post/model/post.schema';
 
+import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
 
 /** 한 번에 불러올 게시글 수 */
@@ -13,27 +14,6 @@ const LIMIT = 4;
 
 /** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
 export const FEED_QUERY_KEY = ['feed'] as const;
-
-/**
- * 서버 Post 엔티티를 화면 렌더링용 PostCardModel로 변환합니다.
- * 이미지가 빈 문자열인 경우 undefined로 처리하여 img 태그가 불필요하게 렌더링되는 것을 방지합니다.
- */
-function mapPost(post: Post): PostCardModel {
-  return {
-    id: post.id,
-    content: post.content,
-    image: post.image && post.image.trim() !== '' ? post.image : undefined,
-    hearted: post.hearted,
-    heartCount: post.heartCount,
-    commentCount: post.commentCount,
-    createdAt: post.createdAt,
-    author: {
-      username: post.author.username,
-      accountname: post.author.accountname,
-      image: post.author.image,
-    },
-  };
-}
 
 /**
  * 피드 게시글 목록을 무한 스크롤로 조회하고 삭제 기능을 제공하는 훅입니다.
