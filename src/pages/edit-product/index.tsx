@@ -12,7 +12,6 @@ export function EditProductPage() {
     isProductLoading,
     isProductError,
     form,
-    handlePriceChange,
     handleImageChange,
     onSubmit,
     isSubmitting,
@@ -40,7 +39,6 @@ export function EditProductPage() {
       onSubmit={onSubmit}
       isSubmitting={isSubmitting}
       onImageChange={handleImageChange}
-      onPriceChange={handlePriceChange}
       initialImage={product.itemImage}
     />
   );
