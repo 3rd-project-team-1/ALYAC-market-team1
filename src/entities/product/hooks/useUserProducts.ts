@@ -4,12 +4,9 @@ import { getUserProducts } from '../api/getUserProducts';
 import { productQueryKeys } from '../model/queryKeys';
 
 export function useUserProducts(accountname?: string) {
-  const { data: products = [] } = useQuery({
+  return useQuery({
     queryKey: productQueryKeys.products(accountname),
     queryFn: () => getUserProducts(accountname!).then((res) => res.product),
     enabled: !!accountname,
   });
-
-  return { products };
 }
-//여기도 마찬가지로 리턴을 원본 그대로.
