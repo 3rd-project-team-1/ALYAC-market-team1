@@ -11,6 +11,9 @@ export const postAuthorSchema = z.object({
   follower: z.array(z.string()),
   followingCount: z.number(),
   followerCount: z.number(),
+  email: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export const postSchema = z.object({
