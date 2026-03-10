@@ -2,13 +2,13 @@ import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBB1mOs6Mmr3oq7m8su9vk-AcKfq-xxvfw',
-  authDomain: 'lets-sell-medicine.firebaseapp.com',
-  projectId: 'lets-sell-medicine',
-  storageBucket: 'lets-sell-medicine.firebasestorage.app',
-  messagingSenderId: '313002780734',
-  appId: '1:313002780734:web:35894ff69c5014393fc96f',
-  measurementId: 'G-Y62MW93NXZ',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);

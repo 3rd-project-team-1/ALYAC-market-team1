@@ -4,6 +4,7 @@ import { getTokenUserInfo } from '@/shared/lib/utils/token';
 import { ROUTE_PATHS } from '@/shared/routes';
 
 import { useFeedPostsQuery } from './useFeedPostsQuery';
+import { useSlowFeedFallback } from './useSlowFeedFallback';
 
 /**
  * 피드 페이지의 비즈니스 로직을 담당하는 커스텀 훅입니다.
@@ -20,8 +21,22 @@ export function useFeedPage() {
   // JWT 토큰에서 현재 로그인 유저의 accountname 추출 (게시글 수정/삭제 권한 판별에 사용)
   const myAccountname = getTokenUserInfo()?.accountname ?? '';
 
-  const { isLoading, isFetchingMore, isError, posts, deletePost, loadMore, hasMore } =
-    useFeedPostsQuery();
+  const {
+    isLoading,
+    isFetchingMore,
+    isError,
+    posts: feedPosts,
+    deletePost,
+    loadMore,
+    hasMore,
+  } = useFeedPostsQuery();
+
+  // 메인 쿼리 실패 시 게시글을 1개씩 천천히 불러오는 폴백
+  const {
+    posts: fallbackPosts,
+    isFetching: isFallbackFetching,
+    isDone: isFallbackDone,
+  } = useSlowFeedFallback(isError);
 
   // 게시글 클릭 → 상세 페이지 이동
   const handlePostClick = (postId: string) => {
@@ -45,10 +60,13 @@ export function useFeedPage() {
     isError,
     hasMore,
     loadMore,
-    posts,
+    // 오류 시 폴백 게시글, 정상 시 일반 게시글 사용
+    posts: isError ? fallbackPosts : feedPosts,
     deletePost,
     handlePostClick,
     handleRewritePost,
     onSearch: () => navigate(ROUTE_PATHS.SEARCH),
+    isFallbackFetching,
+    isFallbackDone,
   };
 }
