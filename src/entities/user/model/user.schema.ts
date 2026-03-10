@@ -10,7 +10,7 @@ export const userSchema = z.object({
   image: z.string(),
   password: z.string(),
   following: z.array(z.string()).default([]),
-  followers: z.array(z.string()).default([]),
+  follower: z.array(z.string()).default([]),
 });
 
 export const profileSchema = z.object({
@@ -20,8 +20,8 @@ export const profileSchema = z.object({
   intro: z.string().default(''),
   image: z.string(),
   isfollow: z.boolean(),
-  following: z.array(z.string()),
-  follower: z.array(z.string()),
+  following: z.array(z.string()).default([]).catch([]),
+  follower: z.array(z.string()).default([]).catch([]),
   followingCount: z.number(),
   followerCount: z.number(),
 });
@@ -105,7 +105,7 @@ export const followResponseSchema = z.object({
   profile: profileSchema,
 });
 
-// ===== 타입 추출 (기존 이름 모두 유지) =====
+// ===== 타입 추출  =====
 export type User = z.infer<typeof userSchema>;
 export type Profile = z.infer<typeof profileSchema>;
 
