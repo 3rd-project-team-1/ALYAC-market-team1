@@ -33,10 +33,7 @@ export function ProductForm({
       <form onSubmit={onSubmit}>
         <div className={cn('flex flex-col gap-5 px-6 pt-6')}>
           <ProductImageUploader initialImage={initialImage} onImageChange={onImageChange} />
-          <ProductFormFields
-            register={form.register}
-            errors={form.formState.errors}
-          />
+          <ProductFormFields register={form.register} errors={form.formState.errors} />
         </div>
       </form>
     </div>

@@ -28,10 +28,7 @@
   --color-sidebar-primary: light-dark(oklch(0.24 0 0), oklch(0.488 0.243 264.376));
   --color-sidebar-primary-foreground: oklch(0.984 0.003 247.858);
   --color-sidebar-accent: light-dark(oklch(0.968 0.007 247.896), oklch(0.32 0 0));
-  --color-sidebar-accent-foreground: light-dark(
-    oklch(0.24 0 0),
-    oklch(0.984 0.003 247.858)
-  );
+  --color-sidebar-accent-foreground: light-dark(oklch(0.24 0 0), oklch(0.984 0.003 247.858));
   --color-sidebar-border: light-dark(oklch(0.929 0.013 255.508), oklch(1 0 0 / 10%));
   --color-sidebar-ring: light-dark(oklch(0.704 0 0), oklch(0.551 0.027 264.364));
   --color-input-label: oklch(0.5658 0 0);
