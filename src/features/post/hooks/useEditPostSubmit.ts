@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useUpdatePostMutation } from '@/entities/post';
+import { uploadMultipleImages } from '@/shared/api';
 import { ROUTE_PATHS } from '@/shared/routes/routePaths';
 
 export function useEditPostSubmit(
@@ -18,8 +19,12 @@ export function useEditPostSubmit(
       return;
     }
 
+    const newImagePaths =
+      newImageFiles.length > 0 ? await uploadMultipleImages(newImageFiles) : [];
+    const image = [...existingImagePaths, ...newImagePaths].join(',');
+
     updatePostMutation.mutate(
-      { postId, content, existingImagePaths, newImageFiles },
+      { postId, content, image },
       {
         onSuccess: (res) => {
           cleanupPreviewUrls();
