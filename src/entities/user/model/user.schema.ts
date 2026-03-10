@@ -26,18 +26,6 @@ export const profileSchema = z.object({
   followerCount: z.number(),
 });
 
-// ===== Auth 관련 스키마 추가 =====
-export const signupRequestSchema = z.object({
-  user: userSchema.pick({
-    username: true,
-    email: true,
-    accountname: true,
-    intro: true,
-    image: true,
-    password: true,
-  }),
-});
-
 export const authResponseSchema = z.object({
   user: userSchema.omit({ password: true }).extend({
     accessToken: z.string(),
