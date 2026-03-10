@@ -15,7 +15,9 @@ export function usePostDetailMutations(postId: string | undefined) {
 
   const heartMutation = useHeartMutation(postId!);
   const createCommentMutation = useCreateCommentMutation(postId!);
-  const deleteCommentMutation = useDeleteCommentMutation(postId!);
+  const deleteCommentMutation = useDeleteCommentMutation(postId!, () => {
+    toast.success('댓글이 삭제되었습니다.');
+  });
   const deletePostMutation = useDeletePostMutation(postId!, {
     onSuccess: () => {
       toast.success('게시물이 삭제되었습니다.');

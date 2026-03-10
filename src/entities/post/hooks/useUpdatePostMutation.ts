@@ -1,32 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { uploadMultipleImages } from '@/shared/api';
-
 import { updatePost } from '../api/updatePost';
 import { postQueryKeys } from '../model/queryKeys';
 
 interface UpdatePostPayload {
   postId: string;
   content: string;
-  existingImagePaths?: string[];
-  newImageFiles?: File[];
+  image: string;
 }
 
 export function useUpdatePostMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      postId,
-      content,
-      existingImagePaths = [],
-      newImageFiles = [],
-    }: UpdatePostPayload) => {
-      const newImagePaths =
-        newImageFiles.length > 0 ? await uploadMultipleImages(newImageFiles) : [];
-      const image = [...existingImagePaths, ...newImagePaths].join(',');
-      return updatePost(postId, content, image);
-    },
+    mutationFn: ({ postId, content, image }: UpdatePostPayload) =>
+      updatePost(postId, content, image),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: postQueryKeys.post(variables.postId) });
       queryClient.invalidateQueries({ queryKey: ['userPosts'] });
