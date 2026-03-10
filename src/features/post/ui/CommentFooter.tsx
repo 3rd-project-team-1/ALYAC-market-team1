@@ -11,7 +11,7 @@ interface CommentFooterProps {
 
 export function CommentFooter({ onSubmit }: CommentFooterProps) {
   const [value, setValue] = useState('');
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
 
   const handleSubmit = () => {
     if (!value.trim()) return;

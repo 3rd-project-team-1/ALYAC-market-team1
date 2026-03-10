@@ -10,7 +10,7 @@ export function useProfileTopSection() {
   const navigate = useNavigate();
   const { isMyProfile, targetAccountname } = useProfileTargetAccount();
 
-  const { profile } = useProfile(targetAccountname);
+  const { data: profile } = useProfile(targetAccountname);
   const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
     initialIsFollow: profile?.isfollow,
   });
