@@ -9,6 +9,7 @@ export function useHeartMutation(postId: string) {
     mutationFn: () => toggleHeart(postId),
     onSuccess: (res) => {
       queryClient.setQueryData(['post', postId], res.post);
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] });
     },
   });
 }
