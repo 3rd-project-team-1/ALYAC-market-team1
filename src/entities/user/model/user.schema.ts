@@ -109,15 +109,6 @@ export const followResponseSchema = z.object({
 export type User = z.infer<typeof userSchema>;
 export type Profile = z.infer<typeof profileSchema>;
 
-// Auth 관련 타입
-export type SignupRequest = z.infer<typeof signupRequestSchema>;
-export type AuthResponse = z.infer<typeof authResponseSchema>;
-export type LoginRequest = z.infer<typeof loginRequestSchema>;
-export type RefreshRequest = z.infer<typeof refreshRequestSchema>;
-export type RefreshResponse = z.infer<typeof refreshResponseSchema>;
-export type EmailValidRequest = z.infer<typeof emailValidRequestSchema>;
-export type AccountNameValidRequest = z.infer<typeof accountNameValidRequestSchema>;
-
 // 기존 타입
 export type UpdateProfileRequest = {
   user: {
