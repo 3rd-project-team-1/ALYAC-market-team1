@@ -69,7 +69,7 @@ export function PostEditorLayout({
           <div
             className={cn(
               'overflow-hidden rounded-lg border-2 transition-all',
-              isFocused ? 'border-blue-900' : 'border-transparent',
+              isFocused ? 'border-[oklch(0.75_0.15_250)]' : 'border-transparent',
             )}
           >
             <textarea
