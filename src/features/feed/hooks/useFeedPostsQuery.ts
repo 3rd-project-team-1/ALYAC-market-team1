@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import type { InfiniteData } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { postQueryKeys } from '@/entities/post';
 import { deletePost as deletePostApi } from '@/entities/post/api/deletePost';
 import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
 import type { Post } from '@/entities/post/model/post.schema';
@@ -10,9 +11,6 @@ import type { PostCardModel } from '../model/types';
 
 /** 한 번에 불러올 게시글 수 */
 const LIMIT = 10;
-
-/** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
-export const FEED_QUERY_KEY = ['feed'] as const;
 
 /**
  * 서버 Post 엔티티를 화면 렌더링용 PostCardModel로 변환합니다.
@@ -53,7 +51,7 @@ export function useFeedPostsQuery() {
   const queryClient = useQueryClient();
 
   const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: FEED_QUERY_KEY,
+    queryKey: postQueryKeys.feed(),
     queryFn: async ({ pageParam }) => {
       const response = await getFeedPosts(pageParam, LIMIT);
       const posts: Post[] = response.posts ?? [];
@@ -79,7 +77,7 @@ export function useFeedPostsQuery() {
     try {
       await deletePostApi(postId);
       // 캐시의 각 페이지에서 삭제된 postId를 필터링하여 제거
-      queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
+      queryClient.setQueryData(postQueryKeys.feed(), (old: InfiniteData<Post[]> | undefined) => {
         if (!old) return old;
         return {
           ...old,
