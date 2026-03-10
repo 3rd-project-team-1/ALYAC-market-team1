@@ -6,7 +6,10 @@ import { userQueryKeys } from '../model/queryKeys';
 export function useFollowingList(accountname?: string) {
   const { data, isLoading } = useQuery({
     queryKey: userQueryKeys.followings(accountname),
-    queryFn: () => getFollowing(accountname!).then((res) => res.following),
+    queryFn: () =>
+      getFollowing(accountname!).then((res) =>
+        res.following.map((user) => ({ ...user, isfollow: true })),
+      ),
     enabled: !!accountname,
   });
 
