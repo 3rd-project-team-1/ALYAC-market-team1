@@ -3,7 +3,7 @@
  *
  * 서버에서 받은 Post 엔티티(post.schema.ts)와 달리,
  * UI 렌더링에 실제로 필요한 필드만 포솔린 경량 뷰 모델입니다.
- * `useFeedPostsQuery`의 `mapPost` 함수를 통해 Post → PostCardModel로 변환됩니다.
+ * `mapPost` 함수(`model/mapPost.ts`)를 통해 Post → PostCardModel로 변환됩니다.
  */
 export interface PostCardModel {
   /** 게시글 고유 ID */

@@ -27,6 +27,8 @@ interface FeedListProps {
   onReport?: (postId: string) => void;
   /** 게시글 카드 클릭 핸들러 (상세 페이지 이동) */
   onClick: (postId: string) => void;
+  /** true이면 각 게시글 카드에 페이드인 슬라이드 애니메이션 적용 (폴백 모드에서 사용) */
+  animated?: boolean;
 }
 
 /**
@@ -47,6 +49,7 @@ export function FeedList({
   onRewrite,
   onDelete,
   onClick,
+  animated = false,
 }: FeedListProps) {
   const { ref, inView } = useInView({ threshold: 0 });
 
@@ -59,15 +62,21 @@ export function FeedList({
   return (
     <main className={cn('mx-auto max-w-5xl pt-[48px]')}>
       {posts.map((post) => (
-        <PostCard
+        <div
           key={post.id}
-          post={post}
-          // 게시글 작성자와 로그인 유저가 같으면 수정/삭제 메뉴 표시
-          isMyPost={post.author.accountname === myAccountname}
-          onRewrite={onRewrite}
-          onDelete={onDelete}
-          onClick={() => onClick(post.id)}
-        />
+          className={cn(
+            animated && 'animate-in fade-in slide-in-from-bottom-4 fill-mode-both duration-500',
+          )}
+        >
+          <PostCard
+            post={post}
+            // 게시글 작성자와 로그인 유저가 같으면 수정/삭제 메뉴 표시
+            isMyPost={post.author.accountname === myAccountname}
+            onRewrite={onRewrite}
+            onDelete={onDelete}
+            onClick={() => onClick(post.id)}
+          />
+        </div>
       ))}
       {/* 스크롤 감지용 sentinel 요소 */}
       <div ref={ref} className={cn('h-1')} />

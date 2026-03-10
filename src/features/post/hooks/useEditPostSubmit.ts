@@ -19,8 +19,7 @@ export function useEditPostSubmit(
       return;
     }
 
-    const newImagePaths =
-      newImageFiles.length > 0 ? await uploadMultipleImages(newImageFiles) : [];
+    const newImagePaths = newImageFiles.length > 0 ? await uploadMultipleImages(newImageFiles) : [];
     const image = [...existingImagePaths, ...newImagePaths].join(',');
 
     updatePostMutation.mutate(
