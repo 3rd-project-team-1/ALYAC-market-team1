@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { follow } from '../api/follow';
 import { unfollow } from '../api/unfollow';
-import { userQueryKeys } from '../model/queryKeys';
 
 interface UseProfileFollowParams {
   initialIsFollow?: boolean;
