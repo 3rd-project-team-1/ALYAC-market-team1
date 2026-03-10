@@ -1,5 +1,5 @@
+import type { Profile } from '@/entities/user';
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
-import type { Profile } from '@/entities/user/types';
 import { UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
