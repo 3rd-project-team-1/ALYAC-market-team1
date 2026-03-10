@@ -16,6 +16,7 @@ export function FeedPage() {
     myAccountname,
     isLoading,
     isFetchingMore,
+    isError,
     hasMore,
     loadMore,
     posts,
@@ -28,6 +29,15 @@ export function FeedPage() {
   // 최초 데이터 로딩 중 전체 화면 스피너 표시 (추가 페이지 로딩은 FeedList 내부에서 처리)
   if (isLoading) {
     return <LoadingSpinner fullScreen message="피드를 불러오는 중입니다..." />;
+  }
+
+  if (isError) {
+    return (
+      <main className={cn('mx-auto flex h-screen max-w-5xl flex-col items-center justify-center')}>
+        <p className={cn('text-lg text-gray-500')}>피드를 불러오지 못했습니다.</p>
+        <p className={cn('mt-1 text-sm text-gray-400')}>잠시 후 다시 시도해 주세요.</p>
+      </main>
+    );
   }
 
   return (

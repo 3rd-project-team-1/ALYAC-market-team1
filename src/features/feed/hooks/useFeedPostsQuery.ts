@@ -52,18 +52,19 @@ function mapPost(post: Post): PostCardModel {
 export function useFeedPostsQuery() {
   const queryClient = useQueryClient();
 
-  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: FEED_QUERY_KEY,
-    queryFn: async ({ pageParam }) => {
-      const response = await getFeedPosts(pageParam, LIMIT);
-      const posts: Post[] = response.posts ?? [];
-      return posts;
-    },
-    initialPageParam: 0,
-    // 마지막 페이지가 LIMIT 개수와 같으면 다음 페이지가 있다고 판단
-    getNextPageParam: (lastPage, _allPages, lastPageParam) =>
-      lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
-  });
+  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage, isError } =
+    useInfiniteQuery({
+      queryKey: FEED_QUERY_KEY,
+      queryFn: async ({ pageParam }) => {
+        const response = await getFeedPosts(pageParam, LIMIT);
+        const posts: Post[] = response.posts ?? [];
+        return posts;
+      },
+      initialPageParam: 0,
+      // 마지막 페이지가 LIMIT 개수와 같으면 다음 페이지가 있다고 판단
+      getNextPageParam: (lastPage, _allPages, lastPageParam) =>
+        lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
+    });
 
   // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)
   const posts: PostCardModel[] = (data?.pages.flat() ?? [])
@@ -95,6 +96,7 @@ export function useFeedPostsQuery() {
   return {
     isLoading: isPending,
     isFetchingMore: isFetchingNextPage,
+    isError,
     posts,
     deletePost,
     loadMore: fetchNextPage,

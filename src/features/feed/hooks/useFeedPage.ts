@@ -20,7 +20,8 @@ export function useFeedPage() {
   // JWT 토큰에서 현재 로그인 유저의 accountname 추출 (게시글 수정/삭제 권한 판별에 사용)
   const myAccountname = getTokenUserInfo()?.accountname ?? '';
 
-  const { isLoading, isFetchingMore, posts, deletePost, loadMore, hasMore } = useFeedPostsQuery();
+  const { isLoading, isFetchingMore, isError, posts, deletePost, loadMore, hasMore } =
+    useFeedPostsQuery();
 
   // 게시글 클릭 → 상세 페이지 이동
   const handlePostClick = (postId: string) => {
@@ -41,6 +42,7 @@ export function useFeedPage() {
     myAccountname,
     isLoading,
     isFetchingMore,
+    isError,
     hasMore,
     loadMore,
     posts,
