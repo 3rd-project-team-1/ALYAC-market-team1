@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { SignInForm } from '@/features/auth';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 export function SignInPage() {
   return (

@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { SignupRequest, useCheckAccountnameDuplicate, useSignUp } from '@/entities/auth';
 import { ApiErrorResponse } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { type SignupProfileInput, signupProfileSchema } from '../model/signup.schema';
 

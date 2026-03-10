@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SearchIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { Button } from '@/shared/ui';
 
 interface TopMainNavProps {

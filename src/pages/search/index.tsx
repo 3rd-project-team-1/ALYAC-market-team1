@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserSearchCard, useUserSearch } from '@/features/search';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { TopSearchNav } from '@/widgets/top-search-nav';
 
 export function SearchPage() {

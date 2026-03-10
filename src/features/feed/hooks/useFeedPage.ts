@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { useFeedPostsQuery } from './useFeedPostsQuery';
 

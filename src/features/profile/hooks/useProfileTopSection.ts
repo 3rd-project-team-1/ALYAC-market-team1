@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { useProfileTargetAccount } from './useProfileTargetAccount';
 
