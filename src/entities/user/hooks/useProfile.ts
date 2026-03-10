@@ -13,19 +13,11 @@ export function useProfile(accountname?: string) {
     tokenInfo?.id?.replace(/^@/, '').trim() ??
     null;
 
-  const normalizedAccountname = accountname?.replace(/^@/, '').trim();
+  const targetAccountname = accountname?.replace(/^@/, '').trim() ?? myAccountname ?? '';
 
-  // 조회할 accountname 결정
-  const targetAccountname = normalizedAccountname ?? myAccountname ?? '';
-
-  const { data, isLoading, isError } = useQuery({
+  return useQuery({
     queryKey: userQueryKeys.profile(targetAccountname),
     queryFn: () => getProfile(targetAccountname).then((res) => res.profile),
     enabled: !!targetAccountname,
   });
-  const isMyProfile = normalizedAccountname
-    ? !!myAccountname && myAccountname === normalizedAccountname
-    : true;
-
-  return { profile: data ?? null, isLoading, isError, isMyProfile };
 }

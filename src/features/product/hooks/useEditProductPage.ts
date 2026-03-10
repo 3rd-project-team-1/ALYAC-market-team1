@@ -6,7 +6,7 @@ import { useUpdateProductAction } from './useUpdateProductAction';
 
 export function useEditProductPage(productId: string | undefined) {
   const {
-    product,
+    data: product,
     isLoading: isProductLoading,
     isError: isProductError,
   } = useProductDetail(productId);

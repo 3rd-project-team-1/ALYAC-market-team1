@@ -12,7 +12,7 @@ export function useProfileProductsSection() {
   const navigate = useNavigate();
   const { targetAccountname, isMyProfile } = useProfileTargetAccount();
 
-  const { products } = useUserProducts(targetAccountname);
+  const { data: products = [] } = useUserProducts(targetAccountname);
   const deleteProductMutation = useDeleteProduct(targetAccountname ?? null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
