@@ -15,7 +15,7 @@ export function SelectionScreen() {
       <div
         className={cn('animate-in fade-in flex flex-1 items-center justify-center duration-700')}
       >
-        <FullLogoAlyacNoTextIcon className={cn('h-38.25 w-24.25 object-contain md:h-60 md:w-50')} />
+        <FullLogoAlyacNoTextIcon className={cn('h-38.25 w-24.25 object-contain')} />
       </div>
       <div
         className={cn(
