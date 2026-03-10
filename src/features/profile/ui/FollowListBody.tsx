@@ -1,4 +1,4 @@
-import type { Profile } from '@/entities/user/types';
+import type { Profile } from '@/entities/user';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 
