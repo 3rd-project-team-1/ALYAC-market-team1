@@ -54,7 +54,13 @@ export const commentResponseSchema = z.object({
 export const commentsResponseSchema = z.object({
   comment: z.array(commentSchema),
 });
+export const deleteCommentResponseSchema = z.object({
+  message: z.string(),
+});
 
+export const deletePostResponseSchema = z.object({
+  message: z.string(),
+});
 export type PostAuthor = z.infer<typeof postAuthorSchema>;
 export type Post = z.infer<typeof postSchema>;
 export type Comment = z.infer<typeof commentSchema>;
@@ -63,3 +69,5 @@ export type PostsResponse = z.infer<typeof postsResponseSchema>;
 export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>;
 export type CommentResponse = z.infer<typeof commentResponseSchema>;
 export type CommentsResponse = z.infer<typeof commentsResponseSchema>;
+export type DeleteCommentResponse = z.infer<typeof deleteCommentResponseSchema>;
+export type DeletePostResponse = z.infer<typeof deletePostResponseSchema>;
