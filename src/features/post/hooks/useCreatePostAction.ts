@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCreatePostMutation } from '@/entities/post';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 export function useCreatePostAction(imageFiles: File[], cleanupPreviewUrls: () => void) {
   const navigate = useNavigate();

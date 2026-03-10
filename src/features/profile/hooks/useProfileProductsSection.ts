@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useDeleteProduct, useUserProducts } from '@/entities/product';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { useProfileTargetAccount } from './useProfileTargetAccount';
 

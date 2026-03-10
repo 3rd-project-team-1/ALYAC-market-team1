@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 import { useDeleteUserPostMutation, useUserPostsWithHeart } from '@/entities/post';
 import type { Post } from '@/entities/post/model/post.schema';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { useProfileTargetAccount } from './useProfileTargetAccount';
 

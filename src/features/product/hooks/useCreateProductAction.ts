@@ -6,7 +6,7 @@ import { useCreateProduct } from '@/entities/product';
 import { productQueryKeys } from '@/entities/product';
 import { useProfile } from '@/entities/user';
 import { uploadSingleImage } from '@/shared/api';
-import { ROUTE_PATHS } from '@/shared/router';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import type { ProductFormInput } from '../model/product-from.schema';
 
