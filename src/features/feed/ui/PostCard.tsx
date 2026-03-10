@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useHeartMutation } from '@/entities/post';
 import type { PostCardModel } from '@/features/feed';
@@ -87,13 +87,7 @@ export function PostCard({
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
 
-  const { mutateAsync: toggleHeart } = useHeartMutation(post.id);
-
-  // 서버 상태 변경 시 로컬 상태 동기화
-  useEffect(() => {
-    setIsLiked(post.hearted);
-    setLocalHeartCount(post.heartCount);
-  }, [post.hearted, post.heartCount]);
+  const { mutateAsync: toggleHeart, isPending } = useHeartMutation(post.id);
 
   const handleRewrite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -222,6 +216,7 @@ export function PostCard({
           type="button"
           aria-label={isLiked ? '좋아요 취소' : '좋아요'}
           onClick={handleLikeToggle}
+          disabled={isPending}
         >
           <HeartIcon active={isLiked} className={cn('mr-1 inline-block')} />
         </button>
