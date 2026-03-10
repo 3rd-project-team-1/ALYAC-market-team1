@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getUserPosts } from '../api/getUserPosts';
-import { postQueryKeys } from '../api/queryKeys';
+import { postQueryKeys } from '../model/queryKeys';
 import { toggleHeart } from '../api/toggleHeart';
 import type { Post } from '../model/post.schema';
 

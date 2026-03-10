@@ -10,4 +10,4 @@ export { useUserPostsWithHeart } from './hooks/useUserPostsWithHeart';
 export { useUpdatePostMutation } from './hooks/useUpdatePostMutation';
 
 export * from './model/post.schema';
-export { postQueryKeys } from './api/queryKeys';
+export { postQueryKeys } from './model/queryKeys';

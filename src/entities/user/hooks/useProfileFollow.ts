@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { follow } from '../api/follow';
-import { userQueryKeys } from '../api/queryKeys';
+import { userQueryKeys } from '../model/queryKeys';
 import { unfollow } from '../api/unfollow';
 
 interface UseProfileFollowParams {
