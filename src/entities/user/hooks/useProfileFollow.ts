@@ -32,8 +32,8 @@ export function useProfileFollow({ initialIsFollow }: UseProfileFollowParams) {
     },
     onSuccess: () => {
       // optimistic 상태 유지 (null로 리셋하지 않음)
-      // 프로필 카운트 즉시 갱신
-      queryClient.invalidateQueries({ queryKey: userQueryKeys.profile() });
+      // 프로필 카운트 즉시 갱신 (prefix 매칭으로 accountname 무관하게 전체 profile 쿼리 invalidate)
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
       // 목록은 stale 처리만 (즉시 refetch 안 함 → 뒤로가기/탭 이동/새로고침 시 반영)
       queryClient.invalidateQueries({ queryKey: userQueryKeys.followings(), refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: userQueryKeys.followers(), refetchType: 'none' });

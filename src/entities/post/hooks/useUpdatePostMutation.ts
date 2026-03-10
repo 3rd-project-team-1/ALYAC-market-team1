@@ -29,7 +29,7 @@ export function useUpdatePostMutation() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: postQueryKeys.post(variables.postId) });
-      queryClient.invalidateQueries({ queryKey: postQueryKeys.userPosts() });
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] });
     },
   });
 }
