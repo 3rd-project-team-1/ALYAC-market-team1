@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { type ProductFormInput, productFormSchema } from '../model/product-from.schema';
-import { usePriceInput } from './usePriceInput';
 
 interface EditableProduct {
   itemName: string;
@@ -35,15 +34,7 @@ export function useProductFormState(product?: EditableProduct) {
     });
   }, [product, form]);
 
-  const { handlePriceChange } = usePriceInput(
-    'price',
-    form.setValue,
-    form.setError,
-    form.clearErrors,
-  );
-
   return {
     form,
-    handlePriceChange,
   };
 }

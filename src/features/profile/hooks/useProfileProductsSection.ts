@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useDeleteProduct, useUserProducts } from '@/entities/product';
 import { ROUTE_PATHS } from '@/shared/router';
@@ -25,7 +26,14 @@ export function useProfileProductsSection() {
 
   const handleDeleteConfirm = () => {
     if (deleteTargetId && !deleteProductMutation.isPending) {
-      deleteProductMutation.mutate(deleteTargetId);
+      deleteProductMutation.mutate(deleteTargetId, {
+        onSuccess: () => {
+          toast.success('상품이 삭제되었습니다.');
+        },
+        onError: () => {
+          toast.error('상품 삭제에 실패했습니다.');
+        },
+      });
     }
     setDeleteTargetId(null);
   };

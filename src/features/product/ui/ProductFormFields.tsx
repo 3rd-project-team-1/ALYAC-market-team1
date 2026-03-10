@@ -1,5 +1,3 @@
-import type { ChangeEvent } from 'react';
-
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 
 import { cn } from '@/shared/lib';
@@ -9,10 +7,15 @@ import type { ProductFormInput } from '../model/product-from.schema';
 interface ProductFormFieldsProps {
   register: UseFormRegister<ProductFormInput>;
   errors: FieldErrors<ProductFormInput>;
-  onPriceChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function ProductFormFields({ register, errors, onPriceChange }: ProductFormFieldsProps) {
+export function ProductFormFields({ register, errors }: ProductFormFieldsProps) {
+  const priceRegister = register('price', {
+    onChange: (e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    },
+  });
+
   return (
     <>
       <div className={cn('flex flex-col gap-1')}>
@@ -33,10 +36,9 @@ export function ProductFormFields({ register, errors, onPriceChange }: ProductFo
       <div className={cn('flex flex-col gap-1')}>
         <label className={cn('text-foreground text-sm font-bold')}>가격</label>
         <input
-          {...register('price')}
+          {...priceRegister}
           placeholder="숫자만 입력 가능합니다."
           inputMode="numeric"
-          onChange={onPriceChange}
           className={cn(
             'text-foreground placeholder:text-muted-foreground w-full border-b py-2 text-sm outline-none',
             errors.price ? 'border-destructive' : 'border-border',

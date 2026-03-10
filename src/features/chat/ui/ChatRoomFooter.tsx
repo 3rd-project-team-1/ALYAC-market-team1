@@ -38,7 +38,7 @@ export function ChatRoomFooter({ onSubmit }: ChatRoomFooterProps) {
       <div
         className={cn(
           'border-border bg-background flex flex-1 items-center rounded-lg border px-3 py-1.5 transition-all',
-          isFocused && 'ring-2 ring-blue-900',
+          isFocused && 'ring-2 ring-blue-900 dark:ring-[oklch(0.75_0.15_250)]',
         )}
       >
         <input

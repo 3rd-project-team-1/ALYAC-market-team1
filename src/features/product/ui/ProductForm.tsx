@@ -1,5 +1,3 @@
-import type { ChangeEvent } from 'react';
-
 import type { UseFormReturn } from 'react-hook-form';
 
 import { cn } from '@/shared/lib';
@@ -14,7 +12,6 @@ interface ProductFormProps {
   onSubmit: () => void;
   isSubmitting: boolean;
   onImageChange: (file: File) => void;
-  onPriceChange: (e: ChangeEvent<HTMLInputElement>) => void;
   initialImage?: string;
 }
 
@@ -23,7 +20,6 @@ export function ProductForm({
   onSubmit,
   isSubmitting,
   onImageChange,
-  onPriceChange,
   initialImage,
 }: ProductFormProps) {
   return (
@@ -40,7 +36,6 @@ export function ProductForm({
           <ProductFormFields
             register={form.register}
             errors={form.formState.errors}
-            onPriceChange={onPriceChange}
           />
         </div>
       </form>

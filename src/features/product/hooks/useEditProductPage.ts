@@ -11,7 +11,7 @@ export function useEditProductPage(productId: string | undefined) {
     isError: isProductError,
   } = useProductDetail(productId);
 
-  const { form, handlePriceChange } = useProductFormState(product);
+  const { form } = useProductFormState(product);
   const { imageFile, handleImageChange } = useProductImageFile();
   const { submit, isSubmitting } = useUpdateProductAction(productId, product?.itemImage);
 
@@ -24,7 +24,6 @@ export function useEditProductPage(productId: string | undefined) {
     isProductLoading,
     isProductError,
     form,
-    handlePriceChange,
     handleImageChange,
     onSubmit,
     isSubmitting,

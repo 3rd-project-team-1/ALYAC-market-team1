@@ -1,4 +1,3 @@
-export { usePriceInput } from './hooks/usePriceInput';
 export { useProductFormState } from './hooks/useProductFormState';
 export { useProductImageFile } from './hooks/useProductImageFile';
 export { useCreateProductAction } from './hooks/useCreateProductAction';
