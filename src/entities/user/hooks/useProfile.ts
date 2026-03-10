@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
 
 import { getProfile } from '../api/getProfile';
-import { userQueryKeys } from '../api/queryKeys';
+import { userQueryKeys } from '../model/queryKeys';
 
 export function useProfile(accountname?: string) {
   const tokenInfo = getTokenUserInfo();

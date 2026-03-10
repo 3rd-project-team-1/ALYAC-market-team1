@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createComment } from '../api/createComment';
-import { postQueryKeys } from '../api/queryKeys';
+import { postQueryKeys } from '../model/queryKeys';
 
 export function useCreateCommentMutation(postId: string | undefined) {
   const queryClient = useQueryClient();

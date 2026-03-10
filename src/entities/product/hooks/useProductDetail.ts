@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getProductDetail } from '../api/getProductDetail';
-import { productQueryKeys } from '../api/queryKeys';
+import { productQueryKeys } from '../model/queryKeys';
 
 export function useProductDetail(productId?: string) {
   const { data, isLoading, isError } = useQuery({
