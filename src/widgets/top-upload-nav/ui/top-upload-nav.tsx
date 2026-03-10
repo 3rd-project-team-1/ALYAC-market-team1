@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { BackIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 interface TopUploadNavProps {
   label?: string;
@@ -18,27 +19,18 @@ export function TopUploadNav({ label = '업로드', disabled = false, onSubmit }
         'bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4',
       )}
     >
-      <button
-        onClick={() => navigate(-1)}
-        className={cn(
-          'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
-        )}
-      >
+      <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
         <BackIcon />
-      </button>
+      </Button>
 
-      <button
-        onClick={onSubmit}
+      <Button
+        variant="upload"
         disabled={disabled}
-        className={cn(
-          'rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors',
-          disabled
-            ? 'cursor-default bg-[#C4C4C4]'
-            : 'cursor-pointer bg-[#11CC27] hover:bg-[#0fb522]',
-        )}
+        onClick={onSubmit}
+        className="px-4 py-1.5 text-sm font-semibold"
       >
         {label}
-      </button>
+      </Button>
     </header>
   );
 }

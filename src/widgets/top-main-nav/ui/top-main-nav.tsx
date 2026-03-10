@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { SearchIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { ROUTE_PATHS } from '@/shared/router';
+import { Button } from '@/shared/ui';
 
 interface TopMainNavProps {
   title: string;
@@ -18,14 +19,9 @@ export function TopMainNav({ title }: TopMainNavProps) {
       )}
     >
       <span className={cn('text-foreground text-base font-semibold')}>{title}</span>
-      <button
-        onClick={() => navigate(ROUTE_PATHS.SEARCH)}
-        className={cn(
-          'hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
-        )}
-      >
+      <Button variant="icon-nav" size="nav" onClick={() => navigate(ROUTE_PATHS.SEARCH)}>
         <SearchIcon />
-      </button>
+      </Button>
     </header>
   );
 }

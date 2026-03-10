@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { BackIcon, MoreIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 interface TopChatNavProps {
   title: string;
@@ -17,25 +18,15 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
         'bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4',
       )}
     >
-      <button
-        onClick={() => navigate(-1)}
-        className={cn(
-          'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
-        )}
-      >
+      <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
         <BackIcon />
-      </button>
+      </Button>
 
       <span className={cn('text-foreground text-base font-semibold')}>{title}</span>
 
-      <button
-        onClick={onMoreClick}
-        className={cn(
-          'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
-        )}
-      >
+      <Button variant="icon-nav" size="nav" onClick={onMoreClick}>
         <MoreIcon />
-      </button>
+      </Button>
     </header>
   );
 }

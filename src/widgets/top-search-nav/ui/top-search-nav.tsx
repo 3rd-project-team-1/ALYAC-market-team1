@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { BackIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 interface TopSearchNavProps {
   searchValue: string;
@@ -17,14 +18,9 @@ export function TopSearchNav({ searchValue, onSearchChange }: TopSearchNavProps)
         'bg-background fixed top-0 right-0 left-0 flex h-[48px] items-center gap-2 px-4',
       )}
     >
-      <button
-        onClick={() => navigate(-1)}
-        className={cn(
-          'text-foreground hover:bg-accent flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-md transition-colors',
-        )}
-      >
+      <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
         <BackIcon />
-      </button>
+      </Button>
 
       <input
         type="text"
