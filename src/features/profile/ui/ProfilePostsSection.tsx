@@ -69,7 +69,7 @@ export function ProfilePostsSection() {
       ) : viewMode === 'list' ? (
         <div className={cn('flex flex-col gap-4 px-4 py-4')}>
           {posts.map((post) => (
-            <div key={post.id} className={cn('')}>
+            <div key={post.id} className={cn('border-border border-b pb-4 last:border-0')}>
               <div className={cn('flex items-center justify-between')}>
                 <div className={cn('flex items-center gap-3')}>
                   <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
