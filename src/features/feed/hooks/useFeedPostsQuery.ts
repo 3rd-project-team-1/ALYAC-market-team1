@@ -44,6 +44,8 @@ export function useFeedPostsQuery() {
       // 마지막 페이지가 LIMIT 개수와 같으면 다음 페이지가 있다고 판단
       getNextPageParam: (lastPage, _allPages, lastPageParam) =>
         lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
+      // 항상 stale로 간주 → 피드 마운트 시 즉시 re-fetch하여 좋아요/댓글 카운트 최신화
+      staleTime: 0,
     });
 
   // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)

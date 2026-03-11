@@ -1,3 +1,4 @@
+import type { InfiniteData } from '@tanstack/react-query';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
@@ -41,6 +42,24 @@ export function useHeartMutation(postId: string) {
 
     onSuccess: (res) => {
       queryClient.setQueryData(['post', postId], res.post);
+      // 피드 InfiniteData 캐시에서 해당 포스트의 hearted/heartCount를 직접 수정
+      // → 뒤로가기 시 refetch 완료를 기다리지 않고 즉시 반영
+      queryClient.setQueriesData<InfiniteData<{ id: string; hearted: boolean; heartCount: number }[]>>(
+        { queryKey: ['feed'] },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.map((post) =>
+                post.id === postId
+                  ? { ...post, hearted: res.post.hearted, heartCount: res.post.heartCount }
+                  : post,
+              ),
+            ),
+          };
+        },
+      );
       queryClient.invalidateQueries({ queryKey: ['userPosts'] });
     },
 
