@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BackIcon, MoreIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { Button } from '@/shared/ui';
+import { TopHeaderLayout } from '@/shared/ui/TopHeaderLayout';
 
 interface TopChatNavProps {
   title: string;
@@ -13,11 +14,7 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
   const navigate = useNavigate();
 
   return (
-    <header
-      className={cn(
-        'bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4',
-      )}
-    >
+    <TopHeaderLayout>
       <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
         <BackIcon />
       </Button>
@@ -27,6 +24,6 @@ export function TopChatNav({ title, onMoreClick }: TopChatNavProps) {
       <Button variant="icon-nav" size="nav" onClick={onMoreClick}>
         <MoreIcon />
       </Button>
-    </header>
+    </TopHeaderLayout>
   );
 }
