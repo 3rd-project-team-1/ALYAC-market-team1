@@ -2,8 +2,6 @@ import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { MonitorIcon, MoonIcon, SunIcon } from '@/shared/assets';
 import { removeToken } from '@/shared/lib';
 import { useTheme } from '@/shared/lib/theme';
@@ -14,7 +12,6 @@ import { MoreMenu } from '../ui/MoreMenu';
 
 export function useLogoutMenu() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -25,7 +22,6 @@ export function useLogoutMenu() {
 
   const handleLogout = () => {
     removeToken();
-    queryClient.clear();
     navigate(ROUTE_PATHS.SIGNIN);
   };
 
@@ -37,7 +33,7 @@ export function useLogoutMenu() {
 
   const menuItems = [
     { label: '설정 및 개인정보', onClick: () => navigate(ROUTE_PATHS.EDIT_PROFILE) },
-    { label: <>테마: {themeLabel[theme]}</>, onClick: toggleTheme },
+    { label: <>테마: {themeLabel[theme]}</>, onClick: toggleTheme, preventClose: true },
     { label: '로그아웃', onClick: () => setIsLogoutModalOpen(true) },
   ];
 
