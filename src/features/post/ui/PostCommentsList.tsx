@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { UploadImageSmallIcon } from '@/shared/assets';
+import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { LogoutModal } from '@/shared/ui';
+import { LoadingSpinner, LogoutModal } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 interface PostComment {
@@ -21,15 +22,26 @@ interface PostComment {
 
 interface PostCommentsListProps {
   comments: PostComment[];
+  commentsPagination: {
+    isFetchingMore: boolean;
+    loadMore: () => void;
+    hasMore: boolean;
+  };
   myAccountname: string | null;
   onDeleteComment: (commentId: string) => void;
 }
 
 export function PostCommentsList({
   comments,
+  commentsPagination,
   myAccountname,
   onDeleteComment,
 }: PostCommentsListProps) {
+  const { ref } = useInfiniteScroll({
+    hasMore: commentsPagination.hasMore,
+    isFetching: commentsPagination.isFetchingMore,
+    onLoadMore: commentsPagination.loadMore,
+  });
   const [dialogType, setDialogType] = useState<'report' | 'delete' | null>(null);
   const [pendingCommentId, setPendingCommentId] = useState<string | null>(null);
 
@@ -111,6 +123,12 @@ export function PostCommentsList({
             />
           </div>
         ))}
+        <div ref={ref} className={cn('h-1')} />
+        {commentsPagination.isFetchingMore && (
+          <div className={cn('py-4')}>
+            <LoadingSpinner message="댓글을 불러오는 중..." />
+          </div>
+        )}
       </div>
 
       {dialogType === 'report' && (

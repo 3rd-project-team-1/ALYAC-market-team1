@@ -26,8 +26,11 @@ export const API_ENDPOINT = {
   POST_UPDATE: (postId: string) => `/api/post/${postId}`,
   POST_DELETE: (postId: string) => `/api/post/${postId}`,
   POST_HEART: (postId: string) => `/api/post/${postId}/heart`,
-  POST_USER: (accountname: string) => `/api/post/${accountname}/userpost`,
-  POST_COMMENTS: (postId: string) => `/api/post/${postId}/comments`,
+  POST_UNHEART: (postId: string) => `/api/post/${postId}/unheart`,
+  POST_USER: (accountname: string, skip = 0, limit = 10) =>
+    `/api/post/${accountname}/userpost?skip=${skip}&limit=${limit}`,
+  POST_COMMENTS: (postId: string, skip = 0, limit = 10) =>
+    `/api/post/${postId}/comments?skip=${skip}&limit=${limit}`,
   POST_COMMENT_DELETE: (postId: string, commentId: string) =>
     `/api/post/${postId}/comments/${commentId}`,
 

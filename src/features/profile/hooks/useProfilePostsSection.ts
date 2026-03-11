@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useDeleteUserPostMutation, useUserPostsWithHeart } from '@/entities/post';
+import { useDeleteUserPostMutation, useUserPostsInfiniteQuery } from '@/entities/post';
 import type { Post } from '@/entities/post/model/post.schema';
 import { ROUTE_PATHS } from '@/shared/routes';
 
@@ -18,7 +18,8 @@ export function useProfilePostsSection() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [deleteTargetPostId, setDeleteTargetPostId] = useState<string | null>(null);
 
-  const { posts, heartMutation } = useUserPostsWithHeart(targetAccountname);
+  const { posts, isLoading, isFetchingMore, loadMore, hasMore, heartMutation } =
+    useUserPostsInfiniteQuery(targetAccountname);
   const deletePostMutation = useDeleteUserPostMutation(targetAccountname, {
     onSuccess: () => {
       toast.success('게시글이 삭제되었습니다');
@@ -49,6 +50,10 @@ export function useProfilePostsSection() {
 
   return {
     posts,
+    isLoading,
+    isFetchingMore,
+    loadMore,
+    hasMore,
     myAccountname,
     viewMode,
     setViewMode,

@@ -34,6 +34,11 @@ interface PostPageContentProps {
       accountname: string;
     };
   }>;
+  commentsPagination: {
+    isFetchingMore: boolean;
+    loadMore: () => void;
+    hasMore: boolean;
+  };
   myAccountname: string | null;
   isHeartPending: boolean;
   postDialogType: 'report' | 'delete' | null;
@@ -49,6 +54,7 @@ interface PostPageContentProps {
 export function PostPageContent({
   post,
   comments,
+  commentsPagination,
   myAccountname,
   isHeartPending,
   postDialogType,
@@ -70,6 +76,7 @@ export function PostPageContent({
 
       <PostCommentsList
         comments={comments}
+        commentsPagination={commentsPagination}
         myAccountname={myAccountname}
         onDeleteComment={onDeleteComment}
       />

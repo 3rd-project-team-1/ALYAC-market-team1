@@ -11,7 +11,7 @@ import { LoadingSpinner } from '@/shared/ui';
 
 export function PostPage() {
   const { postId, myAccountname } = usePostRouteInfo();
-  const { post, comments, isPostLoading } = usePostDetailData(postId);
+  const { post, comments, isPostLoading, commentsPagination } = usePostDetailData(postId);
   const { heartMutation, createCommentMutation, deleteCommentMutation, deletePostMutation } =
     usePostDetailMutations(postId);
 
@@ -46,11 +46,12 @@ export function PostPage() {
     <PostPageContent
       post={post}
       comments={comments}
+      commentsPagination={commentsPagination}
       myAccountname={myAccountname}
       isHeartPending={heartMutation.isPending}
       postDialogType={postDialogType}
       moreMenuItems={moreMenuItems}
-      onToggleHeart={() => heartMutation.mutate()}
+      onToggleHeart={() => heartMutation.mutate(post.hearted)}
       onDeleteComment={(commentId) => deleteCommentMutation.mutate(commentId)}
       onCreateComment={(text) => createCommentMutation.mutate(text)}
       onReportConfirm={handleReportConfirm}
