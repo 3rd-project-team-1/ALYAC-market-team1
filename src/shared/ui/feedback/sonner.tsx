@@ -20,6 +20,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className={cn('toaster group')}
       position="top-right"
       richColors
+      duration={2000}
       expand={false}
       icons={{
         success: <CircleCheckIcon className={cn('size-4')} />,
