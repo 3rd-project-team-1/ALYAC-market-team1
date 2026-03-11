@@ -5,9 +5,10 @@ import {
   PostListIcon,
   UploadImageSmallIcon,
 } from '@/shared/assets';
+import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { LogoutModal } from '@/shared/ui';
+import { LoadingSpinner, LogoutModal } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
@@ -15,6 +16,10 @@ import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
 export function ProfilePostsSection() {
   const {
     posts,
+    isLoading,
+    isFetchingMore,
+    loadMore,
+    hasMore,
     myAccountname,
     viewMode,
     setViewMode,
@@ -26,6 +31,8 @@ export function ProfilePostsSection() {
     handlePostDetail,
     heartMutation,
   } = useProfilePostsSection();
+
+  const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore: loadMore });
 
   return (
     <section className={cn('border-border flex-1 border-t')}>
@@ -51,7 +58,11 @@ export function ProfilePostsSection() {
         </button>
       </div>
 
-      {posts.length === 0 ? (
+      {isLoading ? (
+        <div className={cn('py-10')}>
+          <LoadingSpinner message="게시글을 불러오는 중..." />
+        </div>
+      ) : posts.length === 0 ? (
         <div className={cn('flex items-center justify-center py-20')}>
           <p className={cn('text-muted-foreground text-sm')}>작성한 게시물이 없습니다.</p>
         </div>
@@ -136,6 +147,12 @@ export function ProfilePostsSection() {
               </div>
             </div>
           ))}
+          <div ref={ref} className={cn('h-1')} />
+          {isFetchingMore && (
+            <div className={cn('py-4')}>
+              <LoadingSpinner message="게시글을 불러오는 중..." />
+            </div>
+          )}
         </div>
       ) : (
         <div className={cn('grid grid-cols-3 gap-0.5')}>
@@ -160,6 +177,12 @@ export function ProfilePostsSection() {
               )}
             </div>
           ))}
+          <div ref={ref} className={cn('col-span-3 h-1')} />
+          {isFetchingMore && (
+            <div className={cn('col-span-3 py-4')}>
+              <LoadingSpinner message="게시글을 불러오는 중..." />
+            </div>
+          )}
         </div>
       )}
 

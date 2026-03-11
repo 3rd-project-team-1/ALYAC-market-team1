@@ -1,8 +1,5 @@
-import { useEffect } from 'react';
-
-import { useInView } from 'react-intersection-observer';
-
 import type { PostCardModel } from '@/features/feed';
+import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 
@@ -34,7 +31,7 @@ interface FeedListProps {
 /**
  * 피드 게시글 카드 목록 컴포넌트입니다.
  *
- * `react-intersection-observer`를 사용해 스크롤 기반 무한 로딩을 처리합니다.
+ * `useInfiniteScroll` 훅을 사용해 스크롤 기반 무한 로딩을 처리합니다.
  * 목록 하단의 sentinel 요소가 뷰포트에 진입하면 `onLoadMore`를 호출합니다.
  * `isFetchingMore`가 true일 때는 중복 요청을 방지합니다.
  *
@@ -51,13 +48,7 @@ export function FeedList({
   onClick,
   animated = false,
 }: FeedListProps) {
-  const { ref, inView } = useInView({ threshold: 0 });
-
-  useEffect(() => {
-    if (inView && hasMore && !isFetchingMore) {
-      onLoadMore();
-    }
-  }, [inView, hasMore, isFetchingMore, onLoadMore]);
+  const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore });
 
   return (
     <main className={cn('mx-auto max-w-5xl pt-[48px]')}>
