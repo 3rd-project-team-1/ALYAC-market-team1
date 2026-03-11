@@ -50,7 +50,7 @@ export function PostPage() {
       isHeartPending={heartMutation.isPending}
       postDialogType={postDialogType}
       moreMenuItems={moreMenuItems}
-      onToggleHeart={() => heartMutation.mutate()}
+      onToggleHeart={() => heartMutation.mutate(post.hearted)}
       onDeleteComment={(commentId) => deleteCommentMutation.mutate(commentId)}
       onCreateComment={(text) => createCommentMutation.mutate(text)}
       onReportConfirm={handleReportConfirm}
