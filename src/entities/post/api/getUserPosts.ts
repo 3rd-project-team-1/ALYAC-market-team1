@@ -11,5 +11,5 @@ import { type PostsResponse, postsResponseSchema } from '../model/post.schema';
  * const { post } = await getUserPosts('hong123');
  * ```
  */
-export const getUserPosts = (accountname: string): Promise<PostsResponse> =>
-  api.get(API_ENDPOINT.POST_USER(accountname), postsResponseSchema);
+export const getUserPosts = (accountname: string, skip = 0, limit = 10): Promise<PostsResponse> =>
+  api.get(API_ENDPOINT.POST_USER(accountname, skip, limit), postsResponseSchema);

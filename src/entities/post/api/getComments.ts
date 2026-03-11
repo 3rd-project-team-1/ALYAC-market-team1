@@ -11,5 +11,5 @@ import { type CommentsResponse, commentsResponseSchema } from '../model/post.sch
  * const { comment } = await getComments('post123');
  * ```
  */
-export const getComments = (postId: string): Promise<CommentsResponse> =>
-  api.get(API_ENDPOINT.POST_COMMENTS(postId), commentsResponseSchema);
+export const getComments = (postId: string, skip = 0, limit = 10): Promise<CommentsResponse> =>
+  api.get(API_ENDPOINT.POST_COMMENTS(postId, skip, limit), commentsResponseSchema);
