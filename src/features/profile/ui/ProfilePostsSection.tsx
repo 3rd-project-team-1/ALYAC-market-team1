@@ -112,7 +112,10 @@ export function ProfilePostsSection() {
                   </div>
                 )}
               </div>
-              <p className={cn('text-foreground mt-2 line-clamp-2 pl-12 text-sm')}>
+              <p
+                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer pl-12 text-sm')}
+                onClick={() => handlePostDetail(post.id)}
+              >
                 {post.content}
               </p>
               {post.image && (
