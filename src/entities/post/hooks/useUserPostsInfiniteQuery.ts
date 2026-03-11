@@ -29,8 +29,9 @@ export function useUserPostsInfiniteQuery(accountname?: string) {
   );
 
   const heartMutation = useMutation({
-    mutationFn: (postId: string) => toggleHeart(postId),
-    onMutate: (postId) => {
+    mutationFn: ({ postId, isHearted }: { postId: string; isHearted: boolean }) =>
+      toggleHeart(postId, isHearted),
+    onMutate: ({ postId }) => {
       queryClient.setQueryData<InfiniteData<Post[]>>(queryKey, (old) => {
         if (!old) return old;
         return {
