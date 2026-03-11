@@ -22,6 +22,7 @@ interface PostComment {
 
 interface PostCommentsListProps {
   comments: PostComment[];
+  isLoading: boolean;
   commentsPagination: {
     isFetchingMore: boolean;
     loadMore: () => void;
@@ -33,6 +34,7 @@ interface PostCommentsListProps {
 
 export function PostCommentsList({
   comments,
+  isLoading,
   commentsPagination,
   myAccountname,
   onDeleteComment,
@@ -66,6 +68,14 @@ export function PostCommentsList({
     }
     closeDialog();
   };
+
+  if (isLoading) {
+    return (
+      <div className={cn('flex flex-col px-4 py-8 pb-20')}>
+        <LoadingSpinner message="댓글을 불러오는 중..." />
+      </div>
+    );
+  }
 
   if (!comments || comments.length === 0) {
     return (
