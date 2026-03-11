@@ -20,14 +20,13 @@ export function ProfilePostsSection() {
     isFetchingMore,
     loadMore,
     hasMore,
-    myAccountname,
     viewMode,
     setViewMode,
     deleteTargetPostId,
-    setDeleteTargetPostId,
     handleDeleteConfirm,
     handleDeleteCancel,
     handleEditPost,
+    handleDeletePost,
     handlePostDetail,
     heartMutation,
   } = useProfilePostsSection();
@@ -69,7 +68,7 @@ export function ProfilePostsSection() {
       ) : viewMode === 'list' ? (
         <div className={cn('flex flex-col gap-4 px-4 py-4')}>
           {posts.map((post) => (
-            <div key={post.id} className={cn('')}>
+            <div key={post.id} className={cn('border-border border-b pb-4 last:border-0')}>
               <div className={cn('flex items-center justify-between')}>
                 <div className={cn('flex items-center gap-3')}>
                   <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
@@ -94,25 +93,26 @@ export function ProfilePostsSection() {
                     </p>
                   </div>
                 </div>
-                {myAccountname === post.author.accountname && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <MoreMenu
-                      small
-                      items={[
-                        {
-                          label: '수정',
-                          onClick: () => handleEditPost(post),
-                        },
-                        {
-                          label: <span className={cn('text-destructive')}>삭제</span>,
-                          onClick: () => setDeleteTargetPostId(post.id),
-                        },
-                      ]}
-                    />
-                  </div>
-                )}
+                <div onClick={(e) => e.stopPropagation()}>
+                  <MoreMenu
+                    small
+                    items={[
+                      {
+                        label: '수정',
+                        onClick: () => handleEditPost(post),
+                      },
+                      {
+                        label: <span className={cn('text-destructive')}>삭제</span>,
+                        onClick: () => handleDeletePost(post),
+                      },
+                    ]}
+                  />
+                </div>
               </div>
-              <p className={cn('text-foreground mt-2 line-clamp-2 pl-12 text-sm')}>
+              <p
+                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer pl-12 text-sm')}
+                onClick={() => handlePostDetail(post.id)}
+              >
                 {post.content}
               </p>
               {post.image && (

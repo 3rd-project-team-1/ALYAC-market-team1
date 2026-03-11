@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { toast } from 'sonner';
 
@@ -90,6 +90,12 @@ export function PostCard({
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
 
   const { mutateAsync: toggleHeart, isPending } = useHeartMutation(post.id);
+
+  // 피드로 돌아왔을 때 background refetch 완료 후 캐시 값과 로컬 상태 동기화
+  useEffect(() => {
+    setIsLiked(post.hearted);
+    setLocalHeartCount(post.heartCount);
+  }, [post.hearted, post.heartCount]);
 
   const handleRewrite = (e: React.MouseEvent) => {
     e.stopPropagation();

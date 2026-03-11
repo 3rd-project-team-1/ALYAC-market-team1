@@ -33,7 +33,7 @@ export function useLogoutMenu() {
 
   const menuItems = [
     { label: '설정 및 개인정보', onClick: () => navigate(ROUTE_PATHS.EDIT_PROFILE) },
-    { label: <>테마: {themeLabel[theme]}</>, onClick: toggleTheme },
+    { label: <>테마: {themeLabel[theme]}</>, onClick: toggleTheme, preventClose: true },
     { label: '로그아웃', onClick: () => setIsLogoutModalOpen(true) },
   ];
 

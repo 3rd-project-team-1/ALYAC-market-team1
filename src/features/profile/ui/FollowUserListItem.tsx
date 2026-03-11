@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import type { Profile } from '@/entities/user';
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { UploadImageSmallIcon } from '@/shared/assets';
@@ -10,14 +12,21 @@ interface FollowUserListItemProps {
 }
 
 export function FollowUserListItem({ user, myAccountname }: FollowUserListItemProps) {
+  const navigate = useNavigate();
   const isMe = user.accountname === myAccountname;
   const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
     initialIsFollow: user.isfollow,
   });
 
+  const handleProfileClick = () => {
+    navigate(`/profile/${user.accountname}`);
+  };
+
   return (
     <div className={cn('flex items-center gap-3 px-4 py-3')}>
-      <div
+      <button
+        type="button"
+        onClick={handleProfileClick}
         className={cn(
           'flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200',
         )}
@@ -31,12 +40,16 @@ export function FollowUserListItem({ user, myAccountname }: FollowUserListItemPr
         ) : (
           <UploadImageSmallIcon className={cn('h-42 w-42')} />
         )}
-      </div>
+      </button>
 
-      <div className={cn('flex flex-1 flex-col gap-0.5 overflow-hidden')}>
+      <button
+        type="button"
+        onClick={handleProfileClick}
+        className={cn('flex flex-1 flex-col gap-0.5 overflow-hidden text-left')}
+      >
         <p className={cn('text-foreground truncate text-sm font-semibold')}>{user.username}</p>
         {user.intro && <p className={cn('text-muted-foreground truncate text-xs')}>{user.intro}</p>}
-      </div>
+      </button>
 
       {!isMe && (
         <button

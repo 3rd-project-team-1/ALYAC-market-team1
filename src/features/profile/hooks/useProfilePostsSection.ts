@@ -30,7 +30,19 @@ export function useProfilePostsSection() {
   });
 
   const handleEditPost = (post: Post) => {
+    if (myAccountname !== post.author.accountname) {
+      toast.error('수정 권한이 없습니다');
+      return;
+    }
     navigate(ROUTE_PATHS.EDIT_POST(post.id), { state: { post } });
+  };
+
+  const handleDeletePost = (post: Post) => {
+    if (myAccountname !== post.author.accountname) {
+      toast.error('삭제 권한이 없습니다');
+      return;
+    }
+    setDeleteTargetPostId(post.id);
   };
 
   const handlePostDetail = (postId: string) => {
@@ -63,6 +75,7 @@ export function useProfilePostsSection() {
     handleDeleteConfirm,
     handleDeleteCancel,
     handleEditPost,
+    handleDeletePost,
     handlePostDetail,
     heartMutation,
   };
