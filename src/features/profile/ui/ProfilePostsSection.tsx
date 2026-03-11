@@ -20,14 +20,13 @@ export function ProfilePostsSection() {
     isFetchingMore,
     loadMore,
     hasMore,
-    myAccountname,
     viewMode,
     setViewMode,
     deleteTargetPostId,
-    setDeleteTargetPostId,
     handleDeleteConfirm,
     handleDeleteCancel,
     handleEditPost,
+    handleDeletePost,
     handlePostDetail,
     heartMutation,
   } = useProfilePostsSection();
@@ -94,23 +93,21 @@ export function ProfilePostsSection() {
                     </p>
                   </div>
                 </div>
-                {myAccountname === post.author.accountname && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <MoreMenu
-                      small
-                      items={[
-                        {
-                          label: '수정',
-                          onClick: () => handleEditPost(post),
-                        },
-                        {
-                          label: <span className={cn('text-destructive')}>삭제</span>,
-                          onClick: () => setDeleteTargetPostId(post.id),
-                        },
-                      ]}
-                    />
-                  </div>
-                )}
+                <div onClick={(e) => e.stopPropagation()}>
+                  <MoreMenu
+                    small
+                    items={[
+                      {
+                        label: '수정',
+                        onClick: () => handleEditPost(post),
+                      },
+                      {
+                        label: <span className={cn('text-destructive')}>삭제</span>,
+                        onClick: () => handleDeletePost(post),
+                      },
+                    ]}
+                  />
+                </div>
               </div>
               <p
                 className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer pl-12 text-sm')}
