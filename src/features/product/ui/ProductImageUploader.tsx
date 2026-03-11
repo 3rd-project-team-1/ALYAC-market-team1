@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { ImageIcon } from '@/shared/assets';
 import { useImageUpload } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 
 interface ProductImageUploaderProps {
   initialImage?: string | null;
@@ -45,7 +46,7 @@ export function ProductImageUploader({
       >
         {previewUrl && (
           <img
-            src={previewUrl}
+            src={getImageUrl(previewUrl) ?? previewUrl}
             alt={alt}
             className={cn('h-full w-full object-cover')}
             onError={(e) => {

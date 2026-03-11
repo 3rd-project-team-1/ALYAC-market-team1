@@ -6,7 +6,10 @@ import { uploadSingleImage } from '@/shared/api';
 
 export function useImageUpload(initialUrl?: string) {
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl || null);
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+
+  // 파생 상태: 파일이 선택되었으면 로컬 URL, 아니면 초기 URL 사용
+  const previewUrl = file ? objectUrl : (initialUrl ?? null);
 
   const handleFileChange = (selectedFile: File) => {
     if (!selectedFile.type.startsWith('image/')) {
@@ -21,18 +24,18 @@ export function useImageUpload(initialUrl?: string) {
 
     setFile(selectedFile);
 
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(objectUrl);
+    const newObjectUrl = URL.createObjectURL(selectedFile);
+    setObjectUrl(newObjectUrl);
   };
 
   // 메모리 누수 방지 (컴포넌트 언마운트 시 URL 해제)
   useEffect(() => {
     return () => {
-      if (previewUrl && previewUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(previewUrl);
+      if (objectUrl && objectUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(objectUrl);
       }
     };
-  }, [previewUrl]);
+  }, [objectUrl]);
 
   const upload = async (): Promise<string> => {
     // 새 파일이 없으면 기존 URL 반환 (수정 모드 등)
