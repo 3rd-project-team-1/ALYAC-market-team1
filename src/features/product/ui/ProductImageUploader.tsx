@@ -31,7 +31,16 @@ export function ProductImageUploader({
         )}
         onClick={handleImageClick}
       >
-        {preview && <img src={preview} alt={alt} className={cn('h-full w-full object-cover')} />}
+        {preview && (
+          <img
+            src={preview}
+            alt={alt}
+            className={cn('h-full w-full object-cover')}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        )}
         <div
           className={cn(
             'bg-background absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full shadow transition-shadow hover:shadow-md',

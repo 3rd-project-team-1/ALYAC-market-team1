@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 
+import { ImageIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LogoutModal } from '@/shared/ui';
@@ -32,10 +33,17 @@ export function ProfileProductsSection() {
             <div
               className={cn('group bg-muted relative h-[90px] w-[90px] overflow-hidden rounded-xl')}
             >
+              {/* 이미지 로드 실패 시 표시되는 플레이스홀더 */}
+              <div className={cn('absolute inset-0 flex items-center justify-center')}>
+                <ImageIcon className={cn('text-muted-foreground h-7 w-7')} />
+              </div>
               <img
                 src={getImageUrl(product.itemImage) ?? product.itemImage}
                 alt={product.itemName}
-                className={cn('h-full w-full object-cover')}
+                className={cn('absolute inset-0 h-full w-full object-cover')}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
               />
 
               {isMyProfile && (
