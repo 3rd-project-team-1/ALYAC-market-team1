@@ -46,7 +46,7 @@ export function ProfileProductsSection() {
                     handleDeleteClick(product.id);
                   }}
                   className={cn(
-                    'absolute top-1 right-1 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white opacity-0 transition-all group-hover:opacity-100 hover:bg-black/65',
+                    'absolute top-1 right-1 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white opacity-100 transition-all hover:bg-black/65 active:bg-black/65 md:opacity-0 md:group-hover:opacity-100',
                   )}
                   aria-label="상품 삭제"
                 >
