@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { SignupRequest, useCheckAccountnameDuplicate, useSignUp } from '@/entities/auth';
-import { ApiErrorResponse } from '@/entities/user';
-import { uploadSingleImage } from '@/shared/api';
+import { useImageUpload } from '@/shared/hooks';
+import { handleApiError } from '@/shared/lib';
 import { ROUTE_PATHS } from '@/shared/routes';
 
 import { type SignupProfileInput, signupProfileSchema } from '../model/signup.schema';
@@ -20,7 +19,8 @@ export function useSignUpProfileForm() {
   const checkAccountMutation = useCheckAccountnameDuplicate();
 
   const { email, password } = location.state || {};
-  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  // 이미지 업로드 훅 사용 (로직 분리)
+  const { handleFileChange, upload: uploadImage } = useImageUpload();
   const [isSubmitting, setIsSubmitting] = useState(false); //  중복 방지
 
   useEffect(() => {
@@ -63,19 +63,8 @@ export function useSignUpProfileForm() {
         return;
       }
 
-      // 이미지 업로드
-      let finalImageValue = '';
-      if (profileImageFile) {
-        try {
-          finalImageValue = await uploadSingleImage(profileImageFile);
-        } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : '프로필 이미지 업로드에 실패했습니다.',
-          );
-          setIsSubmitting(false);
-          return;
-        }
-      }
+      // 이미지 업로드 실행
+      const finalImageValue = await uploadImage();
 
       //  회원가입 요청
       const requestData: SignupRequest = {
@@ -94,11 +83,7 @@ export function useSignUpProfileForm() {
       toast.success('회원가입 완료! 🎉');
       navigate(ROUTE_PATHS.SIGNIN);
     } catch (error) {
-      if (axios.isAxiosError<ApiErrorResponse>(error)) {
-        toast.error(error.response?.data?.message || '회원가입에 실패했습니다.');
-      } else {
-        toast.error('오류가 발생했습니다.');
-      }
+      handleApiError(error, '회원가입에 실패했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -110,7 +95,7 @@ export function useSignUpProfileForm() {
     onSubmit,
     errors,
     isValid,
-    setProfileImageFile,
+    setProfileImageFile: handleFileChange, // 이름 맞춰주기
     isPending: isSubmitting,
   };
 }

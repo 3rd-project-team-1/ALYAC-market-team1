@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { ImageIcon } from '@/shared/assets';
 import { useImageUpload } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
@@ -17,10 +19,20 @@ export function ProductImageUploader({
   onImageChange,
   alt = '상품 이미지',
 }: ProductImageUploaderProps) {
-  const { fileInputRef, preview, handleImageClick, handleImageChange } = useImageUpload(
-    initialImage,
-    onImageChange,
-  );
+  const { previewUrl, handleFileChange } = useImageUpload(initialImage ?? undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleContainerClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileChange(file); // 내부 미리보기 업데이트
+      onImageChange(file); // 부모에게 파일 전달
+    }
+  };
 
   return (
     <div>
@@ -29,11 +41,11 @@ export function ProductImageUploader({
         className={cn(
           'bg-muted relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl',
         )}
-        onClick={handleImageClick}
+        onClick={handleContainerClick}
       >
-        {preview && (
+        {previewUrl && (
           <img
-            src={preview}
+            src={previewUrl}
             alt={alt}
             className={cn('h-full w-full object-cover')}
             onError={(e) => {
@@ -53,7 +65,7 @@ export function ProductImageUploader({
           type="file"
           accept="image/*"
           className={cn('hidden')}
-          onChange={handleImageChange}
+          onChange={handleInputChange}
         />
       </div>
     </div>
