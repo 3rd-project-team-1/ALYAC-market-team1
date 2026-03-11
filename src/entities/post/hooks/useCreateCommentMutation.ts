@@ -4,7 +4,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createComment } from '../api/createComment';
 import { postQueryKeys } from '../model/queryKeys';
 
-export function useCreateCommentMutation(postId: string | undefined) {
+export function useCreateCommentMutation(
+  postId: string | undefined,
+  onSuccessCallback?: () => void,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -23,14 +26,13 @@ export function useCreateCommentMutation(postId: string | undefined) {
             ...old,
             pages: old.pages.map((page) =>
               page.map((post) =>
-                post.id === postId
-                  ? { ...post, commentCount: post.commentCount + 1 }
-                  : post,
+                post.id === postId ? { ...post, commentCount: post.commentCount + 1 } : post,
               ),
             ),
           };
         },
       );
+      onSuccessCallback?.();
     },
   });
 }

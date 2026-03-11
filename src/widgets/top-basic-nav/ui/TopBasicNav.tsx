@@ -16,7 +16,7 @@ export function TopBasicNav({ moreMenu, modal }: TopBasicNavProps) {
     <>
       <header
         className={cn(
-          'bg-background border-border fixed top-0 right-0 left-0 flex h-[48px] items-center justify-between border-b px-4',
+          'bg-background border-border fixed top-0 right-0 left-0 z-50 flex h-[48px] items-center justify-between border-b px-4',
         )}
       >
         <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
