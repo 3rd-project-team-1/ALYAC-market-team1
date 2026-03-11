@@ -1,9 +1,12 @@
 import { useState } from 'react';
 
+import { toast } from 'sonner';
+
 import { useHeartMutation } from '@/entities/post';
 import type { PostCardModel } from '@/features/feed';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { cn, getImageUrl } from '@/shared/lib';
+import { LogoutModal } from '@/shared/ui';
 
 /** PostCard 컴포넌트의 Props */
 interface PostCardProps {
@@ -15,8 +18,6 @@ interface PostCardProps {
   onRewrite?: (postId: string) => void;
   /** 삭제 버튼 클릭 핸들러 */
   onDelete?: (postId: string) => void;
-  /** 신고 버튼 클릭 핸들러 */
-  onReport?: (postId: string) => void;
   /** 카드 클릭 시 상세 페이지 이동 핸들러 */
   onClick?: () => void;
 }
@@ -78,11 +79,12 @@ export function PostCard({
   isMyPost = false,
   onRewrite,
   onDelete,
-  onReport,
   onClick,
 }: PostCardProps) {
   // 더보기(⋮) 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // 신고 모달 열림 상태
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   // 좋아요 낙관적 업데이트용 로컬 상태 — post.hearted/heartCount로 초기화
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
@@ -103,8 +105,17 @@ export function PostCard({
 
   const handleReport = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onReport?.(post.id);
     setIsMenuOpen(false);
+    setIsReportModalOpen(true);
+  };
+
+  const handleReportConfirm = () => {
+    toast.success('게시글이 신고되었습니다.');
+    setIsReportModalOpen(false);
+  };
+
+  const handleReportCancel = () => {
+    setIsReportModalOpen(false);
   };
 
   const handleMenuToggle = (e: React.MouseEvent) => {
@@ -118,7 +129,7 @@ export function PostCard({
         { label: '수정', onClick: handleRewrite },
         { label: '삭제', onClick: handleDelete, variant: 'danger' as const },
       ]
-    : [{ label: '신고', onClick: handleReport }];
+    : [{ label: '신고하기', onClick: handleReport }];
 
   /**
    * 좋아요 토글 핸들러 (낙관적 업데이트)
@@ -222,6 +233,18 @@ export function PostCard({
         </button>
         {localHeartCount} <ChatIcon className={cn('mr-1 ml-2')} /> {post.commentCount}{' '}
       </div>
+
+      {isReportModalOpen && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <LogoutModal
+            title="신고하시겠습니까?"
+            confirmText="신고"
+            cancelText="취소"
+            onConfirm={handleReportConfirm}
+            onCancel={handleReportCancel}
+          />
+        </div>
+      )}
     </article>
   );
 }
