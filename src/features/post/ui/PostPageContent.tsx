@@ -34,6 +34,7 @@ interface PostPageContentProps {
       accountname: string;
     };
   }>;
+  isCommentsLoading: boolean;
   commentsPagination: {
     isFetchingMore: boolean;
     loadMore: () => void;
@@ -54,6 +55,7 @@ interface PostPageContentProps {
 export function PostPageContent({
   post,
   comments,
+  isCommentsLoading,
   commentsPagination,
   myAccountname,
   isHeartPending,
@@ -76,6 +78,7 @@ export function PostPageContent({
 
       <PostCommentsList
         comments={comments}
+        isLoading={isCommentsLoading}
         commentsPagination={commentsPagination}
         myAccountname={myAccountname}
         onDeleteComment={onDeleteComment}
