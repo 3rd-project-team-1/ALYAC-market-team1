@@ -130,7 +130,7 @@ export function ProfilePostsSection() {
                   className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
                   onClick={(e) => {
                     e.stopPropagation();
-                    heartMutation.mutate(post.id);
+                    heartMutation.mutate({ postId: post.id, isHearted: post.hearted });
                   }}
                 >
                   <HeartIcon active={post.hearted} />
