@@ -16,8 +16,9 @@ export function useUserPostsWithHeart(accountname?: string) {
   });
 
   const heartMutation = useMutation({
-    mutationFn: (postId: string) => toggleHeart(postId),
-    onMutate: (postId) => {
+    mutationFn: ({ postId, isHearted }: { postId: string; isHearted: boolean }) =>
+      toggleHeart(postId, isHearted),
+    onMutate: ({ postId }) => {
       queryClient.setQueryData<Post[]>(queryKey, (old = []) =>
         old.map((post) =>
           post.id === postId

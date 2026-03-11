@@ -136,7 +136,7 @@ export function PostCard({
     setLocalHeartCount((prev) => (nextLiked ? prev + 1 : prev - 1));
     try {
       // Step 2: 서버 응답값으로 실제 상태 동기화
-      const result = await toggleHeart();
+      const result = await toggleHeart(prevLiked);
       const updated = result.post;
       setIsLiked(updated.hearted);
       setLocalHeartCount(updated.heartCount);
