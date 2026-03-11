@@ -28,3 +28,4 @@ export { PostListIcon } from './PostListIcon';
 export { ShareIcon } from './ShareIcon';
 export { FullLogoAlyac404Icon } from './FullLogoAlyac404Icon';
 export { FullLogoAlyacGrayIcon } from './FullLogoAlyacGrayIcon';
+export { RectangleIcon, Unsplash1Icon, Unsplash2Icon } from './Chatimage';

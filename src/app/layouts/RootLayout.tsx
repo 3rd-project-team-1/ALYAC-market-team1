@@ -1,6 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { cn } from '@/shared/lib';
 import { TabMenu } from '@/widgets/tab-menu';
 
 const HIDE_TAB_MENU_PATHS = [
@@ -26,7 +25,7 @@ export function RootLayout() {
 
   return (
     <div>
-      <main className={cn('mx-auto max-w-5xl')}>
+      <main>
         <Outlet />
       </main>
       {showTabMenu && <TabMenu />}

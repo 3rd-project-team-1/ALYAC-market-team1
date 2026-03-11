@@ -15,7 +15,7 @@ export function FollowListHeader({ title, onBack }: FollowListHeaderProps) {
       <button
         onClick={onBack}
         className={cn(
-          'text-foreground flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-gray-100',
+          'text-foreground hover:bg-accent flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-colors',
         )}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

@@ -1,24 +1,31 @@
 import { useState } from 'react';
 
-import type { PostCardModel } from '@/entities/feed';
 import { useHeartMutation } from '@/entities/post';
-import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets/svg-props';
-import { cn } from '@/shared/lib';
+import type { PostCardModel } from '@/features/feed';
+import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { cn, getImageUrl } from '@/shared/lib';
 
-// PostCard 컴포넌트의 Props
+/** PostCard 컴포넌트의 Props */
 interface PostCardProps {
+  /** 렌더링할 게시글 뷰 모델 */
   post: PostCardModel;
+  /** 본인 게시글 여부 — true이면 수정/삭제 메뉴, false이면 신고 메뉴 표시 */
   isMyPost?: boolean;
-  isYourPost?: boolean;
+  /** 수정 버튼 클릭 핸들러 */
   onRewrite?: (postId: string) => void;
+  /** 삭제 버튼 클릭 핸들러 */
   onDelete?: (postId: string) => void;
+  /** 신고 버튼 클릭 핸들러 */
   onReport?: (postId: string) => void;
+  /** 카드 클릭 시 상세 페이지 이동 핸들러 */
   onClick?: () => void;
 }
 
-// 드롭다운 메뉴 아이템 정의
+/** 게시글 카드 더보기(⋮) 드롭다운 메뉴의 Props */
 interface PostCardDropdownProps {
+  /** 드롭다운 닫기 콜백 */
   onClose: () => void;
+  /** 메뉴 아이템 목록 (label, 클릭 핸들러, 스타일 변형) */
   items: { label: string; onClick: (e: React.MouseEvent) => void; variant?: 'danger' }[];
 }
 
@@ -60,34 +67,27 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
 }
 
 /**
- * 포스트 정보를 카드 형태로 렌더링하는 컴포넌트입니다.
+ * 게시글 한 건을 카드 형태로 렌더링하는 컴포넌트입니다.
  *
- * @param props - PostCardProps
- * @param props.post - 포스트 뷰 모델 데이터
- * @param props.isMyPost - 본인 게시글 여부 (수정/삭제 메뉴 표시여부 결정)
- * @param props.isYourPost - 다른 사용자의 게시글 여부 (신고 메뉴 표시여부 결정)
- * @param props.onRewrite - 수정 핸들러
- * @param props.onDelete - 삭제 핸들러
- * @param props.onClick - 카드 클릭 시 상세 이동 등의 핸들러
- * @returns 게시글 카드 엘리먼트
- * @file features/feed/ui/PostCard.tsx
+ * - `isMyPost === true` : 더보기 메뉴에 수정/삭제 표시
+ * - `isMyPost === false`: 더보기 메뉴에 신고 표시
+ * - 좋아요는 낙관적 업데이트로 즉시 반영하고, API 완료 후 서버 값으로 동기화합니다.
  */
 export function PostCard({
   post,
   isMyPost = false,
-  isYourPost = true,
   onRewrite,
   onDelete,
   onReport,
   onClick,
 }: PostCardProps) {
-  // 수정/삭제 메뉴 드롭다운 열림 상태
+  // 더보기(⋮) 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // 좋아요 상태 - post.hearted로 초기화하여 서버 상태 동기화 (낙관적 업데이트)
+  // 좋아요 낙관적 업데이트용 로컬 상태 — post.hearted/heartCount로 초기화
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
 
-  const { mutateAsync: toggleHeart } = useHeartMutation(post.id);
+  const { mutateAsync: toggleHeart, isPending } = useHeartMutation(post.id);
 
   const handleRewrite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -112,32 +112,39 @@ export function PostCard({
     setIsMenuOpen((prev) => !prev);
   };
 
+  // isMyPost에 따라 드롭다운 메뉴 아이템 결정
+  const menuItems = isMyPost
+    ? [
+        { label: '수정', onClick: handleRewrite },
+        { label: '삭제', onClick: handleDelete, variant: 'danger' as const },
+      ]
+    : [{ label: '신고', onClick: handleReport }];
+
+  /**
+   * 좋아요 토글 핸들러 (낙관적 업데이트)
+   * 1. 즉시 로컬 상태를 반전시켜 UI에 반영
+   * 2. API 호출 후 서버 응답으로 실제 값 동기화
+   * 3. 실패 시 이전 상태로 롤백
+   */
   const handleLikeToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const prevLiked = isLiked;
     const prevCount = localHeartCount;
-    // 낙관적 업데이트
+    // Step 1: 낙관적 업데이트 — 서버 응답 전에 UI 먼저 반영
     const nextLiked = !isLiked;
     setIsLiked(nextLiked);
     setLocalHeartCount((prev) => (nextLiked ? prev + 1 : prev - 1));
     try {
+      // Step 2: 서버 응답값으로 실제 상태 동기화
       const result = await toggleHeart();
-      const updated = result.data.post;
+      const updated = result.post;
       setIsLiked(updated.hearted);
       setLocalHeartCount(updated.heartCount);
     } catch {
-      // 실패 시 롤백
+      // Step 3: API 실패 시 이전 상태로 롤백
       setIsLiked(prevLiked);
       setLocalHeartCount(prevCount);
     }
-  };
-
-  // 이미지 경로 처리 함수
-  const getImageUrl = (imagePath?: string) => {
-    if (!imagePath || imagePath.trim() === '') return undefined;
-    if (imagePath.startsWith('http')) return imagePath;
-    const baseUrl = import.meta.env.VITE_IMAGE_BASE_URL || 'http://localhost:3000';
-    return `${baseUrl.replace(/\/$/, '')}/${imagePath.replace(/^\/+/, '')}`;
   };
 
   return (
@@ -150,7 +157,7 @@ export function PostCard({
         <div className={cn('flex items-start gap-3')}>
           {getImageUrl(post.author.image) ? (
             <img
-              src={getImageUrl(post.author.image)}
+              src={getImageUrl(post.author.image) ?? undefined}
               alt={post.author.username}
               className={cn('h-10 w-10 rounded-full object-cover')}
               onError={(e) => {
@@ -170,74 +177,47 @@ export function PostCard({
           </div>
         </div>
 
-        {/* 더보기 버튼 및 드롭다운 (본인 게시글일 경우만 표시) */}
-        {isMyPost && (
-          <div className={cn('relative')}>
-            <button
-              type="button"
-              aria-label="게시글 메뉴"
-              className={cn(
-                'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
-              )}
-              onClick={handleMenuToggle}
-            >
-              <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
-            </button>
-            {isMenuOpen && (
-              <PostCardDropdown
-                onClose={() => setIsMenuOpen(false)}
-                items={[
-                  { label: '수정', onClick: handleRewrite },
-                  { label: '삭제', onClick: handleDelete, variant: 'danger' },
-                ]}
-              />
+        {/* 더보기 버튼 및 드롭다운 (본인: 수정/삭제, 타인: 신고) */}
+        <div className={cn('relative')}>
+          <button
+            type="button"
+            aria-label="게시글 메뉴"
+            className={cn(
+              'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
             )}
-          </div>
-        )}
-        {/* 다른 사용자의 게시글일 경우 신고 메뉴 표시 */}
-        {!isMyPost && isYourPost && (
-          <div className={cn('relative')}>
-            <button
-              type="button"
-              aria-label="게시글 메뉴"
-              className={cn(
-                'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
-              )}
-              onClick={handleMenuToggle}
-            >
-              <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
-            </button>
-            {isMenuOpen && (
-              <PostCardDropdown
-                onClose={() => setIsMenuOpen(false)}
-                items={[{ label: '신고', onClick: handleReport }]}
-              />
-            )}
-          </div>
-        )}
+            onClick={handleMenuToggle}
+          >
+            <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
+          </button>
+          {isMenuOpen && (
+            <PostCardDropdown onClose={() => setIsMenuOpen(false)} items={menuItems} />
+          )}
+        </div>
       </div>
 
       {/* 게시글 본문 내용 */}
       <p className={cn('text-foreground mt-3 text-sm whitespace-pre-wrap')}>{post.content}</p>
 
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
-      {post.image && post.image.trim() !== '' && (
+      {post.image && (
         <img
-          src={getImageUrl(post.image)}
+          src={getImageUrl(post.image) ?? undefined}
           alt="게시글 이미지"
           className={cn('border-border mt-3 w-full rounded-lg border object-cover')}
           onError={(e) => {
-            if (!e.currentTarget.dataset.fallback) {
-              e.currentTarget.src = '/default-image.png';
-              e.currentTarget.dataset.fallback = 'true';
-            }
+            e.currentTarget.style.display = 'none';
           }}
         />
       )}
 
       {/* 좋아요 및 댓글 수 동기화 */}
       <div className={cn('text-muted-foreground mt-3 flex items-center text-xs')}>
-        <button onClick={handleLikeToggle}>
+        <button
+          type="button"
+          aria-label={isLiked ? '좋아요 취소' : '좋아요'}
+          onClick={handleLikeToggle}
+          disabled={isPending}
+        >
           <HeartIcon active={isLiked} className={cn('mr-1 inline-block')} />
         </button>
         {localHeartCount} <ChatIcon className={cn('mr-1 ml-2')} /> {post.commentCount}{' '}

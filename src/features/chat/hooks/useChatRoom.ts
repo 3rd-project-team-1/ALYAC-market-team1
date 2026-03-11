@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { ROUTE_PATHS } from '@/shared/routes';
+
 import type { ChatMessage } from '../model/types';
 
 const DUMMY_MESSAGES: ChatMessage[] = [
@@ -23,7 +25,7 @@ const DUMMY_MESSAGES: ChatMessage[] = [
     content: 'Treat Inside 입니다.',
     isMine: true,
     time: '12:50',
-    image: 'https://via.placeholder.com/280x180/111827/ffffff?text=Treat+Inside',
+    image: '/Reactangle.webp',
   },
 ];
 
@@ -48,7 +50,7 @@ export function useChatRoom() {
 
   const handleLeaveRoom = () => {
     setShowModal(false);
-    navigate('/chat');
+    navigate(ROUTE_PATHS.CHAT);
   };
 
   return {

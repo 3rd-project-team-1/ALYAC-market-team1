@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserSearchCard, useUserSearch } from '@/features/search';
 import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { TopSearchNav } from '@/widgets/top-search-nav';
 
 export function SearchPage() {
@@ -13,7 +14,7 @@ export function SearchPage() {
    * @param accountname - 사용자의 고유 계정 ID
    */
   const handleUserClick = (accountname: string) => {
-    navigate(`/profile/${accountname}`);
+    navigate(ROUTE_PATHS.PROFILE_DETAIL(accountname));
   };
 
   return (

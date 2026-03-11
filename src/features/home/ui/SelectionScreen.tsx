@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { FullLogoAlyacNoTextIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { Button } from '@/shared/ui';
 
 import { SocialLoginButton } from './SocialLoginButtons';
@@ -14,7 +15,7 @@ export function SelectionScreen() {
       <div
         className={cn('animate-in fade-in flex flex-1 items-center justify-center duration-700')}
       >
-        <FullLogoAlyacNoTextIcon className={cn('h-38.25 w-24.25 object-contain md:h-60 md:w-50')} />
+        <FullLogoAlyacNoTextIcon className={cn('h-38.25 w-24.25 object-contain')} />
       </div>
       <div
         className={cn(
@@ -35,7 +36,7 @@ export function SelectionScreen() {
               size="sm"
               className={cn('h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900')}
             >
-              <Link to="/signin">이메일로 로그인</Link>
+              <Link to={ROUTE_PATHS.SIGNIN}>이메일로 로그인</Link>
             </Button>
             <span>|</span>
             <Button
@@ -44,7 +45,7 @@ export function SelectionScreen() {
               asChild
               className={cn('h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900')}
             >
-              <Link to="/signup">회원가입</Link>
+              <Link to={ROUTE_PATHS.SIGNUP}>회원가입</Link>
             </Button>
           </div>
         </div>

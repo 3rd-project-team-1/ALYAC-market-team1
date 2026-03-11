@@ -1,11 +1,10 @@
-import type { Profile } from '@/entities/user/types';
+import type { Profile } from '@/entities/user';
 import { useEditProfileForm } from '@/features/profile';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { FormField } from '@/shared/ui';
+import { ProfileImageInput } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
-
-import { ProfileImageInput } from './ProfileImageInput';
 
 interface EditProfileFormProps {
   profile: Profile | null;

@@ -1,13 +1,15 @@
-import { API_ENDPOINT, axiosInstance } from '@/shared/api';
+import { API_ENDPOINT, api } from '@/shared/api';
 
-import { productsResponseSchema } from '../model/product.schema';
+import { type ProductsResponse, productsResponseSchema } from '../model/product.schema';
 
-export const getUserProducts = async (accountname: string) => {
-  const response = await axiosInstance.get(API_ENDPOINT.PRODUCT_GET_USER(accountname));
-  const result = productsResponseSchema.safeParse(response.data);
-  if (!result.success) {
-    console.error('게시글 조회 응답 검증 실패:', result.error);
-    throw new Error('잘못된 서버 응답');
-  }
-  return result.data;
-};
+/**
+ * 특정 사용자의 상품 목록 조회 API
+ * @param accountname - 사용자 계정 ID
+ * @returns 사용자의 상품 목록
+ * @example
+ * ```ts
+ * const { product } = await getUserProducts('hong123');
+ * ```
+ */
+export const getUserProducts = (accountname: string): Promise<ProductsResponse> =>
+  api.get(API_ENDPOINT.PRODUCT_GET_USER(accountname), productsResponseSchema);

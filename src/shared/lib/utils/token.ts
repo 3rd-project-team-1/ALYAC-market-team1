@@ -44,7 +44,9 @@ export const getTokenUserInfo = () => {
 
   try {
     const payload = token.split('.')[1];
-    const decoded = JSON.parse(atob(payload));
+    // JWT는 Base64url 인코딩 사용 → 표준 Base64로 변환 후 디코딩
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(atob(base64));
     return decoded; // { accountname, email, ... }
   } catch {
     return null;

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { signUp } from '@/entities/auth';
+import { signUp } from '../api/signup';
 
 // 우리가 만든 회원가입 API 통신 함수
 

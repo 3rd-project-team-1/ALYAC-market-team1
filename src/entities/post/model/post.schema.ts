@@ -6,8 +6,14 @@ export const postAuthorSchema = z.object({
   accountname: z.string(),
   image: z.string(),
   intro: z.string(),
+  isfollow: z.boolean().optional(),
+  following: z.array(z.string()),
+  follower: z.array(z.string()),
   followingCount: z.number(),
   followerCount: z.number(),
+  email: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export const postSchema = z.object({
@@ -19,7 +25,7 @@ export const postSchema = z.object({
   hearted: z.boolean(),
   heartCount: z.number(),
   commentCount: z.number(),
-  authorId: z.string(),
+  authorId: z.string().optional(),
   author: postAuthorSchema,
 });
 
@@ -27,8 +33,8 @@ export const commentSchema = z.object({
   id: z.string(),
   content: z.string(),
   createdAt: z.string(),
-  postId: z.string(),
-  authorId: z.string(),
+  postId: z.string().optional(),
+  authorId: z.string().optional(),
   author: postAuthorSchema,
 });
 
@@ -49,14 +55,23 @@ export const commentResponseSchema = z.object({
 });
 
 export const commentsResponseSchema = z.object({
-  comments: z.array(commentSchema),
+  id: z.string().optional(),
+  comment: z.array(commentSchema),
+});
+export const deleteCommentResponseSchema = z.object({
+  message: z.string(),
 });
 
-export type PostAuthorSchema = z.infer<typeof postAuthorSchema>;
-export type PostSchema = z.infer<typeof postSchema>;
-export type CommentSchema = z.infer<typeof commentSchema>;
-export type PostResponseSchema = z.infer<typeof postResponseSchema>;
-export type PostsResponseSchema = z.infer<typeof postsResponseSchema>;
-export type FeedPostsResponseSchema = z.infer<typeof feedPostsResponseSchema>;
-export type CommentResponseSchema = z.infer<typeof commentResponseSchema>;
-export type CommentsResponseSchema = z.infer<typeof commentsResponseSchema>;
+export const deletePostResponseSchema = z.object({
+  message: z.string(),
+});
+export type PostAuthor = z.infer<typeof postAuthorSchema>;
+export type Post = z.infer<typeof postSchema>;
+export type Comment = z.infer<typeof commentSchema>;
+export type PostResponse = z.infer<typeof postResponseSchema>;
+export type PostsResponse = z.infer<typeof postsResponseSchema>;
+export type FeedPostsResponse = z.infer<typeof feedPostsResponseSchema>;
+export type CommentResponse = z.infer<typeof commentResponseSchema>;
+export type CommentsResponse = z.infer<typeof commentsResponseSchema>;
+export type DeleteCommentResponse = z.infer<typeof deleteCommentResponseSchema>;
+export type DeletePostResponse = z.infer<typeof deletePostResponseSchema>;

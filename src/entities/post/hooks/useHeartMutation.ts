@@ -2,13 +2,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { toggleHeart } from '../api/toggleHeart';
 
-export function useHeartMutation(postId: string | undefined) {
+export function useHeartMutation(postId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => toggleHeart(postId!),
+    mutationFn: () => toggleHeart(postId),
     onSuccess: (res) => {
-      queryClient.setQueryData(['post', postId], res.data.post);
+      queryClient.setQueryData(['post', postId], res.post);
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] });
     },
   });
 }

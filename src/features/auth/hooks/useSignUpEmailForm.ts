@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useCheckEmailDuplicate } from '@/entities/auth';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { type SignupEmailInput, signupEmailSchema } from '../model/signup.schema';
 
@@ -35,7 +36,7 @@ export function useSignUpEmailForm() {
           });
         } else {
           // 중복 아니면 다음 단계로
-          navigate('/signup/profile', {
+          navigate(ROUTE_PATHS.SIGNUP_PROFILE, {
             state: { email: data.email, password: data.password },
           });
         }

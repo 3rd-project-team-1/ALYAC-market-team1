@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { MoreIcon, MoreSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 interface MenuItem {
   label: React.ReactNode;
@@ -27,15 +28,9 @@ export function MoreMenu({ items, onClick, small = false }: MoreMenuProps) {
 
   return (
     <div className={cn('relative')}>
-      <button
-        onClick={handleClick}
-        className={cn(
-          'text-foreground hover:bg-accent flex cursor-pointer items-center justify-center rounded-md transition-colors',
-          small ? 'h-[24px] w-[24px]' : 'h-[32px] w-[32px]',
-        )}
-      >
+      <Button variant="icon-nav" size={small ? 'nav-sm' : 'nav'} onClick={handleClick}>
         {small ? <MoreSmallIcon /> : <MoreIcon />}
-      </button>
+      </Button>
 
       {!onClick && isOpen && (
         <>
@@ -46,18 +41,17 @@ export function MoreMenu({ items, onClick, small = false }: MoreMenuProps) {
             )}
           >
             {items?.map((item, idx) => (
-              <button
+              <Button
                 key={idx}
-                className={cn(
-                  'text-foreground hover:bg-accent flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm',
-                )}
+                variant="ghost"
+                className="w-full justify-start gap-2 px-4 py-2.5 text-sm"
                 onClick={() => {
                   item.onClick();
                   setIsOpen(false);
                 }}
               >
                 {item.label}
-              </button>
+              </Button>
             ))}
           </div>
         </>

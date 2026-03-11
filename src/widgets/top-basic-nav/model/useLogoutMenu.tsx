@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { MonitorIcon, MoonIcon, SunIcon } from '@/shared/assets';
 import { removeToken } from '@/shared/lib';
 import { useTheme } from '@/shared/lib/theme';
+import { ROUTE_PATHS } from '@/shared/routes';
 import { LogoutModal } from '@/shared/ui/modal';
 
 import { MoreMenu } from '../ui/MoreMenu';
@@ -21,7 +22,7 @@ export function useLogoutMenu() {
 
   const handleLogout = () => {
     removeToken();
-    navigate('/signin');
+    navigate(ROUTE_PATHS.SIGNIN);
   };
 
   const themeLabel = {
@@ -31,7 +32,7 @@ export function useLogoutMenu() {
   };
 
   const menuItems = [
-    { label: '설정 및 개인정보', onClick: () => navigate('/edit-profile') },
+    { label: '설정 및 개인정보', onClick: () => navigate(ROUTE_PATHS.EDIT_PROFILE) },
     { label: <>테마: {themeLabel[theme]}</>, onClick: toggleTheme },
     { label: '로그아웃', onClick: () => setIsLogoutModalOpen(true) },
   ];

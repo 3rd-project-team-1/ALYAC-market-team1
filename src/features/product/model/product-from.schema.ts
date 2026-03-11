@@ -9,9 +9,8 @@ export const productFormSchema = z.object({
   price: z
     .string()
     .min(1, '가격을 입력해주세요.')
-    .refine((val) => !isNaN(Number(val)) && Number(val) >= 1, {
-      message: '가격은 1원 이상이어야 합니다.',
-    }),
+    .refine((val) => !isNaN(Number(val)), '숫자를 입력해주세요.')
+    .refine((val) => Number(val) >= 1, '가격은 1원 이상이어야 합니다.'),
 
   link: z
     .string()

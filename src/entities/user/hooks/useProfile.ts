@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { userApi } from '@/entities/user/api';
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
+
+import { getProfile } from '../api/getProfile';
+import { userQueryKeys } from '../model/queryKeys';
 
 export function useProfile(accountname?: string) {
   const tokenInfo = getTokenUserInfo();
@@ -11,20 +13,11 @@ export function useProfile(accountname?: string) {
     tokenInfo?.id?.replace(/^@/, '').trim() ??
     null;
 
-  const normalizedAccountname = accountname?.replace(/^@/, '').trim();
+  const targetAccountname = accountname?.replace(/^@/, '').trim() ?? myAccountname ?? '';
 
-  // 조회할 accountname 결정
-  const targetAccountname = normalizedAccountname ?? myAccountname ?? '';
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['profile', targetAccountname],
-    queryFn: () => userApi.getProfile(targetAccountname).then((res) => res.data.profile),
+  return useQuery({
+    queryKey: userQueryKeys.profile(targetAccountname),
+    queryFn: () => getProfile(targetAccountname).then((res) => res.profile),
     enabled: !!targetAccountname,
   });
-
-  const isMyProfile = normalizedAccountname
-    ? !!myAccountname && myAccountname === normalizedAccountname
-    : true;
-
-  return { profile: data ?? null, isLoading, isError, isMyProfile };
 }

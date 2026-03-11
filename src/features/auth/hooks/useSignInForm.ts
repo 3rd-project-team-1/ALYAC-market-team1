@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useSignIn } from '@/entities/auth';
+import { ROUTE_PATHS } from '@/shared/routes';
 
 import { type SigninInput, signinSchema } from '../model/signin.schema';
 
@@ -30,7 +31,7 @@ export const useSignInForm = () => {
 
   const onSubmit = (data: SigninInput) => {
     loginMutation.mutate(data, {
-      onSuccess: () => navigate('/feed'),
+      onSuccess: () => navigate(ROUTE_PATHS.FEED),
       onError: (error) => {
         if (axios.isAxiosError<{ message: string }>(error)) {
           const errorMessage =

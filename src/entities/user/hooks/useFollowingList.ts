@@ -1,14 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { userApi } from '@/entities/user/api';
-import type { Profile } from '@/entities/user/types';
+import { getFollowing } from '../api/getFollowing';
+import { userQueryKeys } from '../model/queryKeys';
 
 export function useFollowingList(accountname?: string) {
   const { data, isLoading } = useQuery({
-    queryKey: ['followings', accountname],
-    queryFn: () => userApi.getFollowings(accountname!).then((res) => res.data.following),
+    queryKey: userQueryKeys.followings(accountname),
+    queryFn: () =>
+      getFollowing(accountname!).then((res) =>
+        res.following.map((user) => ({ ...user, isfollow: true })),
+      ),
     enabled: !!accountname,
   });
 
-  return { followings: (data ?? []) as Profile[], isLoading };
+  return { followings: data ?? [], isLoading };
 }
