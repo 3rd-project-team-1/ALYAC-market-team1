@@ -56,11 +56,7 @@ export function AvatarActionPopover({
   return (
     <div className={cn('relative shrink-0')}>
       {/* 아바타 — 클릭 시 프로필 이동 */}
-      <button
-        type="button"
-        aria-label={`${username} 프로필 보기`}
-        onClick={handleAvatarClick}
-      >
+      <button type="button" aria-label={`${username} 프로필 보기`} onClick={handleAvatarClick}>
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -71,7 +67,9 @@ export function AvatarActionPopover({
             }}
           />
         ) : (
-          <div className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}>
+          <div
+            className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
+          >
             <UploadImageSmallIcon />
           </div>
         )}
