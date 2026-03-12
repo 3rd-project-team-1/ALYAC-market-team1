@@ -1,11 +1,11 @@
 import type { KeyboardEvent, MouseEvent, SyntheticEvent, TouchEvent } from 'react';
 
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 import type { PostCardModel } from '@/features/feed';
 import { ChatIcon, HeartIcon, MoreIcon } from '@/shared/assets';
 import { cn, getImageUrl, getRelativeTime } from '@/shared/lib';
 import { LogoutModal } from '@/shared/ui';
-
-import { AvatarActionPopover } from './AvatarActionPopover';
 
 export type DropdownItem = {
   label: string;
@@ -63,7 +63,6 @@ function PostCardDropdown({ onClose, items, menuId }: PostCardDropdownProps) {
 
 interface PostCardHeaderProps {
   post: PostCardModel;
-  isMyPost: boolean;
   isMenuOpen: boolean;
   menuItems: DropdownItem[];
   onMenuToggle: (e: MouseEvent) => void;
@@ -73,7 +72,6 @@ interface PostCardHeaderProps {
 
 export function PostCardHeader({
   post,
-  isMyPost,
   isMenuOpen,
   menuItems,
   onMenuToggle,
@@ -81,23 +79,14 @@ export function PostCardHeader({
   menuId,
 }: PostCardHeaderProps) {
   return (
-    <div className={cn('flex items-start justify-between gap-3')}>
-      <div className={cn('flex items-start gap-3')}>
-        <AvatarActionPopover
-          accountname={post.author.accountname}
-          image={post.author.image}
-          username={post.author.username}
-          isMyPost={isMyPost}
-          initialIsFollow={post.isfollow}
-        />
-        <div>
-          <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-          <p className={cn('text-muted-foreground text-xs')}>
-            @{post.author.accountname}
-            <span className={cn('mx-1')}>·</span>
-            <time dateTime={post.createdAt}>{getRelativeTime(post.createdAt)}</time>
-          </p>
-        </div>
+    <div className={cn('flex items-start justify-between')}>
+      <div>
+        <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
+        <p className={cn('text-muted-foreground text-xs')}>
+          @{post.author.accountname}
+          <span className={cn('mx-1')}>·</span>
+          <time dateTime={post.createdAt}>{getRelativeTime(post.createdAt)}</time>
+        </p>
       </div>
 
       <div className={cn('relative')}>
@@ -217,14 +206,14 @@ export function PostCardImages({
               type="button"
               aria-label="이전 이미지"
               className={cn(
-                'absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full bg-black/60 px-2 py-1 text-xs text-white',
+                'absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full bg-black/60 p-1.5 text-white',
               )}
               onClick={(e) => {
                 e.stopPropagation();
                 onPrevImage();
               }}
             >
-              이전
+              <ChevronLeft className={cn('h-4 w-4')} />
             </button>
           )}
           {!isLastImage && (
@@ -232,14 +221,14 @@ export function PostCardImages({
               type="button"
               aria-label="다음 이미지"
               className={cn(
-                'absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full bg-black/60 px-2 py-1 text-xs text-white',
+                'absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full bg-black/60 p-1.5 text-white',
               )}
               onClick={(e) => {
                 e.stopPropagation();
                 onNextImage();
               }}
             >
-              다음
+              <ChevronRight className={cn('h-4 w-4')} />
             </button>
           )}
         </>
