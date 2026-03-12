@@ -45,7 +45,7 @@ export function MoreMenu({ items, onClick, small = false }: MoreMenuProps) {
               <Button
                 key={idx}
                 variant="ghost"
-                className="w-full justify-start gap-2 px-4 has-[>svg]:px-4 py-2.5 text-sm"
+                className="w-full justify-start gap-2 px-4 py-2.5 text-sm has-[>svg]:px-4"
                 onClick={() => {
                   item.onClick();
                   if (!item.preventClose) {

@@ -20,6 +20,8 @@ export interface PostCardModel {
   commentCount: number;
   /** 게시글 작성 시각 (ISO 8601) */
   createdAt: string;
+  /** 현재 로그인 유저의 작성자 팔로우 여부 */
+  isfollow?: boolean;
   /** 게시글 작성자 정보 */
   author: {
     /** 작성자 이름 */

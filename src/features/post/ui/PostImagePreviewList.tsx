@@ -1,5 +1,7 @@
+import { CloseIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { Button } from '@/shared/ui';
 
 interface PostImagePreviewListProps {
   images: string[];
@@ -18,18 +20,17 @@ export function PostImagePreviewList({ images, onRemove }: PostImagePreviewListP
             alt={`업로드 이미지 ${index + 1}`}
             className={cn('w-full object-cover')}
           />
-          <button
+          <Button
             type="button"
+            size="icon-sm"
             onClick={() => onRemove(index)}
             className={cn(
-              'absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white',
+              'absolute top-2 right-2 rounded-full bg-black/50 text-white hover:bg-black/70',
             )}
             aria-label="이미지 삭제"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1L13 13M13 1L1 13" stroke="white" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </button>
+            <CloseIcon />
+          </Button>
         </div>
       ))}
     </div>

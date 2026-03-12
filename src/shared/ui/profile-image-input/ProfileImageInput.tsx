@@ -1,5 +1,7 @@
+import { useRef } from 'react';
+
 import { UploadFile, UploadImageIcon } from '@/shared/assets';
-import { useImageUpload } from '@/shared/hooks/useImageUpload';
+import { useImageUpload } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 
 import { Button } from '../button/button';
@@ -16,10 +18,20 @@ export function ProfileImageInput({
   className,
   initialImage,
 }: ProfileImageInputProps) {
-  const { fileInputRef, preview, handleImageClick, handleImageChange } = useImageUpload(
-    initialImage,
-    onImageChange as (file: File) => void, // 타입 호환을 위해
-  );
+  const { previewUrl, handleFileChange } = useImageUpload(initialImage);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileChange(file);
+      onImageChange(file);
+    }
+  };
 
   return (
     <div className={cn('mb-8 flex justify-center', className)}>
@@ -35,9 +47,9 @@ export function ProfileImageInput({
         )}
       >
         {/* 프로필 이미지 미리보기 또는 기본 회색 아이콘 */}
-        {preview ? (
+        {previewUrl ? (
           <img
-            src={preview}
+            src={previewUrl}
             alt="프로필 이미지"
             className="size-full rounded-full bg-gray-200 object-cover group-hover:brightness-90"
           />
@@ -65,7 +77,7 @@ export function ProfileImageInput({
         type="file"
         accept="image/*"
         ref={fileInputRef}
-        onChange={handleImageChange}
+        onChange={handleInputChange}
         className="hidden"
       />
     </div>

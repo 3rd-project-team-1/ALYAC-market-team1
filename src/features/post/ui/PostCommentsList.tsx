@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { UploadImageSmallIcon } from '@/shared/assets';
 import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
+import { getRelativeTime } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LoadingSpinner, LogoutModal } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
@@ -109,7 +110,7 @@ export function PostCommentsList({
                   {comment.author.username}
                 </span>
                 <span className={cn('text-muted-foreground text-xs')}>
-                  {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
+                  {getRelativeTime(comment.createdAt)}
                 </span>
               </div>
               <p className={cn('text-foreground text-sm')}>{comment.content}</p>

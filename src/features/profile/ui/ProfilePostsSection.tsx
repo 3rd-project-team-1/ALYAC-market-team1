@@ -1,14 +1,12 @@
-import {
-  ChatIcon,
-  HeartIcon,
-  PostAlbumIcon,
-  PostListIcon,
-  UploadImageSmallIcon,
-} from '@/shared/assets';
+import { useNavigate } from 'react-router-dom';
+
+import { PostAlbumIcon, PostListIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { getImageUrl } from '@/shared/lib';
 import { LoadingSpinner, LogoutModal } from '@/shared/ui';
+import { ImageCountBadge } from '@/shared/ui';
+import { PostAction } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
@@ -32,7 +30,7 @@ export function ProfilePostsSection() {
   } = useProfilePostsSection();
 
   const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore: loadMore });
-
+  const navigate = useNavigate();
   return (
     <section className={cn('border-border flex-1 border-t')}>
       <div className={cn('border-border flex justify-end border-b')}>
@@ -66,9 +64,14 @@ export function ProfilePostsSection() {
           <p className={cn('text-muted-foreground text-sm')}>작성한 게시물이 없습니다.</p>
         </div>
       ) : viewMode === 'list' ? (
-        <div className={cn('flex flex-col gap-4 px-4 py-4')}>
+        <div className={cn('flex flex-col')}>
           {posts.map((post) => (
-            <div key={post.id} className={cn('border-border border-b pb-4 last:border-0')}>
+            <div
+              key={post.id}
+              className={cn(
+                'border-border hover:bg-accent border-b px-4 py-3 transition-colors last:border-0',
+              )}
+            >
               <div className={cn('flex items-center justify-between')}>
                 <div className={cn('flex items-center gap-3')}>
                   <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
@@ -110,41 +113,41 @@ export function ProfilePostsSection() {
                 </div>
               </div>
               <p
-                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer pl-12 text-sm')}
+                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer text-sm')}
                 onClick={() => handlePostDetail(post.id)}
               >
                 {post.content}
               </p>
               {post.image && (
-                <div className={cn('mt-2 overflow-hidden rounded-xl pl-12')}>
+                <div className={cn('relative mt-2 rounded-xl')}>
                   <img
                     src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
                     alt="게시글 이미지"
-                    className={cn('w-full object-cover')}
+                    className={cn('border-border w-full rounded-lg border object-cover')}
                   />
+                  {post.image.split(',').length > 1 && (
+                    <ImageCountBadge
+                      count={post.image.split(',').length}
+                      onClick={() => handlePostDetail(post.id)}
+                    />
+                  )}
                 </div>
               )}
-              <div className={cn('mt-2 flex items-center gap-4 pl-12')}>
-                <button
-                  type="button"
-                  className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    heartMutation.mutate({ postId: post.id, isHearted: post.hearted });
-                  }}
-                >
-                  <HeartIcon active={post.hearted} />
-                  {post.heartCount}
-                </button>
-                <button
-                  type="button"
-                  className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
-                  onClick={() => handlePostDetail(post.id)}
-                >
-                  <ChatIcon />
-                  {post.commentCount}
-                </button>
-              </div>
+              {/* 게시글 하단영역 (좋아요,댓글, 날짜) */}
+              <PostAction
+                hearted={post.hearted}
+                heartCount={post.heartCount}
+                commentCount={post.commentCount}
+                createdAt={post.createdAt}
+                onToggleHeart={() =>
+                  heartMutation.mutate({
+                    postId: post.id,
+                    isHearted: post.hearted,
+                  })
+                }
+                isHeartPending={heartMutation.isPending}
+                onClickComment={() => navigate(`/post/${post.id}`)}
+              />
             </div>
           ))}
           <div ref={ref} className={cn('h-1')} />
@@ -159,15 +162,23 @@ export function ProfilePostsSection() {
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('bg-muted aspect-square cursor-pointer overflow-hidden')}
+              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden')}
               onClick={() => handlePostDetail(post.id)}
             >
               {post.image ? (
-                <img
-                  src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
-                  alt="게시글"
-                  className={cn('h-full w-full object-cover')}
-                />
+                <>
+                  <img
+                    src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
+                    alt="게시글"
+                    className={cn('h-full w-full object-cover')}
+                  />
+                  {post.image.split(',').length > 1 && (
+                    <ImageCountBadge
+                      count={post.image.split(',').length}
+                      onClick={() => handlePostDetail(post.id)}
+                    />
+                  )}
+                </>
               ) : (
                 <div className={cn('flex h-full w-full items-center justify-center')}>
                   <p className={cn('text-muted-foreground line-clamp-3 p-2 text-center text-xs')}>
