@@ -1,4 +1,6 @@
-import { X } from 'lucide-react';
+import { useState } from 'react';
+
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 
 import { ImageIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
@@ -18,22 +20,55 @@ export function ProfileProductsSection() {
     handleDeleteCancel,
   } = useProfileProductsSection();
 
+  const [showAll, setShowAll] = useState(false);
+
   if (!products || products.length === 0) return null;
 
   return (
     <section className={cn('border-border border-t px-4 py-4')}>
-      <h2 className={cn('text-foreground mb-3 text-sm font-semibold')}>판매 중인 상품</h2>
-      <div className={cn('flex gap-3 overflow-x-auto pb-2')}>
+      {/* 헤더 */}
+      <div className={cn('mb-3 flex items-center justify-between')}>
+        <h2 className={cn('text-foreground text-sm font-semibold')}>판매 중인 상품</h2>
+        <button
+          type="button"
+          className={cn(
+            'flex items-center gap-0.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground',
+          )}
+          onClick={() => setShowAll((prev) => !prev)}
+        >
+          {showAll ? (
+            <>접기 <ChevronUp className={cn('h-3.5 w-3.5')} /></>
+          ) : (
+            <>전체 보기 ({products.length}) <ChevronDown className={cn('h-3.5 w-3.5')} /></>
+          )}
+        </button>
+      </div>
+
+      {/* 상품 목록 */}
+      <div
+        className={cn(
+          'gap-3',
+          showAll
+            ? 'grid grid-cols-3 sm:grid-cols-4'
+            : 'flex overflow-x-auto pb-2',
+        )}
+      >
         {products.map((product) => (
           <div
             key={product.id}
-            className={cn('relative flex-shrink-0 cursor-pointer')}
+            className={cn(
+              'relative cursor-pointer',
+              showAll ? 'w-full' : 'w-[120px] flex-shrink-0',
+            )}
             onClick={() => handleProductClick(product.id)}
           >
             <div
-              className={cn('group bg-muted relative h-[90px] w-[90px] overflow-hidden rounded-xl')}
+              className={cn(
+                'group bg-muted relative overflow-hidden rounded-xl',
+                showAll ? 'aspect-square w-full' : 'h-[120px] w-[120px]',
+              )}
             >
-              {/* 이미지 로드 실패 시 표시되는 플레이스홀더 */}
+              {/* 이미지 로드 실패 시 플레이스홀더 */}
               <div className={cn('absolute inset-0 flex items-center justify-center')}>
                 <ImageIcon className={cn('text-muted-foreground h-7 w-7')} />
               </div>
@@ -46,6 +81,7 @@ export function ProfileProductsSection() {
                 }}
               />
 
+              {/* 삭제 버튼 (내 프로필) */}
               {isMyProfile && (
                 <button
                   type="button"
@@ -62,10 +98,16 @@ export function ProfileProductsSection() {
                 </button>
               )}
             </div>
-            <p className={cn('text-foreground mt-1 max-w-[90px] truncate text-xs font-medium')}>
+
+            <p
+              className={cn(
+                'text-foreground mt-1 truncate text-xs font-medium',
+                showAll ? 'w-full' : 'max-w-[120px]',
+              )}
+            >
               {product.itemName}
             </p>
-            <p className={cn('text-xs text-[#3C9E00]')}>{product.price.toLocaleString()}원</p>
+            <p className={cn('text-xs font-bold text-[#0a9e1e]')}>{product.price.toLocaleString()}원</p>
           </div>
         ))}
       </div>
