@@ -262,7 +262,9 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
             <img
               src={getImageUrl(primaryPostImage) ?? undefined}
               alt="게시글 이미지"
-              className={cn('border-border w-full rounded-lg border object-cover')}
+              className={cn(
+                'border-border max-h-[60vh] w-full rounded-lg border bg-gray-50 object-contain',
+              )}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
@@ -280,7 +282,9 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
                   key={`${post.id}-image-${index}`}
                   src={getImageUrl(img) ?? undefined}
                   alt={`게시글 이미지 ${index + 1}`}
-                  className={cn('border-border h-32 w-full rounded-md border object-cover')}
+                  className={cn(
+                    'border-border h-32 max-h-[40vh] w-full rounded-md border bg-gray-50 object-contain sm:h-40 md:h-48',
+                  )}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
