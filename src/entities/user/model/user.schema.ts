@@ -73,6 +73,9 @@ export const updateProfileResponseSchema = z.object({
 
 export const searchUserSchema = profileSchema.omit({ isfollow: true }).extend({
   email: z.string(),
+  image: z.string().nullable().catch(''),
+  following: z.array(z.string()).optional().default([]).catch([]),
+  follower: z.array(z.string()).optional().default([]).catch([]),
 });
 
 export const getProfileResponseSchema = z.object({
