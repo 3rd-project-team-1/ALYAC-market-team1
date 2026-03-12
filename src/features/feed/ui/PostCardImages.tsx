@@ -2,111 +2,10 @@ import type { KeyboardEvent, MouseEvent, SyntheticEvent, TouchEvent } from 'reac
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import type { PostCardModel } from '@/features/feed';
-import { ChatIcon, HeartIcon, MoreIcon } from '@/shared/assets';
-import { cn, getImageUrl, getRelativeTime } from '@/shared/lib';
-import { LogoutModal } from '@/shared/ui';
-
-export type DropdownItem = {
-  label: string;
-  onClick: (e: MouseEvent) => void;
-  variant?: 'danger';
-};
+import { cn, getImageUrl } from '@/shared/lib';
 
 function hideBrokenImage(e: SyntheticEvent<HTMLImageElement>) {
   e.currentTarget.style.display = 'none';
-}
-
-interface PostCardDropdownProps {
-  onClose: () => void;
-  items: DropdownItem[];
-  menuId: string;
-}
-
-function PostCardDropdown({ onClose, items, menuId }: PostCardDropdownProps) {
-  return (
-    <>
-      <button
-        type="button"
-        className={cn('fixed inset-0 z-10 cursor-default')}
-        aria-label="메뉴 닫기"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-      />
-      <div
-        id={menuId}
-        role="menu"
-        className={cn(
-          'bg-background border-border absolute top-9 right-0 z-20 w-28 overflow-hidden rounded-md border py-1 shadow-sm',
-        )}
-      >
-        {items.map((item) => (
-          <button
-            key={item.label}
-            type="button"
-            role="menuitem"
-            className={cn(
-              'hover:bg-accent w-full px-3 py-2 text-left text-sm',
-              item.variant === 'danger' ? 'text-destructive' : 'text-foreground',
-            )}
-            onClick={item.onClick}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
-    </>
-  );
-}
-
-interface PostCardHeaderProps {
-  post: PostCardModel;
-  isMenuOpen: boolean;
-  menuItems: DropdownItem[];
-  onMenuToggle: (e: MouseEvent) => void;
-  onCloseMenu: () => void;
-  menuId: string;
-}
-
-export function PostCardHeader({
-  post,
-  isMenuOpen,
-  menuItems,
-  onMenuToggle,
-  onCloseMenu,
-  menuId,
-}: PostCardHeaderProps) {
-  return (
-    <div className={cn('flex items-start justify-between')}>
-      <div>
-        <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-        <p className={cn('text-muted-foreground text-xs')}>
-          @{post.author.accountname}
-          <span className={cn('mx-1')}>·</span>
-          <time dateTime={post.createdAt}>{getRelativeTime(post.createdAt)}</time>
-        </p>
-      </div>
-
-      <div className={cn('relative')}>
-        <button
-          type="button"
-          aria-label="게시글 메뉴"
-          aria-expanded={isMenuOpen}
-          aria-controls={menuId}
-          aria-haspopup="menu"
-          className={cn(
-            'text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-md',
-          )}
-          onClick={onMenuToggle}
-        >
-          <MoreIcon className={cn('h-4 w-4')} aria-label="더보기" />
-        </button>
-        {isMenuOpen && <PostCardDropdown onClose={onCloseMenu} items={menuItems} menuId={menuId} />}
-      </div>
-    </div>
-  );
 }
 
 interface PostCardImagesProps {
@@ -259,58 +158,6 @@ export function PostCardImages({
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-interface PostCardActionsProps {
-  isLiked: boolean;
-  localHeartCount: number;
-  commentCount: number;
-  isPending: boolean;
-  onLikeToggle: (e: MouseEvent) => Promise<void>;
-}
-
-export function PostCardActions({
-  isLiked,
-  localHeartCount,
-  commentCount,
-  isPending,
-  onLikeToggle,
-}: PostCardActionsProps) {
-  return (
-    <div className={cn('text-muted-foreground mt-3 flex items-center text-xs')}>
-      <button
-        type="button"
-        aria-label={isLiked ? '좋아요 취소' : '좋아요'}
-        onClick={onLikeToggle}
-        disabled={isPending}
-      >
-        <HeartIcon active={isLiked} className={cn('mr-1 inline-block')} />
-      </button>
-      {localHeartCount} <ChatIcon className={cn('mr-1 ml-2')} /> {commentCount}{' '}
-    </div>
-  );
-}
-
-interface PostCardReportModalProps {
-  isOpen: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
-export function PostCardReportModal({ isOpen, onConfirm, onCancel }: PostCardReportModalProps) {
-  if (!isOpen) return null;
-
-  return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <LogoutModal
-        title="신고하시겠습니까?"
-        confirmText="신고"
-        cancelText="취소"
-        onConfirm={onConfirm}
-        onCancel={onCancel}
-      />
     </div>
   );
 }
