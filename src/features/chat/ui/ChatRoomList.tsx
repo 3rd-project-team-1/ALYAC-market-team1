@@ -27,7 +27,7 @@ export function ChatRoomList({ rooms, onRoomClick }: ChatRoomListProps) {
               {room.isOnline && (
                 <span
                   className={cn(
-                    'border-background absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 bg-[#3C9E00]',
+                    'absolute top-0 left-0 h-2.5 w-2.5 rounded-full bg-[#11cc27]',
                   )}
                 />
               )}
