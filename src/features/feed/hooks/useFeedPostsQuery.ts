@@ -49,8 +49,9 @@ export function useFeedPostsQuery() {
     });
 
   // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)
+  // 피드는 항상 팔로우한 사람의 글만 노출되므로 isfollow를 true로 교정합니다.
   const posts: PostCardModel[] = (data?.pages.flat() ?? [])
-    .map(mapPost)
+    .map((post) => ({ ...mapPost(post), isfollow: true }))
     .filter((post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx);
 
   /**

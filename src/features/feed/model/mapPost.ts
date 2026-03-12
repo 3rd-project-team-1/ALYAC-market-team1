@@ -15,6 +15,7 @@ export function mapPost(post: Post): PostCardModel {
     heartCount: post.heartCount,
     commentCount: post.commentCount,
     createdAt: post.createdAt,
+    isfollow: post.author.isfollow,
     author: {
       username: post.author.username,
       accountname: post.author.accountname,
