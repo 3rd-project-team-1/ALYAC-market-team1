@@ -247,7 +247,9 @@ export function PostCardImages({
 
       {hasMultipleImages && (
         <div
-          className={cn('absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1')}
+          className={cn(
+            'absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1 rounded-full bg-black/45 px-2 py-1',
+          )}
           aria-label="이미지 인디케이터"
         >
           {images.map((_, index) => (
@@ -262,7 +264,7 @@ export function PostCardImages({
               }}
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
-                index === currentIndex ? 'bg-white' : 'bg-white/50',
+                index === currentIndex ? 'bg-white' : 'bg-white/10',
               )}
             />
           ))}
