@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useHeartMutation } from '@/entities/post';
 import type { PostCardModel } from '@/features/feed';
-import { getImageUrl } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/routes';
 
 import {
   useIsDesktopEnvironment,
@@ -36,7 +33,6 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
-  const navigate = useNavigate();
   const { mutateAsync: toggleHeart, isPending } = useHeartMutation(post.id);
   const isDesktopEnvironment = useIsDesktopEnvironment();
 
@@ -107,13 +103,6 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     closeMenu();
   };
 
-  const handleProfileClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    navigate(ROUTE_PATHS.PROFILE_DETAIL(post.author.accountname));
-  };
-
-  const authorImageUrl = getImageUrl(post.author.image) ?? undefined;
-
   const menuItems: DropdownItem[] = isMyPost
     ? [
         { label: '수정', onClick: handleRewrite },
@@ -129,10 +118,9 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     >
       <PostCardHeader
         post={post}
-        authorImageUrl={authorImageUrl}
+        isMyPost={isMyPost}
         isMenuOpen={isMenuOpen}
         menuItems={menuItems}
-        onProfileClick={handleProfileClick}
         onMenuToggle={handleMenuToggle}
         onCloseMenu={closeMenu}
         menuId={postMenuId}

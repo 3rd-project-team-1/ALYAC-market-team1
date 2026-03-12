@@ -1,9 +1,11 @@
 import type { KeyboardEvent, MouseEvent, SyntheticEvent, TouchEvent } from 'react';
 
 import type { PostCardModel } from '@/features/feed';
-import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { ChatIcon, HeartIcon, MoreIcon } from '@/shared/assets';
 import { cn, getImageUrl, getRelativeTime } from '@/shared/lib';
 import { LogoutModal } from '@/shared/ui';
+
+import { AvatarActionPopover } from './AvatarActionPopover';
 
 export type DropdownItem = {
   label: string;
@@ -61,10 +63,9 @@ function PostCardDropdown({ onClose, items, menuId }: PostCardDropdownProps) {
 
 interface PostCardHeaderProps {
   post: PostCardModel;
-  authorImageUrl: string | undefined;
+  isMyPost: boolean;
   isMenuOpen: boolean;
   menuItems: DropdownItem[];
-  onProfileClick: (e: MouseEvent) => void;
   onMenuToggle: (e: MouseEvent) => void;
   onCloseMenu: () => void;
   menuId: string;
@@ -72,10 +73,9 @@ interface PostCardHeaderProps {
 
 export function PostCardHeader({
   post,
-  authorImageUrl,
+  isMyPost,
   isMenuOpen,
   menuItems,
-  onProfileClick,
   onMenuToggle,
   onCloseMenu,
   menuId,
@@ -83,27 +83,13 @@ export function PostCardHeader({
   return (
     <div className={cn('flex items-start justify-between gap-3')}>
       <div className={cn('flex items-start gap-3')}>
-        <button
-          type="button"
-          aria-label={`${post.author.username} 프로필 보기`}
-          className={cn('shrink-0')}
-          onClick={onProfileClick}
-        >
-          {authorImageUrl ? (
-            <img
-              src={authorImageUrl}
-              alt={post.author.username}
-              className={cn('h-10 w-10 rounded-full object-cover')}
-              onError={hideBrokenImage}
-            />
-          ) : (
-            <div
-              className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
-            >
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </button>
+        <AvatarActionPopover
+          accountname={post.author.accountname}
+          image={post.author.image}
+          username={post.author.username}
+          isMyPost={isMyPost}
+          initialIsFollow={post.isfollow}
+        />
         <div>
           <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
           <p className={cn('text-muted-foreground text-xs')}>
