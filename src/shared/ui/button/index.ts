@@ -1,3 +1,3 @@
 export * from './button';
 export * from './icon-button';
-export * from './ImageCountBadge';
+export * from './imageCountBadge';
