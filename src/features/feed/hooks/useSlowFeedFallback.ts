@@ -6,7 +6,7 @@ import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
 
 /** 게시글 하나를 불러온 후 다음 게시글까지 대기 시간 (ms) */
-const SLOW_LOAD_DELAY_MS = 30000;
+const SLOW_LOAD_DELAY_MS = 60000;
 
 // ─── 상태 타입 ────────────────────────────────────────────────────────────────
 
