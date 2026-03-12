@@ -40,7 +40,7 @@ export function PostCreatePage() {
       onContentFocus={onFocus}
       onContentBlur={onBlur}
       images={images}
-      profileImage={profile?.image}
+      profileImage={profile?.image ?? null}
       onSubmit={onSubmit}
       onImageAdd={handleImageAdd}
       onImageRemove={handleImageRemove}

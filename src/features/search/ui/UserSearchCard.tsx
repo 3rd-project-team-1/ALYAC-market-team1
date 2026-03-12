@@ -7,7 +7,7 @@ interface UserSearchCardProps {
   user: {
     username: string;
     accountname: string;
-    image?: string;
+    image: string | null;
   };
   onClick: () => void;
   highlight?: string;
