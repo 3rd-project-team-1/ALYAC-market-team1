@@ -36,7 +36,7 @@ export const API_ENDPOINT = {
 
   // 상품
   PRODUCT_CREATE: '/api/product',
-  PRODUCT_GET_USER: (accountname: string) => `/api/product/${accountname}`,
+  PRODUCT_GET_USER: (accountname: string) => `/api/product/${accountname}?limit=1000&skip=0`,
   PRODUCT_DETAIL: (id: string) => `/api/product/detail/${id}`,
   PRODUCT_UPDATE: (id: string) => `/api/product/${id}`,
   PRODUCT_DELETE: (id: string) => `/api/product/${id}`,
