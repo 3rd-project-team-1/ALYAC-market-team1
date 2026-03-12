@@ -8,6 +8,7 @@ interface PostActionProps {
   createdAt: string;
   onToggleHeart: () => void;
   isHeartPending?: boolean;
+  onClickComment?: () => void;
 }
 
 export function PostAction({
@@ -17,6 +18,7 @@ export function PostAction({
   createdAt,
   onToggleHeart,
   isHeartPending = false,
+  onClickComment,
 }: PostActionProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -40,7 +42,7 @@ export function PostAction({
           <span className={cn('text-muted-foreground text-xs')}>{heartCount}</span>
         </button>
 
-        <button type="button" className={cn('flex items-center gap-1.5')}>
+        <button type="button" onClick={onClickComment} className={cn('flex items-center gap-1.5')}>
           <ChatIcon />
           <span className={cn('text-muted-foreground text-xs')}>{commentCount}</span>
         </button>
