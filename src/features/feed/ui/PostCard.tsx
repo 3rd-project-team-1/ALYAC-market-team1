@@ -19,6 +19,7 @@ import {
   PostCardImages,
   PostCardReportModal,
 } from './PostCard.sections';
+import { AvatarActionPopover } from './AvatarActionPopover';
 
 interface PostCardProps {
   post: PostCardModel;
@@ -116,44 +117,58 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       onClick={onClick}
       onKeyDown={handleArticleKeyDown}
     >
-      <PostCardHeader
-        post={post}
-        isMyPost={isMyPost}
-        isMenuOpen={isMenuOpen}
-        menuItems={menuItems}
-        onMenuToggle={handleMenuToggle}
-        onCloseMenu={closeMenu}
-        menuId={postMenuId}
-      />
+      {/* 헤더: 아바타(좌측 고정) + 이름/시간/메뉴(우측 flex-1) */}
+      <div className="flex items-start gap-3">
+        <AvatarActionPopover
+          accountname={post.author.accountname}
+          image={post.author.image}
+          username={post.author.username}
+          isMyPost={isMyPost}
+          initialIsFollow={post.isfollow}
+        />
+        <div className="min-w-0 flex-1">
+          <PostCardHeader
+            post={post}
+            isMenuOpen={isMenuOpen}
+            menuItems={menuItems}
+            onMenuToggle={handleMenuToggle}
+            onCloseMenu={closeMenu}
+            menuId={postMenuId}
+          />
+        </div>
+      </div>
 
-      <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
+      {/* 본문·이미지·액션: 아바타(40px) + gap(12px) = 52px 들여써서 이름 열에 정렬 */}
+      <div className="pl-[52px]">
+        <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
 
-      <PostCardImages
-        postId={post.id}
-        images={images}
-        currentIndex={currentIndex}
-        hasMultipleImages={hasMultipleImages}
-        showDesktopNavButtons={isDesktopEnvironment}
-        slideTransform={slideTransform}
-        onGoToImage={goToImage}
-        onNextImage={handleNextImage}
-        onPrevImage={handlePrevImage}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-      />
+        <PostCardImages
+          postId={post.id}
+          images={images}
+          currentIndex={currentIndex}
+          hasMultipleImages={hasMultipleImages}
+          showDesktopNavButtons={isDesktopEnvironment}
+          slideTransform={slideTransform}
+          onGoToImage={goToImage}
+          onNextImage={handleNextImage}
+          onPrevImage={handlePrevImage}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        />
 
-      <PostCardActions
-        isLiked={isLiked}
-        localHeartCount={localHeartCount}
-        commentCount={post.commentCount}
-        isPending={isPending}
-        onLikeToggle={handleLikeToggle}
-      />
+        <PostCardActions
+          isLiked={isLiked}
+          localHeartCount={localHeartCount}
+          commentCount={post.commentCount}
+          isPending={isPending}
+          onLikeToggle={handleLikeToggle}
+        />
+      </div>
 
       <PostCardReportModal
         isOpen={isReportModalOpen}
