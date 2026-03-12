@@ -1,6 +1,6 @@
-import { useProfileTargetAccount } from '@/features/profile/hooks/useProfileTargetAccount';
-import { ProfilePostsSection, ProfileProductsSection, ProfileTopSection } from '@/features/profile';
 import { useProfile } from '@/entities/user/hooks/useProfile';
+import { ProfilePostsSection, ProfileProductsSection, ProfileTopSection } from '@/features/profile';
+import { useProfileTargetAccount } from '@/features/profile/hooks/useProfileTargetAccount';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopBasicNav, useLogoutMenu } from '@/widgets/top-basic-nav';

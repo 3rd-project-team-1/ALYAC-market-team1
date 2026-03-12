@@ -32,14 +32,18 @@ export function ProfileProductsSection() {
         <button
           type="button"
           className={cn(
-            'flex items-center gap-0.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground',
+            'text-muted-foreground hover:text-foreground flex items-center gap-0.5 text-xs font-medium transition-colors',
           )}
           onClick={() => setShowAll((prev) => !prev)}
         >
           {showAll ? (
-            <>접기 <ChevronUp className={cn('h-3.5 w-3.5')} /></>
+            <>
+              접기 <ChevronUp className={cn('h-3.5 w-3.5')} />
+            </>
           ) : (
-            <>전체 보기 ({products.length}) <ChevronDown className={cn('h-3.5 w-3.5')} /></>
+            <>
+              전체 보기 ({products.length}) <ChevronDown className={cn('h-3.5 w-3.5')} />
+            </>
           )}
         </button>
       </div>
@@ -48,9 +52,7 @@ export function ProfileProductsSection() {
       <div
         className={cn(
           'gap-3',
-          showAll
-            ? 'grid grid-cols-3 sm:grid-cols-4'
-            : 'flex overflow-x-auto pb-2',
+          showAll ? 'grid grid-cols-3 sm:grid-cols-4' : 'flex overflow-x-auto pb-2',
         )}
       >
         {products.map((product) => (
@@ -107,7 +109,9 @@ export function ProfileProductsSection() {
             >
               {product.itemName}
             </p>
-            <p className={cn('text-xs font-bold text-[#0a9e1e]')}>{product.price.toLocaleString()}원</p>
+            <p className={cn('text-xs font-bold text-[#0a9e1e]')}>
+              {product.price.toLocaleString()}원
+            </p>
           </div>
         ))}
       </div>
