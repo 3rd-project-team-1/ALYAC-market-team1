@@ -59,59 +59,66 @@ export function ProfileProductsSection() {
           <div
             key={product.id}
             className={cn(
-              'relative cursor-pointer',
+              'relative cursor-pointer transition-transform duration-200 hover:scale-[1.03]',
               showAll ? 'w-full' : 'w-[120px] flex-shrink-0',
             )}
             onClick={() => handleProductClick(product.id)}
           >
             <div
               className={cn(
-                'group bg-muted relative overflow-hidden rounded-xl',
-                showAll ? 'aspect-square w-full' : 'h-[120px] w-[120px]',
+                'group bg-muted relative overflow-hidden rounded-xl shadow-sm transition-shadow duration-200 hover:shadow-lg',
+                showAll ? 'w-full' : 'w-[120px]',
               )}
             >
-              {/* 이미지 로드 실패 시 플레이스홀더 */}
-              <div className={cn('absolute inset-0 flex items-center justify-center')}>
-                <ImageIcon className={cn('text-muted-foreground h-7 w-7')} />
-              </div>
-              <img
-                src={getImageUrl(product.itemImage) ?? product.itemImage}
-                alt={product.itemName}
-                className={cn('absolute inset-0 h-full w-full object-cover')}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-
-              {/* 삭제 버튼 (내 프로필) */}
-              {isMyProfile && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteClick(product.id);
+              {/* 이미지 영역 */}
+              <div
+                className={cn(
+                  'bg-muted relative',
+                  showAll ? 'aspect-square w-full' : 'h-[120px] w-[120px]',
+                )}
+              >
+                {/* 이미지 로드 실패 시 플레이스홀더 */}
+                <div className={cn('absolute inset-0 flex items-center justify-center')}>
+                  <ImageIcon className={cn('text-muted-foreground h-7 w-7')} />
+                </div>
+                <img
+                  src={getImageUrl(product.itemImage) ?? product.itemImage}
+                  alt={product.itemName}
+                  className={cn('absolute inset-0 h-full w-full object-cover')}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
                   }}
-                  className={cn(
-                    'absolute top-1 right-1 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white opacity-100 transition-all hover:bg-black/65 active:bg-black/65 md:opacity-0 md:group-hover:opacity-100',
-                  )}
-                  aria-label="상품 삭제"
-                >
-                  <X className={cn('h-5 w-5')} strokeWidth={2.25} />
-                </button>
-              )}
-            </div>
+                />
+                {/* 삭제 버튼 (내 프로필) */}
+                {isMyProfile && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClick(product.id);
+                    }}
+                    className={cn(
+                      'absolute top-1 right-1 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white opacity-100 transition-all hover:bg-black/65 active:bg-black/65 md:opacity-0 md:group-hover:opacity-100',
+                    )}
+                    aria-label="상품 삭제"
+                  >
+                    <X className={cn('h-5 w-5')} strokeWidth={2.25} />
+                  </button>
+                )}
+              </div>
 
-            <p
-              className={cn(
-                'text-foreground mt-1 truncate text-xs font-medium',
-                showAll ? 'w-full' : 'max-w-[120px]',
-              )}
-            >
-              {product.itemName}
-            </p>
-            <p className={cn('text-xs font-bold text-[#0a9e1e]')}>
-              {product.price.toLocaleString()}원
-            </p>
+              <p
+                className={cn(
+                  'text-foreground mt-1 truncate text-xs font-medium',
+                  showAll ? 'w-full' : 'max-w-[120px]',
+                )}
+              >
+                {product.itemName}
+              </p>
+              <p className={cn('text-xs font-bold text-[#0a9e1e]')}>
+                {product.price.toLocaleString()}원
+              </p>
+            </div>
           </div>
         ))}
       </div>
