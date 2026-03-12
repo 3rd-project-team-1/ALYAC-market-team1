@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useHeartMutation } from '@/entities/post';
 import type { PostCardModel } from '@/features/feed';
-import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { ChatIcon, HeartIcon, MoreIcon } from '@/shared/assets';
 import { cn, getImageUrl, getRelativeTime } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/routes';
 import { LogoutModal } from '@/shared/ui';
+
+import { AvatarActionPopover } from './AvatarActionPopover';
 
 /** PostCard 컴포넌트의 Props */
 interface PostCardProps {
@@ -93,7 +93,6 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
 
-  const navigate = useNavigate();
   const { mutateAsync: toggleHeart, isPending } = useHeartMutation(post.id);
 
   // 피드로 돌아왔을 때 background refetch 완료 후 캐시 값과 로컬 상태 동기화
@@ -140,11 +139,6 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   const handleMenuToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsMenuOpen((prev) => !prev);
-  };
-
-  const handleProfileClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate(ROUTE_PATHS.PROFILE_DETAIL(post.author.accountname));
   };
 
   // isMyPost에 따라 드롭다운 메뉴 아이템 결정
@@ -250,31 +244,13 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       <div className={cn('flex items-start justify-between gap-3')}>
         {/* 작성자 프로필 영역 */}
         <div className={cn('flex items-start gap-3')}>
-          <button
-            type="button"
-            aria-label={`${post.author.username} 프로필 보기`}
-            className={cn('shrink-0')}
-            onClick={handleProfileClick}
-          >
-            {getImageUrl(post.author.image) ? (
-              <img
-                src={getImageUrl(post.author.image) ?? undefined}
-                alt={post.author.username}
-                className={cn('h-10 w-10 rounded-full object-cover')}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            ) : (
-              <div
-                className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-full bg-gray-100',
-                )}
-              >
-                <UploadImageSmallIcon />
-              </div>
-            )}
-          </button>
+          <AvatarActionPopover
+            accountname={post.author.accountname}
+            image={post.author.image}
+            username={post.author.username}
+            isMyPost={isMyPost}
+            initialIsFollow={post.isfollow}
+          />
           <div>
             <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
             <p className={cn('text-muted-foreground text-xs')}>
