@@ -35,7 +35,7 @@ export function FeedPage() {
 
   return (
     <>
-      <TopMainNav title="얄약마켓 피드" />
+      <TopMainNav title="알약마켓 피드" />
       {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
       <div className={cn('pb-[60px]')}>
         {/* 오류 발생 시 1개씩 불러오기 안내 배너 */}
