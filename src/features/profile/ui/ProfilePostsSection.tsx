@@ -108,17 +108,17 @@ export function ProfilePostsSection() {
                 </div>
               </div>
               <p
-                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer pl-12 text-sm')}
+                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer text-sm')}
                 onClick={() => handlePostDetail(post.id)}
               >
                 {post.content}
               </p>
               {post.image && (
-                <div className={cn('relative mt-2 overflow-hidden rounded-xl pl-12')}>
+                <div className={cn('relative mt-2 rounded-xl')}>
                   <img
                     src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
                     alt="게시글 이미지"
-                    className={cn('w-full object-cover')}
+                    className={cn('border-border w-full rounded-lg border object-cover')}
                   />
                   {post.image.split(',').length > 1 && (
                     <ImageCountBadge
