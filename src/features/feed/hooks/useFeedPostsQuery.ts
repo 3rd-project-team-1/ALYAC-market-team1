@@ -9,10 +9,26 @@ import type { Post } from '@/entities/post/model/post.schema';
 import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
 
+/** 한 번에 불러올 게시글 수 */
 const LIMIT = 4;
 
-export const FEED_QUERY_KEY = ['feed', 'posts'] as const;
+/** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
+export const FEED_QUERY_KEY = ['feed'] as const;
 
+/**
+ * 피드 게시글 목록을 무한 스크롤로 조회하고 삭제 기능을 제공하는 훅입니다.
+ *
+ * 내부적으로 TanStack Query의 `useInfiniteQuery`를 사용하여
+ * 오프셋 기반 페이지네이션(skip/limit)으로 데이터를 페치합니다.
+ *
+ * @returns
+ * - `isLoading` : 최초 로딩 여부
+ * - `isFetchingMore` : 다음 페이지 로딩 여부
+ * - `posts` : 중복 제거된 PostCardModel 배열
+ * - `deletePost` : 게시글 삭제 후 캐시 즉시 반영
+ * - `loadMore` : 다음 페이지 불러오기
+ * - `hasMore` : 추가 페이지 존재 여부
+ */
 export function useFeedPostsQuery() {
   const queryClient = useQueryClient();
 
@@ -25,18 +41,27 @@ export function useFeedPostsQuery() {
         return posts;
       },
       initialPageParam: 0,
+      // 마지막 페이지가 LIMIT 개수와 같으면 다음 페이지가 있다고 판단
       getNextPageParam: (lastPage, _allPages, lastPageParam) =>
         lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
+      // 항상 stale로 간주 → 피드 마운트 시 즉시 re-fetch하여 좋아요/댓글 카운트 최신화
       staleTime: 0,
     });
 
+  // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)
   const posts: PostCardModel[] = (data?.pages.flat() ?? [])
     .map(mapPost)
     .filter((post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx);
 
+  /**
+   * 게시글 삭제 핸들러
+   * - API 호출 후 React Query 캐시에서 해당 게시글을 즉시 제거합니다 (낙관적 캐시 갱신).
+   * - 실패 시 토스트 메시지로 에러를 알립니다.
+   */
   const deletePost = async (postId: string) => {
     try {
       await deletePostApi(postId);
+      // 캐시의 각 페이지에서 삭제된 postId를 필터링하여 제거
       queryClient.setQueryData(FEED_QUERY_KEY, (old: InfiniteData<Post[]> | undefined) => {
         if (!old) return old;
         return {
