@@ -12,6 +12,9 @@ import type { PostCardModel } from '../model/types';
 /** 한 번에 불러올 게시글 수 */
 const LIMIT = 4;
 
+/** 메인 피드 요청 최대 대기 시간 (ms) - 초과 시 폴백 로딩으로 전환 */
+const FEED_REQUEST_TIMEOUT_MS = 8000;
+
 /** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
 export const FEED_QUERY_KEY = ['feed'] as const;
 
@@ -36,7 +39,14 @@ export function useFeedPostsQuery() {
     useInfiniteQuery({
       queryKey: FEED_QUERY_KEY,
       queryFn: async ({ pageParam }) => {
-        const response = await getFeedPosts(pageParam, LIMIT);
+        const response = await Promise.race([
+          getFeedPosts(pageParam, LIMIT),
+          new Promise<never>((_, reject) => {
+            window.setTimeout(() => {
+              reject(new Error('Feed request timeout'));
+            }, FEED_REQUEST_TIMEOUT_MS);
+          }),
+        ]);
         const posts: Post[] = response.posts ?? [];
         return posts;
       },
@@ -46,13 +56,20 @@ export function useFeedPostsQuery() {
         lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
       // 항상 stale로 간주 → 피드 마운트 시 즉시 re-fetch하여 좋아요/댓글 카운트 최신화
       staleTime: 0,
+      // 실패 시 즉시 폴백으로 전환해 긴 스피너 대기를 줄임
+      retry: 0,
     });
 
   // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)
   // 피드는 항상 팔로우한 사람의 글만 노출되므로 isfollow를 true로 교정합니다.
-  const posts: PostCardModel[] = (data?.pages.flat() ?? [])
-    .map((post) => ({ ...mapPost(post), isfollow: true }))
-    .filter((post, idx, arr) => arr.findIndex((p) => p.id === post.id) === idx);
+  const seenPostIds = new Set<string>();
+  const posts: PostCardModel[] = [];
+
+  for (const post of data?.pages.flat() ?? []) {
+    if (seenPostIds.has(post.id)) continue;
+    seenPostIds.add(post.id);
+    posts.push({ ...mapPost(post), isfollow: true });
+  }
 
   /**
    * 게시글 삭제 핸들러
