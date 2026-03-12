@@ -8,7 +8,7 @@ import type { PostCardModel } from '@/features/feed';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { cn, getImageUrl, getRelativeTime } from '@/shared/lib';
 import { ROUTE_PATHS } from '@/shared/routes';
-import { ImageCountBadge, LogoutModal } from '@/shared/ui';
+import { LogoutModal } from '@/shared/ui';
 
 /** PostCard 컴포넌트의 Props */
 interface PostCardProps {
@@ -84,8 +84,11 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // 신고 모달 열림 상태
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  // 다중 이미지 인라인 펼치기 상태
-  const [isImageExpanded, setIsImageExpanded] = useState(false);
+  // 다중 이미지 현재 인덱스 상태
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // 모바일 스와이프 시작/종료 좌표
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
   // 좋아요 낙관적 업데이트용 로컬 상태 — post.hearted/heartCount로 초기화
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
@@ -157,12 +160,60 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     ?.split(',')
     .map((path) => path.trim())
     .filter(Boolean);
-  const primaryPostImage = postImages?.[0];
+  const images = postImages ?? [];
   const hasMultipleImages = (postImages?.length ?? 0) > 1;
+  const SWIPE_THRESHOLD = 40;
+  const SLIDE_WIDTH_PERCENT = 86;
+  const SLIDE_GAP_PX = 8;
+  const LAST_SLIDE_CENTER_OFFSET_PERCENT = (100 - SLIDE_WIDTH_PERCENT) / 2;
+  const isLastImage = images.length > 0 && currentIndex === images.length - 1;
 
-  const handleToggleImageExpanded = () => {
-    setIsImageExpanded((prev) => !prev);
+  const handleNextImage = () => {
+    if (!hasMultipleImages || images.length === 0) return;
+    setCurrentIndex((prev) => {
+      if (prev >= images.length - 1) return prev;
+      return prev + 1;
+    });
   };
+
+  const handlePrevImage = () => {
+    if (!hasMultipleImages || images.length === 0) return;
+    setCurrentIndex((prev) => {
+      if (prev <= 0) return prev;
+      return prev - 1;
+    });
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleImages) return;
+    setTouchStartX(e.touches[0].clientX);
+    setTouchEndX(null);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleImages) return;
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!hasMultipleImages || touchStartX === null || touchEndX === null) return;
+
+    const distance = touchStartX - touchEndX;
+    if (Math.abs(distance) < SWIPE_THRESHOLD) return;
+
+    if (distance > 0) {
+      handleNextImage();
+    } else {
+      handlePrevImage();
+    }
+
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [post.id]);
 
   /**
    * 좋아요 토글 핸들러 (낙관적 업데이트)
@@ -256,38 +307,47 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       <p className={cn('text-foreground mt-3 text-sm whitespace-pre-wrap')}>{post.content}</p>
 
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
-      {primaryPostImage && (
-        <div className={cn('relative mt-3')} onClick={(e) => e.stopPropagation()}>
-          {(!hasMultipleImages || !isImageExpanded) && (
-            <img
-              src={getImageUrl(primaryPostImage) ?? undefined}
-              alt="게시글 이미지"
-              className={cn(
-                'border-border max-h-[60vh] w-full rounded-lg border bg-gray-50 object-contain',
-              )}
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          )}
+      {images.length > 0 && (
+        <div className={cn('relative mt-3 overflow-hidden')} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={cn('flex gap-2 transition-transform duration-300')}
+            style={{
+              transform: isLastImage
+                ? `translateX(calc(-${currentIndex * SLIDE_WIDTH_PERCENT}% - ${currentIndex * SLIDE_GAP_PX}px + ${LAST_SLIDE_CENTER_OFFSET_PERCENT}%))`
+                : `translateX(calc(-${currentIndex * SLIDE_WIDTH_PERCENT}% - ${currentIndex * SLIDE_GAP_PX}px))`,
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {images.map((img, index) => (
+              <img
+                key={`${post.id}-image-${index}`}
+                src={getImageUrl(img) ?? undefined}
+                alt={`게시글 이미지 ${index + 1}`}
+                className={cn(
+                  'border-border max-h-[60vh] w-[86%] flex-shrink-0 rounded-lg border bg-gray-50 object-contain',
+                )}
+                onClick={handleNextImage}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            ))}
+          </div>
 
           {hasMultipleImages && (
-            <ImageCountBadge count={postImages?.length ?? 0} onClick={handleToggleImageExpanded} />
-          )}
-
-          {hasMultipleImages && isImageExpanded && (
-            <div className={cn('mt-2 grid grid-cols-2 gap-2')}>
-              {(postImages ?? []).map((img, index) => (
-                <img
-                  key={`${post.id}-image-${index}`}
-                  src={getImageUrl(img) ?? undefined}
-                  alt={`게시글 이미지 ${index + 1}`}
+            <div
+              className={cn('absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1')}
+              aria-label="이미지 인디케이터"
+            >
+              {images.map((_, index) => (
+                <div
+                  key={`${post.id}-dot-${index}`}
                   className={cn(
-                    'border-border h-32 max-h-[40vh] w-full rounded-md border bg-gray-50 object-contain sm:h-40 md:h-48',
+                    'h-1.5 w-1.5 rounded-full',
+                    index === currentIndex ? 'bg-white' : 'bg-white/50',
                   )}
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
                 />
               ))}
             </div>
