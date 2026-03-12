@@ -12,7 +12,6 @@ export function useFollowersPage() {
   const myAccountname = tokenInfo?.accountname ?? tokenInfo?.account ?? tokenInfo?.id ?? null;
 
   const { followers, isLoading } = useFollowerList(accountname);
-  // 서버의 isfollow 버그 우회: 내 팔로잉 목록을 별도로 조회해 isfollow를 교정합니다.
   const { followings } = useFollowingList(myAccountname ?? undefined);
   const followingSet = new Set(followings.map((u) => u.accountname));
 
