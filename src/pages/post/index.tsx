@@ -11,7 +11,8 @@ import { LoadingSpinner } from '@/shared/ui';
 
 export function PostPage() {
   const { postId, myAccountname } = usePostRouteInfo();
-  const { post, comments, isPostLoading, isCommentsLoading, commentsPagination } = usePostDetailData(postId);
+  const { post, comments, isPostLoading, isCommentsLoading, commentsPagination } =
+    usePostDetailData(postId);
   const { heartMutation, createCommentMutation, deleteCommentMutation, deletePostMutation } =
     usePostDetailMutations(postId);
 
