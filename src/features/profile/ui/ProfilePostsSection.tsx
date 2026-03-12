@@ -12,6 +12,7 @@ import { LoadingSpinner, LogoutModal } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
+import { ImageCountBadge } from './ImageCountBadge';
 
 export function ProfilePostsSection() {
   const {
@@ -116,12 +117,18 @@ export function ProfilePostsSection() {
                 {post.content}
               </p>
               {post.image && (
-                <div className={cn('mt-2 overflow-hidden rounded-xl pl-12')}>
+                <div className={cn('relative mt-2 overflow-hidden rounded-xl pl-12')}>
                   <img
                     src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
                     alt="게시글 이미지"
                     className={cn('w-full object-cover')}
                   />
+                  {post.image.split(',').length > 1 && (
+                    <ImageCountBadge
+                      count={post.image.split(',').length}
+                      onClick={() => handlePostDetail(post.id)}
+                    />
+                  )}
                 </div>
               )}
               <div className={cn('mt-2 flex items-center gap-4 pl-12')}>
@@ -159,15 +166,23 @@ export function ProfilePostsSection() {
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('bg-muted aspect-square cursor-pointer overflow-hidden')}
+              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden')}
               onClick={() => handlePostDetail(post.id)}
             >
               {post.image ? (
-                <img
-                  src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
-                  alt="게시글"
-                  className={cn('h-full w-full object-cover')}
-                />
+                <>
+                  <img
+                    src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
+                    alt="게시글"
+                    className={cn('h-full w-full object-cover')}
+                  />
+                  {post.image.split(',').length > 1 && (
+                    <ImageCountBadge
+                      count={post.image.split(',').length}
+                      onClick={() => handlePostDetail(post.id)}
+                    />
+                  )}
+                </>
               ) : (
                 <div className={cn('flex h-full w-full items-center justify-center')}>
                   <p className={cn('text-muted-foreground line-clamp-3 p-2 text-center text-xs')}>
