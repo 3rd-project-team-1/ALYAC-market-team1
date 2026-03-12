@@ -52,7 +52,7 @@ export function ProfileProductsSection() {
       <div
         className={cn(
           'gap-3',
-          showAll ? 'grid grid-cols-3 sm:grid-cols-4' : 'flex overflow-x-auto pb-2',
+          showAll ? 'grid grid-cols-3 sm:grid-cols-4' : 'flex overflow-x-auto pb-6',
         )}
       >
         {products.map((product) => (
@@ -66,14 +66,14 @@ export function ProfileProductsSection() {
           >
             <div
               className={cn(
-                'group bg-muted relative overflow-hidden rounded-xl shadow-sm transition-shadow duration-200 hover:shadow-lg',
+                'group bg-muted relative rounded-xl shadow-sm transition-shadow duration-200 hover:shadow-lg',
                 showAll ? 'w-full' : 'w-[120px]',
               )}
             >
               {/* 이미지 영역 */}
               <div
                 className={cn(
-                  'bg-muted relative',
+                  'bg-muted relative overflow-hidden rounded-t-xl',
                   showAll ? 'aspect-square w-full' : 'h-[120px] w-[120px]',
                 )}
               >
@@ -107,17 +107,19 @@ export function ProfileProductsSection() {
                 )}
               </div>
 
-              <p
-                className={cn(
-                  'text-foreground mt-1 truncate text-xs font-medium',
-                  showAll ? 'w-full' : 'max-w-[120px]',
-                )}
-              >
-                {product.itemName}
-              </p>
-              <p className={cn('text-xs font-bold text-[#0a9e1e]')}>
-                {product.price.toLocaleString()}원
-              </p>
+              <div className={cn('bg-white px-2 pb-2 pt-1 rounded-b-xl')}>
+                <p
+                  className={cn(
+                    'text-foreground truncate text-xs font-medium',
+                    showAll ? 'w-full' : 'max-w-[120px]',
+                  )}
+                >
+                  {product.itemName}
+                </p>
+                <p className={cn('text-xs font-bold text-[#0a9e1e]')}>
+                  {product.price.toLocaleString()}원
+                </p>
+              </div>
             </div>
           </div>
         ))}
