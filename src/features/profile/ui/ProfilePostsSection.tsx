@@ -1,15 +1,12 @@
-import {
-  ChatIcon,
-  HeartIcon,
-  PostAlbumIcon,
-  PostListIcon,
-  UploadImageSmallIcon,
-} from '@/shared/assets';
+import { useNavigate } from 'react-router-dom';
+
+import { PostAlbumIcon, PostListIcon, UploadImageSmallIcon } from '@/shared/assets';
 import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { getImageUrl } from '@/shared/lib';
 import { LoadingSpinner, LogoutModal } from '@/shared/ui';
 import { ImageCountBadge } from '@/shared/ui';
+import { PostAction } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
@@ -33,7 +30,7 @@ export function ProfilePostsSection() {
   } = useProfilePostsSection();
 
   const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore: loadMore });
-
+  const navigate = useNavigate();
   return (
     <section className={cn('border-border flex-1 border-t')}>
       <div className={cn('border-border flex justify-end border-b')}>
@@ -131,27 +128,21 @@ export function ProfilePostsSection() {
                   )}
                 </div>
               )}
-              <div className={cn('mt-2 flex items-center gap-4 pl-12')}>
-                <button
-                  type="button"
-                  className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    heartMutation.mutate({ postId: post.id, isHearted: post.hearted });
-                  }}
-                >
-                  <HeartIcon active={post.hearted} />
-                  {post.heartCount}
-                </button>
-                <button
-                  type="button"
-                  className={cn('text-muted-foreground flex items-center gap-1 text-xs')}
-                  onClick={() => handlePostDetail(post.id)}
-                >
-                  <ChatIcon />
-                  {post.commentCount}
-                </button>
-              </div>
+              {/* 게시글 하단영역 (좋아요,댓글, 날짜) */}
+              <PostAction
+                hearted={post.hearted}
+                heartCount={post.heartCount}
+                commentCount={post.commentCount}
+                createdAt={post.createdAt}
+                onToggleHeart={() =>
+                  heartMutation.mutate({
+                    postId: post.id,
+                    isHearted: post.hearted,
+                  })
+                }
+                isHeartPending={heartMutation.isPending}
+                onClickComment={() => navigate(`/post/${post.id}`)}
+              />
             </div>
           ))}
           <div ref={ref} className={cn('h-1')} />
