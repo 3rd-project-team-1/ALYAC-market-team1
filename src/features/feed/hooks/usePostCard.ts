@@ -29,7 +29,7 @@ export function useRelativeTimeTicker() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setNowTick((prev) => prev + 1);
-    }, 1_000);
+    }, 60_000);
 
     return () => window.clearInterval(timer);
   }, []);

@@ -427,6 +427,7 @@ npm run dev
 ### 9.1 기여자별 커밋 수
 
 <!-- COMMIT-PIE-START -->
+
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': {
   'primaryColor': '#6366f1',
@@ -444,11 +445,13 @@ pie title 기여자별 커밋 수
   "김세윤" : 140
   "장영재" : 66
 ```
+
 <!-- COMMIT-PIE-END -->
 
 ### 9.2 일자별 커밋 수
 
 <!-- COMMIT-BAR-START -->
+
 ```mermaid
 %%{init: { 'theme': 'base', 'themeVariables': {
   'xyChart': {
@@ -461,6 +464,7 @@ xychart-beta
   y-axis "커밋 수" 0 --> 84
   bar [11, 42, 82, 78, 1, 14, 31, 59, 29, 3]
 ```
+
 <!-- COMMIT-BAR-END -->
 
 ### 9.3 날짜별 커밋 로그
