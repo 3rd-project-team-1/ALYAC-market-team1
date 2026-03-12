@@ -69,7 +69,7 @@ export function ProfilePostsSection() {
             <div
               key={post.id}
               className={cn(
-                'border-border border-b px-4 py-3 last:border-0 transition-colors hover:bg-accent',
+                'border-border hover:bg-accent border-b px-4 py-3 transition-colors last:border-0',
               )}
             >
               <div className={cn('flex items-center justify-between')}>
