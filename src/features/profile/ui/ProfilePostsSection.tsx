@@ -9,10 +9,10 @@ import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
 import { LoadingSpinner, LogoutModal } from '@/shared/ui';
+import { ImageCountBadge } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
 
 import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
-import { ImageCountBadge } from './ImageCountBadge';
 
 export function ProfilePostsSection() {
   const {
