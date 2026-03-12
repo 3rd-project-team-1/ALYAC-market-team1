@@ -1,35 +1,14 @@
 import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-
 import { toast } from 'sonner';
 
 import { useHeartMutation } from '@/entities/post';
 import type { PostCardModel } from '@/features/feed';
 import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/assets';
-import { cn, getImageUrl } from '@/shared/lib';
+import { cn, getImageUrl, getRelativeTime } from '@/shared/lib';
 import { ROUTE_PATHS } from '@/shared/routes';
-import { LogoutModal } from '@/shared/ui';
-
-/**
- * ISO 8601 날짜 문자열을 한국시간으로 변환합니다.
- * 예: "방금 전", "5분 전", "3시간 전", "2일 전", "2026. 3. 12."
- */
-function formatRelativeTime(isoString: string): string {
-  const diff = Date.now() - new Date(isoString).getTime();
-  const minutes = Math.floor(diff / 60_000);
-  if (minutes < 1) return '방금 전';
-  if (minutes < 60) return `${minutes}분 전`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}시간 전`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}일 전`;
-  return new Intl.DateTimeFormat('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(isoString));
-}
+import { ImageCountBadge, LogoutModal } from '@/shared/ui';
 
 /** PostCard 컴포넌트의 Props */
 interface PostCardProps {
@@ -98,10 +77,15 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
  * - 좋아요는 낙관적 업데이트로 즉시 반영하고, API 완료 후 서버 값으로 동기화합니다.
  */
 export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick }: PostCardProps) {
+  // 상대 시간이 자연스럽게 갱신되도록 주기적으로 리렌더 트리거
+  const [, setNowTick] = useState(Date.now());
+
   // 더보기(⋮) 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // 신고 모달 열림 상태
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  // 다중 이미지 인라인 펼치기 상태
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
   // 좋아요 낙관적 업데이트용 로컬 상태 — post.hearted/heartCount로 초기화
   const [isLiked, setIsLiked] = useState(post.hearted);
   const [localHeartCount, setLocalHeartCount] = useState(post.heartCount);
@@ -114,6 +98,14 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
     setIsLiked(post.hearted);
     setLocalHeartCount(post.heartCount);
   }, [post.hearted, post.heartCount]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setNowTick(Date.now());
+    }, 1_000);
+
+    return () => window.clearInterval(timer);
+  }, []);
 
   const handleRewrite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -159,6 +151,18 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
         { label: '삭제', onClick: handleDelete, variant: 'danger' as const },
       ]
     : [{ label: '신고하기', onClick: handleReport }];
+
+  // 서버 image 필드는 콤마로 여러 경로가 올 수 있어 배열로 정규화합니다.
+  const postImages = post.image
+    ?.split(',')
+    .map((path) => path.trim())
+    .filter(Boolean);
+  const primaryPostImage = postImages?.[0];
+  const hasMultipleImages = (postImages?.length ?? 0) > 1;
+
+  const handleToggleImageExpanded = () => {
+    setIsImageExpanded((prev) => !prev);
+  };
 
   /**
    * 좋아요 토글 핸들러 (낙관적 업데이트)
@@ -225,7 +229,7 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
             <p className={cn('text-muted-foreground text-xs')}>
               @{post.author.accountname}
               <span className={cn('mx-1')}>·</span>
-              <time dateTime={post.createdAt}>{formatRelativeTime(post.createdAt)}</time>
+              <time dateTime={post.createdAt}>{getRelativeTime(post.createdAt)}</time>
             </p>
           </div>
         </div>
@@ -252,15 +256,39 @@ export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick 
       <p className={cn('text-foreground mt-3 text-sm whitespace-pre-wrap')}>{post.content}</p>
 
       {/* 이미지 영역 (빈 문자열이 아닌 경우만 표시) */}
-      {post.image && (
-        <img
-          src={getImageUrl(post.image) ?? undefined}
-          alt="게시글 이미지"
-          className={cn('border-border mt-3 w-full rounded-lg border object-cover')}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+      {primaryPostImage && (
+        <div className={cn('relative mt-3')} onClick={(e) => e.stopPropagation()}>
+          {(!hasMultipleImages || !isImageExpanded) && (
+            <img
+              src={getImageUrl(primaryPostImage) ?? undefined}
+              alt="게시글 이미지"
+              className={cn('border-border w-full rounded-lg border object-cover')}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          )}
+
+          {hasMultipleImages && (
+            <ImageCountBadge count={postImages?.length ?? 0} onClick={handleToggleImageExpanded} />
+          )}
+
+          {hasMultipleImages && isImageExpanded && (
+            <div className={cn('mt-2 grid grid-cols-2 gap-2')}>
+              {(postImages ?? []).map((img, index) => (
+                <img
+                  key={`${post.id}-image-${index}`}
+                  src={getImageUrl(img) ?? undefined}
+                  alt={`게시글 이미지 ${index + 1}`}
+                  className={cn('border-border h-32 w-full rounded-md border object-cover')}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       {/* 좋아요 및 댓글 수 동기화 */}
