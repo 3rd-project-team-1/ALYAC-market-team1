@@ -8,6 +8,26 @@ import { ChatIcon, HeartIcon, MoreIcon, UploadImageSmallIcon } from '@/shared/as
 import { cn, getImageUrl } from '@/shared/lib';
 import { LogoutModal } from '@/shared/ui';
 
+/**
+ * ISO 8601 날짜 문자열을 한국시간으로 변환합니다.
+ * 예: "방금 전", "5분 전", "3시간 전", "2일 전", "2026. 3. 12."
+ */
+function formatRelativeTime(isoString: string): string {
+  const diff = Date.now() - new Date(isoString).getTime();
+  const minutes = Math.floor(diff / 60_000);
+  if (minutes < 1) return '방금 전';
+  if (minutes < 60) return `${minutes}분 전`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}시간 전`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}일 전`;
+  return new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(isoString));
+}
+
 /** PostCard 컴포넌트의 Props */
 interface PostCardProps {
   /** 렌더링할 게시글 뷰 모델 */
@@ -74,13 +94,7 @@ function PostCardDropdown({ onClose, items }: PostCardDropdownProps) {
  * - `isMyPost === false`: 더보기 메뉴에 신고 표시
  * - 좋아요는 낙관적 업데이트로 즉시 반영하고, API 완료 후 서버 값으로 동기화합니다.
  */
-export function PostCard({
-  post,
-  isMyPost = false,
-  onRewrite,
-  onDelete,
-  onClick,
-}: PostCardProps) {
+export function PostCard({ post, isMyPost = false, onRewrite, onDelete, onClick }: PostCardProps) {
   // 더보기(⋮) 드롭다운 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // 신고 모달 열림 상태
@@ -190,7 +204,11 @@ export function PostCard({
           )}
           <div>
             <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-            <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
+            <p className={cn('text-muted-foreground text-xs')}>
+              @{post.author.accountname}
+              <span className={cn('mx-1')}>·</span>
+              <time dateTime={post.createdAt}>{formatRelativeTime(post.createdAt)}</time>
+            </p>
           </div>
         </div>
 
