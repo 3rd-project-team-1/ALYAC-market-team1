@@ -2,9 +2,9 @@ import { useRef } from 'react';
 
 import type { UseFormRegisterReturn } from 'react-hook-form';
 
-import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
+import { UploadFile } from '@/shared/assets';
 import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { UserAvatar } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 import { PostImagePreviewList } from './PostImagePreviewList';
@@ -51,19 +51,7 @@ export function PostEditorLayout({
       />
 
       <form onSubmit={onSubmit} className={cn('flex flex-1 gap-3 px-4 pt-5')}>
-        <div className={cn('bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full')}>
-          {profileImage ? (
-            <img
-              src={getImageUrl(profileImage) ?? profileImage}
-              alt="내 프로필"
-              className={cn('h-full w-full object-cover')}
-            />
-          ) : (
-            <div className={cn('flex h-full w-full items-center justify-center')}>
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </div>
+        <UserAvatar src={profileImage} username="내 프로필" className="h-10 w-10" />
 
         <div className={cn('flex flex-1 flex-col gap-2')}>
           <div

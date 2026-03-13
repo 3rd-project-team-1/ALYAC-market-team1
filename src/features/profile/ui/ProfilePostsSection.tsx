@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-import { PostAlbumIcon, PostListIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { PostAlbumIcon, PostListIcon } from '@/shared/assets';
 import { useInfiniteScroll } from '@/shared/hooks';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib';
-import { LoadingSpinner, LogoutModal } from '@/shared/ui';
+import { LoadingSpinner, LogoutModal, PostContent, UserProfile } from '@/shared/ui';
 import { ImageCountBadge } from '@/shared/ui';
 import { PostAction } from '@/shared/ui';
 import { MoreMenu } from '@/widgets/top-basic-nav';
@@ -73,29 +73,12 @@ export function ProfilePostsSection() {
               )}
             >
               <div className={cn('flex items-center justify-between')}>
-                <div className={cn('flex items-center gap-3')}>
-                  <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
-                    {post.author.image ? (
-                      <img
-                        src={getImageUrl(post.author.image) ?? post.author.image}
-                        alt={post.author.username}
-                        className={cn('h-full w-full object-cover')}
-                      />
-                    ) : (
-                      <div className={cn('flex h-full w-full items-center justify-center')}>
-                        <UploadImageSmallIcon />
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <p className={cn('text-foreground text-sm font-semibold')}>
-                      {post.author.username}
-                    </p>
-                    <p className={cn('text-muted-foreground text-xs')}>
-                      @{post.author.accountname}
-                    </p>
-                  </div>
-                </div>
+                <UserProfile
+                  image={post.author.image}
+                  username={post.author.username}
+                  accountname={post.author.accountname}
+                  className="h-8 w-8"
+                />
                 <div onClick={(e) => e.stopPropagation()}>
                   <MoreMenu
                     small
@@ -112,12 +95,11 @@ export function ProfilePostsSection() {
                   />
                 </div>
               </div>
-              <p
-                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer text-sm')}
+              <PostContent
+                content={post.content}
+                className="mt-2 line-clamp-2 cursor-pointer"
                 onClick={() => handlePostDetail(post.id)}
-              >
-                {post.content}
-              </p>
+              />
               {post.image && (
                 <div className={cn('relative mt-2 rounded-xl')}>
                   <img
@@ -135,17 +117,17 @@ export function ProfilePostsSection() {
               )}
               {/* 게시글 하단영역 (좋아요,댓글, 날짜) */}
               <PostAction
-                hearted={post.hearted}
+                isLiked={post.hearted}
                 heartCount={post.heartCount}
                 commentCount={post.commentCount}
                 createdAt={post.createdAt}
-                onToggleHeart={() =>
+                onToggleLike={() =>
                   heartMutation.mutate({
                     postId: post.id,
                     isHearted: post.hearted,
                   })
                 }
-                isHeartPending={heartMutation.isPending}
+                isPending={heartMutation.isPending}
                 onClickComment={() => navigate(`/post/${post.id}`)}
               />
             </div>
@@ -162,7 +144,9 @@ export function ProfilePostsSection() {
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden rounded-lg')}
+              className={cn(
+                'bg-muted relative aspect-square cursor-pointer overflow-hidden rounded-lg',
+              )}
               onClick={() => handlePostDetail(post.id)}
             >
               {post.image ? (
