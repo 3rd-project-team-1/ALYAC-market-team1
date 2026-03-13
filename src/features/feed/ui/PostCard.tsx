@@ -4,7 +4,7 @@ import { useId, useState } from 'react';
 import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
 import type { PostCardModel } from '@/features/feed';
 import { usePostDialog } from '@/features/post';
-import { LogoutModal } from '@/shared/ui';
+import { LogoutModal, PostContent } from '@/shared/ui';
 
 import {
   useIsDesktopEnvironment,
@@ -123,8 +123,10 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
       {/* 본문·이미지·액션: 카드 내부 전체 너비로 좌우 균형 정렬 */}
       <div>
-        <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
+        {/* 게시글 내용 */}
+        <PostContent content={post.content} className="mt-3" />
 
+        {/* 게시글 이미지 */}
         <PostCardImages
           postId={post.id}
           image={post.image}
