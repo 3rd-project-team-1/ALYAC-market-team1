@@ -1,6 +1,6 @@
-import { UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { UserProfile } from '@/shared/ui';
 import { PostAction } from '@/shared/ui';
 
 interface PostDetailCardProps {
@@ -27,25 +27,11 @@ export function PostDetailCard({ post, onToggleHeart, isHeartPending }: PostDeta
   return (
     <div className={cn('px-4 pt-5')}>
       {/* 작성자 정보 */}
-      <div className={cn('flex items-center gap-3')}>
-        <div className={cn('bg-muted h-10 w-10 overflow-hidden rounded-full')}>
-          {post.author.image ? (
-            <img
-              src={getImageUrl(post.author.image) ?? post.author.image}
-              alt="프로필"
-              className={cn('h-full w-full object-cover')}
-            />
-          ) : (
-            <div className={cn('flex h-full w-full items-center justify-center')}>
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </div>
-        <div>
-          <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-          <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
-        </div>
-      </div>
+      <UserProfile
+        image={post.author.image}
+        username={post.author.username}
+        accountname={post.author.accountname}
+      />
 
       {/* 게시글 내용 */}
       <p className={cn('text-foreground mt-4 text-sm leading-relaxed')}>{post.content}</p>
