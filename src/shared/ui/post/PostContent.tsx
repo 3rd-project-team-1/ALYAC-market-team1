@@ -3,6 +3,7 @@ import { cn } from '@/shared/lib';
 interface PostContentProps {
   content: string;
   className?: string;
+  onClick?: () => void;
 }
 
 export function PostContent({ content, className }: PostContentProps) {
