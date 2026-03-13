@@ -13,7 +13,7 @@ import type { PostCardModel } from '../model/types';
 const LIMIT = 10;
 
 /** 메인 피드 요청 최대 대기 시간 (ms) - 초과 시 폴백 로딩으로 전환 */
-const FEED_REQUEST_TIMEOUT_MS = 29000;
+const FEED_REQUEST_TIMEOUT_MS = 50 * 1000;
 
 /** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
 export const FEED_QUERY_KEY = ['feed'] as const;
