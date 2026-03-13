@@ -73,6 +73,10 @@ gantt
   FSD 리팩토링 · 문서화 자동화          :done, m7, 2026-02-25, 2026-03-05
 ```
 
+<details>
+<summary>Day 1 ~ Day 18 상세 기록 보기</summary>
+
+
 #### Day 1 — 프로젝트 기획 및 역할 분담 (2026-02-13)
 
 | 팀원          | 담당 파트                  |
@@ -225,6 +229,8 @@ gantt
 - PostCard/캐러셀/이미지 카운트/상대 시간/아바타 팝오버 등 피드 UI 고도화
 - `useFeedPostsQuery`의 LIMIT, `staleTime`, timeout 조정으로 체감 성능 개선
 - 검색 스키마 null 허용, 팔로우 폴백 보정, 에러 배너 분리 등 안정화 작업
+
+</details>
 
 ### 1.4 주요 기능
 
