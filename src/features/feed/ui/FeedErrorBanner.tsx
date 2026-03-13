@@ -18,27 +18,27 @@ export function FeedErrorBanner({ isFallbackDone, hasNoPosts }: FeedErrorBannerP
   const isFailed = isFallbackDone && hasNoPosts;
 
   return (
-    <div className={cn('mx-auto max-w-5xl px-4 pt-[60px]')}>
+    <div className={cn('mx-auto max-w-5xl px-3 pt-[60px]')}>
       <div
         className={cn(
-          'flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 shadow-sm',
+          'flex items-center gap-3 rounded-xl border border-border bg-muted px-4 py-2.5',
         )}
       >
         {/* 원형 아이콘 배지 */}
         <span
           className={cn(
-            'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-600',
+            'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground/10',
           )}
         >
-          <AlertTriangle className={cn('h-3.5 w-3.5 text-white')} />
+          <AlertTriangle className={cn('h-3.5 w-3.5 text-muted-foreground')} />
         </span>
 
         {/* 텍스트 */}
         <div className={cn('min-w-0 flex-1')}>
-          <p className={cn('text-[13px] font-semibold text-gray-800')}>
+          <p className={cn('text-[13px] font-semibold text-foreground')}>
             피드를 불러오는 데 시간이 걸리고 있어요
           </p>
-          <p className={cn('mt-0.5 text-[11px] text-gray-400')}>
+          <p className={cn('mt-0.5 text-[11px] text-muted-foreground')}>
             {isFailed
               ? '잠시 후 다시 시도해 주세요'
               : '서버 상태에 따라 게시글을 순차적으로 가져오고 있습니다'}
@@ -51,7 +51,7 @@ export function FeedErrorBanner({ isFallbackDone, hasNoPosts }: FeedErrorBannerP
             type="button"
             onClick={() => window.location.reload()}
             className={cn(
-              'flex shrink-0 items-center gap-1.5 rounded-full bg-gray-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-gray-700',
+              'flex shrink-0 items-center gap-1.5 rounded-full bg-foreground/10 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-foreground/20',
             )}
           >
             <RotateCcw className={cn('h-3 w-3')} />

@@ -19,16 +19,21 @@ export function PostCardActions({
   onLikeToggle,
 }: PostCardActionsProps) {
   return (
-    <div className={cn('text-muted-foreground mt-3 flex items-center text-xs')}>
+    <div className={cn('text-muted-foreground mt-3 flex items-center gap-3 text-xs')}>
       <button
         type="button"
         aria-label={isLiked ? '좋아요 취소' : '좋아요'}
+        className={cn('flex items-center gap-1')}
         onClick={onLikeToggle}
         disabled={isPending}
       >
-        <HeartIcon active={isLiked} className={cn('mr-1 inline-block')} />
+        <HeartIcon active={isLiked} />
+        <span>{localHeartCount}</span>
       </button>
-      {localHeartCount} <ChatIcon className={cn('mr-1 ml-2')} /> {commentCount}{' '}
+      <div className={cn('flex items-center gap-1')}>
+        <ChatIcon />
+        <span>{commentCount}</span>
+      </div>
     </div>
   );
 }

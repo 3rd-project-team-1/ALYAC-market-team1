@@ -5,7 +5,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn, getImageUrl } from '@/shared/lib';
 
 function hideBrokenImage(e: SyntheticEvent<HTMLImageElement>) {
-  e.currentTarget.style.display = 'none';
+  const wrapper = e.currentTarget.closest('[data-img-wrapper]') as HTMLElement | null;
+  if (wrapper) {
+    wrapper.style.display = 'none';
+  } else {
+    e.currentTarget.style.display = 'none';
+  }
 }
 
 interface PostCardImagesProps {
@@ -85,16 +90,22 @@ export function PostCardImages({
         onMouseLeave={onMouseLeave}
       >
         {images.map((img, index) => (
-          <img
+          <div
             key={`${postId}-image-${index}`}
-            src={getImageUrl(img) ?? undefined}
-            alt={`게시글 이미지 ${index + 1}`}
+            data-img-wrapper=""
             className={cn(
-              'border-border max-h-[60vh] w-[86%] flex-shrink-0 rounded-lg border bg-gray-50 object-contain',
+              'border-border flex-shrink-0 overflow-hidden rounded-xl border',
+              hasMultipleImages ? 'w-[86%]' : 'w-full',
             )}
             onClick={onNextImage}
-            onError={hideBrokenImage}
-          />
+          >
+            <img
+              src={getImageUrl(img) ?? undefined}
+              alt={`게시글 이미지 ${index + 1}`}
+              className={cn('aspect-square w-full object-cover')}
+              onError={hideBrokenImage}
+            />
+          </div>
         ))}
       </div>
 
