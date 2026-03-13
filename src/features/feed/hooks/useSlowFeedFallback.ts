@@ -1,6 +1,9 @@
 import { useEffect, useReducer } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { getFeedPosts } from '@/entities/post/api/getFeedPosts';
+import { postQueryKeys } from '@/entities/post/model/queryKeys';
 
 import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
@@ -80,13 +83,15 @@ function reducer(state: State, action: Action): State {
  * 각 요청 사이에 `SLOW_LOAD_DELAY_MS` 만큼 대기합니다.
  *
  * @param isEnabled - true이면 폴백 로딩 시작 (일반적으로 isError가 true일 때 전달)
+ * @param initialSkip - 기존에 정상 로딩된 게시글 개수(폴백 시작 오프셋)
  *
  * @returns
- * - `posts`      - 지금까지 불러온 게시글 목록
+ * - `posts`      - 폴백으로 추가로 불러온 게시글 목록
  * - `isFetching` - 현재 다음 게시글을 불러오는 중인지 여부
  * - `isDone`     - 더 이상 불러올 게시글이 없거나 오류가 발생해 종료된 경우 true
  */
-export function useSlowFeedFallback(isEnabled: boolean) {
+export function useSlowFeedFallback(isEnabled: boolean, initialSkip = 0) {
+  const queryClient = useQueryClient();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -96,8 +101,8 @@ export function useSlowFeedFallback(isEnabled: boolean) {
     const controller = new AbortController();
     const { signal } = controller;
 
-    // skip은 동일 effect 실행 내 재귀 호출 간 클로저로 공유되므로 ref 불필요
-    let skip = 0;
+    // skip은 기존 정상 피드 이후 지점부터 시작해 이어서 불러옵니다.
+    let skip = initialSkip;
 
     dispatch({ type: 'RESET' });
 
@@ -107,7 +112,11 @@ export function useSlowFeedFallback(isEnabled: boolean) {
       dispatch({ type: 'FETCH_START' });
 
       try {
-        const { posts = [] } = await getFeedPosts(skip, 1);
+        const { posts = [] } = await queryClient.fetchQuery({
+          queryKey: [...postQueryKeys.feed(), 'fallback', skip, 1],
+          queryFn: () => getFeedPosts(skip, 1),
+          staleTime: 1000 * 60 * 5,
+        });
 
         // 비동기 응답이 돌아왔을 때 이미 중단 상태이면 무시
         if (signal.aborted) return;
@@ -139,7 +148,7 @@ export function useSlowFeedFallback(isEnabled: boolean) {
       // 언마운트 또는 isEnabled 변경 시 진행 중인 페치·타이머 일괄 취소
       controller.abort();
     };
-  }, [isEnabled]);
+  }, [initialSkip, isEnabled, queryClient]);
 
   return state;
 }
