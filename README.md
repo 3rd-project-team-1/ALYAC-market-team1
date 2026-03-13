@@ -257,7 +257,7 @@ gantt
 | 빌드        | Vite                         | 7.3   |
 | 라우팅      | React Router DOM             | 7.13  |
 | 서버 상태   | TanStack Query (React Query) | 5.90  |
-| 전역 상태   | Zustand                      | 5.0   |
+| 전역 상태   | Context API                  | 5.0   |
 | HTTP        | Axios                        | 1.13  |
 | 폼 / 검증   | React Hook Form + Zod        | 7 / 4 |
 | 스타일      | Tailwind CSS v4              | 4.1   |
@@ -268,8 +268,7 @@ gantt
 
 ### 2.2 배포 URL
 
-- 프론트엔드: []()
-- 백엔드: []()
+- 프론트엔드: https://alyac-market-team1.vercel.app
 
 ## 3. 라우팅 구조
 
@@ -305,9 +304,9 @@ gantt
 ## 4. 데이터 흐름
 
 1. 클라이언트는 Axios를 통해 `/api/*` 경로로 REST API 요청을 보냅니다. (Vite 프록시 → `http://localhost:3000`)
-2. 서버 상태는 **TanStack Query**가 캐싱·동기화하고, 전역 UI 상태는 **Zustand**로 관리합니다.
-3. 인증 토큰(accessToken · refreshToken)은 **LocalStorage**에 저장되며, Axios 인터셉터가 요청마다 자동 첨부합니다.
-4. 토큰 만료 시 `/api/user/refresh` 로 자동 재발급 후 원래 요청을 재시도합니다.
+2. 서버 상태는 **TanStack Query**가 캐싱·동기화하고, 전역 UI 상태는 **Context API**로 관리합니다.
+3. 인증 토큰(accessToken · refreshToken)은 **LocalStorage**에 저장되며, Axios 인터셉터가 요청마다 자동 첨부합니다。
+4. 토큰 만료 시 `/api/user/refresh` 로 자동 재발급 후 원래 요청을 재시도합니다。
 
 ### 4.1 주요 API 엔드포인트
 
@@ -355,8 +354,8 @@ src/
   app/           # 앱 진입점 · 라우터 · QueryClient · 전역 Provider
   pages/         # 라우트별 페이지 조립 (18개 페이지)
   widgets/       # 독립적 UI 블록 (TopNav 6종, TabMenu)
-  features/      # 사용자 시나리오 단위 (auth, feed, post, product, profile, chat, search, home, create-post)
-  entities/      # 도메인 모델 · API · 훅 (auth, feed, post, product, user)
+    features/      # 사용자 시나리오 단위 (auth, feed, post, product, profile, chat, search, home)
+    entities/      # 도메인 모델 · API · 훅 (auth, post, product, user)
   shared/        # 도메인 무관 공용 기반 (axiosInstance, ui/, hooks/, lib/)
 ```
 
@@ -364,8 +363,8 @@ src/
 
 | 레이어           | 포함 도메인 / 모듈                                                                                   |
 | ---------------- | ---------------------------------------------------------------------------------------------------- |
-| **entities**     | `auth` · `feed` · `post` · `product` · `user`                                                        |
-| **features**     | `auth` · `chat` · `create-post` · `feed` · `home` · `post` · `product` · `profile` · `search`        |
+| **entities**     | `auth` · `post` · `product` · `user`                                                                 |
+| **features**     | `auth` · `chat` · `feed` · `home` · `post` · `product` · `profile` · `search`                        |
 | **widgets**      | `top-basic-nav` · `top-chat-nav` · `top-main-nav` · `top-search-nav` · `top-upload-nav` · `tab-menu` |
 | **shared/ui**    | `button` · `feedback` · `form` · `modal` · `user`                                                    |
 | **shared/hooks** | `useDebounce` · `useImageUpload`                                                                     |
@@ -390,7 +389,7 @@ flowchart TD
             Pages["Pages\n18개 라우트 페이지"]
             Widgets["Widgets\nTopNav 6종 · TabMenu"]
             Features["Features\nauth · feed · post · product\nprofile · chat · search · home"]
-            Entities["Entities\nauth · feed · post · product · user\n(API 함수 · 타입 · 쿼리 훅)"]
+            Entities["Entities\nauth · post · product · user\n(API 함수 · 타입 · 쿼리 훅)"]
             Shared["Shared\naxios · ui/ · hooks/ · lib/"]
 
             Pages --> Widgets --> Features --> Entities --> Shared
