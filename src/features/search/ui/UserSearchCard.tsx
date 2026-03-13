@@ -1,6 +1,6 @@
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { cn } from '@/shared/lib';
-import { UserAvatar } from '@/shared/ui';
+import { UserProfile } from '@/shared/ui';
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -31,14 +31,12 @@ export function UserSearchCard({ user, onClick, highlight }: UserSearchCardProps
       className={cn('border-border flex cursor-pointer items-center gap-3 border-b px-4 py-3')}
       onClick={onClick}
     >
-      <UserAvatar src={user.image} username={user.username} />
-      <div className={cn('min-w-0 flex-1')}>
-        <p
-          className={cn('text-foreground text-sm font-semibold')}
-          dangerouslySetInnerHTML={{ __html: highlightedUsername }}
-        />
-        <p className={cn('text-muted-foreground text-xs')}>@{user.accountname}</p>
-      </div>
+      <UserProfile
+        image={user.image}
+        accountname={user.accountname}
+        className="flex-1"
+        username={<span dangerouslySetInnerHTML={{ __html: highlightedUsername }} />}
+      />
       {!user.isMe && (
         <button
           type="button"
