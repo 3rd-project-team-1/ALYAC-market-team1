@@ -74,8 +74,7 @@ gantt
 ```
 
 <details>
-<summary>Day 1 ~ Day 18 상세 기록 보기</summary>
-
+<summary><span style="color:#e11d48;"><strong>[펼치기] Day 1 ~ Day 18 상세 기록 보기</strong></span> <strong>▼</strong></summary>
 
 #### Day 1 — 프로젝트 기획 및 역할 분담 (2026-02-13)
 
