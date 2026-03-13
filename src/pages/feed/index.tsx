@@ -40,7 +40,7 @@ export function FeedPage() {
 
   return (
     <>
-      <TopMainNav title="얄약마켓 피드" />
+      <TopMainNav title="알약마켓 피드" />
       {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
       <div className={cn('pb-[60px]')}>
         {/* 오류 발생 시 1개씩 불러오기 안내 배너 */}
@@ -65,6 +65,8 @@ export function FeedPage() {
             onClick={handlePostClick}
             // 폴백 모드에서는 게시글마다 페이드인 슬라이드 애니메이션 적용
             animated={isError}
+            // 배너가 이미 네비 오프셋을 담당하므로 상단 패딩 최소화
+            className={isError ? 'pt-3' : undefined}
           />
         ) : isError && isFallbackDone && !isFallbackFetching ? (
           /* 폴백도 완료됐는데 게시글이 없는 경우 — 오류 배너만 노출 */

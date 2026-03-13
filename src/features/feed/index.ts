@@ -10,8 +10,7 @@
  * - useFeedPage : 피드 페이지 전반의 비즈니스 로직 훅
  * - useFeedPostsQuery : 피드 데이터 페치 및 캐시 관리 훅
  */
-export { FeedEmpty, FeedList } from './ui';
-export { FeedErrorBanner } from './ui/FeedErrorBanner';
+export { FeedEmpty, FeedErrorBanner, FeedList } from './ui';
 export { useFeedPage } from './hooks/useFeedPage';
 export type { PostCardModel } from './model/types';
 export { useFeedPostsQuery, FEED_QUERY_KEY } from './hooks/useFeedPostsQuery';

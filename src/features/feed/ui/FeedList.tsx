@@ -26,6 +26,8 @@ interface FeedListProps {
   onClick: (postId: string) => void;
   /** true이면 각 게시글 카드에 페이드인 슬라이드 애니메이션 적용 (폴백 모드에서 사용) */
   animated?: boolean;
+  /** 최상단 패딩 오버라이드 (배너 등 상단 요소가 있을 때 사용) */
+  className?: string;
 }
 
 /**
@@ -47,11 +49,13 @@ export function FeedList({
   onDelete,
   onClick,
   animated = false,
+  className,
 }: FeedListProps) {
   const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore });
 
   return (
-    <main className={cn('mx-auto max-w-5xl pt-[48px]')}>
+    <main className={cn('mx-auto max-w-5xl px-3 pt-[48px]', className)}>
+      <div className={cn('flex flex-col gap-3 py-3')}>
       {posts.map((post) => (
         <div
           key={post.id}
@@ -69,6 +73,7 @@ export function FeedList({
           />
         </div>
       ))}
+      </div>
       {/* 스크롤 감지용 sentinel 요소 */}
       <div ref={ref} className={cn('h-1')} />
       {isFetchingMore && (

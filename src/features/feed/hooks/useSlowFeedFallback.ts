@@ -127,6 +127,7 @@ export function useSlowFeedFallback(isEnabled: boolean, initialSkip = 0) {
           return;
         }
 
+        // 피드 폴백도 팔로우한 사용자만 노출되므로 isfollow는 true로 보정
         dispatch({ type: 'FETCH_SUCCESS', post: { ...mapPost(posts[0]), isfollow: true } });
         skip += 1;
 

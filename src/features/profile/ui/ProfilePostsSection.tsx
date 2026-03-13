@@ -33,7 +33,7 @@ export function ProfilePostsSection() {
   const navigate = useNavigate();
   return (
     <section className={cn('border-border flex-1 border-t')}>
-      <div className={cn('border-border flex justify-end border-b')}>
+      <div className={cn('border-border flex justify-end border-b pr-2')}>
         <button
           className={cn(
             'hover:bg-accent flex h-9 w-9 items-center justify-center rounded-md transition-colors',
@@ -46,7 +46,7 @@ export function ProfilePostsSection() {
 
         <button
           className={cn(
-            'hover:bg-accent flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+            'hover:bg-accent -ml-2 flex h-9 w-9 items-center justify-center rounded-md transition-colors',
           )}
           onClick={() => setViewMode('grid')}
           aria-label="그리드 뷰"
@@ -158,11 +158,11 @@ export function ProfilePostsSection() {
           )}
         </div>
       ) : (
-        <div className={cn('grid grid-cols-3 gap-0.5')}>
+        <div className={cn('grid grid-cols-3 gap-1')}>
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden')}
+              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden rounded-lg')}
               onClick={() => handlePostDetail(post.id)}
             >
               {post.image ? (
