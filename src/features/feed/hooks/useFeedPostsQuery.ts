@@ -10,7 +10,7 @@ import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
 
 /** 한 번에 불러올 게시글 수 */
-const LIMIT = 10;
+const LIMIT = 15;
 
 /** 메인 피드 요청 최대 대기 시간 (ms) - 초과 시 폴백 로딩으로 전환 */
 const FEED_REQUEST_TIMEOUT_MS = 29000;
