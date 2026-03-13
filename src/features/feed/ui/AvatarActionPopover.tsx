@@ -61,14 +61,14 @@ export function AvatarActionPopover({
           <img
             src={imageUrl}
             alt={username}
-            className={cn('h-10 w-10 rounded-full object-cover')}
+            className={cn('h-11 w-11 rounded-full object-cover')}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
           />
         ) : (
           <div
-            className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
+            className={cn('flex h-11 w-11 items-center justify-center rounded-full bg-gray-100')}
           >
             <UploadImageSmallIcon />
           </div>

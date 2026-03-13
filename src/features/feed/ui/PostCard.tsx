@@ -114,7 +114,7 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
   return (
     <article
-      className="border-border relative cursor-pointer border-b px-4 py-4 hover:bg-gray-50/50"
+      className="bg-background relative cursor-pointer rounded-2xl border border-gray-200/70 px-4 py-4 shadow-sm transition-colors hover:bg-gray-50/60 active:bg-gray-100/60"
       onClick={onClick}
       onKeyDown={handleArticleKeyDown}
     >
@@ -139,8 +139,8 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
         </div>
       </div>
 
-      {/* 본문·이미지·액션: 아바타(40px) + gap(12px) = 52px 들여써서 이름 열에 정렬 */}
-      <div className="pl-[52px]">
+      {/* 본문·이미지·액션: 카드 내부 전체 너비로 좌우 균형 정렬 */}
+      <div>
         <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
 
         <PostCardImages
