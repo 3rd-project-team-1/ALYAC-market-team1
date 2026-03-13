@@ -1,7 +1,6 @@
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { UserProfile } from '@/shared/ui';
-import { PostAction } from '@/shared/ui';
+import { PostAction, PostContent, UserProfile } from '@/shared/ui';
 
 interface PostDetailCardProps {
   post: {
@@ -34,7 +33,7 @@ export function PostDetailCard({ post, onToggleHeart, isHeartPending }: PostDeta
       />
 
       {/* 게시글 내용 */}
-      <p className={cn('text-foreground mt-4 text-sm leading-relaxed')}>{post.content}</p>
+      <PostContent content={post.content} className="mt-3" />
 
       {/* 게시글 이미지 */}
       {images.length > 0 && (
