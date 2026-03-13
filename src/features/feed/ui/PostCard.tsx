@@ -1,23 +1,22 @@
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { useId, useState } from 'react';
 
+import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
 import type { PostCardModel } from '@/features/feed';
 import { usePostDialog } from '@/features/post';
-import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
 import { LogoutModal } from '@/shared/ui';
 
+import {
+  useIsDesktopEnvironment,
+  useOptimisticHeartState,
+  useRelativeTimeTicker,
+} from '../hooks/usePostCard';
 import { AvatarActionPopover } from './AvatarActionPopover';
 import { PostCardActions } from './PostCardActions';
 import type { DropdownItem } from './PostCardDropdown';
 import { PostCardHeader } from './PostCardHeader';
 import { PostCardImages } from './PostCardImages';
 import { PostCardReportModal } from './PostCardReportModal';
-import {
-  useIsDesktopEnvironment,
-  useOptimisticHeartState,
-  usePostImageCarousel,
-  useRelativeTimeTicker,
-} from '../hooks/usePostCard';
 
 interface PostCardProps {
   post: PostCardModel;
@@ -36,23 +35,6 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuId = useId();
-
-  const {
-    images,
-    currentIndex,
-    hasMultipleImages,
-    slideTransform,
-    goToImage,
-    handleNextImage,
-    handlePrevImage,
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleMouseLeave,
-  } = usePostImageCarousel(post.image, post.id);
 
   const isDesktopEnvironment = useIsDesktopEnvironment();
 
@@ -114,7 +96,7 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
   return (
     <article
-      className="bg-background relative cursor-pointer rounded-2xl border border-border px-4 py-4 shadow-sm transition-colors hover:bg-muted/40 active:bg-muted/60"
+      className="bg-background border-border hover:bg-muted/40 active:bg-muted/60 relative cursor-pointer rounded-2xl border px-4 py-4 shadow-sm transition-colors"
       onClick={onClick}
       onKeyDown={handleArticleKeyDown}
     >
@@ -145,21 +127,8 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
         <PostCardImages
           postId={post.id}
-          images={images}
-          currentIndex={currentIndex}
-          hasMultipleImages={hasMultipleImages}
+          image={post.image}
           showDesktopNavButtons={isDesktopEnvironment}
-          slideTransform={slideTransform}
-          onGoToImage={goToImage}
-          onNextImage={handleNextImage}
-          onPrevImage={handlePrevImage}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
         />
 
         <PostCardActions

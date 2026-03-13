@@ -1,8 +1,10 @@
-import type { KeyboardEvent, MouseEvent, SyntheticEvent, TouchEvent } from 'react';
+import type { KeyboardEvent, SyntheticEvent } from 'react';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { cn, getImageUrl } from '@/shared/lib';
+
+import { usePostImageCarousel } from '../hooks/usePostCard';
 
 function hideBrokenImage(e: SyntheticEvent<HTMLImageElement>) {
   const wrapper = e.currentTarget.closest('[data-img-wrapper]') as HTMLElement | null;
@@ -12,44 +14,29 @@ function hideBrokenImage(e: SyntheticEvent<HTMLImageElement>) {
     e.currentTarget.style.display = 'none';
   }
 }
-
 interface PostCardImagesProps {
   postId: string;
-  images: string[];
-  currentIndex: number;
-  hasMultipleImages: boolean;
+  image: string | undefined; // 부모에서 post.image로 넘겨준 값
   showDesktopNavButtons: boolean;
-  slideTransform: string;
-  onGoToImage: (index: number) => void;
-  onNextImage: () => void;
-  onPrevImage: () => void;
-  onTouchStart: (e: TouchEvent<HTMLDivElement>) => void;
-  onTouchMove: (e: TouchEvent<HTMLDivElement>) => void;
-  onTouchEnd: () => void;
-  onMouseDown: (e: MouseEvent<HTMLDivElement>) => void;
-  onMouseMove: (e: MouseEvent<HTMLDivElement>) => void;
-  onMouseUp: () => void;
-  onMouseLeave: () => void;
 }
 
-export function PostCardImages({
-  postId,
-  images,
-  currentIndex,
-  hasMultipleImages,
-  showDesktopNavButtons,
-  slideTransform,
-  onGoToImage,
-  onNextImage,
-  onPrevImage,
-  onTouchStart,
-  onTouchMove,
-  onTouchEnd,
-  onMouseDown,
-  onMouseMove,
-  onMouseUp,
-  onMouseLeave,
-}: PostCardImagesProps) {
+export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCardImagesProps) {
+  const {
+    images,
+    currentIndex,
+    hasMultipleImages,
+    slideTransform,
+    goToImage,
+    handleNextImage,
+    handlePrevImage,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    handleMouseLeave,
+  } = usePostImageCarousel(image, postId);
   if (images.length === 0) return null;
   const isFirstImage = currentIndex === 0;
   const isLastImage = currentIndex === images.length - 1;
@@ -58,12 +45,12 @@ export function PostCardImages({
     if (!hasMultipleImages) return;
     if (e.key === 'ArrowRight') {
       e.preventDefault();
-      onNextImage();
+      handleNextImage(); // ✅ onNextImage -> handleNextImage
       return;
     }
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      onPrevImage();
+      handlePrevImage(); // ✅ onPrevImage -> handlePrevImage
     }
   };
 
@@ -81,13 +68,14 @@ export function PostCardImages({
         style={{
           transform: slideTransform,
         }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseLeave}
+        // ✅ 전부 handle~ 로 시작하는 함수 이름으로 변경!
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
       >
         {images.map((img, index) => (
           <div
@@ -97,7 +85,7 @@ export function PostCardImages({
               'border-border flex-shrink-0 overflow-hidden rounded-xl border',
               hasMultipleImages ? 'w-[86%]' : 'w-full',
             )}
-            onClick={onNextImage}
+            onClick={handleNextImage} // ✅ onNextImage -> handleNextImage
           >
             <img
               src={getImageUrl(img) ?? undefined}
@@ -120,7 +108,7 @@ export function PostCardImages({
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                onPrevImage();
+                handlePrevImage(); // ✅ onPrevImage -> handlePrevImage
               }}
             >
               <ChevronLeft className={cn('h-4 w-4')} />
@@ -135,7 +123,7 @@ export function PostCardImages({
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                onNextImage();
+                handleNextImage(); // ✅ onNextImage -> handleNextImage
               }}
             >
               <ChevronRight className={cn('h-4 w-4')} />
@@ -159,7 +147,7 @@ export function PostCardImages({
               aria-current={index === currentIndex}
               onClick={(e) => {
                 e.stopPropagation();
-                onGoToImage(index);
+                goToImage(index); // ✅ onGoToImage -> goToImage
               }}
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
