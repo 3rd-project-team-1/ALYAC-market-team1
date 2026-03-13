@@ -7,6 +7,7 @@ import { getImageUrl } from '@/shared/lib';
 interface UserAvatarProps {
   src?: string | null;
   username: string;
+  className?: string;
 }
 
 export function UserAvatar({ src, username }: UserAvatarProps) {
