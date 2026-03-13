@@ -45,12 +45,12 @@ export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCar
     if (!hasMultipleImages) return;
     if (e.key === 'ArrowRight') {
       e.preventDefault();
-      handleNextImage(); // ✅ onNextImage -> handleNextImage
+      handleNextImage();
       return;
     }
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      handlePrevImage(); // ✅ onPrevImage -> handlePrevImage
+      handlePrevImage();
     }
   };
 
@@ -68,7 +68,6 @@ export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCar
         style={{
           transform: slideTransform,
         }}
-        // ✅ 전부 handle~ 로 시작하는 함수 이름으로 변경!
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -85,7 +84,7 @@ export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCar
               'border-border flex-shrink-0 overflow-hidden rounded-xl border',
               hasMultipleImages ? 'w-[86%]' : 'w-full',
             )}
-            onClick={handleNextImage} // ✅ onNextImage -> handleNextImage
+            onClick={handleNextImage}
           >
             <img
               src={getImageUrl(img) ?? undefined}
@@ -108,7 +107,7 @@ export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCar
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                handlePrevImage(); // ✅ onPrevImage -> handlePrevImage
+                handlePrevImage();
               }}
             >
               <ChevronLeft className={cn('h-4 w-4')} />
@@ -123,7 +122,7 @@ export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCar
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                handleNextImage(); // ✅ onNextImage -> handleNextImage
+                handleNextImage();
               }}
             >
               <ChevronRight className={cn('h-4 w-4')} />
@@ -147,7 +146,7 @@ export function PostCardImages({ postId, image, showDesktopNavButtons }: PostCar
               aria-current={index === currentIndex}
               onClick={(e) => {
                 e.stopPropagation();
-                goToImage(index); // ✅ onGoToImage -> goToImage
+                goToImage(index);
               }}
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
