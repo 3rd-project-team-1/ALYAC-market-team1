@@ -11,6 +11,7 @@ export function useUpdateProfile() {
     }) => updateProfile(data),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['userPosts'] });
     },
     onError: (error) => {
       console.error('프로필 업데이트 실패:', error);
