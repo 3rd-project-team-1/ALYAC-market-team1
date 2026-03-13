@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { CircleMinus, CirclePlus, Plus, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { UploadImageSmallIcon } from '@/shared/assets';
@@ -25,7 +26,7 @@ export function AvatarActionPopover({
 }: AvatarActionPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
+  const { isFollowing, followMutation } = useProfileFollow({
     initialIsFollow,
   });
 
@@ -49,7 +50,18 @@ export function AvatarActionPopover({
 
   const handleFollow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleFollow(accountname);
+    const wasFollowing = isFollowing;
+    followMutation.mutate(
+      { accountname, isFollowing },
+      {
+        onSuccess: () => {
+          toast.success(wasFollowing ? '팔로우가 취소되었습니다.' : '팔로우했습니다.');
+        },
+        onError: () => {
+          toast.error('요청에 실패했습니다. 다시 시도해 주세요.');
+        },
+      },
+    );
     setIsOpen(false);
   };
 
@@ -61,14 +73,14 @@ export function AvatarActionPopover({
           <img
             src={imageUrl}
             alt={username}
-            className={cn('h-10 w-10 rounded-full object-cover')}
+            className={cn('h-11 w-11 rounded-full object-cover')}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
           />
         ) : (
           <div
-            className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
+            className={cn('flex h-11 w-11 items-center justify-center rounded-full bg-gray-100')}
           >
             <UploadImageSmallIcon />
           </div>

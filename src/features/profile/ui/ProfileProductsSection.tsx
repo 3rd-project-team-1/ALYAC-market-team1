@@ -107,7 +107,7 @@ export function ProfileProductsSection() {
                 )}
               </div>
 
-              <div className={cn('bg-white px-2 pb-2 pt-1 rounded-b-xl')}>
+              <div className={cn('bg-card px-2 pb-2 pt-1 rounded-b-xl')}>
                 <p
                   className={cn(
                     'text-foreground truncate text-xs font-medium',
@@ -116,7 +116,7 @@ export function ProfileProductsSection() {
                 >
                   {product.itemName}
                 </p>
-                <p className={cn('text-xs font-bold text-[#0a9e1e]')}>
+                <p className={cn('text-xs font-bold text-primary-green')}>
                   {product.price.toLocaleString()}원
                 </p>
               </div>

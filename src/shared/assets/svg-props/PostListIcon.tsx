@@ -3,27 +3,24 @@ import { cn } from '@/shared/lib';
 import type { IconProps } from './types';
 
 export const PostListIcon = ({ active }: Pick<IconProps, 'active'>) => (
-  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M22.75 3.25H3.25V7.58333H22.75V3.25Z"
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect
+      x="1" y="0.5" width="18" height="4"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
-    <path
-      d="M22.75 10.8333H3.25V15.1667H22.75V10.8333Z"
+    <rect
+      x="1" y="8" width="18" height="4"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
-    <path
-      d="M22.75 18.4167H3.25V22.75H22.75V18.4167Z"
+    <rect
+      x="1" y="15.5" width="18" height="4"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
   </svg>
 );

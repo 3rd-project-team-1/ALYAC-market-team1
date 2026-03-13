@@ -25,12 +25,17 @@ export function PostCardHeader({
 }: PostCardHeaderProps) {
   return (
     <div className={cn('flex items-start justify-between')}>
-      <div>
-        <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-        <p className={cn('text-muted-foreground text-xs')}>
+      <div className={cn('min-w-0')}>
+        <div className={cn('flex items-center gap-1.5')}>
+          <p className={cn('text-foreground truncate text-[15px] font-semibold leading-tight')}>
+            {post.author.username}
+          </p>
+          <span className={cn('text-muted-foreground shrink-0 text-xs')}>
+            · {getRelativeTime(post.createdAt)}
+          </span>
+        </div>
+        <p className={cn('text-muted-foreground truncate text-xs leading-tight')}>
           @{post.author.accountname}
-          <span className={cn('mx-1')}>·</span>
-          <time dateTime={post.createdAt}>{getRelativeTime(post.createdAt)}</time>
         </p>
       </div>
 
