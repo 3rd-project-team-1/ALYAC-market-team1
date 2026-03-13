@@ -1,4 +1,4 @@
-import { FeedEmpty, FeedList, useFeedPage } from '@/features/feed';
+import { FeedEmpty, FeedErrorBanner, FeedList, useFeedPage } from '@/features/feed';
 import { cn } from '@/shared/lib';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopMainNav } from '@/widgets/top-main-nav';
@@ -15,6 +15,7 @@ export function FeedPage() {
   const {
     myAccountname,
     isLoading,
+    hasFetchedOnce,
     isFetchingMore,
     isError,
     hasMore,
@@ -24,12 +25,16 @@ export function FeedPage() {
     handlePostClick,
     handleRewritePost,
     onSearch,
+    retryFeed,
     isFallbackFetching,
     isFallbackDone,
   } = useFeedPage();
 
-  // 최초 데이터 로딩 중 전체 화면 스피너 표시 (추가 페이지 로딩은 FeedList 내부에서 처리)
-  if (isLoading) {
+  const shouldShowFallbackBanner =
+    isError && (isFallbackFetching || (isFallbackDone && posts.length === 0));
+
+  // 진짜 첫 진입에서만 전체 화면 스피너를 사용하고, 이후 재시도/폴백 중에는 페이지를 유지
+  if (isLoading && !hasFetchedOnce) {
     return <LoadingSpinner fullScreen message="피드를 불러오는 중입니다..." />;
   }
 
@@ -39,27 +44,12 @@ export function FeedPage() {
       {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
       <div className={cn('pb-[60px]')}>
         {/* 오류 발생 시 1개씩 불러오기 안내 배너 */}
-        {isError && (
-          <div className={cn('mx-auto max-w-5xl px-4 pt-[60px]')}>
-            <div
-              className={cn('rounded-md border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm')}
-            >
-              <p className={cn('font-medium text-yellow-800')}>일시적인 서버 오류가 발생했습니다</p>
-              <p className={cn('mt-0.5 text-xs text-yellow-600')}>
-                {isFallbackDone && posts.length === 0
-                  ? '게시글을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
-                  : '게시글을 하나씩 천천히 불러오고 있습니다...'}
-              </p>
-              {isFallbackDone && posts.length === 0 && (
-                <button
-                  className={cn('mt-2 text-xs font-medium text-yellow-700 underline')}
-                  onClick={() => window.location.reload()}
-                >
-                  다시 시도
-                </button>
-              )}
-            </div>
-          </div>
+        {shouldShowFallbackBanner && (
+          <FeedErrorBanner
+            isFallbackDone={isFallbackDone}
+            hasNoPosts={posts.length === 0}
+            onRetry={retryFeed}
+          />
         )}
 
         {posts.length > 0 ? (
@@ -76,7 +66,7 @@ export function FeedPage() {
             // 폴백 모드에서는 게시글마다 페이드인 슬라이드 애니메이션 적용
             animated={isError}
           />
-        ) : isError && !isFallbackFetching ? (
+        ) : isError && isFallbackDone && !isFallbackFetching ? (
           /* 폴백도 완료됐는데 게시글이 없는 경우 — 오류 배너만 노출 */
           <div className={cn('mx-auto flex max-w-5xl flex-col items-center justify-center py-20')}>
             <p className={cn('text-sm text-gray-400')}>불러올 수 있는 게시글이 없습니다.</p>

@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import { getTokenUserInfo } from '@/shared/lib/utils/token';
@@ -23,20 +25,36 @@ export function useFeedPage() {
 
   const {
     isLoading,
+    hasFetchedOnce,
     isFetchingMore,
     isError,
     posts: feedPosts,
     deletePost,
     loadMore,
+    retryFeed,
     hasMore,
   } = useFeedPostsQuery();
+
+  // 메인 쿼리 에러가 발생한 동안 폴백 모드 활성화
+  const isFallbackMode = isError;
 
   // 메인 쿼리 실패 시 게시글을 1개씩 천천히 불러오는 폴백
   const {
     posts: fallbackPosts,
     isFetching: isFallbackFetching,
     isDone: isFallbackDone,
-  } = useSlowFeedFallback(isError);
+  } = useSlowFeedFallback(isFallbackMode, feedPosts.length);
+
+  // 폴백 중에는 기존 피드 + 폴백으로 추가 로드한 게시글을 함께 표시
+  const mergedPosts = useMemo(() => {
+    const merged = [...feedPosts, ...fallbackPosts];
+    const seenIds = new Set<string>();
+    return merged.filter((post) => {
+      if (seenIds.has(post.id)) return false;
+      seenIds.add(post.id);
+      return true;
+    });
+  }, [fallbackPosts, feedPosts]);
 
   // 게시글 클릭 → 상세 페이지 이동
   const handlePostClick = (postId: string) => {
@@ -56,16 +74,17 @@ export function useFeedPage() {
   return {
     myAccountname,
     isLoading,
+    hasFetchedOnce,
     isFetchingMore,
-    isError,
+    isError: isFallbackMode,
     hasMore,
     loadMore,
-    // 오류 시 폴백 게시글, 정상 시 일반 게시글 사용
-    posts: isError ? fallbackPosts : feedPosts,
+    posts: isFallbackMode ? mergedPosts : feedPosts,
     deletePost,
     handlePostClick,
     handleRewritePost,
     onSearch: () => navigate(ROUTE_PATHS.SEARCH),
+    retryFeed,
     isFallbackFetching,
     isFallbackDone,
   };

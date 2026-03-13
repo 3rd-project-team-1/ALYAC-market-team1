@@ -35,30 +35,39 @@ export const FEED_QUERY_KEY = ['feed'] as const;
 export function useFeedPostsQuery() {
   const queryClient = useQueryClient();
 
-  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage, isError } =
-    useInfiniteQuery({
-      queryKey: FEED_QUERY_KEY,
-      queryFn: async ({ pageParam }) => {
-        const response = await Promise.race([
-          getFeedPosts(pageParam, LIMIT),
-          new Promise<never>((_, reject) => {
-            window.setTimeout(() => {
-              reject(new Error('Feed request timeout'));
-            }, FEED_REQUEST_TIMEOUT_MS);
-          }),
-        ]);
-        const posts: Post[] = response.posts ?? [];
-        return posts;
-      },
-      initialPageParam: 0,
-      // 마지막 페이지가 LIMIT 개수와 같으면 다음 페이지가 있다고 판단
-      getNextPageParam: (lastPage, _allPages, lastPageParam) =>
-        lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
-      // 항상 stale로 간주 → 피드 마운트 시 즉시 re-fetch하여 좋아요/댓글 카운트 최신화
-      staleTime: 0,
-      // 실패 시 즉시 폴백으로 전환해 긴 스피너 대기를 줄임
-      retry: 0,
-    });
+  const {
+    data,
+    isPending,
+    isFetched,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+    hasNextPage,
+    isError,
+    isFetchNextPageError,
+  } = useInfiniteQuery({
+    queryKey: FEED_QUERY_KEY,
+    queryFn: async ({ pageParam }) => {
+      const response = await Promise.race([
+        getFeedPosts(pageParam, LIMIT),
+        new Promise<never>((_, reject) => {
+          window.setTimeout(() => {
+            reject(new Error('Feed request timeout'));
+          }, FEED_REQUEST_TIMEOUT_MS);
+        }),
+      ]);
+      const posts: Post[] = response.posts ?? [];
+      return posts;
+    },
+    initialPageParam: 0,
+    // 마지막 페이지가 LIMIT 개수와 같으면 다음 페이지가 있다고 판단
+    getNextPageParam: (lastPage, _allPages, lastPageParam) =>
+      lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
+    // 항상 stale로 간주 → 피드 마운트 시 즉시 re-fetch하여 좋아요/댓글 카운트 최신화
+    staleTime: 0,
+    // 실패 시 즉시 폴백으로 전환해 긴 스피너 대기를 줄임
+    retry: 0,
+  });
 
   // 모든 페이지를 하나로 합친 뒤 중복 제거 (서버가 최신순으로 반환하므로 재정렬 불필요)
   // 피드는 항상 팔로우한 사람의 글만 노출되므로 isfollow를 true로 교정합니다.
@@ -95,11 +104,14 @@ export function useFeedPostsQuery() {
 
   return {
     isLoading: isPending,
+    hasFetchedOnce: isFetched,
     isFetchingMore: isFetchingNextPage,
-    isError,
+    // 첫 로딩/재조회 실패뿐 아니라 다음 페이지 실패도 폴백 트리거에 포함
+    isError: isError || isFetchNextPageError,
     posts,
     deletePost,
     loadMore: fetchNextPage,
+    retryFeed: () => refetch(),
     hasMore: hasNextPage ?? false,
   };
 }

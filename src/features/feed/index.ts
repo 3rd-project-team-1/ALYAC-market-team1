@@ -11,6 +11,7 @@
  * - useFeedPostsQuery : 피드 데이터 페치 및 캐시 관리 훅
  */
 export { FeedEmpty, FeedList } from './ui';
+export { FeedErrorBanner } from './ui/FeedErrorBanner';
 export { useFeedPage } from './hooks/useFeedPage';
 export type { PostCardModel } from './model/types';
 export { useFeedPostsQuery, FEED_QUERY_KEY } from './hooks/useFeedPostsQuery';
