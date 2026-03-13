@@ -16,8 +16,8 @@ export const API_ENDPOINT = {
   PROFILE: (accountname: string) => `/api/profile/${accountname}`,
   PROFILE_FOLLOW: (accountname: string) => `/api/profile/${accountname}/follow`,
   PROFILE_UNFOLLOW: (accountname: string) => `/api/profile/${accountname}/unfollow`,
-  PROFILE_FOLLOWERS: (accountname: string) => `/api/profile/${accountname}/follower/`,
-  PROFILE_FOLLOWINGS: (accountname: string) => `/api/profile/${accountname}/following/`,
+  PROFILE_FOLLOWERS: (accountname: string) => `/api/profile/${accountname}/follower/?limit=1000&skip=0`,
+  PROFILE_FOLLOWINGS: (accountname: string) => `/api/profile/${accountname}/following/?limit=1000&skip=0`,
 
   // 게시글
   POST_CREATE: '/api/post',
