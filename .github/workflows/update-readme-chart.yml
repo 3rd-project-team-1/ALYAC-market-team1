@@ -1,0 +1,229 @@
+name: 📊 Update README Commit Chart
+
+on:
+  schedule:
+    - cron: '0 16 * * *' # 매일 새벽1시 KST (UTC 16:00) default branch에서만 실행됨
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-chart:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (전체 히스토리)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: openai 패키지 설치
+        run: pip install openai
+
+      - name: 커밋 분석 및 차트 생성
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python3 << 'PYEOF'
+          import subprocess
+          import re
+          import os
+          import time
+          from collections import Counter, defaultdict
+          from datetime import datetime, timezone, timedelta
+          from openai import OpenAI
+
+          ai_client = OpenAI(
+              base_url="https://models.inference.ai.azure.com",
+              api_key=os.environ["GH_PAT"],
+          )
+
+          def summarize_commits(date, messages):
+              joined = '\n'.join(f'- {m}' for m in messages)
+              prompt = (
+                  f"{date}의 Git 커밋 메시지를 한국어로 2~4문장으로 간결하게 요약해줘. "
+                  "핵심 작업만 남기고 중복·세부 표현은 제거해. 마크다운 없이 평문으로만 작성해.\n\n"
+                  f"커밋 메시지:\n{joined}"
+              )
+              try:
+                  resp = ai_client.chat.completions.create(
+                      model="gpt-4o-mini",
+                      messages=[{"role": "user", "content": prompt}],
+                      max_tokens=200,
+                  )
+                  return resp.choices[0].message.content.strip().replace('|', '｜')
+              except Exception as e:
+                  print(f'⚠️ AI 요약 실패 ({date}): {e}')
+                  return ' · '.join(messages)
+              finally:
+                  time.sleep(5)  # 분당 15회 제한 방지
+
+          # ── 이름 정규화 매핑 ──────────────────────────────────────
+          NAME_MAP = {
+              'kimdonghei':    '김동희',
+              'dongheikim':    '김동희',
+              'junwoo':        '배준우',
+              'junwoo01':      '배준우',
+              'seyunkims':     '김세윤',
+              'seyun':         '김세윤',
+              'youngjaejang7': '장영재',
+              'youngjaejang':  '장영재',
+          }
+
+          def normalize(name):
+              return NAME_MAP.get(name.lower().replace(' ', ''), name)
+
+          # ── 기여자별 커밋 수 ────────────────────────────────────────
+          result = subprocess.run(
+              ['git', 'log', '--format=%aN', '--no-merges'],
+              capture_output=True, text=True
+          )
+          raw_authors = [a for a in result.stdout.strip().split('\n') if a]
+          authors = Counter(normalize(a) for a in raw_authors)
+
+          pie_lines = [
+              '```mermaid',
+              "%%{init: { 'theme': 'base', 'themeVariables': {",
+              "  'primaryColor': '#6366f1',",
+              "  'primaryTextColor': '#ffffff',",
+              "  'primaryBorderColor': '#4338ca',",
+              "  'secondaryColor': '#c7d2fe',",
+              "  'tertiaryColor': '#e0e7ff',",
+              "  'pieLegendTextColor': '#1e1b4b',",
+              "  'pieStrokeColor': '#ffffff',",
+              "  'pieOuterStrokeColor': '#4338ca'",
+              "} } }%%",
+              'pie title 기여자별 커밋 수',
+          ]
+          for author, count in authors.most_common():
+              pie_lines.append(f'  "{author}" : {count}')
+          pie_lines.append('```')
+          pie_block = '\n'.join(pie_lines)
+
+          # ── 일자별 커밋 수 ────────────────────────────────────────
+          result2 = subprocess.run(
+              ['git', 'log', '--format=%ad', '--date=format:%m/%d', '--no-merges'],
+              capture_output=True, text=True
+          )
+          date_counts = Counter(d for d in result2.stdout.strip().split('\n') if d)
+          sorted_dates = sorted(date_counts.keys())
+          # 최근 10개 일자만 표시
+          recent_dates = sorted_dates[-10:]
+          max_count = max(date_counts[d] for d in recent_dates) if recent_dates else 10
+          y_max = max_count + 2
+
+          x_labels = '[' + ', '.join(f'"{d}"' for d in recent_dates) + ']'
+          y_values = '[' + ', '.join(str(date_counts[d]) for d in recent_dates) + ']'
+
+          bar_lines = [
+              '```mermaid',
+              "%%{init: { 'theme': 'base', 'themeVariables': {",
+              "  'xyChart': {",
+              "    'plotColorPalette': '#6366f1'",
+              "  }",
+              "} } }%%",
+              'xychart-beta',
+              '  title "일자별 커밋 수"',
+              f'  x-axis {x_labels}',
+              f'  y-axis "커밋 수" 0 --> {y_max}',
+              f'  bar {y_values}',
+              '```',
+          ]
+          bar_block = '\n'.join(bar_lines)
+
+          # ── README 마커 구간 교체 ────────────────────────────────
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          content = re.sub(
+              r'<!-- COMMIT-PIE-START -->.*?<!-- COMMIT-PIE-END -->',
+              f'<!-- COMMIT-PIE-START -->\n{pie_block}\n<!-- COMMIT-PIE-END -->',
+              content,
+              flags=re.DOTALL
+          )
+          content = re.sub(
+              r'<!-- COMMIT-BAR-START -->.*?<!-- COMMIT-BAR-END -->',
+              f'<!-- COMMIT-BAR-START -->\n{bar_block}\n<!-- COMMIT-BAR-END -->',
+              content,
+              flags=re.DOTALL
+          )
+
+          with open('README.md', 'w', encoding='utf-8') as f:
+              f.write(content)
+
+          # ── 날짜별 커밋 로그 ────────────────────────────────────
+          result3 = subprocess.run(
+              ['git', 'log', '--format=%ad|%s', '--date=format:%Y-%m-%d', '--no-merges'],
+              capture_output=True, text=True
+          )
+
+          log_by_date = defaultdict(list)
+          for line in result3.stdout.strip().split('\n'):
+              if '|' not in line:
+                  continue
+              date, msg = line.split('|', 1)
+              # [skip ci] 등 자동 커밋 제외
+              if '[skip ci]' in msg or msg.startswith('docs: 커밋 활동'):
+                  continue
+              log_by_date[date].append(msg.strip())
+
+          # ── 기존 요약 행 파싱 (이미 처리된 날짜 보존) ────────────
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          existing_rows = {}
+          log_section = re.search(
+              r'<!-- COMMIT-LOG-START -->(.*?)<!-- COMMIT-LOG-END -->',
+              content, flags=re.DOTALL
+          )
+          if log_section:
+              for row in log_section.group(1).strip().splitlines():
+                  m = re.match(r'\|\s*(\d{4}-\d{2}-\d{2})\s*\|(.*)\|', row)
+                  if m:
+                      existing_rows[m.group(1).strip()] = row.strip()
+
+          # ── 자정 스케줄 실행 시 당일 날짜 강제 재요약 ──────────
+          # UTC 16:00 = KST 01:00. 이 시점의 UTC 날짜 = 방금 끝난 KST 날짜
+          force_date = None
+          if os.environ.get('EVENT_NAME') == 'schedule':
+              force_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+              print(f'📅 자정 실행: {force_date} 강제 재요약')
+
+          # ── 새 날짜만 AI 요약, 기존 날짜는 그대로 ────────────────
+          all_dates = sorted(log_by_date.keys(), reverse=True)
+          log_lines = ['| 날짜 | 요약 |', '| ---- | ---- |']
+          for date in all_dates:
+              if date in existing_rows and date != force_date:
+                  log_lines.append(existing_rows[date])
+              else:
+                  summary = summarize_commits(date, log_by_date[date])
+                  log_lines.append(f'| {date} | {summary} |')
+
+          log_block = '\n'.join(log_lines)
+
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          content = re.sub(
+              r'<!-- COMMIT-LOG-START -->.*?<!-- COMMIT-LOG-END -->',
+              f'<!-- COMMIT-LOG-START -->\n{log_block}\n<!-- COMMIT-LOG-END -->',
+              content,
+              flags=re.DOTALL
+          )
+
+          with open('README.md', 'w', encoding='utf-8') as f:
+              f.write(content)
+
+          print("✅ 차트 업데이트 완료")
+          PYEOF
+
+      - name: 변경 사항 커밋
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'docs: 커밋 활동 차트 자동 업데이트 [skip ci]'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          file_pattern: README.md

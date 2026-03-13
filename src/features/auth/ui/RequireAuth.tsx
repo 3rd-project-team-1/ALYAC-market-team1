@@ -1,15 +1,23 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { getToken } from '@/entities/auth/lib/token';
+import { LoadingSpinner } from '@/shared/ui';
 
+import { useTokenVerification } from '../hooks/useTokenVerification';
+
+/**
+ * 인증된 사용자만 접근 가능한 라우트 가드
+ * 토큰이 없거나 유효하지 않으면 홈으로 리다이렉트
+ */
 export function RequireAuth() {
-  const token = getToken();
+  const { token, isVerifying, isValid } = useTokenVerification();
 
-  // // 토큰이 없으면 로그인 페이지로 쫓아냄
   if (!token) {
     return <Navigate to="/" replace />;
   }
 
-  // 로그인했으면 그 안의 페이지들(Outlet)을 싹 다 보여줌!
-  return <Outlet />;
+  if (isVerifying) {
+    return <LoadingSpinner fullScreen message="권한 확인 중..." />;
+  }
+
+  return isValid ? <Outlet /> : <Navigate to="/" replace />;
 }

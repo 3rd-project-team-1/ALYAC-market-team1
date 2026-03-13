@@ -1,0 +1,211 @@
+import { useNavigate } from 'react-router-dom';
+
+import { PostAlbumIcon, PostListIcon, UploadImageSmallIcon } from '@/shared/assets';
+import { useInfiniteScroll } from '@/shared/hooks';
+import { cn } from '@/shared/lib';
+import { getImageUrl } from '@/shared/lib';
+import { LoadingSpinner, LogoutModal } from '@/shared/ui';
+import { ImageCountBadge } from '@/shared/ui';
+import { PostAction } from '@/shared/ui';
+import { MoreMenu } from '@/widgets/top-basic-nav';
+
+import { useProfilePostsSection } from '../hooks/useProfilePostsSection';
+
+export function ProfilePostsSection() {
+  const {
+    posts,
+    isLoading,
+    isFetchingMore,
+    loadMore,
+    hasMore,
+    viewMode,
+    setViewMode,
+    deleteTargetPostId,
+    handleDeleteConfirm,
+    handleDeleteCancel,
+    handleEditPost,
+    handleDeletePost,
+    handlePostDetail,
+    heartMutation,
+  } = useProfilePostsSection();
+
+  const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore: loadMore });
+  const navigate = useNavigate();
+  return (
+    <section className={cn('border-border flex-1 border-t')}>
+      <div className={cn('border-border flex justify-end border-b')}>
+        <button
+          className={cn(
+            'hover:bg-accent flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+          )}
+          onClick={() => setViewMode('list')}
+          aria-label="리스트 뷰"
+        >
+          <PostListIcon active={viewMode === 'list'} />
+        </button>
+
+        <button
+          className={cn(
+            'hover:bg-accent flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+          )}
+          onClick={() => setViewMode('grid')}
+          aria-label="그리드 뷰"
+        >
+          <PostAlbumIcon active={viewMode === 'grid'} />
+        </button>
+      </div>
+
+      {isLoading ? (
+        <div className={cn('py-10')}>
+          <LoadingSpinner message="게시글을 불러오는 중..." />
+        </div>
+      ) : posts.length === 0 ? (
+        <div className={cn('flex items-center justify-center py-20')}>
+          <p className={cn('text-muted-foreground text-sm')}>작성한 게시물이 없습니다.</p>
+        </div>
+      ) : viewMode === 'list' ? (
+        <div className={cn('flex flex-col')}>
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className={cn(
+                'border-border hover:bg-accent border-b px-4 py-3 transition-colors last:border-0',
+              )}
+            >
+              <div className={cn('flex items-center justify-between')}>
+                <div className={cn('flex items-center gap-3')}>
+                  <div className={cn('bg-muted h-8 w-8 overflow-hidden rounded-full')}>
+                    {post.author.image ? (
+                      <img
+                        src={getImageUrl(post.author.image) ?? post.author.image}
+                        alt={post.author.username}
+                        className={cn('h-full w-full object-cover')}
+                      />
+                    ) : (
+                      <div className={cn('flex h-full w-full items-center justify-center')}>
+                        <UploadImageSmallIcon />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className={cn('text-foreground text-sm font-semibold')}>
+                      {post.author.username}
+                    </p>
+                    <p className={cn('text-muted-foreground text-xs')}>
+                      @{post.author.accountname}
+                    </p>
+                  </div>
+                </div>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <MoreMenu
+                    small
+                    items={[
+                      {
+                        label: '수정',
+                        onClick: () => handleEditPost(post),
+                      },
+                      {
+                        label: <span className={cn('text-destructive')}>삭제</span>,
+                        onClick: () => handleDeletePost(post),
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <p
+                className={cn('text-foreground mt-2 line-clamp-2 cursor-pointer text-sm')}
+                onClick={() => handlePostDetail(post.id)}
+              >
+                {post.content}
+              </p>
+              {post.image && (
+                <div className={cn('relative mt-2 rounded-xl')}>
+                  <img
+                    src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
+                    alt="게시글 이미지"
+                    className={cn('border-border w-full rounded-lg border object-cover')}
+                  />
+                  {post.image.split(',').length > 1 && (
+                    <ImageCountBadge
+                      count={post.image.split(',').length}
+                      onClick={() => handlePostDetail(post.id)}
+                    />
+                  )}
+                </div>
+              )}
+              {/* 게시글 하단영역 (좋아요,댓글, 날짜) */}
+              <PostAction
+                hearted={post.hearted}
+                heartCount={post.heartCount}
+                commentCount={post.commentCount}
+                createdAt={post.createdAt}
+                onToggleHeart={() =>
+                  heartMutation.mutate({
+                    postId: post.id,
+                    isHearted: post.hearted,
+                  })
+                }
+                isHeartPending={heartMutation.isPending}
+                onClickComment={() => navigate(`/post/${post.id}`)}
+              />
+            </div>
+          ))}
+          <div ref={ref} className={cn('h-1')} />
+          {isFetchingMore && (
+            <div className={cn('py-4')}>
+              <LoadingSpinner message="게시글을 불러오는 중..." />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className={cn('grid grid-cols-3 gap-0.5')}>
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden')}
+              onClick={() => handlePostDetail(post.id)}
+            >
+              {post.image ? (
+                <>
+                  <img
+                    src={getImageUrl(post.image.split(',')[0]) ?? post.image.split(',')[0]}
+                    alt="게시글"
+                    className={cn('h-full w-full object-cover')}
+                  />
+                  {post.image.split(',').length > 1 && (
+                    <ImageCountBadge
+                      count={post.image.split(',').length}
+                      onClick={() => handlePostDetail(post.id)}
+                    />
+                  )}
+                </>
+              ) : (
+                <div className={cn('flex h-full w-full items-center justify-center')}>
+                  <p className={cn('text-muted-foreground line-clamp-3 p-2 text-center text-xs')}>
+                    {post.content}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+          <div ref={ref} className={cn('col-span-3 h-1')} />
+          {isFetchingMore && (
+            <div className={cn('col-span-3 py-4')}>
+              <LoadingSpinner message="게시글을 불러오는 중..." />
+            </div>
+          )}
+        </div>
+      )}
+
+      {deleteTargetPostId && (
+        <LogoutModal
+          title="게시글을 삭제할까요?"
+          confirmText="삭제"
+          cancelText="취소"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
+    </section>
+  );
+}

@@ -1,15 +1,23 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { getToken } from '@/entities/auth/lib/token';
+import { LoadingSpinner } from '@/shared/ui';
 
+import { useTokenVerification } from '../hooks/useTokenVerification';
+
+/**
+ * 비인증 사용자만 접근 가능한 라우트 가드
+ * 유효한 토큰이 있으면 피드로 리다이렉트
+ */
 export function RequireGuest() {
-  const token = getToken();
+  const { token, isVerifying, isValid } = useTokenVerification();
 
-  // 토큰이 있으면(이미 로그인했으면) 피드 화면으로 돌려보냄
-  if (token) {
-    return <Navigate to="/feed" replace />;
+  if (!token) {
+    return <Outlet />;
   }
 
-  // 로그인 안 했으면 폼 화면(Outlet) 보여줌!
-  return <Outlet />;
+  if (isVerifying) {
+    return <LoadingSpinner fullScreen message="로딩 중..." />;
+  }
+
+  return isValid ? <Navigate to="/feed" replace /> : <Outlet />;
 }

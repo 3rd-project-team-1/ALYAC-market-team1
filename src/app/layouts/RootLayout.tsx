@@ -1,15 +1,31 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { TabMenu } from '@/widgets/tab-menu/ui/tab-menu'; // TabMenu 경로에 맞게 수정
 
-const HIDE_TAB_MENU_PATHS = ['/edit-profile', '/create-post', '/signin', '/signup', '/'];
+import { TabMenu } from '@/widgets/tab-menu';
+
+const HIDE_TAB_MENU_PATHS = [
+  '/edit-profile',
+  '/create-post',
+  '/create-product',
+  '/edit-product',
+  '/signin',
+  '/signup',
+  '/post',
+  '/chat/1',
+  '/chat/2',
+  '/chat/3',
+  '/signup/profile',
+  '/',
+];
 
 export function RootLayout() {
   const location = useLocation();
-  const showTabMenu = !HIDE_TAB_MENU_PATHS.includes(location.pathname);
+  const showTabMenu = !HIDE_TAB_MENU_PATHS.some((path) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path),
+  );
 
   return (
     <div>
-      <main className='mx-auto max-w-5xl'>
+      <main>
         <Outlet />
       </main>
       {showTabMenu && <TabMenu />}

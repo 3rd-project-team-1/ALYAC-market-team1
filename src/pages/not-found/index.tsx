@@ -1,13 +1,18 @@
 import { Link } from 'react-router-dom';
 
+import { FullLogoAlyac404Icon } from '@/shared/assets';
+import { cn } from '@/shared/lib';
+import { ROUTE_PATHS } from '@/shared/routes';
+import { Button } from '@/shared/ui';
+
 export function NotFoundPage() {
   return (
-    <section className='space-y-3'>
-      <h1 className='text-2xl font-semibold'>404 - 페이지를 찾을 수 없습니다</h1>
-      <p className='text-sm'>요청하신 경로가 존재하지 않거나 이동되었습니다.</p>
-      <Link to='/' className='inline-block rounded-md border px-3 py-1.5 text-sm'>
-        홈으로 이동
+    <main className={cn('flex h-screen flex-col items-center justify-center')}>
+      <FullLogoAlyac404Icon className={cn('size-100')} />
+      <p className={cn('mb-8 text-gray-500')}>요청하신 페이지를 찾을 수 없습니다. 😢</p>
+      <Link to={ROUTE_PATHS.SEARCH}>
+        <Button variant="outline">뒤로 돌아가기</Button>
       </Link>
-    </section>
+    </main>
   );
 }

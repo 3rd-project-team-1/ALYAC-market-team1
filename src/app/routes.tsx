@@ -2,35 +2,32 @@ import { lazy } from 'react';
 
 import { createBrowserRouter } from 'react-router-dom';
 
-import { RootLayout } from '@/app/layouts/RootLayout';
-import { RequireAuth } from '@/features/auth/ui/RequireAuth';
-import { RequireGuest } from '@/features/auth/ui/RequireGuest';
+import { RequireAuth, RequireGuest } from '@/features/auth';
 
-const HomePage = lazy(() => import('@/pages/home').then((m) => ({ default: m.HomePage })));
-const SignInPage = lazy(() => import('@/pages/signin').then((m) => ({ default: m.SignInPage })));
-const SignUpPage = lazy(() => import('@/pages/signup').then((m) => ({ default: m.SignUpPage })));
-const FeedPage = lazy(() => import('@/pages/feed').then((m) => ({ default: m.FeedPage })));
-const SearchPage = lazy(() => import('@/pages/search').then((m) => ({ default: m.SearchPage })));
-const ProfilePage = lazy(() => import('@/pages/profile').then((m) => ({ default: m.ProfilePage })));
-const SignUpProfilePage = lazy(() =>
-  import('@/pages/signup-profile').then((m) => ({ default: m.SignUpProfilePage })),
-);
+import { RootLayout } from './layouts/RootLayout';
 
-const EditProfilePage = lazy(() =>
-  import('@/pages/edit-profile').then((m) => ({ default: m.EditProfilePage })),
-);
-const CreatePostPage = lazy(() =>
-  import('@/pages/create-post').then((m) => ({ default: m.CreatePostPage })),
-);
-const PostPage = lazy(() => import('@/pages/post').then((m) => ({ default: m.PostPage })));
-const UploadPage = lazy(() => import('@/pages/upload').then((m) => ({ default: m.UploadPage })));
-const ChatPage = lazy(() => import('@/pages/chat').then((m) => ({ default: m.ChatPage })));
-const ChatRoomPage = lazy(() =>
-  import('@/pages/chat-room').then((m) => ({ default: m.ChatRoomPage })),
-);
-const NotFoundPage = lazy(() =>
-  import('@/pages/not-found').then((m) => ({ default: m.NotFoundPage })),
-);
+const lazyPage = (path: string, name: string) =>
+  lazy(() => import(`@/pages/${path}/index.tsx`).then((m) => ({ default: m[name] })));
+
+const HomePage = lazyPage('home', 'HomePage');
+const SignInPage = lazyPage('signin', 'SignInPage');
+const SignUpPage = lazyPage('signup', 'SignUpPage');
+const FeedPage = lazyPage('feed', 'FeedPage');
+const SearchPage = lazyPage('search', 'SearchPage');
+const ProfilePage = lazyPage('profile', 'ProfilePage');
+const SignUpProfilePage = lazyPage('signup-profile', 'SignUpProfilePage');
+const EditProfilePage = lazyPage('edit-profile', 'EditProfilePage');
+const CreateProductPage = lazyPage('create-product', 'CreateProductPage');
+const EditProductPage = lazyPage('edit-product', 'EditProductPage');
+const PostCreatePage = lazyPage('create-post', 'PostCreatePage');
+const EditPostPage = lazyPage('edit-post', 'EditPostPage');
+const PostPage = lazyPage('post', 'PostPage');
+const ChatPage = lazyPage('chat', 'ChatPage');
+const ChatRoomPage = lazyPage('chat-room', 'ChatRoomPage');
+const FollowersPage = lazyPage('followers', 'FollowersPage');
+const FollowingsPage = lazyPage('followings', 'FollowingsPage');
+const NotFoundPage = lazyPage('not-found', 'NotFoundPage');
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -61,16 +58,25 @@ export const router = createBrowserRouter([
             element: <EditProfilePage />,
           },
           {
-            path: 'create-post',
-            element: <CreatePostPage />,
+            path: 'create-product',
+            element: <CreateProductPage />,
           },
           {
-            path: 'post',
+            path: 'edit-product/:productId',
+            element: <EditProductPage />,
+          },
+
+          {
+            path: 'create-post',
+            element: <PostCreatePage />,
+          },
+          {
+            path: 'post/:postId',
             element: <PostPage />,
           },
           {
-            path: 'upload',
-            element: <UploadPage />,
+            path: 'post/:postId/edit',
+            element: <EditPostPage />,
           },
           {
             path: 'chat',
@@ -79,6 +85,14 @@ export const router = createBrowserRouter([
           {
             path: 'chat/:roomId',
             element: <ChatRoomPage />,
+          },
+          {
+            path: 'followers/:accountname',
+            element: <FollowersPage />,
+          },
+          {
+            path: 'followings/:accountname',
+            element: <FollowingsPage />,
           },
         ],
       },
@@ -105,12 +119,11 @@ export const router = createBrowserRouter([
           },
         ],
       },
-
-      // 404 페이지는누구나 볼 수 있게
-      {
-        path: '*',
-        element: <NotFoundPage />,
-      },
     ],
+  },
+  // 404 페이지는 레이아웃 없이 렌더링
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ]);
