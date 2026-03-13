@@ -15,6 +15,7 @@ export function FeedPage() {
   const {
     myAccountname,
     isLoading,
+    hasFetchedOnce,
     isFetchingMore,
     isError,
     hasMore,
@@ -24,12 +25,16 @@ export function FeedPage() {
     handlePostClick,
     handleRewritePost,
     onSearch,
+    retryFeed,
     isFallbackFetching,
     isFallbackDone,
   } = useFeedPage();
 
-  // 최초 데이터 로딩 중 전체 화면 스피너 표시 (추가 페이지 로딩은 FeedList 내부에서 처리)
-  if (isLoading) {
+  const shouldShowFallbackBanner =
+    isError && (isFallbackFetching || (isFallbackDone && posts.length === 0));
+
+  // 진짜 첫 진입에서만 전체 화면 스피너를 사용하고, 이후 재시도/폴백 중에는 페이지를 유지
+  if (isLoading && !hasFetchedOnce) {
     return <LoadingSpinner fullScreen message="피드를 불러오는 중입니다..." />;
   }
 
@@ -39,8 +44,12 @@ export function FeedPage() {
       {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
       <div className={cn('pb-[60px]')}>
         {/* 오류 발생 시 1개씩 불러오기 안내 배너 */}
-        {isError && (
-          <FeedErrorBanner isFallbackDone={isFallbackDone} hasNoPosts={posts.length === 0} />
+        {shouldShowFallbackBanner && (
+          <FeedErrorBanner
+            isFallbackDone={isFallbackDone}
+            hasNoPosts={posts.length === 0}
+            onRetry={retryFeed}
+          />
         )}
 
         {posts.length > 0 ? (
@@ -59,7 +68,7 @@ export function FeedPage() {
             // 배너가 이미 네비 오프셋을 담당하므로 상단 패딩 최소화
             className={isError ? 'pt-3' : undefined}
           />
-        ) : isError && !isFallbackFetching ? (
+        ) : isError && isFallbackDone && !isFallbackFetching ? (
           /* 폴백도 완료됐는데 게시글이 없는 경우 — 오류 배너만 노출 */
           <div className={cn('mx-auto flex max-w-5xl flex-col items-center justify-center py-20')}>
             <p className={cn('text-sm text-gray-400')}>불러올 수 있는 게시글이 없습니다.</p>
