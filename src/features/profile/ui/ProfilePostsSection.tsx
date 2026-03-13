@@ -158,11 +158,11 @@ export function ProfilePostsSection() {
           )}
         </div>
       ) : (
-        <div className={cn('grid grid-cols-3 gap-0.5')}>
+        <div className={cn('grid grid-cols-3 gap-1')}>
           {posts.map((post) => (
             <div
               key={post.id}
-              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden')}
+              className={cn('bg-muted relative aspect-square cursor-pointer overflow-hidden rounded-lg')}
               onClick={() => handlePostDetail(post.id)}
             >
               {post.image ? (
