@@ -34,7 +34,7 @@ export function PostAction({
   return (
     <div className={cn('mt-3 flex items-center justify-between', className)}>
       {/* 왼쪽: 좋아요와 댓글 버튼 묶음 */}
-      <div className={cn('flex items-center gap-4')}>
+      <div className={cn('flex items-center gap-2')}>
         <button
           type="button"
           aria-label={isLiked ? '좋아요 취소' : '좋아요'}

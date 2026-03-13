@@ -1,6 +1,8 @@
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { useId, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
 import type { PostCardModel } from '@/features/feed';
 import { usePostDialog } from '@/features/post';
@@ -31,7 +33,7 @@ interface PostCardProps {
 
 export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostCardProps) {
   useRelativeTimeTicker();
-
+  const navigator = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuId = useId();
 
@@ -138,6 +140,7 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
           commentCount={post.commentCount}
           isPending={heartMutation.isPending}
           onToggleLike={handleLikeToggle}
+          onClickComment={() => navigator(`/post/${post.id}`)}
         />
       </div>
 
