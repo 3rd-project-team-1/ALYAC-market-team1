@@ -19,7 +19,7 @@ interface PostEditorLayoutProps {
   onContentFocus: () => void;
   onContentBlur: () => void;
   images: string[];
-  profileImage?: string;
+  profileImage: string | null;
   onSubmit: () => void;
   onImageAdd: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onImageRemove: (index: number) => void;

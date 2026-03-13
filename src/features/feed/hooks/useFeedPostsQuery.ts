@@ -10,10 +10,10 @@ import { mapPost } from '../model/mapPost';
 import type { PostCardModel } from '../model/types';
 
 /** 한 번에 불러올 게시글 수 */
-const LIMIT = 4;
+const LIMIT = 15;
 
 /** 메인 피드 요청 최대 대기 시간 (ms) - 초과 시 폴백 로딩으로 전환 */
-const FEED_REQUEST_TIMEOUT_MS = 8000;
+const FEED_REQUEST_TIMEOUT_MS = 50 * 1000;
 
 /** TanStack Query 캐시 키 (피드 전체 데이터에 대한 식별자) */
 export const FEED_QUERY_KEY = ['feed'] as const;
@@ -55,7 +55,7 @@ export function useFeedPostsQuery() {
       getNextPageParam: (lastPage, _allPages, lastPageParam) =>
         lastPage.length === LIMIT ? lastPageParam + LIMIT : undefined,
       // 항상 stale로 간주 → 피드 마운트 시 즉시 re-fetch하여 좋아요/댓글 카운트 최신화
-      staleTime: 0,
+      staleTime: 1000 * 60,
       // 실패 시 즉시 폴백으로 전환해 긴 스피너 대기를 줄임
       retry: 0,
     });

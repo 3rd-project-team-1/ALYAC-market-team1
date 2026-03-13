@@ -12,7 +12,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 //  기본 Axios 인스턴스 생성
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 30000,
+  timeout: 60000,
 });
 
 //  요청(Request) 인터셉터: API 호출 전에 토큰을 헤더에 자동 추가

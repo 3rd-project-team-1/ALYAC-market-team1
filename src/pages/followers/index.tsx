@@ -8,7 +8,7 @@ export function FollowersPage() {
     <div className={cn('bg-background flex min-h-screen flex-col')}>
       <FollowListHeader title="Followers" onBack={onBack} />
 
-      <main className={cn('pt-[48px]')}>
+      <main className={cn('flex flex-1 flex-col pt-[48px]')}>
         <FollowListBody
           users={followers}
           isLoading={isLoading}

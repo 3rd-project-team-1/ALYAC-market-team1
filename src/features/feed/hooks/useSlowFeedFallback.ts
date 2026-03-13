@@ -118,7 +118,8 @@ export function useSlowFeedFallback(isEnabled: boolean) {
           return;
         }
 
-        dispatch({ type: 'FETCH_SUCCESS', post: mapPost(posts[0]) });
+        // 피드 폴백도 팔로우한 사용자만 노출되므로 isfollow는 true로 보정
+        dispatch({ type: 'FETCH_SUCCESS', post: { ...mapPost(posts[0]), isfollow: true } });
         skip += 1;
 
         // SLOW_LOAD_DELAY_MS 대기 후 다음 게시글 요청 (abort 시 즉시 중단)

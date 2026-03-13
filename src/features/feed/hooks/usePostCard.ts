@@ -16,8 +16,8 @@ function normalizePostImages(image?: string) {
     .filter(Boolean);
 }
 
-function getSlideTransform(currentIndex: number, isLastImage: boolean) {
-  if (isLastImage) {
+function getSlideTransform(currentIndex: number, isLastImage: boolean, hasMultipleImages: boolean) {
+  if (isLastImage && hasMultipleImages) {
     return `translateX(calc(-${currentIndex * SLIDE_WIDTH_PERCENT}% - ${currentIndex * SLIDE_GAP_PX}px + ${LAST_SLIDE_CENTER_OFFSET_PERCENT}%))`;
   }
   return `translateX(calc(-${currentIndex * SLIDE_WIDTH_PERCENT}% - ${currentIndex * SLIDE_GAP_PX}px))`;
@@ -202,7 +202,7 @@ export function usePostImageCarousel(image: string | undefined, postId: string) 
     images,
     currentIndex,
     hasMultipleImages,
-    slideTransform: getSlideTransform(currentIndex, isLastImage),
+    slideTransform: getSlideTransform(currentIndex, isLastImage, hasMultipleImages),
     goToImage,
     handleNextImage,
     handlePrevImage,
