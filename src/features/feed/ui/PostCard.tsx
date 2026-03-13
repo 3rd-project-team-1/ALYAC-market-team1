@@ -114,7 +114,7 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
   return (
     <article
-      className="bg-background relative cursor-pointer rounded-2xl border border-gray-200/70 px-4 py-4 shadow-sm transition-colors hover:bg-gray-50/60 active:bg-gray-100/60"
+      className="bg-background relative cursor-pointer rounded-2xl border border-border px-4 py-4 shadow-sm transition-colors hover:bg-muted/40 active:bg-muted/60"
       onClick={onClick}
       onKeyDown={handleArticleKeyDown}
     >
