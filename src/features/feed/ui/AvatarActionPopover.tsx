@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { CircleMinus, CirclePlus, Plus, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
 import { UploadImageSmallIcon } from '@/shared/assets';
@@ -25,7 +26,7 @@ export function AvatarActionPopover({
 }: AvatarActionPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
+  const { isFollowing, followMutation } = useProfileFollow({
     initialIsFollow,
   });
 
@@ -49,7 +50,18 @@ export function AvatarActionPopover({
 
   const handleFollow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleFollow(accountname);
+    const wasFollowing = isFollowing;
+    followMutation.mutate(
+      { accountname, isFollowing },
+      {
+        onSuccess: () => {
+          toast.success(wasFollowing ? '팔로우가 취소되었습니다.' : '팔로우했습니다.');
+        },
+        onError: () => {
+          toast.error('요청에 실패했습니다. 다시 시도해 주세요.');
+        },
+      },
+    );
     setIsOpen(false);
   };
 
