@@ -4,7 +4,7 @@ import { useId, useState } from 'react';
 import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
 import type { PostCardModel } from '@/features/feed';
 import { usePostDialog } from '@/features/post';
-import { LogoutModal, PostContent } from '@/shared/ui';
+import { LogoutModal, PostAction, PostContent } from '@/shared/ui';
 
 import {
   useIsDesktopEnvironment,
@@ -12,7 +12,6 @@ import {
   useRelativeTimeTicker,
 } from '../hooks/usePostCard';
 import { AvatarActionPopover } from './AvatarActionPopover';
-import { PostCardActions } from './PostCardActions';
 import type { DropdownItem } from './PostCardDropdown';
 import { PostCardHeader } from './PostCardHeader';
 import { PostCardImages } from './PostCardImages';
@@ -133,12 +132,12 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
           showDesktopNavButtons={isDesktopEnvironment}
         />
 
-        <PostCardActions
+        <PostAction
           isLiked={isLiked}
-          localHeartCount={localHeartCount}
+          heartCount={localHeartCount}
           commentCount={post.commentCount}
           isPending={heartMutation.isPending}
-          onLikeToggle={handleLikeToggle}
+          onToggleLike={handleLikeToggle}
         />
       </div>
 
