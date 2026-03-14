@@ -11,7 +11,7 @@ export function SignInPage() {
       <Helmet>
         {/* 브라우저 탭에 표시될 제목 */}
         <title>로그인 | Alyac Market</title>
-
+        <link rel="canonical" href="https://alyac-market-team1.vercel.app/signin" />
         {/* 로그인 페이지 전용 설명  */}
         <meta
           name="description"
