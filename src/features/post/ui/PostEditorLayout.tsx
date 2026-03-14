@@ -41,9 +41,9 @@ export function PostEditorLayout({
   onImageRemove,
 }: PostEditorLayoutProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const textareaId = 'post-content-textarea';
   return (
-    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
+    <main className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
         label={submitLabel}
         disabled={!hasContent || isSubmitting}
@@ -54,6 +54,9 @@ export function PostEditorLayout({
         <UserAvatar src={profileImage} username="내 프로필" className="h-10 w-10" />
 
         <div className={cn('flex flex-1 flex-col gap-2')}>
+          <label htmlFor={textareaId} className="sr-only">
+            게시글 내용 작성
+          </label>
           <div
             className={cn(
               'overflow-hidden rounded-lg border-2 transition-all',
@@ -64,17 +67,23 @@ export function PostEditorLayout({
           >
             <textarea
               {...textareaProps}
+              id={textareaId}
               placeholder="게시글 입력하기..."
               className={cn(
                 'bg-background text-foreground placeholder:text-muted-foreground min-h-[300px] w-full resize-none p-2 text-sm outline-none',
               )}
               onFocus={onContentFocus}
               onBlur={onContentBlur}
+              aria-invalid={showError}
+              aria-describedby={showError ? 'post-error-message' : undefined}
             />
           </div>
 
-          {showError && <p className={cn('text-xs text-red-500')}>게시글 내용을 입력해주세요.</p>}
-
+          {showError && (
+            <p id="post-error-message" className={cn('text-xs text-red-500')} role="alert">
+              게시글 내용을 입력해주세요.
+            </p>
+          )}
           <PostImagePreviewList images={images} onRemove={onImageRemove} />
         </div>
       </form>
@@ -92,12 +101,14 @@ export function PostEditorLayout({
 
       <input
         ref={fileInputRef}
+        id="post-image-upload-input"
         type="file"
         accept="image/*"
         multiple
         className={cn('hidden')}
         onChange={onImageAdd}
+        aria-hidden="true"
       />
-    </div>
+    </main>
   );
 }
