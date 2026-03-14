@@ -6,25 +6,28 @@ import { ROUTE_PATHS } from '@/shared/routes';
 
 export function SignInPage() {
   return (
-    <div
+    <main
       className={cn(
         'bg-background flex min-h-screen flex-col items-center justify-start px-4 pt-20',
       )}
     >
-      <div className={cn('flex w-full max-w-md flex-col space-y-8')}>
-        <div className={cn('text-center')}>
+      <section className={cn('flex w-full max-w-md flex-col space-y-8')}>
+        <header className={cn('text-center')}>
           <h1 className={cn('text-foreground text-3xl font-bold')}>로그인</h1>
-        </div>
+        </header>
         <SignInForm />
-        <div className={cn('text-center')}>
+        <nav aria-label="회원가입" className={cn('text-center')}>
           <Link
             to={ROUTE_PATHS.SIGNUP}
-            className={cn('text-muted-foreground hover:text-foreground text-sm transition-colors')}
+            className={cn(
+              'text-muted-foreground hover:text-foreground text-sm transition-colors',
+              'focus-visible:ring-primary-green rounded-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+            )}
           >
             이메일로 회원가입
           </Link>
-        </div>
-      </div>
-    </div>
+        </nav>
+      </section>
+    </main>
   );
 }
