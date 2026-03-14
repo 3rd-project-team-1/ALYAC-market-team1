@@ -4,7 +4,7 @@ import { Button, FormField } from '@/shared/ui';
 import { useSignUpEmailForm } from '../hooks/useSignUpEmailForm';
 
 export function SignUpEmailForm() {
-  const { register, handleSubmit, errors, isValid, onSubmit } = useSignUpEmailForm();
+  const { register, handleSubmit, errors, isValid, onSubmit, isChecking } = useSignUpEmailForm();
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6')}>
       <div className={cn('space-y-2')}>
@@ -31,7 +31,7 @@ export function SignUpEmailForm() {
 
       <Button
         type="submit"
-        disabled={!isValid}
+        disabled={!isValid || isChecking}
         className={cn(
           'inline-flex h-14 w-full items-center justify-center gap-2 px-4 py-2',
           'text-base font-semibold whitespace-nowrap text-white',
@@ -44,7 +44,7 @@ export function SignUpEmailForm() {
             : 'bg-primary-green-light cursor-not-allowed text-white',
         )}
       >
-        다음
+        {isChecking ? '중복 확인 중...' : '다음'}
       </Button>
     </form>
   );

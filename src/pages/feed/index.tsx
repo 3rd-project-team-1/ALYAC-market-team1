@@ -1,5 +1,8 @@
+import { Helmet } from 'react-helmet-async';
+
 import { FeedEmpty, FeedErrorBanner, FeedList, useFeedPage } from '@/features/feed';
 import { cn } from '@/shared/lib';
+import { FRONTEND_URL, ROUTE_PATHS } from '@/shared/routes';
 import { LoadingSpinner } from '@/shared/ui';
 import { TopMainNav } from '@/widgets/top-main-nav';
 
@@ -40,9 +43,19 @@ export function FeedPage() {
 
   return (
     <>
+      {/* SEO 설정 추가 */}
+      <Helmet>
+        <title>알약마켓 피드</title>
+        <link rel="canonical" href={`${FRONTEND_URL}${ROUTE_PATHS.FEED}`} />
+        <meta name="description" content="팔로우한 유저들의 최신 정보와 일상을 확인하세요." />
+      </Helmet>
+
       <TopMainNav title="알약마켓 피드" />
-      {/*pb-[60px]: 하단 탭메뉴 높이만큼 패딩 */}
-      <div className={cn('pb-[60px]')}>
+
+      <main className={cn('pb-[60px]')}>
+        {/* 스크린 리더용 제목 추가 (Lighthouse 접근성 점수용) */}
+        <h1 className="sr-only">내 피드 목록</h1>
+
         {/* 오류 발생 시 1개씩 불러오기 안내 배너 */}
         {shouldShowFallbackBanner && (
           <FeedErrorBanner
@@ -53,21 +66,21 @@ export function FeedPage() {
         )}
 
         {posts.length > 0 ? (
-          <FeedList
-            posts={posts}
-            myAccountname={myAccountname}
-            // 폴백 모드에서는 내부에서 자동 로딩하므로 무한 스크롤 비활성화
-            hasMore={isError ? false : hasMore}
-            isFetchingMore={isError ? isFallbackFetching : isFetchingMore}
-            onLoadMore={loadMore}
-            onRewrite={handleRewritePost}
-            onDelete={deletePost}
-            onClick={handlePostClick}
-            // 폴백 모드에서는 게시글마다 페이드인 슬라이드 애니메이션 적용
-            animated={isError}
-            // 배너가 이미 네비 오프셋을 담당하므로 상단 패딩 최소화
-            className={isError ? 'pt-3' : undefined}
-          />
+          /*  리스트 영역을 section으로 감쌈 */
+          <section aria-label="게시글 목록">
+            <FeedList
+              posts={posts}
+              myAccountname={myAccountname}
+              hasMore={isError ? false : hasMore}
+              isFetchingMore={isError ? isFallbackFetching : isFetchingMore}
+              onLoadMore={loadMore}
+              onRewrite={handleRewritePost}
+              onDelete={deletePost}
+              onClick={handlePostClick}
+              animated={isError}
+              className={isError ? 'pt-3' : undefined}
+            />
+          </section>
         ) : isError && isFallbackDone && !isFallbackFetching ? (
           /* 폴백도 완료됐는데 게시글이 없는 경우 — 오류 배너만 노출 */
           <div className={cn('mx-auto flex max-w-5xl flex-col items-center justify-center py-20')}>
@@ -80,9 +93,12 @@ export function FeedPage() {
           </div>
         ) : (
           /* 팔로우 중인 유저가 없거나 게시글이 없을 때 검색 유도 화면 */
-          <FeedEmpty onSearch={onSearch} />
+          /*  빈 화면도 정보가 있는 영역이므로 section 처리 */
+          <section aria-label="피드 정보 없음">
+            <FeedEmpty onSearch={onSearch} />
+          </section>
         )}
-      </div>
+      </main>
     </>
   );
 }

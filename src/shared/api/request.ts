@@ -1,4 +1,6 @@
+// shared/api/index.ts
 import { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { z } from 'zod';
 
 import axiosInstance from './axios';
@@ -45,6 +47,22 @@ async function apiRequest<TResponse>(
 
     return result.data;
   } catch (error) {
+    //  422 에러는 validation response로 처리
+    if (axios.isAxiosError(error) && error.response?.status === 422) {
+      const result = schema.safeParse(error.response.data);
+
+      if (!result.success) {
+        console.error('422 응답 검증 실패:', {
+          url: config.url,
+          method: config.method,
+          errors: result.error.issues,
+        });
+        throw error;
+      }
+
+      return result.data;
+    }
+
     if (error instanceof Error && error.message.includes('서버 응답')) {
       throw error;
     }

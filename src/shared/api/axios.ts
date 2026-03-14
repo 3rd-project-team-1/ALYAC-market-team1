@@ -57,9 +57,6 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
-    if (error.response?.status === 422) {
-      return Promise.resolve(error.response);
-    }
     if (
       error.response?.status === 401 &&
       originalRequest &&
