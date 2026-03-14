@@ -60,6 +60,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
+      aria-disabled={props.disabled}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
