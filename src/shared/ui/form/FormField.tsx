@@ -21,6 +21,7 @@ export function FormField({
   error,
   autoComplete,
 }: FormFieldProps) {
+  const errorId = `${register.name}-error`;
   return (
     <div className={cn('flex flex-col gap-1.5')}>
       {label && (
@@ -34,6 +35,7 @@ export function FormField({
         placeholder={placeholder}
         autoComplete={autoComplete}
         aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? errorId : undefined}
         {...register}
       />
       {error && <p className={cn('text-destructive mt-1 text-sm')}>{error.message}</p>}
