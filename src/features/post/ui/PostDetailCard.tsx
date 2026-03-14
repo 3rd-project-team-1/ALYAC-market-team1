@@ -1,7 +1,6 @@
-import { UploadImageSmallIcon } from '@/shared/assets';
 import { cn } from '@/shared/lib';
 import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
-import { PostAction } from '@/shared/ui';
+import { PostAction, PostContent, UserProfile } from '@/shared/ui';
 
 interface PostDetailCardProps {
   post: {
@@ -27,61 +26,54 @@ export function PostDetailCard({ post, onToggleHeart, isHeartPending }: PostDeta
   return (
     <div className={cn('px-4 pt-5')}>
       {/* 작성자 정보 */}
-      <div className={cn('flex items-center gap-3')}>
-        <div className={cn('bg-muted h-10 w-10 overflow-hidden rounded-full')}>
-          {post.author.image ? (
-            <img
-              src={getImageUrl(post.author.image) ?? post.author.image}
-              alt="프로필"
-              className={cn('h-full w-full object-cover')}
-            />
-          ) : (
-            <div className={cn('flex h-full w-full items-center justify-center')}>
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </div>
-        <div>
-          <p className={cn('text-foreground text-sm font-semibold')}>{post.author.username}</p>
-          <p className={cn('text-muted-foreground text-xs')}>@{post.author.accountname}</p>
-        </div>
-      </div>
+      <UserProfile
+        image={post.author.image}
+        username={post.author.username}
+        accountname={post.author.accountname}
+      />
 
       {/* 게시글 내용 */}
-      <p className={cn('text-foreground mt-4 text-sm leading-relaxed')}>{post.content}</p>
+      <PostContent content={post.content} className="mt-3" />
 
       {/* 게시글 이미지 */}
-      {images.length > 0 && (
-        <div className={cn('mt-4 overflow-hidden rounded-xl')}>
-          {images.length > 1 ? (
-            <div className={cn('grid grid-cols-2 gap-2')}>
-              {images.map((img, index) => (
-                <img
-                  key={index}
-                  src={getImageUrl(img) ?? img}
-                  alt={`게시글 이미지 ${index + 1}`}
-                  className={cn('h-48 w-full rounded-lg object-cover')}
-                />
-              ))}
-            </div>
-          ) : (
-            <img
-              src={getImageUrl(images[0]) ?? images[0]}
-              alt="게시글 이미지"
-              className={cn('w-full object-cover')}
-            />
-          )}
-        </div>
-      )}
+      <PostImageGrid images={images} className="mt-4" />
 
       <PostAction
-        hearted={post.hearted}
+        isLiked={post.hearted}
         heartCount={post.heartCount}
         commentCount={post.commentCount}
         createdAt={post.createdAt}
-        onToggleHeart={onToggleHeart}
-        isHeartPending={isHeartPending}
+        onToggleLike={onToggleHeart}
+        isPending={isHeartPending}
       />
+    </div>
+  );
+}
+
+// 일단 여기서만 쓰여서 함수로 처리
+function PostImageGrid({ images, className }: { images: string[]; className?: string }) {
+  if (!images || images.length === 0) return null;
+
+  return (
+    <div className={cn('overflow-hidden rounded-xl', className)}>
+      {images.length > 1 ? (
+        <div className={cn('grid grid-cols-2 gap-2')}>
+          {images.map((img, index) => (
+            <img
+              key={index}
+              src={getImageUrl(img) ?? img}
+              alt={`게시글 이미지 ${index + 1}`}
+              className={cn('h-48 w-full rounded-lg object-cover')}
+            />
+          ))}
+        </div>
+      ) : (
+        <img
+          src={getImageUrl(images[0]) ?? images[0]}
+          alt="게시글 이미지"
+          className={cn('w-full object-cover')}
+        />
+      )}
     </div>
   );
 }
