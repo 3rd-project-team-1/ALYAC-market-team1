@@ -21,7 +21,6 @@ export function EditProfilePage() {
       <main>
         <h1 className="sr-only">프로필 수정하기</h1>
 
-        {/* EditProfileForm 내부도 div로 시작하는지 나중에 체크해보면 좋겠네요! */}
         <EditProfileForm profile={profile} />
       </main>
     </>

@@ -25,9 +25,16 @@ export function ProfilePage() {
           rel="canonical"
           href={`${FRONTEND_URL}${ROUTE_PATHS.PROFILE}/${targetAccountname || ''}`}
         />
+        {/* 소셜 공유용 OG 태그*/}
+        <meta property="og:title" content={`${userName} 님의 프로필`} />
+        <meta property="og:description" content="로그인하고 프로필을 확인해보세요" />
         <meta
-          name="description"
-          content={`${userName} 님의 상품 리스트와 작성한 게시글을 확인해보세요.`}
+          property="og:image"
+          content={profile?.image || `${FRONTEND_URL}/default-profile.png`}
+        />
+        <meta
+          property="og:url"
+          content={`${FRONTEND_URL}${ROUTE_PATHS.PROFILE}/${targetAccountname}`}
         />
       </Helmet>
 

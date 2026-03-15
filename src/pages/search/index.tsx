@@ -25,7 +25,6 @@ export function SearchPage() {
         <link rel="canonical" href={`${FRONTEND_URL}${ROUTE_PATHS.SEARCH}`} />
         {/* 검색 페이지 자체는 결과가 계속 변하므로 로봇이 수집하지 않게 하는 경우가 많다. */}
         <meta name="robots" content="noindex, follow" />
-        <meta name="description" content="알약마켓의 다양한 유저들을 검색하고 팔로우해보세요." />
       </Helmet>
 
       {/* 상단 검색 네비게이션 바 */}
