@@ -47,7 +47,6 @@ export function FeedPage() {
       <Helmet>
         <title>알약마켓 피드</title>
         <link rel="canonical" href={`${FRONTEND_URL}${ROUTE_PATHS.FEED}`} />
-        <meta name="description" content="팔로우한 유저들의 최신 정보와 일상을 확인하세요." />
       </Helmet>
 
       <TopMainNav title="알약마켓 피드" />

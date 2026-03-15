@@ -34,20 +34,34 @@ export function ProductImageUploader({
       onImageChange(file); // 부모에게 파일 전달
     }
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInputRef.current?.click();
+    }
+  };
   return (
     <div>
-      <p className={cn('text-foreground mb-2 text-sm font-medium')}>이미지 등록</p>
+      <label
+        htmlFor="product-image-upload"
+        className={cn('text-foreground mb-2 block cursor-pointer text-sm font-medium')}
+      >
+        이미지 등록
+      </label>
       <div
         className={cn(
           'bg-muted relative flex h-52 w-full cursor-pointer items-end justify-end overflow-hidden rounded-xl',
         )}
         onClick={handleContainerClick}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-label="상품 이미지 업로드"
       >
         {previewUrl && (
           <img
             src={getImageUrl(previewUrl) ?? previewUrl}
-            alt={alt}
+            alt={`${alt} 미리보기`}
             className={cn('h-full w-full object-cover')}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
@@ -55,6 +69,7 @@ export function ProductImageUploader({
           />
         )}
         <div
+          aria-hidden="true"
           className={cn(
             'bg-background absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full shadow transition-shadow hover:shadow-md',
           )}
@@ -64,6 +79,7 @@ export function ProductImageUploader({
         <input
           ref={fileInputRef}
           type="file"
+          id="product-image-upload"
           accept="image/*"
           className={cn('hidden')}
           onChange={handleInputChange}

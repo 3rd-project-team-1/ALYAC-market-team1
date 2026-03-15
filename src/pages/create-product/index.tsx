@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async';
+
 import { ProductForm, useCreateProductPage } from '@/features/product';
 import { LoadingSpinner } from '@/shared/ui';
 
@@ -9,11 +11,21 @@ export function CreateProductPage() {
   }
 
   return (
-    <ProductForm
-      form={form}
-      onSubmit={onSubmit}
-      isSubmitting={isSubmitting}
-      onImageChange={handleImageChange}
-    />
+    <>
+      <Helmet>
+        <title>상품 등록 | Alyac Market</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+      <main>
+        <h1 className="sr-only">판매 상품 등록하기</h1>
+
+        <ProductForm
+          form={form}
+          onSubmit={onSubmit}
+          isSubmitting={isSubmitting}
+          onImageChange={handleImageChange}
+        />
+      </main>
+    </>
   );
 }

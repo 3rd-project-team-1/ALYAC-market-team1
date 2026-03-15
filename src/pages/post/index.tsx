@@ -46,20 +46,20 @@ export function PostPage() {
     );
   }
   // SEO를 위한 데이터 가공
-  const postTitle = post.content.slice(0, 20) || '게시글 상세'; // 본문 앞부분을 제목으로
-  const postDescription = post.content.slice(0, 150); // 본문 요약
+  const postPreview = post.content.slice(0, 100) || '게시글';
+
   const authorName = post.author.username;
   return (
     <>
       <Helmet>
-        <title>{`${postTitle} - ${authorName}님의 게시글 | Alyac Market`}</title>
+        <title>{`${authorName}님의 게시글 | Alyac Market`}</title>
         <link rel="canonical" href={`${FRONTEND_URL}${ROUTE_PATHS.POST}/${postId}`} />
-        <meta name="description" content={postDescription} />
 
-        {/* SNS 공유 시 보여질 카드 설정 (Open Graph) */}
-        <meta property="og:title" content={`${authorName}님의 알약마켓 포스트`} />
-        <meta property="og:description" content={postDescription} />
+        {/* 소셜 공유용 OG 태그만 유지 */}
+        <meta property="og:title" content={`${authorName}님의 게시글`} />
+        <meta property="og:description" content={postPreview} />
         <meta property="og:type" content="article" />
+        <meta property="og:url" content={`${FRONTEND_URL}${ROUTE_PATHS.POST}/${postId}`} />
         {post.image && <meta property="og:image" content={post.image.split(',')[0]} />}
       </Helmet>
 
