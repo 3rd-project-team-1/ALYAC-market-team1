@@ -77,7 +77,7 @@ export function ProfilePostsSection() {
                   image={post.author.image}
                   username={post.author.username}
                   accountname={post.author.accountname}
-                  className="h-8 w-8"
+                  avatarClassName="h-8 w-8"
                 />
                 <div onClick={(e) => e.stopPropagation()}>
                   <MoreMenu

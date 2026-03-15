@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 
 import { ProductForm, useEditProductPage } from '@/features/product';
@@ -34,12 +35,22 @@ export function EditProductPage() {
   }
 
   return (
-    <ProductForm
-      form={form}
-      onSubmit={onSubmit}
-      isSubmitting={isSubmitting}
-      onImageChange={handleImageChange}
-      initialImage={product.itemImage}
-    />
+    <>
+      <Helmet>
+        <title>상품 수정 | Alyac Market</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+
+      <main className={cn('bg-background min-h-screen')}>
+        <h1 className="sr-only">상품 정보 수정하기</h1>
+        <ProductForm
+          form={form}
+          onSubmit={onSubmit}
+          isSubmitting={isSubmitting}
+          onImageChange={handleImageChange}
+          initialImage={product.itemImage}
+        />
+      </main>
+    </>
   );
 }

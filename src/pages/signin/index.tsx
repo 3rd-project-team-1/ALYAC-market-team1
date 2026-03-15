@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { SignInForm } from '@/features/auth';
 import { cn } from '@/shared/lib';
-import { ROUTE_PATHS } from '@/shared/routes';
+import { FRONTEND_URL, ROUTE_PATHS } from '@/shared/routes';
 
 export function SignInPage() {
   return (
@@ -11,7 +11,7 @@ export function SignInPage() {
       <Helmet>
         {/* 브라우저 탭에 표시될 제목 */}
         <title>로그인 | Alyac Market</title>
-
+        <link rel="canonical" href={`${FRONTEND_URL}${ROUTE_PATHS.SIGNIN}`} />
         {/* 로그인 페이지 전용 설명  */}
         <meta
           name="description"

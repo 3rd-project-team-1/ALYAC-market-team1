@@ -15,7 +15,11 @@ export function SelectionScreen() {
       <div
         className={cn('animate-in fade-in flex flex-1 items-center justify-center duration-700')}
       >
-        <FullLogoAlyacNoTextIcon className={cn('h-38.25 w-24.25 object-contain')} />
+        <FullLogoAlyacNoTextIcon
+          role="img"
+          aria-label="Alyac Market 로고"
+          className={cn('h-38.25 w-24.25 object-contain')}
+        />
       </div>
       <div
         className={cn(
@@ -34,7 +38,8 @@ export function SelectionScreen() {
             <Button
               variant="ghost"
               size="sm"
-              className={cn('h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900')}
+              asChild
+              className={cn('h-10 px-4 text-gray-600 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNIN}>이메일로 로그인</Link>
             </Button>
@@ -43,7 +48,7 @@ export function SelectionScreen() {
               variant="ghost"
               size="sm"
               asChild
-              className={cn('h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900')}
+              className={cn('h-10 px-4py-3 text-gray-600 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNUP}>회원가입</Link>
             </Button>

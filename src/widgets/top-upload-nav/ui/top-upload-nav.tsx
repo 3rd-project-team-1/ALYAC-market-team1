@@ -15,7 +15,12 @@ export function TopUploadNav({ label = '업로드', disabled = false, onSubmit }
 
   return (
     <TopHeaderLayout>
-      <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
+      <Button
+        aria-label="이전 페이지로 이동"
+        variant="icon-nav"
+        size="nav"
+        onClick={() => navigate(-1)}
+      >
         <BackIcon />
       </Button>
 
