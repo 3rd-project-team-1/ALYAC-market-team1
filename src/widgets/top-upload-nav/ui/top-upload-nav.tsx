@@ -1,16 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 
 import { BackIcon } from '@/shared/assets';
+import { cn } from '@/shared/lib';
 import { Button } from '@/shared/ui';
 import { TopHeaderLayout } from '@/shared/ui/TopHeaderLayout';
 
 interface TopUploadNavProps {
   label?: string;
   disabled?: boolean;
-  onSubmit: () => void;
+  onSubmit?: () => void;
+  formId?: string;
 }
 
-export function TopUploadNav({ label = '업로드', disabled = false, onSubmit }: TopUploadNavProps) {
+export function TopUploadNav({
+  label = '업로드',
+  disabled = false,
+  onSubmit,
+  formId,
+}: TopUploadNavProps) {
   const navigate = useNavigate();
 
   return (
@@ -28,7 +35,12 @@ export function TopUploadNav({ label = '업로드', disabled = false, onSubmit }
         variant="upload"
         disabled={disabled}
         onClick={onSubmit}
-        className="px-4 py-1.5 text-sm font-semibold"
+        type={formId ? 'submit' : 'button'}
+        form={formId}
+        className={cn(
+          'px-4 py-1.5 text-sm font-semibold',
+          'bg-primary-green hover:bg-primary-green-hover active:bg-primary-green-hover',
+        )}
       >
         {label}
       </Button>

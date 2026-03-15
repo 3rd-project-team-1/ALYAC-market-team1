@@ -27,7 +27,7 @@ export function TopSearchNav({ searchValue, onSearchChange }: TopSearchNavProps)
       <input
         id="user-search"
         type="search"
-        role="searchbox"
+        aria-label="사용자 계정 검색"
         placeholder="계정 검색"
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
