@@ -23,7 +23,7 @@ export function SelectionScreen() {
       </div>
       <div
         className={cn(
-          'animate-in slide-in-from-bottom-full flex h-[45vh] w-full flex-col items-center rounded-t-[30px] bg-white px-8 pt-12 pb-16 duration-700',
+          'animate-in slide-in-from-bottom-full flex h-[45dvh] w-full flex-col items-center rounded-t-[30px] bg-white px-8 pt-12 pb-16 duration-700',
         )}
       >
         <div
@@ -48,7 +48,7 @@ export function SelectionScreen() {
               variant="ghost"
               size="sm"
               asChild
-              className={cn('h-10 px-4py-3 text-gray-600 hover:text-gray-900')}
+              className={cn('h-10 px-4 py-3 text-gray-600 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNUP}>회원가입</Link>
             </Button>

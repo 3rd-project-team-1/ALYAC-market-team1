@@ -15,8 +15,13 @@ export function TopBasicNav({ moreMenu, modal }: TopBasicNavProps) {
   return (
     <>
       <TopHeaderLayout>
-        <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
-          <BackIcon />
+        <Button
+          aria-label="이전 페이지로 돌아가기"
+          variant="icon-nav"
+          size="nav"
+          onClick={() => navigate(-1)}
+        >
+          <BackIcon aria-hidden="true" />
         </Button>
 
         {moreMenu}

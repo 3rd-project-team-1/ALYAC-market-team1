@@ -17,7 +17,10 @@ export const TabMenu = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="bg-background border-border fixed right-0 bottom-0 left-0 flex items-center justify-between border-t px-2 py-2">
+    <nav
+      aria-label="하단 메인 탭"
+      className="bg-background border-border fixed right-0 bottom-0 left-0 flex items-center justify-between border-t px-2 py-2"
+    >
       {tabs.map(({ path, label, Icon }) => {
         const active = path.some((p) => location.pathname.startsWith(p));
         return (
@@ -26,6 +29,7 @@ export const TabMenu = () => {
             label={label}
             active={active}
             Icon={Icon}
+            aria-current={active ? 'page' : undefined}
             onClick={() => navigate(path[0])}
             className="group hover:bg-primary-green/10 flex-1 rounded-lg px-2 py-1.5"
             labelClassName={cn(

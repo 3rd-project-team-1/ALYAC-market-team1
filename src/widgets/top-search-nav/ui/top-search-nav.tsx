@@ -15,12 +15,19 @@ export function TopSearchNav({ searchValue, onSearchChange }: TopSearchNavProps)
 
   return (
     <TopHeaderLayout>
-      <Button variant="icon-nav" size="nav" onClick={() => navigate(-1)}>
-        <BackIcon />
+      <Button
+        aria-label="이전 페이지로 돌아가기"
+        variant="icon-nav"
+        size="nav"
+        onClick={() => navigate(-1)}
+      >
+        <BackIcon aria-hidden="true" />
       </Button>
 
       <input
-        type="text"
+        id="user-search"
+        type="search"
+        role="searchbox"
         placeholder="계정 검색"
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
