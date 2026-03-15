@@ -16,8 +16,13 @@ export function TopMainNav({ title }: TopMainNavProps) {
   return (
     <TopHeaderLayout>
       <span className={cn('text-foreground text-base font-semibold')}>{title}</span>
-      <Button variant="icon-nav" size="nav" onClick={() => navigate(ROUTE_PATHS.SEARCH)}>
-        <SearchIcon />
+      <Button
+        aria-label="검색"
+        variant="icon-nav"
+        size="nav"
+        onClick={() => navigate(ROUTE_PATHS.SEARCH)}
+      >
+        <SearchIcon aria-hidden="true" />
       </Button>
     </TopHeaderLayout>
   );
