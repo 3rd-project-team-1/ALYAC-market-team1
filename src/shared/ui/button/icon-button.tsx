@@ -18,6 +18,7 @@ export const IconButton = ({
 }: IconButtonProps) => (
   <button
     type="button"
+    aria-label={label}
     className={cn(
       'flex cursor-pointer flex-col items-center gap-0.5 transition-colors',
       'focus-visible:ring-primary-green focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
@@ -28,7 +29,10 @@ export const IconButton = ({
     <div aria-hidden="true">
       <Icon active={active} />
     </div>
-    <span className={cn('text-[12px] whitespace-nowrap transition-colors', labelClassName)}>
+    <span
+      aria-hidden="true"
+      className={cn('text-[12px] whitespace-nowrap transition-colors', labelClassName)}
+    >
       {label}
     </span>
   </button>
