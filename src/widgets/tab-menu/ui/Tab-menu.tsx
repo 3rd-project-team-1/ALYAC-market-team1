@@ -31,7 +31,7 @@ export const TabMenu = () => {
             Icon={Icon}
             aria-current={active ? 'page' : undefined}
             onClick={() => navigate(path[0])}
-            className="group hover:bg-primary-green/10 flex-1 rounded-lg px-2 py-1.5"
+            className="group hover:bg-primary-green flex-1 rounded-lg px-2 py-1.5"
             labelClassName={cn(
               'group-hover:text-primary-green group-hover:font-semibold',
               active ? 'text-primary-green font-semibold' : 'text-muted-foreground font-normal',

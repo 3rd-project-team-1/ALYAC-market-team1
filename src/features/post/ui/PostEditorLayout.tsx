@@ -92,7 +92,8 @@ export function PostEditorLayout({
         type="button"
         onClick={() => fileInputRef.current?.click()}
         className={cn(
-          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]',
+          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full',
+          'bg-primary-green hover:bg-primary-green-hover',
         )}
         aria-label="이미지 추가"
       >
