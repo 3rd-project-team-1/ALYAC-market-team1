@@ -43,7 +43,7 @@ export function PostEditorLayout({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaId = 'post-content-textarea';
   return (
-    <main className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
+    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
         label={submitLabel}
         disabled={!hasContent || isSubmitting}
@@ -109,6 +109,6 @@ export function PostEditorLayout({
         onChange={onImageAdd}
         aria-hidden="true"
       />
-    </main>
+    </div>
   );
 }

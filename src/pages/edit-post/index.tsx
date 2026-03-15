@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async';
+
 import { useProfile } from '@/entities/user';
 import {
   PostEditorLayout,
@@ -61,20 +63,29 @@ export function EditPostPage() {
   }
 
   return (
-    <PostEditorLayout
-      submitLabel={isSubmitting ? '수정 중...' : '수정'}
-      isSubmitting={isSubmitting}
-      hasContent={hasContent}
-      textareaProps={contentTextareaProps}
-      isFocused={isFocused}
-      showError={showError}
-      onContentFocus={onFocus}
-      onContentBlur={onBlur}
-      images={images}
-      profileImage={profile?.image ?? null}
-      onSubmit={onSubmit}
-      onImageAdd={handleImageAdd}
-      onImageRemove={handleImageRemove}
-    />
+    <>
+      <Helmet>
+        <title>게시글 수정 | Alyac Market</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+      <main>
+        <h1 className="sr-only">게시글 수정하기</h1>
+        <PostEditorLayout
+          submitLabel={isSubmitting ? '수정 중...' : '수정'}
+          isSubmitting={isSubmitting}
+          hasContent={hasContent}
+          textareaProps={contentTextareaProps}
+          isFocused={isFocused}
+          showError={showError}
+          onContentFocus={onFocus}
+          onContentBlur={onBlur}
+          images={images}
+          profileImage={profile?.image ?? null}
+          onSubmit={onSubmit}
+          onImageAdd={handleImageAdd}
+          onImageRemove={handleImageRemove}
+        />
+      </main>
+    </>
   );
 }
