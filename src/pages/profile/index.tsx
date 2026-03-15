@@ -30,14 +30,10 @@ export function ProfilePage() {
               : ROUTE_PATHS.PROFILE
           }`}
         />
-
-        {/* 소셜 공유용 OG 태그 */}
+        {/* 소셜 공유용 OG 태그
         <meta property="og:title" content={`${userName} 님의 프로필`} />
         <meta property="og:description" content="로그인하고 프로필을 확인해보세요" />
-        <meta
-          property="og:image"
-          content={profile?.image || `${FRONTEND_URL}/default-profile.png`}
-        />
+        <meta property="og:image" content={profile?.image || `${FRONTEND_URL}/og-image.webp`} />
         <meta
           property="og:url"
           content={`${FRONTEND_URL}${
@@ -45,7 +41,7 @@ export function ProfilePage() {
               ? ROUTE_PATHS.PROFILE_DETAIL(profileAccountname)
               : ROUTE_PATHS.PROFILE
           }`}
-        />
+        /> */}
       </Helmet>
 
       <TopBasicNav moreMenu={moreMenu} modal={modal} />
