@@ -23,12 +23,17 @@ export function SelectionScreen() {
       </div>
       <div
         className={cn(
-          'animate-in slide-in-from-bottom-full flex h-[45dvh] w-full flex-col items-center rounded-t-[30px] bg-white px-8 pt-12 pb-16 duration-700',
+          'animate-in slide-in-from-bottom-full',
+          'flex w-full flex-col items-center',
+          'pb-safe rounded-t-[30px] bg-white px-8 pt-12', // pb-16 → pb-safe
+          'duration-700',
         )}
       >
         <div
           className={cn(
-            'animate-in fade-in flex w-full max-w-sm flex-col space-y-4 delay-300 duration-700',
+            'animate-in fade-in',
+            'flex w-full max-w-sm flex-col space-y-4',
+            'pb-8 delay-300 duration-700', // 하단 여백 추가
           )}
         >
           {SOCIAL_PROVIDERS.map((platform) => (
@@ -39,16 +44,16 @@ export function SelectionScreen() {
               variant="ghost"
               size="sm"
               asChild
-              className={cn('h-10 px-4 text-gray-600 hover:text-gray-900')}
+              className={cn('h-10 px-4 text-gray-700 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNIN}>이메일로 로그인</Link>
             </Button>
-            <span>|</span>
+            <span className="text-gray-700">|</span>
             <Button
               variant="ghost"
               size="sm"
               asChild
-              className={cn('h-10 px-4 py-3 text-gray-600 hover:text-gray-900')}
+              className={cn('h-10 px-4 py-3 text-gray-700 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNUP}>회원가입</Link>
             </Button>
