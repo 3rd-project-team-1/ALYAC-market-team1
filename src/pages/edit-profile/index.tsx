@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async';
+
 import { useProfile } from '@/entities/user/hooks/useProfile';
 import { EditProfileForm } from '@/features/profile/ui/EditProfileForm';
 import { LoadingSpinner } from '@/shared/ui';
@@ -9,5 +11,19 @@ export function EditProfilePage() {
     return <LoadingSpinner fullScreen message="프로필을 불러오는 중입니다..." />;
   }
 
-  return <EditProfileForm profile={profile} />;
+  return (
+    <>
+      <Helmet>
+        <title>프로필 수정 | Alyac Market</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+
+      <main>
+        <h1 className="sr-only">프로필 수정하기</h1>
+
+        {/* EditProfileForm 내부도 div로 시작하는지 나중에 체크해보면 좋겠네요! */}
+        <EditProfileForm profile={profile} />
+      </main>
+    </>
+  );
 }
