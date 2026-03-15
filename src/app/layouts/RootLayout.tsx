@@ -1,5 +1,8 @@
+import { Suspense } from 'react';
+
 import { Outlet, useLocation } from 'react-router-dom';
 
+import { LoadingSpinner } from '@/shared/ui';
 import { TabMenu } from '@/widgets/tab-menu';
 
 const HIDE_TAB_MENU_PATHS = [
@@ -25,9 +28,9 @@ export function RootLayout() {
 
   return (
     <div>
-      <main>
+      <Suspense fallback={<LoadingSpinner fullScreen message="페이지 로딩 중..." />}>
         <Outlet />
-      </main>
+      </Suspense>
       {showTabMenu && <TabMenu />}
     </div>
   );

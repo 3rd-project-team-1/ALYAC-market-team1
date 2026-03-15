@@ -17,15 +17,21 @@ export function ProfilePage() {
     return <LoadingSpinner fullScreen message="프로필을 불러오는 중..." />;
   }
   const userName = profile?.username || targetAccountname || '사용자';
+  const profileAccountname = targetAccountname || profile?.accountname || '';
   return (
     <>
       <Helmet>
         <title>{`${userName} 님의 프로필 | Alyac Market`}</title>
         <link
           rel="canonical"
-          href={`${FRONTEND_URL}${ROUTE_PATHS.PROFILE}/${targetAccountname || ''}`}
+          href={`${FRONTEND_URL}${
+            profileAccountname
+              ? ROUTE_PATHS.PROFILE_DETAIL(profileAccountname)
+              : ROUTE_PATHS.PROFILE
+          }`}
         />
-        {/* 소셜 공유용 OG 태그*/}
+
+        {/* 소셜 공유용 OG 태그 */}
         <meta property="og:title" content={`${userName} 님의 프로필`} />
         <meta property="og:description" content="로그인하고 프로필을 확인해보세요" />
         <meta
@@ -34,7 +40,11 @@ export function ProfilePage() {
         />
         <meta
           property="og:url"
-          content={`${FRONTEND_URL}${ROUTE_PATHS.PROFILE}/${targetAccountname}`}
+          content={`${FRONTEND_URL}${
+            profileAccountname
+              ? ROUTE_PATHS.PROFILE_DETAIL(profileAccountname)
+              : ROUTE_PATHS.PROFILE
+          }`}
         />
       </Helmet>
 
