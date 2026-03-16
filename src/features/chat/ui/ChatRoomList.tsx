@@ -26,7 +26,7 @@ export function ChatRoomList({ rooms, onRoomClick }: ChatRoomListProps) {
               </div>
               {room.isOnline && (
                 <span
-                  className={cn('absolute top-0 left-0 h-2.5 w-2.5 rounded-full bg-[#11cc27]')}
+                  className={cn('bg-primary-green absolute top-0 left-0 h-2.5 w-2.5 rounded-full')}
                 />
               )}
             </div>
