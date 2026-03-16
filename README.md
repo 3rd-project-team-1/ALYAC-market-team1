@@ -1,5 +1,26 @@
 # Alyac Market
 
+## 목차
+
+- [1. 프로젝트 개요](#1-프로젝트-개요)
+- [1.1 목표](#11-목표)
+- [1.2 팀원](#12-팀원)
+- [1.3 마일스톤](#13-마일스톤)
+- [1.4 주요 기능](#14-주요-기능)
+- [2. 개발 환경 및 배포](#2-개발-환경-및-배포)
+- [2.1 개발 스택](#21-개발-스택)
+- [2.2 배포 URL](#22-배포-url)
+- [3. 라우팅 구조](#3-라우팅-구조)
+- [3.1 비인증 페이지 (RequireGuest)](#31-비인증-페이지-requireguest)
+- [3.2 인증 필요 페이지 (RequireAuth)](#32-인증-필요-페이지-requireauth)
+- [4. 데이터 흐름](#4-데이터-흐름)
+- [4.1 주요 API 엔드포인트](#41-주요-api-엔드포인트)
+- [5. 프로젝트 구조](#5-프로젝트-구조)
+- [5.1 레이어별 도메인](#51-레이어별-도메인)
+- [6. 아키텍처](#6-아키텍처)
+- [7. 실행 방법](#7-실행-방법)
+- [8. 테스트 계정](#8-테스트-계정)
+
 ## 1. 프로젝트 개요
 
 이스트소프트 프론트엔드 개발과정 10기
@@ -42,65 +63,18 @@ gantt
     dateFormat  YYYY-MM-DD
     axisFormat  %m/%d
 
-    section 기획 · 환경
-    FSD 폴더 구조 초기화 · 라우팅 설정     :done, g1, 2026-02-13, 1d
-    Axios 인스턴스 · 토큰 관리 구축        :done, g2, 2026-02-14, 1d
-    라우터 동적 로딩 · 페이지 분리         :done, g3, 2026-02-20, 1d
-    Prettier 팀 동기화 완료               :done, g4, 2026-02-23, 1d
-
-    section 인증 · 검증
-    Auth · User 타입 정의                  :done, a1, 2026-02-14, 1d
-    로그인 페이지 구현 (signin)            :done, a2, 2026-02-19, 1d
-    회원가입 페이지 · 2단계 유효성 검사    :done, a3, 2026-02-20, 2d
-    계정 중복 검증 추가                   :done, a4, 2026-02-21, 1d
-    토큰 유효성 확인 · 라우터 가드        :done, a5, 2026-03-02, 1d
-    useAuth 훅 · Zustand 도입             :done, a6, 2026-03-03, 1d
-    Zod 스키마 · zodResolver 전면 적용    :done, a7, 2026-03-04, 2d
-
-    section 프로필 · 팔로우
-    프로필 · 프로필 수정 페이지 구현      :done, p1, 2026-02-19, 1d
-    useProfile · useImageUpload 훅 분리  :done, p2, 2026-02-20, 1d
-    프로필 이미지 업로드 API 연동         :done, p3, 2026-02-22, 1d
-    profile · edit-profile API 연동      :done, p4, 2026-02-23, 1d
-    헤더 widgets 컴포넌트화              :done, p5, 2026-02-24, 1d
-    팔로워 · 팔로잉 목록 페이지 구현     :done, p6, 2026-02-26, 1d
-    프로필 페이지 리팩토링 · 컴포넌트 분리:done, p7, 2026-02-27, 1d
-    팔로우 토글 optimistic 처리 개선     :done, p8, 2026-03-05, 1d
-
-    section 피드 · 게시글
-    홈 · 검색 페이지 · 메인 Nav 생성     :done, f1, 2026-02-19, 1d
-    post · chat · 채팅방 페이지 초기 구현:done, f2, 2026-02-23, 1d
-    게시글 상세 · 이미지 처리            :done, f3, 2026-02-26, 2d
-    피드 페이지 UI 개선                  :done, f4, 2026-02-27, 1d
-    이미지 버그 수정 · 신고 기능         :done, f5, 2026-02-28, 1d
-    피드 무한 스크롤 (useInfiniteQuery)  :done, f6, 2026-03-03, 1d
-    게시글 수정 페이지 · 포스트 UI 고도화:done, f7, 2026-03-03, 1d
-    좋아요 기능 · useMutation 전환       :done, f8, 2026-03-04, 1d
-
-    section 상품 · 검색
-    상품 등록 API 연동                   :done, s1, 2026-02-24, 1d
-    검색 기능 완성 (UserSearchCard)      :done, s2, 2026-02-24, 1d
-    search FSD 방식으로 재구성           :done, s3, 2026-02-25, 1d
-    상품 수정 페이지 추가                :done, s4, 2026-02-25, 1d
-
-    section UI · 컴포넌트
-    버튼 CVA 전환 · FormField 공통화     :done, u1, 2026-02-20, 1d
-    탭메뉴 · 헤더 · useDebounce 훅      :done, u2, 2026-02-21, 1d
-    TanStack Query · shadcn 컴포넌트    :done, u3, 2026-02-24, 1d
-    SVG 파일 전체 컴포넌트화            :done, u4, 2026-02-25, 3d
-    shadcn 토스트 · chat-room UI 개선   :done, u5, 2026-02-26, 2d
-    cn 유틸 · shared/ui 구조 개선       :done, u6, 2026-03-04, 2d
-
-    section FSD 리팩토링
-    FSD 레이어 전면 정리                 :done, r1, 2026-02-25, 1d
-    feed · search FSD 구조화           :done, r2, 2026-02-26, 2d
-    token.ts · 이미지 API shared 이동  :done, r3, 2026-02-27, 1d
-    API 구조 단순화 · 경로 통일         :done, r4, 2026-03-04, 2d
-
-    section 문서화 · 자동화
-    README 전면 업데이트                 :done, d1, 2026-03-04, 1d
-    커밋 자동 업데이트 · AI 요약         :done, d2, 2026-03-05, 1d
+  section 단계별 요약
+  기획 · 환경 세팅                      :done, m1, 2026-02-13, 2026-02-23
+  인증 · 검증 기능 구축                 :done, m2, 2026-02-14, 2026-03-04
+  프로필 · 팔로우 기능 구현             :done, m3, 2026-02-19, 2026-03-05
+  피드 · 게시글 기능 완성               :done, m4, 2026-02-19, 2026-03-04
+  상품 · 검색 기능 구현                 :done, m5, 2026-02-24, 2026-02-25
+  UI 공통화 · 컴포넌트 정리             :done, m6, 2026-02-20, 2026-03-04
+  FSD 리팩토링 · 문서화 자동화          :done, m7, 2026-02-25, 2026-03-05
 ```
+
+<details>
+<summary><span style="color:#e11d48;"><strong>[펼치기] Day 1 ~ Day 22 상세 기록 보기</strong></span> <strong>▼</strong></summary>
 
 #### Day 1 — 프로젝트 기획 및 역할 분담 (2026-02-13)
 
@@ -192,6 +166,101 @@ gantt
 - **코드 정리**: 레거시 코드 제거, 임포트 경로 통일
 - **구조 정비**: FSD 계층 기준 위반 항목 최종 재정비
 
+---
+
+#### Day 11 — API 스키마 확장 · UI 일관화 (2026-03-05)
+
+- auth/user/post 스키마 검증을 확장하고 500 오류 원인을 수정
+- API URL 하드코딩을 제거하고 `endpoints.ts` 상수 기반으로 통일
+- Post 상세/댓글의 MoreMenu 전환 등 UI 일관성 개선
+
+---
+
+#### Day 12 — FSD 분리 고도화 · 도메인 기능 보강 (2026-03-06)
+
+- post/product/profile 로직을 features/entities로 재분리해 pages 경량화
+- product 편집/삭제 API 연동, profile 그리드/리스트 뷰 및 이동 UX 개선
+- post 신고/삭제 확인 모달, 댓글/이미지 편집 기능 등 상세 기능 보강
+- feed 구조 리팩토링과 로딩/에러 처리 안정화 진행
+
+---
+
+#### Day 13 — 자동화 점검 (2026-03-07)
+
+- 문서 자동 업데이트 워크플로우 동작 확인 및 안정성 점검
+
+---
+
+#### Day 14 — API 클라이언트 공통화 (2026-03-08)
+
+- Zod 기반 타입 안전 요청 래퍼를 도입하고 API 호출 구조를 공통화
+- entities(auth/user/product/post) 중복 검증 로직 제거 및 타입 정리
+- JSDoc/스키마 중심 구조로 전환해 유지보수성 개선
+
+---
+
+#### Day 15 — 라우팅/쿼리 키 정리 · 피드 안정화 (2026-03-09)
+
+- 라우터 가드 리팩토링(중복 제거, 로딩 스피너 추가, 구조 정리)
+- 하드코딩 경로/쿼리 키를 상수로 치환해 참조 안정성 강화
+- 피드 무한스크롤/캐시 업데이트 및 로딩 처리 개선
+
+---
+
+#### Day 16 — 배포 대응 보정 · 캐시 동기화 강화 (2026-03-10)
+
+- 개발/배포 응답 차이를 반영한 스키마 보정(optional/nullish 처리)
+- Firebase 환경 변수화 및 피드 로딩 실패 폴백/타임아웃 조정
+- 좋아요·댓글·팔로우 후 프로필/피드 수치 즉시 반영되도록 쿼리 무효화 강화
+
+---
+
+#### Day 17 — 프로필/댓글 UX 개선 · 공통 헤더화 (2026-03-11)
+
+- 프로필 게시물·댓글 무한 스크롤과 신고 모달/권한 토스트 등 상호작용 개선
+- 팔로워/팔로잉 isfollow 교정, 로그아웃 시 React Query 캐시 초기화 추가
+- `TopHeaderLayout` 공통화와 이미지 업로드 훅 정리로 UI 중복 축소
+
+---
+
+#### Day 18 — 피드 UI 완성도 향상 · 요청 파라미터 튜닝 (2026-03-12)
+
+- PostCard/캐러셀/이미지 카운트/상대 시간/아바타 팝오버 등 피드 UI 고도화
+- `useFeedPostsQuery`의 LIMIT/staleTime/timeout 튜닝으로 체감 성능 개선
+- PostCard 섹션 컴포넌트 분리와 import 정리로 피드 코드 구조 단순화
+
+---
+
+#### Day 19 — 공통 컴포넌트화 · 팔로우/피드 안정화 (2026-03-13)
+
+- `PostContent`/유저 프로필 영역 공통 컴포넌트 도입 및 feed/post/search 리팩토링
+- 팔로우·팔로잉 목록(limit 확장, 하단 가림/아이콘 크기) 및 프로필 수정 반영 이슈 수정
+- 피드 팔로우 토스트, 로드아웃 유지, 다크모드 색상 보정으로 UX 안정화
+
+---
+
+#### Day 20 — SEO/접근성 전면 적용 · 메타데이터 정비 (2026-03-14)
+
+- `react-helmet-async`/`HelmetProvider` 적용, 페이지별 동적 타이틀·canonical·OG/Twitter 메타 구성
+- 로그인/회원가입·홈·피드·검색·프로필 등 주요 화면 시맨틱 구조 및 A11y 속성 강화
+- `robots.txt`, `VITE_FRONTEND_URL` 기반 URL 관리, axios 422 분리 처리로 운영 안정성 보완
+
+---
+
+#### Day 21 — 전 페이지 A11y/SEO 고도화 · 홈 화면 이슈 수정 (2026-03-15)
+
+- 검색/채팅/프로필/게시글 작성·상세/상품 수정/프로필 수정 등 전 페이지 접근성·SEO 추가 개선
+- 텍스트 대비율, 버튼 접근성, 헤더 접근성 등 UI 접근성 디테일 보강
+- 카카오 링크 진입 시 홈 화면 하단 잘림(vh) 문제와 공유 메타 노출 이슈 수정
+
+---
+
+#### Day 22 — 다크모드 접근성 핫픽스 및 문서 갱신 (2026-03-16)
+
+- 다크모드 환경 접근성(a11y) 대응 핫픽스 적용
+
+</details>
+
 ### 1.4 주요 기능
 
 | 기능   | 설명                                          |
@@ -218,7 +287,7 @@ gantt
 | 빌드        | Vite                         | 7.3   |
 | 라우팅      | React Router DOM             | 7.13  |
 | 서버 상태   | TanStack Query (React Query) | 5.90  |
-| 전역 상태   | Zustand                      | 5.0   |
+| 전역 상태   | Context API                  | 5.0   |
 | HTTP        | Axios                        | 1.13  |
 | 폼 / 검증   | React Hook Form + Zod        | 7 / 4 |
 | 스타일      | Tailwind CSS v4              | 4.1   |
@@ -229,8 +298,7 @@ gantt
 
 ### 2.2 배포 URL
 
-- 프론트엔드: []()
-- 백엔드: []()
+- 프론트엔드: https://alyac-market-team1.vercel.app
 
 ## 3. 라우팅 구조
 
@@ -266,9 +334,9 @@ gantt
 ## 4. 데이터 흐름
 
 1. 클라이언트는 Axios를 통해 `/api/*` 경로로 REST API 요청을 보냅니다. (Vite 프록시 → `http://localhost:3000`)
-2. 서버 상태는 **TanStack Query**가 캐싱·동기화하고, 전역 UI 상태는 **Zustand**로 관리합니다.
-3. 인증 토큰(accessToken · refreshToken)은 **LocalStorage**에 저장되며, Axios 인터셉터가 요청마다 자동 첨부합니다.
-4. 토큰 만료 시 `/api/user/refresh` 로 자동 재발급 후 원래 요청을 재시도합니다.
+2. 서버 상태는 **TanStack Query**가 캐싱·동기화하고, 전역 UI 상태는 **Context API**로 관리합니다.
+3. 인증 토큰(accessToken · refreshToken)은 **LocalStorage**에 저장되며, Axios 인터셉터가 요청마다 자동 첨부합니다。
+4. 토큰 만료 시 `/api/user/refresh` 로 자동 재발급 후 원래 요청을 재시도합니다。
 
 ### 4.1 주요 API 엔드포인트
 
@@ -316,8 +384,8 @@ src/
   app/           # 앱 진입점 · 라우터 · QueryClient · 전역 Provider
   pages/         # 라우트별 페이지 조립 (18개 페이지)
   widgets/       # 독립적 UI 블록 (TopNav 6종, TabMenu)
-  features/      # 사용자 시나리오 단위 (auth, feed, post, product, profile, chat, search, home, create-post)
-  entities/      # 도메인 모델 · API · 훅 (auth, feed, post, product, user)
+    features/      # 사용자 시나리오 단위 (auth, feed, post, product, profile, chat, search, home)
+    entities/      # 도메인 모델 · API · 훅 (auth, post, product, user)
   shared/        # 도메인 무관 공용 기반 (axiosInstance, ui/, hooks/, lib/)
 ```
 
@@ -325,8 +393,8 @@ src/
 
 | 레이어           | 포함 도메인 / 모듈                                                                                   |
 | ---------------- | ---------------------------------------------------------------------------------------------------- |
-| **entities**     | `auth` · `feed` · `post` · `product` · `user`                                                        |
-| **features**     | `auth` · `chat` · `create-post` · `feed` · `home` · `post` · `product` · `profile` · `search`        |
+| **entities**     | `auth` · `post` · `product` · `user`                                                                 |
+| **features**     | `auth` · `chat` · `feed` · `home` · `post` · `product` · `profile` · `search`                        |
 | **widgets**      | `top-basic-nav` · `top-chat-nav` · `top-main-nav` · `top-search-nav` · `top-upload-nav` · `tab-menu` |
 | **shared/ui**    | `button` · `feedback` · `form` · `modal` · `user`                                                    |
 | **shared/hooks** | `useDebounce` · `useImageUpload`                                                                     |
@@ -351,7 +419,7 @@ flowchart TD
             Pages["Pages\n18개 라우트 페이지"]
             Widgets["Widgets\nTopNav 6종 · TabMenu"]
             Features["Features\nauth · feed · post · product\nprofile · chat · search · home"]
-            Entities["Entities\nauth · feed · post · product · user\n(API 함수 · 타입 · 쿼리 훅)"]
+            Entities["Entities\nauth · post · product · user\n(API 함수 · 타입 · 쿼리 훅)"]
             Shared["Shared\naxios · ui/ · hooks/ · lib/"]
 
             Pages --> Widgets --> Features --> Entities --> Shared
@@ -396,93 +464,11 @@ flowchart TD
 
 ## 7. 실행 방법
 
-1. 백엔드 서버 실행
-
-alyac-market-server-main
-
 ```bash
-npm install
-npm run start
-```
-
-2. 프론트엔드 서버 실행
-
-3rd-project
-
-```bash
-cd 3rd-project
 npm install
 npm run dev
 ```
 
 ## 8. 테스트 계정
 
-- 아이디: / 비밀번호:
-- 아이디: / 비밀번호:
-
-## 9. 커밋 활동
-
-> **자동 업데이트** — GitHub Actions 워크플로우(`.github/workflows/update-readme-chart.yml`)가 docs/README 브랜치 push 또는 main branch에서 01시마다 아래 차트를 갱신합니다.
-
-### 9.1 기여자별 커밋 수
-
-<!-- COMMIT-PIE-START -->
-```mermaid
-%%{init: { 'theme': 'base', 'themeVariables': {
-  'primaryColor': '#6366f1',
-  'primaryTextColor': '#ffffff',
-  'primaryBorderColor': '#4338ca',
-  'secondaryColor': '#c7d2fe',
-  'tertiaryColor': '#e0e7ff',
-  'pieLegendTextColor': '#1e1b4b',
-  'pieStrokeColor': '#ffffff',
-  'pieOuterStrokeColor': '#4338ca'
-} } }%%
-pie title 기여자별 커밋 수
-  "배준우" : 278
-  "김동희" : 220
-  "김세윤" : 164
-  "장영재" : 78
-  "bjw9415-oss" : 2
-```
-<!-- COMMIT-PIE-END -->
-
-### 9.2 일자별 커밋 수
-
-<!-- COMMIT-BAR-START -->
-```mermaid
-%%{init: { 'theme': 'base', 'themeVariables': {
-  'xyChart': {
-    'plotColorPalette': '#6366f1'
-  }
-} } }%%
-xychart-beta
-  title "일자별 커밋 수"
-  x-axis ["03/06", "03/07", "03/08", "03/09", "03/10", "03/11", "03/12", "03/13", "03/14", "03/15"]
-  y-axis "커밋 수" 0 --> 80
-  bar [78, 1, 14, 31, 61, 30, 53, 28, 23, 18]
-```
-<!-- COMMIT-BAR-END -->
-
-### 9.3 날짜별 커밋 로그
-
-<!-- COMMIT-LOG-START -->
-
-| """        | 날짜                                                                                                                                                                                                                                                      | 요약 |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 2026-03-05 | README 기여자 누락 수정 및 커밋 자동 업데이트 기능 추가. 다크모드 Mermaid 차트 색상 고정 및 10일차 내용 개선. 팔로우 토글 optimistic 처리 개선 및 cn 클래스 전체 통일. Zod 스키마 검증을 게시글 작성·프로필 수정 폼에 zodResolver로 연동.                 |
-| 2026-03-04 | 회원가입·로그인·프로필 수정·게시글 작성 전 폼에 Zod 스키마 검증 적용. post/product 엔티티 API 구조 단순화 및 chat 파일 features로 이동 등 FSD 기준 리팩토링. 피드 좋아요 기능 구현 및 좋아요 카운트 동기화. shared/ui 폴더 구조 개선 및 레거시 코드 정리. |
-| 2026-03-03 | 피드 무한 스크롤 동작 수정. async/await 방식을 useMutation으로 전환하고 오류 시 toast 알림 추가. useAuth 훅 추가 및 Zustand 설치. 게시글 수정(edit-post) 페이지 추가 및 token.ts axios로 전환.                                                            |
-| 2026-03-02 | 토큰 유효성 확인 로직 추가 및 라우터 가드 수정. QueryClient 전역 설정 추가.                                                                                                                                                                               |
-| 2026-02-28 | 게시글 이미지 없을 때 기본 프로필 이미지 오노출 버그 수정. SVG 아이콘 컴포넌트 교체 완료 후 기존 이미지 파일 제거. FollowUserListItem 프로필 사진 위치 및 ChatRoomFooter SVG 교체. 좋아요 버튼 활성화 오류 수정.                                          |
-| 2026-02-27 | token.ts를 shared/lib으로 이동. 전체 nav/tab 커서 포인터 및 TopBasicNav 링크 수정. 프로필 페이지 리팩토링 및 컴포넌트 분리. chat-room LeaveRoomModal을 드롭다운 스타일로 변경. 전 페이지에 걸쳐 SVG 컴포넌트 교체 완료 및 공통 이미지 업로드 API 적용.    |
-| 2026-02-26 | SVG 파일 컴포넌트화 완료 및 전 페이지 적용. 팔로잉 게시글 안 보이는 문제 해결. followers/followings 목록 페이지 구현. feed FSD 구조화 및 shadcn 토스트 추가. 이미지 업로드 API shared로 이동. edit-profile 컴포넌트 분리 및 product uploader 구조 정리.   |
-| 2026-02-25 | FSD 레이어 전면 정리(profile·product·image 로직 재배치). search를 FSD 방식으로 재구성 및 API 훅 연동. 좋아요 토글 기능 및 하트 아이콘 구현. 상품 수정(edit-product) 페이지 추가. 이미지 파일 PNG→SVG·WebP 전환으로 품질 개선. homepage FSD 분리 적용.     |
-| 2026-02-24 | 검색 기능(UserSearchCard, API 연동) 완성. TanStack Query 적용 및 FormField 공통 컴포넌트 구현. 상품 등록 API 연동. 각 페이지 헤더를 widgets 컴포넌트로 교체. 프로필·게시글·채팅방 이미지 URL 절대경로 변환 적용. FSD 구조 개선 및 중복 폴더 정리.         |
-| 2026-02-23 | post·chat·chat-room 페이지 초기 구현 및 라우트 추가. Prettier 설정 팀 공유 및 전체 format 적용. profile·post·edit-profile API 연동. 탭메뉴·라우트 경로 정비. 게시글 상세 페이지 생성 및 가격 필드 유효성 검사 추가.                                       |
-| 2026-02-22 | 프로필 페이지 API 전 연동(조회·이미지 업로드). 프로필 이미지 업로드 구현 및 기본 이미지 추가. 유효성 검사 메모리 누수 방지 로직 추가.                                                                                                                     |
-| 2026-02-21 | signupprofile 계정 중복검증 추가. post·upload·chat·chat-room 페이지 구현 및 라우트 추가. useDebounce 훅 추가. 헤더·탭메뉴 컴포넌트 구현. 이메일 중복검사 기능 추가.                                                                                       |
-| 2026-02-20 | signup·signup-profile 페이지 작성 및 유효성 검사 추가. 라우터 동적 로딩으로 전환 및 홈/로그인 페이지 분리. useProfile·useImageUpload 커스텀 훅 분리. 버튼 CVA 기반으로 전환. my-profile·your-profile을 profile 페이지로 통합.                             |
-| 2026-02-19 | signin·useSignIn 구현 및 로그인 페이지 스플래시 효과 추가. 프로필·프로필 수정·상품 등록 페이지 구현. 홈페이지와 검색 페이지 연결 및 메인 Nav 생성. SVG 아이콘 추가 및 라우터 초기 정비.                                                                   |
-| 2026-02-14 | Axios 인스턴스 구현 및 토큰 갱신 로직 안정화(무한 루프 방어, refreshToken 에러 처리). token.ts 추가. Auth·User 타입 정의.                                                                                                                                 |
-| 2026-02-13 | 프로젝트 첫 커밋. FSD 폴더 구조 초기화, 라우팅 설정, RootLayout·Guest 컴포넌트 생성.                                                                                                                                                                      | """  |
+- 아이디: test@test.com / 비밀번호: 11111111
