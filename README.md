@@ -464,21 +464,7 @@ flowchart TD
 
 ## 7. 실행 방법
 
-1. 백엔드 서버 실행
-
-alyac-market-server-main
-
 ```bash
-npm install
-npm run start
-```
-
-2. 프론트엔드 서버 실행
-
-3rd-project
-
-```bash
-cd 3rd-project
 npm install
 npm run dev
 ```
