@@ -16,7 +16,12 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
   const intro = watch('intro');
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-12')}>
-      <TopUploadNav label="저장" disabled={isPending} onSubmit={() => void submitEditProfile()} />
+      <TopUploadNav
+        formId="edit-profile-form"
+        label="저장"
+        disabled={isPending}
+        onSubmit={() => void submitEditProfile()}
+      />
 
       <div className={cn('mt-8')}>
         <ProfileImageInput
@@ -25,7 +30,11 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
         />
       </div>
 
-      <form onSubmit={submitEditProfile} className={cn('flex flex-col gap-6 px-6')}>
+      <form
+        id="edit-profile-form"
+        onSubmit={submitEditProfile}
+        className={cn('flex flex-col gap-6 px-6')}
+      >
         {/* 사용자 이름 */}
         <FormField
           type="text"
@@ -37,16 +46,23 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
 
         {/* 계정 ID */}
         <div className={cn('flex flex-col gap-1')}>
-          <label className={cn('text-foreground text-sm font-medium')}>계정 ID</label>
+          <label htmlFor="account-id" className={cn('text-foreground text-sm font-medium')}>
+            계정 ID
+          </label>
           <input
+            id="account-id"
             type="text"
             value={profile?.accountname ?? ''}
             readOnly
+            aria-readonly="true"
+            aria-describedby="account-id-help"
             className={cn(
               'border-border text-foreground w-full border-b py-2 text-sm outline-none',
             )}
           />
-          <p className={cn('text-muted-foreground text-xs')}>계정 ID는 변경할 수 없습니다.</p>
+          <p id="account-id-help" className={cn('text-muted-foreground text-xs')}>
+            계정 ID는 변경할 수 없습니다.
+          </p>
         </div>
 
         {/* 소개 */}
@@ -54,6 +70,7 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
           <div className={cn('flex items-center justify-between')}>
             <label className={cn('text-foreground text-sm font-medium')}>소개</label>
             <span
+              aria-live="polite"
               className={cn(
                 'text-xs',
                 (intro?.length ?? 0) > 60 ? 'text-destructive' : 'text-muted-foreground',
@@ -66,6 +83,7 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
             {...register('intro')}
             placeholder="간단한 자기 소개를 입력하세요."
             rows={1}
+            aria-invalid={errors.intro ? 'true' : 'false'}
             className={cn(
               'border-border text-foreground placeholder:text-muted-foreground w-full resize-none border-b py-2 text-sm outline-none',
             )}

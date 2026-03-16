@@ -2,11 +2,12 @@ import { useState } from 'react';
 
 import { CircleMinus, CirclePlus, Plus, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useProfileFollow } from '@/entities/user/hooks/useProfileFollow';
-import { UploadImageSmallIcon } from '@/shared/assets';
-import { cn, getImageUrl } from '@/shared/lib';
+import { cn } from '@/shared/lib';
 import { ROUTE_PATHS } from '@/shared/routes';
+import { UserAvatar } from '@/shared/ui';
 
 interface AvatarActionPopoverProps {
   accountname: string;
@@ -25,11 +26,9 @@ export function AvatarActionPopover({
 }: AvatarActionPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const { isFollowing, followMutation, toggleFollow } = useProfileFollow({
+  const { isFollowing, followMutation } = useProfileFollow({
     initialIsFollow,
   });
-
-  const imageUrl = getImageUrl(image);
 
   const handleAvatarClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -49,7 +48,18 @@ export function AvatarActionPopover({
 
   const handleFollow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleFollow(accountname);
+    const wasFollowing = isFollowing;
+    followMutation.mutate(
+      { accountname, isFollowing },
+      {
+        onSuccess: () => {
+          toast.success(wasFollowing ? '팔로우가 취소되었습니다.' : '팔로우했습니다.');
+        },
+        onError: () => {
+          toast.error('요청에 실패했습니다. 다시 시도해 주세요.');
+        },
+      },
+    );
     setIsOpen(false);
   };
 
@@ -57,22 +67,7 @@ export function AvatarActionPopover({
     <div className={cn('relative shrink-0')}>
       {/* 아바타 — 클릭 시 프로필 이동 */}
       <button type="button" aria-label={`${username} 프로필 보기`} onClick={handleAvatarClick}>
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={username}
-            className={cn('h-10 w-10 rounded-full object-cover')}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-        ) : (
-          <div
-            className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gray-100')}
-          >
-            <UploadImageSmallIcon />
-          </div>
-        )}
+        <UserAvatar src={image} username={username} className="h-11 w-11" />
       </button>
 
       {/* "+" 버튼 — 본인 게시글이 아닐 때만 표시 */}

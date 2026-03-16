@@ -30,7 +30,7 @@ export function FollowListBody({
   }
 
   return (
-    <ul>
+    <ul className={cn('pb-20')}>
       {users.map((user) => (
         <li key={user._id} className={cn('border-border border-b last:border-b-0')}>
           <FollowUserListItem user={user} myAccountname={myAccountname} />

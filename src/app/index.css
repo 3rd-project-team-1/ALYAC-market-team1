@@ -33,7 +33,7 @@
   --color-sidebar-ring: light-dark(oklch(0.704 0 0), oklch(0.551 0.027 264.364));
   --color-input-label: oklch(0.5658 0 0);
 
-  --color-primary-green: #11cc27;
+  --color-primary-green: light-dark(oklch(0.51 0.37 150), oklch(0.6 0.25 150));
   --color-primary-green-light: #a7ffb9;
   --color-primary-green-hover: #5cb020;
 

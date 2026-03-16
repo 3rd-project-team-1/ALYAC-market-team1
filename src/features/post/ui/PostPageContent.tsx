@@ -69,22 +69,28 @@ export function PostPageContent({
   onCloseDialog,
 }: PostPageContentProps) {
   return (
-    <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
+    <main className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopBasicNav moreMenu={<MoreMenu items={moreMenuItems} />} />
 
-      <PostDetailCard post={post} onToggleHeart={onToggleHeart} isHeartPending={isHeartPending} />
+      <article>
+        <h1 className="sr-only">{post.author.username}님의 게시글</h1>
+        <PostDetailCard post={post} onToggleHeart={onToggleHeart} isHeartPending={isHeartPending} />
+      </article>
+      <div role="presentation" className={cn('border-border mt-4 border-t')} />
 
-      <div className={cn('border-border mt-4 border-t')} />
-
-      <PostCommentsList
-        comments={comments}
-        isLoading={isCommentsLoading}
-        commentsPagination={commentsPagination}
-        myAccountname={myAccountname}
-        onDeleteComment={onDeleteComment}
-      />
-
-      <CommentFooter onSubmit={onCreateComment} />
+      <section aria-label="댓글 목록" className="flex-1">
+        <h2 className="sr-only">댓글</h2>
+        <PostCommentsList
+          comments={comments}
+          isLoading={isCommentsLoading}
+          commentsPagination={commentsPagination}
+          myAccountname={myAccountname}
+          onDeleteComment={onDeleteComment}
+        />
+      </section>
+      <footer>
+        <CommentFooter onSubmit={onCreateComment} />
+      </footer>
 
       {postDialogType === 'report' && (
         <LogoutModal
@@ -105,6 +111,6 @@ export function PostPageContent({
           onCancel={onCloseDialog}
         />
       )}
-    </div>
+    </main>
   );
 }

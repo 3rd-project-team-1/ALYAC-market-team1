@@ -3,34 +3,30 @@ import { cn } from '@/shared/lib';
 import type { IconProps } from './types';
 
 export const PostAlbumIcon = ({ active }: Pick<IconProps, 'active'>) => (
-  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M10.8333 3.25H3.25V10.8333H10.8333V3.25Z"
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect
+      x="0" y="0" width="8" height="8"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
-    <path
-      d="M22.7501 3.25H15.1667V10.8333H22.7501V3.25Z"
+    <rect
+      x="12" y="0" width="8" height="8"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
-    <path
-      d="M22.7501 15.1667H15.1667V22.75H22.7501V15.1667Z"
+    <rect
+      x="0" y="12" width="8" height="8"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
-    <path
-      d="M10.8333 15.1667H3.25V22.75H10.8333V15.1667Z"
+    <rect
+      x="12" y="12" width="8" height="8"
+      rx="2"
       fill="currentColor"
-      stroke="currentColor"
-      strokeLinecap="round"
-      className={cn(active ? 'opacity-100' : 'opacity-30')}
+      className={cn(active ? 'opacity-100' : 'opacity-35')}
     />
   </svg>
 );

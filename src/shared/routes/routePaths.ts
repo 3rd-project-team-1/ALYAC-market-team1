@@ -22,3 +22,5 @@ export const ROUTE_PATHS = {
   FOLLOWERS: (accountname: string) => `/followers/${accountname}`,
   FOLLOWINGS: (accountname: string) => `/followings/${accountname}`,
 } as const;
+
+export const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;

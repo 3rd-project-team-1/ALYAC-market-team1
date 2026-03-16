@@ -15,16 +15,25 @@ export function SelectionScreen() {
       <div
         className={cn('animate-in fade-in flex flex-1 items-center justify-center duration-700')}
       >
-        <FullLogoAlyacNoTextIcon className={cn('h-38.25 w-24.25 object-contain')} />
+        <FullLogoAlyacNoTextIcon
+          role="img"
+          aria-label="Alyac Market 로고"
+          className={cn('h-38.25 w-24.25 object-contain')}
+        />
       </div>
       <div
         className={cn(
-          'animate-in slide-in-from-bottom-full flex h-[45vh] w-full flex-col items-center rounded-t-[30px] bg-white px-8 pt-12 pb-16 duration-700',
+          'animate-in slide-in-from-bottom-full',
+          'flex w-full flex-col items-center',
+          'pb-safe rounded-t-[30px] bg-white px-8 pt-12', // pb-16 → pb-safe
+          'duration-700',
         )}
       >
         <div
           className={cn(
-            'animate-in fade-in flex w-full max-w-sm flex-col space-y-4 delay-300 duration-700',
+            'animate-in fade-in',
+            'flex w-full max-w-sm flex-col space-y-4',
+            'pb-8 delay-300 duration-700', // 하단 여백 추가
           )}
         >
           {SOCIAL_PROVIDERS.map((platform) => (
@@ -34,16 +43,17 @@ export function SelectionScreen() {
             <Button
               variant="ghost"
               size="sm"
-              className={cn('h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900')}
+              asChild
+              className={cn('h-10 px-4 text-gray-700 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNIN}>이메일로 로그인</Link>
             </Button>
-            <span>|</span>
+            <span className="text-gray-700">|</span>
             <Button
               variant="ghost"
               size="sm"
               asChild
-              className={cn('h-auto px-1.5 py-1.5 text-gray-500 hover:text-gray-900')}
+              className={cn('h-10 px-4 py-3 text-gray-700 hover:text-gray-900')}
             >
               <Link to={ROUTE_PATHS.SIGNUP}>회원가입</Link>
             </Button>

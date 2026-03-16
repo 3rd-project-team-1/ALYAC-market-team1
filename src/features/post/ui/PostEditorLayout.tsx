@@ -2,9 +2,9 @@ import { useRef } from 'react';
 
 import type { UseFormRegisterReturn } from 'react-hook-form';
 
-import { UploadFile, UploadImageSmallIcon } from '@/shared/assets';
+import { UploadFile } from '@/shared/assets';
 import { cn } from '@/shared/lib';
-import { getImageUrl } from '@/shared/lib/utils/getImageUrl';
+import { UserAvatar } from '@/shared/ui';
 import { TopUploadNav } from '@/widgets/top-upload-nav';
 
 import { PostImagePreviewList } from './PostImagePreviewList';
@@ -41,7 +41,7 @@ export function PostEditorLayout({
   onImageRemove,
 }: PostEditorLayoutProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const textareaId = 'post-content-textarea';
   return (
     <div className={cn('bg-background flex min-h-screen flex-col pt-[48px]')}>
       <TopUploadNav
@@ -51,21 +51,12 @@ export function PostEditorLayout({
       />
 
       <form onSubmit={onSubmit} className={cn('flex flex-1 gap-3 px-4 pt-5')}>
-        <div className={cn('bg-muted h-10 w-10 flex-shrink-0 overflow-hidden rounded-full')}>
-          {profileImage ? (
-            <img
-              src={getImageUrl(profileImage) ?? profileImage}
-              alt="내 프로필"
-              className={cn('h-full w-full object-cover')}
-            />
-          ) : (
-            <div className={cn('flex h-full w-full items-center justify-center')}>
-              <UploadImageSmallIcon />
-            </div>
-          )}
-        </div>
+        <UserAvatar src={profileImage} username="내 프로필" className="h-10 w-10" />
 
         <div className={cn('flex flex-1 flex-col gap-2')}>
+          <label htmlFor={textareaId} className="sr-only">
+            게시글 내용 작성
+          </label>
           <div
             className={cn(
               'overflow-hidden rounded-lg border-2 transition-all',
@@ -76,17 +67,23 @@ export function PostEditorLayout({
           >
             <textarea
               {...textareaProps}
+              id={textareaId}
               placeholder="게시글 입력하기..."
               className={cn(
                 'bg-background text-foreground placeholder:text-muted-foreground min-h-[300px] w-full resize-none p-2 text-sm outline-none',
               )}
               onFocus={onContentFocus}
               onBlur={onContentBlur}
+              aria-invalid={showError}
+              aria-describedby={showError ? 'post-error-message' : undefined}
             />
           </div>
 
-          {showError && <p className={cn('text-xs text-red-500')}>게시글 내용을 입력해주세요.</p>}
-
+          {showError && (
+            <p id="post-error-message" className={cn('text-xs text-red-500')} role="alert">
+              게시글 내용을 입력해주세요.
+            </p>
+          )}
           <PostImagePreviewList images={images} onRemove={onImageRemove} />
         </div>
       </form>
@@ -95,7 +92,8 @@ export function PostEditorLayout({
         type="button"
         onClick={() => fileInputRef.current?.click()}
         className={cn(
-          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#11CC27] shadow-lg hover:bg-[#0db322]',
+          'fixed right-6 bottom-6 flex h-[50px] w-[50px] items-center justify-center rounded-full',
+          'bg-primary-green hover:bg-primary-green-hover',
         )}
         aria-label="이미지 추가"
       >
@@ -104,11 +102,13 @@ export function PostEditorLayout({
 
       <input
         ref={fileInputRef}
+        id="post-image-upload-input"
         type="file"
         accept="image/*"
         multiple
         className={cn('hidden')}
         onChange={onImageAdd}
+        aria-hidden="true"
       />
     </div>
   );

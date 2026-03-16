@@ -1,23 +1,23 @@
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { useId, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
+import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
 import type { PostCardModel } from '@/features/feed';
 import { usePostDialog } from '@/features/post';
-import { useHeartMutation } from '@/entities/post/hooks/useHeartMutation';
-import { LogoutModal } from '@/shared/ui';
+import { LogoutModal, PostAction, PostContent } from '@/shared/ui';
 
+import {
+  useIsDesktopEnvironment,
+  useOptimisticHeartState,
+  useRelativeTimeTicker,
+} from '../hooks/usePostCard';
 import { AvatarActionPopover } from './AvatarActionPopover';
-import { PostCardActions } from './PostCardActions';
 import type { DropdownItem } from './PostCardDropdown';
 import { PostCardHeader } from './PostCardHeader';
 import { PostCardImages } from './PostCardImages';
 import { PostCardReportModal } from './PostCardReportModal';
-import {
-  useIsDesktopEnvironment,
-  useOptimisticHeartState,
-  usePostImageCarousel,
-  useRelativeTimeTicker,
-} from '../hooks/usePostCard';
 
 interface PostCardProps {
   post: PostCardModel;
@@ -33,26 +33,9 @@ interface PostCardProps {
 
 export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostCardProps) {
   useRelativeTimeTicker();
-
+  const navigator = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuId = useId();
-
-  const {
-    images,
-    currentIndex,
-    hasMultipleImages,
-    slideTransform,
-    goToImage,
-    handleNextImage,
-    handlePrevImage,
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleMouseLeave,
-  } = usePostImageCarousel(post.image, post.id);
 
   const isDesktopEnvironment = useIsDesktopEnvironment();
 
@@ -114,7 +97,7 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
 
   return (
     <article
-      className="border-border relative cursor-pointer border-b px-4 py-4 hover:bg-gray-50/50"
+      className="bg-background border-border hover:bg-muted/40 active:bg-muted/60 relative cursor-pointer rounded-2xl border px-4 py-4 shadow-sm transition-colors"
       onClick={onClick}
       onKeyDown={handleArticleKeyDown}
     >
@@ -139,35 +122,25 @@ export function PostCard({ post, isMyPost, onRewrite, onDelete, onClick }: PostC
         </div>
       </div>
 
-      {/* 본문·이미지·액션: 아바타(40px) + gap(12px) = 52px 들여써서 이름 열에 정렬 */}
-      <div className="pl-[52px]">
-        <p className="text-foreground mt-3 text-sm whitespace-pre-wrap">{post.content}</p>
+      {/* 본문·이미지·액션: 카드 내부 전체 너비로 좌우 균형 정렬 */}
+      <div>
+        {/* 게시글 내용 */}
+        <PostContent content={post.content} className="mt-3" />
 
+        {/* 게시글 이미지 */}
         <PostCardImages
           postId={post.id}
-          images={images}
-          currentIndex={currentIndex}
-          hasMultipleImages={hasMultipleImages}
+          image={post.image}
           showDesktopNavButtons={isDesktopEnvironment}
-          slideTransform={slideTransform}
-          onGoToImage={goToImage}
-          onNextImage={handleNextImage}
-          onPrevImage={handlePrevImage}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
         />
 
-        <PostCardActions
+        <PostAction
           isLiked={isLiked}
-          localHeartCount={localHeartCount}
+          heartCount={localHeartCount}
           commentCount={post.commentCount}
           isPending={heartMutation.isPending}
-          onLikeToggle={handleLikeToggle}
+          onToggleLike={handleLikeToggle}
+          onClickComment={() => navigator(`/post/${post.id}`)}
         />
       </div>
 

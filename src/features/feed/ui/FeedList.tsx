@@ -54,7 +54,8 @@ export function FeedList({
   const { ref } = useInfiniteScroll({ hasMore, isFetching: isFetchingMore, onLoadMore });
 
   return (
-    <main className={cn('mx-auto max-w-5xl pt-[48px]', className)}>
+    <main className={cn('mx-auto max-w-5xl px-3 pt-[48px]', className)}>
+      <div className={cn('flex flex-col gap-3 py-3')}>
       {posts.map((post) => (
         <div
           key={post.id}
@@ -72,6 +73,7 @@ export function FeedList({
           />
         </div>
       ))}
+      </div>
       {/* 스크롤 감지용 sentinel 요소 */}
       <div ref={ref} className={cn('h-1')} />
       {isFetchingMore && (
