@@ -74,7 +74,7 @@ gantt
 ```
 
 <details>
-<summary><span style="color:#e11d48;"><strong>[펼치기] Day 1 ~ Day 18 상세 기록 보기</strong></span> <strong>▼</strong></summary>
+<summary><span style="color:#e11d48;"><strong>[펼치기] Day 1 ~ Day 22 상세 기록 보기</strong></span> <strong>▼</strong></summary>
 
 #### Day 1 — 프로젝트 기획 및 역할 분담 (2026-02-13)
 
@@ -226,8 +226,38 @@ gantt
 #### Day 18 — 피드 UI 완성도 향상 · 요청 파라미터 튜닝 (2026-03-12)
 
 - PostCard/캐러셀/이미지 카운트/상대 시간/아바타 팝오버 등 피드 UI 고도화
-- `useFeedPostsQuery`의 LIMIT, `staleTime`, timeout 조정으로 체감 성능 개선
-- 검색 스키마 null 허용, 팔로우 폴백 보정, 에러 배너 분리 등 안정화 작업
+- `useFeedPostsQuery`의 LIMIT/staleTime/timeout 튜닝으로 체감 성능 개선
+- PostCard 섹션 컴포넌트 분리와 import 정리로 피드 코드 구조 단순화
+
+---
+
+#### Day 19 — 공통 컴포넌트화 · 팔로우/피드 안정화 (2026-03-13)
+
+- `PostContent`/유저 프로필 영역 공통 컴포넌트 도입 및 feed/post/search 리팩토링
+- 팔로우·팔로잉 목록(limit 확장, 하단 가림/아이콘 크기) 및 프로필 수정 반영 이슈 수정
+- 피드 팔로우 토스트, 로드아웃 유지, 다크모드 색상 보정으로 UX 안정화
+
+---
+
+#### Day 20 — SEO/접근성 전면 적용 · 메타데이터 정비 (2026-03-14)
+
+- `react-helmet-async`/`HelmetProvider` 적용, 페이지별 동적 타이틀·canonical·OG/Twitter 메타 구성
+- 로그인/회원가입·홈·피드·검색·프로필 등 주요 화면 시맨틱 구조 및 A11y 속성 강화
+- `robots.txt`, `VITE_FRONTEND_URL` 기반 URL 관리, axios 422 분리 처리로 운영 안정성 보완
+
+---
+
+#### Day 21 — 전 페이지 A11y/SEO 고도화 · 홈 화면 이슈 수정 (2026-03-15)
+
+- 검색/채팅/프로필/게시글 작성·상세/상품 수정/프로필 수정 등 전 페이지 접근성·SEO 추가 개선
+- 텍스트 대비율, 버튼 접근성, 헤더 접근성 등 UI 접근성 디테일 보강
+- 카카오 링크 진입 시 홈 화면 하단 잘림(vh) 문제와 공유 메타 노출 이슈 수정
+
+---
+
+#### Day 22 — 다크모드 접근성 핫픽스 및 문서 갱신 (2026-03-16)
+
+- 다크모드 환경 접근성(a11y) 대응 핫픽스 적용
 
 </details>
 
